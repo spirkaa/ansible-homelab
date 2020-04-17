@@ -1,0 +1,33 @@
+qcow2_path: /mnt/pve/spsrv-proxmox/template/qcow2
+qcow2_image: CentOS-7-x86_64-genericcloud-20200417.qcow2
+
+ssh_keys_path: ~/.ssh/authorized_keys
+
+resourse_pool: k8s
+resourse_pool_comment: Kubernetes Cluster
+
+# Основа для переменной. Уникальное значение создается с помощью loop range,
+# присоединяя цифру в конец, то есть из 810 получится 8100, 8101 и т.д.
+vm_id_tpl: 810
+vm_name_tpl: k8s-n0
+vm_net_ip_tpl: 192.168.13.21
+
+# Одинаковые значения для всех
+vm_comment: This VM created with a little help of Ansible
+vm_cores: 2
+vm_mem: 4096
+vm_disk: 20G
+vm_net_cidr: /24
+vm_net_gw: 192.168.13.1
+vm_net_dns: 192.168.13.1
+vm_net_domain: home.devmem.ru
+vm_net_bridge: vmbr1
+vm_net_vlan: 13
+vm_disk_storage: local-lvm
+vm_user_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63373866353233376163666264613562653863366138333939663637346136303232623531353639
+          6233323838326337396163333766383762633065656563340a653264653861303364363536383736
+          30653565623365646132636265386630323961343263363931396365316437663364386437643832
+          6632366634313762300a303032363763336339333565313437356164366339646135373664353236
+          6537

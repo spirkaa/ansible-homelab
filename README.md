@@ -1,2 +1,3 @@
-# template-repo
+# Ansible-Homelab
 
+Автоматизация домашнего сервера

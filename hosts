@@ -1,0 +1,7 @@
+spsrv
+spmaxi
+
+[all:vars]
+ansible_user=root
+ansible_ssh_common_args='-o ServerAliveInterval=5 -o StrictHostKeyChecking=no'
+ansible_python_interpreter=auto_legacy_silent
