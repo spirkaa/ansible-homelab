@@ -6,8 +6,11 @@
     - vars.yml
 
   vars:
-    # WARNING! ALARMA! Кластер исчезнет без следа при значении true!
-    cluster_destroy:
+    # WARNING! ALARMA! ВМ исчезнут без следа при значении true!
+    vm_destroy:
+
+    # Завершить работу ВМ
+    vm_shutdown: yes
 
     # Сколько нужно создать ВМ (от 1 до 9)
     vm_count: 3
@@ -27,120 +30,17 @@
       changed_when: false
 
   tasks:
-    - name: Create resource pool
-      command: >
-        pvesh create /pools -poolid '{{ resourse_pool }}' --comment '{{ resourse_pool_comment }}'
-      when: resourse_pool not in proxmox_pool_list.stdout
-
     - block:
-        - name: Create VM
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          command: >
-            qm create "{{ vm_id }}"
-              --pool "{{ resourse_pool }}"
-              --ostype "l26"
-              --name "{{ vm_name_tpl }}{{ item }}"
-              --description "{{ vm_comment }}"
-              --agent "1,fstrim_cloned_disks=1"
-              --cores "{{ vm_cores }}"
-              --memory "{{ vm_mem }}"
-              --net0 "virtio,bridge={{ vm_net_bridge }},tag={{ vm_net_vlan }}"
-              --ipconfig0 "gw={{ vm_net_gw }},ip={{ vm_net_ip_tpl }}{{ item }}{{ vm_net_cidr }}"
-              --nameserver "{{ vm_net_dns }}"
-              --searchdomain "{{ vm_net_domain }}"
-              --sshkeys "{{ ssh_keys_path }}"
-              --cipassword "{{ vm_user_pass }}"
-          loop: "{{ vm_index_list }}"
-          register: create_vm
-          when: vmid_string not in proxmox_vm_list.stdout
+        - include_tasks: vm_start.yml
+        - include_tasks: vm_create.yml
+      when: >
+        not vm_shutdown |default(false) |bool and
+        not vm_destroy |default(false) |bool
 
-        - name: Import qcow2 image as VM disk
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          command: >
-            qm importdisk {{ vm_id }} {{ qcow2_path }}/{{ qcow2_image }} {{ vm_disk_storage }}
-          loop: "{{ vm_index_list }}"
-          when: vmid_string not in proxmox_vm_list.stdout
+    - include_tasks: vm_shutdown.yml
+      when: >
+        vm_shutdown |default(false) |bool and
+        not vm_destroy |default(false) |bool
 
-        - name: Confige VM hardware
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          command: >
-            qm set {{ vm_id }} 
-              --scsihw virtio-scsi-pci 
-              --scsi0 {{ vm_disk_storage }}:vm-{{ vm_id }}-disk-0,discard=on
-              --ide2 {{ vm_disk_storage }}:cloudinit
-              --bootdisk scsi0
-              --boot c
-              --serial0 socket
-              --vga serial0
-          loop: "{{ vm_index_list }}"
-          when: vmid_string not in proxmox_vm_list.stdout
-
-        - name: Resize VM disk
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          command: >
-            qm resize {{ vm_id }} scsi0 {{ vm_disk }}
-          loop: "{{ vm_index_list }}"
-          when: vmid_string not in proxmox_vm_list.stdout
-
-        - name: Start VM
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          command: >
-            qm start {{ vm_id }}
-          loop: "{{ vm_index_list }}"
-          when: vmid_string not in proxmox_vm_list.stdout
-
-        - name: Wait for VM ssh port become available
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          wait_for:
-            # host: "{{ vm_name_tpl }}{{ item }}"
-            host: "{{ vm_net_ip_tpl }}{{ item }}"
-            port: 22
-            msg: "VM did not become available after 5 minutes. Network error?"
-          loop: "{{ vm_index_list }}"
-          when: vmid_string not in proxmox_vm_list.stdout
-
-        - name: Wait 2 minutes for VM cloud-init proccess
-          pause:
-            seconds: 120
-          when: create_vm.changed
-
-      when: not cluster_destroy |default(false) |bool
-
-    - block:
-        - name: Stop VM
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          command: >
-            qm stop {{ vm_id }}
-          loop: "{{ vm_index_list }}"
-          when: vmid_string in proxmox_vm_list.stdout
-
-        - name: Destroy VM
-          vars:
-            vm_id: "{{ vm_id_tpl }}{{ item }}"
-            vmid_string: "vmid: {{ vm_id }}"
-          command: >
-            qm destroy {{ vm_id }}
-          loop: "{{ vm_index_list }}"
-          when: vmid_string in proxmox_vm_list.stdout
-
-        - name: Delete Resource Pool
-          command: >
-            pvesh delete /pools/{{ resourse_pool }}
-          ignore_errors: yes
-          when: resourse_pool in proxmox_pool_list.stdout
-
-      when: cluster_destroy |default(false) |bool
+    - include_tasks: vm_destroy.yml
+      when: vm_destroy |default(false) |bool
