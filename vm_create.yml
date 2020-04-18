@@ -1,7 +1,7 @@
 ---
 - name: Create resource pool
   command: >
-    pvesh create /pools -poolid '{{ resourse_pool }}' --comment '{{ resourse_pool_comment }}'
+    pvesh create /pools -poolid "{{ resourse_pool }}" --comment "{{ resourse_pool_comment }}"
   when: resourse_pool not in proxmox_pool_list.stdout
 
 - name: Create VM
@@ -9,22 +9,32 @@
     vm_id: "{{ vm_id_tpl }}{{ item }}"
     vmid_string: "vmid: {{ vm_id }}"
   command: >
-    qm create "{{ vm_id }}"
-      --pool "{{ resourse_pool }}"
-      --ostype "l26"
-      --name "{{ vm_name_tpl }}{{ item }}"
+    qm create {{ vm_id }}
+      --pool {{ resourse_pool }}
+      --ostype l26
+      --name {{ vm_name_tpl }}{{ item }}
       --description "{{ vm_comment }}"
-      --agent "1,fstrim_cloned_disks=1"
-      --cores "{{ vm_cores }}"
-      --memory "{{ vm_mem }}"
-      --net0 "virtio,bridge={{ vm_net_bridge }},tag={{ vm_net_vlan }}"
-      --ipconfig0 "gw={{ vm_net_gw }},ip={{ vm_net_ip_tpl }}{{ item }}{{ vm_net_cidr }}"
-      --nameserver "{{ vm_net_dns }}"
-      --searchdomain "{{ vm_net_domain }}"
-      --sshkeys "{{ ssh_keys_path }}"
-      --cipassword "{{ vm_user_pass }}"
+      --agent 1,fstrim_cloned_disks=1
+      --cores {{ vm_cores }}
+      --memory {{ vm_mem }}
+      --net0 virtio,bridge={{ vm_net_bridge }},tag={{ vm_net_vlan }}
+      --ipconfig0 gw={{ vm_net_gw }},ip={{ vm_net_ip_tpl }}{{ item }}{{ vm_net_cidr }}
+      --nameserver {{ vm_net_dns }}
+      --searchdomain {{ vm_net_domain }}
+      --sshkeys "{{ vm_ssh_keys }}"
   loop: "{{ vm_index_list }}"
   register: create_vm
+  when: vmid_string not in proxmox_vm_list.stdout
+
+- name: Set VM default user password
+  vars:
+    vm_id: "{{ vm_id_tpl }}{{ item }}"
+    vmid_string: "vmid: {{ vm_id }}"
+  command: >
+    qm set {{ vm_id }}
+      --cipassword {{ vm_user_pass }}
+  no_log: true
+  loop: "{{ vm_index_list }}"
   when: vmid_string not in proxmox_vm_list.stdout
 
 - name: Import qcow2 template as VM disk
@@ -32,7 +42,7 @@
     vm_id: "{{ vm_id_tpl }}{{ item }}"
     vmid_string: "vmid: {{ vm_id }}"
   command: >
-    qm importdisk {{ vm_id }} {{ qcow2_path }}/{{ qcow2_image }} {{ vm_disk_storage }}
+    qm importdisk {{ vm_id }} {{ qcow2_image }} {{ vm_disk_storage }}
   loop: "{{ vm_index_list }}"
   when: vmid_string not in proxmox_vm_list.stdout
 
@@ -41,8 +51,8 @@
     vm_id: "{{ vm_id_tpl }}{{ item }}"
     vmid_string: "vmid: {{ vm_id }}"
   command: >
-    qm set {{ vm_id }} 
-      --scsihw virtio-scsi-pci 
+    qm set {{ vm_id }}
+      --scsihw virtio-scsi-pci
       --scsi0 {{ vm_disk_storage }}:vm-{{ vm_id }}-disk-0,discard=on
       --ide2 {{ vm_disk_storage }}:cloudinit
       --bootdisk scsi0

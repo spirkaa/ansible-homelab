@@ -10,7 +10,7 @@
     vm_destroy:
 
     # Завершить работу ВМ
-    vm_shutdown: yes
+    vm_shutdown:
 
     # Сколько нужно создать ВМ (от 1 до 9)
     vm_count: 3
