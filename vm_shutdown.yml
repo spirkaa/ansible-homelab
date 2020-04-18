@@ -9,6 +9,7 @@
   loop: "{{ vm_index_list }}"
   changed_when: false
   when: vmid_string in proxmox_vm_list.stdout
+  tags: [never, shutdown]
 
 - name: Shutdown VM
   vars:
@@ -20,3 +21,4 @@
   when: > 
     vmid_string in proxmox_vm_list.stdout and
     'stopped' not in vm_status.results[item].stdout
+  tags: [never, shutdown]

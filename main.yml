@@ -6,12 +6,6 @@
     - vars.yml
 
   vars:
-    # WARNING! ALARMA! ВМ исчезнут без следа при значении true!
-    vm_destroy:
-
-    # Завершить работу ВМ
-    vm_shutdown:
-
     # Сколько нужно создать ВМ (от 1 до 9)
     vm_count: 3
     vm_index_list: "{{ range(0, lookup('vars', 'vm_count')) | list }}"
@@ -22,25 +16,27 @@
         pvesh get /pools  --output-format yaml
       register: proxmox_pool_list
       changed_when: false
+      tags: always
 
     - name: Get VMs list from Proxmox
       command: >
         pvesh get /cluster/resources --type vm  --output-format yaml
       register: proxmox_vm_list
       changed_when: false
+      tags: always
 
   tasks:
-    - block:
-        - include_tasks: vm_start.yml
-        - include_tasks: vm_create.yml
-      when: >
-        not vm_shutdown |default(false) |bool and
-        not vm_destroy |default(false) |bool
+    - include_tasks:
+        file: vm_create.yml
+        apply:
+          tags: create
+      tags: create
+
+    - include_tasks: vm_start.yml
+      tags: start
 
     - include_tasks: vm_shutdown.yml
-      when: >
-        vm_shutdown |default(false) |bool and
-        not vm_destroy |default(false) |bool
+      tags: [never, shutdown]
 
     - include_tasks: vm_destroy.yml
-      when: vm_destroy |default(false) |bool
+      tags: [never, destroy]

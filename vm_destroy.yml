@@ -7,9 +7,11 @@
     qm stop {{ vm_id }} && qm destroy {{ vm_id }}
   loop: "{{ vm_index_list }}"
   when: vmid_string in proxmox_vm_list.stdout
+  tags: [never, destroy]
 
 - name: Delete Resource Pool
   command: >
     pvesh delete /pools/{{ resourse_pool }}
   ignore_errors: yes
   when: resourse_pool in proxmox_pool_list.stdout
+  tags: [never, destroy]
