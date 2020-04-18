@@ -7,7 +7,7 @@
 
   vars:
     # Сколько нужно создать ВМ (от 1 до 9)
-    vm_count: 3
+    vm_count: 4
     vm_index_list: "{{ range(0, lookup('vars', 'vm_count')) | list }}"
 
   pre_tasks:
@@ -35,8 +35,29 @@
     - include_tasks: vm_start.yml
       tags: start
 
+    - include_tasks: vm_dyn_inventory.yml
+      tags: dyn_inventory
+
     - include_tasks: vm_shutdown.yml
       tags: [never, shutdown]
 
     - include_tasks: vm_destroy.yml
       tags: [never, destroy]
+
+
+- hosts: k8s
+  become: yes
+
+  pre_tasks:
+    - name: Wait up to 10 minutes for yum process to exit
+      wait_for:
+        path: /var/run/yum.pid
+        state: absent
+        timeout: 600
+
+    - include_tasks: k8s_docker.yml
+
+  roles:
+    - role: geerlingguy.kubernetes
+      vars:
+        kubernetes_allow_pods_on_master: false

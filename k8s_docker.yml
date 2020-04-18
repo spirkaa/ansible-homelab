@@ -1,0 +1,28 @@
+---
+- include_role:
+    name: geerlingguy.docker
+  vars:
+    docker_install_compose: false
+
+- name: Create docker.service.d directory
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    recurse: yes
+
+- name: Copy daemon.json
+  copy: 
+    src: files/daemon.json
+    dest: /etc/docker
+  register: docker_config
+
+- name: Restart docker service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+  when: docker_config.changed
+
+- name: Reboot
+  reboot:
+  when: docker_config.changed

@@ -1,0 +1,33 @@
+---
+- name: Get VMs list from Proxmox
+  command: >
+    pvesh get /cluster/resources --type vm  --output-format yaml
+  register: proxmox_vm_list
+  changed_when: false
+  tags: dyn_inventory
+
+- name: Add first VM to k8s_master group
+  vars:
+    vm_id: "{{ vm_id_tpl }}{{ item }}"
+    vmid_string: "vmid: {{ vm_id }}"
+  add_host:
+    name: "{{ vm_net_ip_tpl }}{{ item }}"
+    groups: k8s_master
+    kubernetes_role: master
+  loop: "{{ vm_index_list[:1] }}"
+  changed_when: false
+  when: vmid_string in proxmox_vm_list.stdout
+  tags: dyn_inventory
+
+- name: Add rest of VMs to k8s_nodes group
+  vars:
+    vm_id: "{{ vm_id_tpl }}{{ item }}"
+    vmid_string: "vmid: {{ vm_id }}"
+  add_host:
+    name: "{{ vm_net_ip_tpl }}{{ item }}"
+    groups: k8s_nodes
+    kubernetes_role: node
+  loop: "{{ vm_index_list[1:] }}"
+  changed_when: false
+  when: vmid_string in proxmox_vm_list.stdout
+  tags: dyn_inventory

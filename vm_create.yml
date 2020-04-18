@@ -87,11 +87,5 @@
   wait_for:
     host: "{{ vm_net_ip_tpl }}{{ item }}"
     port: 22
-    msg: "VM did not become available after 5 minutes. Network error?"
   loop: "{{ vm_index_list }}"
   when: vmid_string not in proxmox_vm_list.stdout
-
-- name: Wait 2 minutes for VM cloud-init proccess
-  pause:
-    seconds: 120
-  when: create_vm.changed
