@@ -66,3 +66,15 @@
     - include_tasks: k8s_yum.yml
     - include_tasks: k8s_docker.yml
     - include_tasks: k8s_kubernetes.yml
+
+
+- hosts: k8s_master
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - include_tasks:
+        file: deploy_hello_k8s.yml
+        apply:
+          tags: deploy_hello_k8s
+      tags: deploy_hello_k8s
