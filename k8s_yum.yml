@@ -1,0 +1,10 @@
+---
+- name: Install EPEL repo
+  yum: name=epel-release state=present
+
+- name: Install packages
+  yum:
+    state: present
+    name:
+      - python2-pip
+      - python2-openshift

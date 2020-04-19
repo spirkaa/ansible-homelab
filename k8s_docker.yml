@@ -22,7 +22,3 @@
     daemon_reload: yes
     name: docker
   when: docker_config.changed
-
-- name: Reboot
-  reboot:
-  when: docker_config.changed

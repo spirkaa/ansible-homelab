@@ -32,11 +32,11 @@
           tags: create
       tags: create
 
-    - include_tasks: vm_start.yml
-      tags: start
-
     - include_tasks: vm_dyn_inventory.yml
       tags: dyn_inventory
+
+    - include_tasks: vm_start.yml
+      tags: [never, start]
 
     - include_tasks: vm_shutdown.yml
       tags: [never, shutdown]
@@ -48,16 +48,21 @@
 - hosts: k8s
   become: yes
 
+  handlers:
+    - name: Reboot nodes
+      reboot:
+        post_reboot_delay: 60
+      listen: restart kubelet
+
   pre_tasks:
-    - name: Wait up to 10 minutes for yum process to exit
+    - name: Wait for yum process to exit
       wait_for:
         path: /var/run/yum.pid
         state: absent
         timeout: 600
 
+  tasks:
+    - include_tasks: k8s_sysctl.yml
+    - include_tasks: k8s_yum.yml
     - include_tasks: k8s_docker.yml
-
-  roles:
-    - role: geerlingguy.kubernetes
-      vars:
-        kubernetes_allow_pods_on_master: false
+    - include_tasks: k8s_kubernetes.yml
