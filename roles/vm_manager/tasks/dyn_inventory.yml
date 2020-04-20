@@ -1,0 +1,26 @@
+---
+- include_tasks: util_vm_list.yml
+
+- block:
+    - name: Add first VM to k8s_master group
+      vars:
+        vm_id: "{{ vm_id_tpl }}{{ item }}"
+        vmid_string: "vmid: {{ vm_id }}"
+      add_host:
+        name: "{{ vm_net_ip_tpl }}{{ item }}"
+        groups: k8s_master
+        kubernetes_role: master
+      loop: "{{ vm_index_list[:1] }}"
+      changed_when: false
+
+    - name: Add rest of VMs to k8s_nodes group
+      vars:
+        vm_id: "{{ vm_id_tpl }}{{ item }}"
+        vmid_string: "vmid: {{ vm_id }}"
+      add_host:
+        name: "{{ vm_net_ip_tpl }}{{ item }}"
+        groups: k8s_nodes
+        kubernetes_role: node
+      loop: "{{ vm_index_list[1:] }}"
+      changed_when: false
+  when: vmid_string in vm_list.stdout

@@ -1,0 +1,13 @@
+---
+- include_tasks: util_vm_status.yml
+
+- name: Shutdown VM
+  vars:
+    vm_id: "{{ vm_id_tpl }}{{ item }}"
+    vmid_string: "vmid: {{ vm_id }}"
+  shell: >
+    qm shutdown {{ vm_id }} && qm wait {{ vm_id }} -timeout 60
+  loop: "{{ vm_index_list }}"
+  when: > 
+    vmid_string in vm_list.stdout and
+    'stopped' not in vm_status.results[item].stdout

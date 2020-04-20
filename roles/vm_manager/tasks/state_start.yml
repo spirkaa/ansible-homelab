@@ -1,0 +1,23 @@
+---
+- include_tasks: util_vm_status.yml
+
+- block:
+    - name: Start VM
+      vars:
+        vm_id: "{{ vm_id_tpl }}{{ item }}"
+        vmid_string: "vmid: {{ vm_id }}"
+      command: >
+        qm start {{ vm_id }}
+      loop: "{{ vm_index_list }}"
+
+    - name: Wait for VM ssh port become available
+      vars:
+        vm_id: "{{ vm_id_tpl }}{{ item }}"
+        vmid_string: "vmid: {{ vm_id }}"
+      wait_for:
+        host: "{{ vm_net_ip_tpl }}{{ item }}"
+        port: 22
+      loop: "{{ vm_index_list }}"
+  when: > 
+    vmid_string in vm_list.stdout and
+    'running' not in vm_status.results[item].stdout

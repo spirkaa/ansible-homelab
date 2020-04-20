@@ -1,0 +1,6 @@
+---
+- name: Get VM list from Proxmox
+  command: >
+    pvesh get /cluster/resources --type vm  --output-format yaml
+  register: vm_list
+  changed_when: false
