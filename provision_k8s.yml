@@ -4,4 +4,4 @@
   become: yes
 
   roles: 
-    - k8s
+    - {role: k8s, tags: k8s}

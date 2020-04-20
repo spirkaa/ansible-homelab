@@ -2,17 +2,6 @@
 - hosts: all
   gather_facts: no
 
-- import_playbook: vm_provision.yml
-- import_playbook: k8s_provision.yml
-
-
-- hosts: k8s_master
-  gather_facts: no
-  become: yes
-
-  tasks:
-    - include_tasks:
-        file: deploy_hello_k8s.yml
-        apply:
-          tags: deploy_hello_k8s
-      tags: deploy_hello_k8s
+- import_playbook: provision_vm.yml
+- import_playbook: provision_k8s.yml
+- import_playbook: deploy_hello_k8s.yml

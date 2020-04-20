@@ -1,0 +1,28 @@
+---
+- name: Create hello-k8s resources and wait until they are Ready.
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/' + item) }}"
+    wait: true
+  with_items:
+    - hello_k8s_deployment.yml
+    - hello_k8s_service.yml
+
+- name: Get hello-k8s service details.
+  k8s_info:
+    kind: Service
+    name: hello-k8s
+    namespace: default
+  register: svc
+
+- name: Set the service NodePort as a variable.
+  set_fact:
+    port: "{{ svc['resources'][0]['spec']['ports'][0]['nodePort'] }}"
+
+- name: Test a request to the service.
+  uri:
+    url: http://{{ ansible_host }}:{{ port }}/
+
+- name: Print the URL for hello-k8s.
+  debug:
+    msg: http://{{ ansible_host }}:{{ port }}/
