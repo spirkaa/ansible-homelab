@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os
 
@@ -18,6 +19,11 @@ category_auth = 'SessionService/Sessions'
 category_actions = 'Systems/1/Actions/ComputerSystem.Reset'
 auth_header = 'X-Auth-Token'
 
+parser = argparse.ArgumentParser(description='Supermicro IPMI Power Manager')
+parser.add_argument('--on', dest='power_state', action='store_true')
+parser.add_argument('--off', dest='power_state', action='store_false')
+
+args = parser.parse_args()
 
 def get_auth_token():
     payload = F'{{"UserName": "{IPMI_USERNAME}","Password": "{IPMI_PASSWORD}"}}'
@@ -48,10 +54,22 @@ def set_power_on():
     print(r.text.encode('utf8'))
 
 
-if __name__ == '__main__':
-    logging.getLogger('urllib3').setLevel(logging.WARNING)
-    logging.basicConfig(
-        format='%(asctime)s [%(levelname)8s] [%(name)s:%(lineno)s:%(funcName)20s()] --- %(message)s',
-        level=logging.DEBUG)
+def set_power_off():
+    payload = '{"ResetType": "GracefulShutdown"}'
+    auth_token = get_auth_token()
+    headers = {
+        auth_header: auth_token,
+        'Content-Type': 'application/json'
+    }
+    
+    r = requests.post(
+        baseuri+category_actions,
+        headers=headers,
+        data=payload,
+        verify=False)
+    print(r.text.encode('utf8'))
 
+if args.power_state:
     set_power_on()
+else:
+    set_power_off()
