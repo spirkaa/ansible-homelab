@@ -1,0 +1,9 @@
+docker_install_compose: false
+
+kubernetes_version: '1.17'
+kubernetes_version_rhel_package: '1.17.5'
+kubernetes_allow_pods_on_master: false
+kubernetes_pod_network:
+  cni: 'calico'
+  cidr: '10.244.0.0/16'
+kubernetes_calico_manifest_file: https://docs.projectcalico.org/manifests/calico.yaml

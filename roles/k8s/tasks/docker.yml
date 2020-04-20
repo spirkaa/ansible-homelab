@@ -1,8 +1,6 @@
 ---
 - include_role:
     name: geerlingguy.docker
-  vars:
-    docker_install_compose: false
 
 - name: Create docker.service.d directory
   file:
@@ -14,11 +12,7 @@
   copy: 
     src: files/daemon.json
     dest: /etc/docker
-  register: docker_config
+  notify: Restart docker service
 
-- name: Restart docker service
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: docker
-  when: docker_config.changed
+- name: Force all notified handlers
+  meta: flush_handlers

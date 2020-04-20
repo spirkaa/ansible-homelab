@@ -1,0 +1,19 @@
+---
+- name: Wait for yum process to exit (cloud-init updates)
+  wait_for:
+    path: /var/run/yum.pid
+    state: absent
+    timeout: 600
+
+- name: Sysctl
+  include_tasks: sysctl.yml
+
+- name: Packages
+  include_tasks: packages.yml
+
+- name: Docker
+  include_tasks: docker.yml
+
+- name: Kubernetes
+  include_role:
+    name: geerlingguy.kubernetes

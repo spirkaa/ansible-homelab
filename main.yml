@@ -3,29 +3,7 @@
   gather_facts: no
 
 - import_playbook: vm_provision.yml
-
-
-- hosts: k8s
-  become: yes
-
-  handlers:
-    - name: Reboot nodes
-      reboot:
-        post_reboot_delay: 60
-      listen: restart kubelet
-
-  pre_tasks:
-    - name: Wait for yum process to exit
-      wait_for:
-        path: /var/run/yum.pid
-        state: absent
-        timeout: 600
-
-  tasks:
-    - include_tasks: k8s_sysctl.yml
-    - include_tasks: k8s_yum.yml
-    - include_tasks: k8s_docker.yml
-    - include_tasks: k8s_kubernetes.yml
+- import_playbook: k8s_provision.yml
 
 
 - hosts: k8s_master
