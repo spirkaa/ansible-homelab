@@ -1,5 +1,5 @@
 ---
-- hosts: spmaxi
+- hosts: proxmox
   gather_facts: no
 
   vars:
@@ -18,3 +18,4 @@
         url: "{{ item }}"
         dest: "{{ qcow2_path }}/{{ item | basename }}"
       loop: "{{ os_images }}"
+      run_once: true
