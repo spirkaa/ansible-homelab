@@ -1,0 +1,6 @@
+---
+- hosts: proxmox
+  gather_facts: no
+
+  roles: 
+    - postfix

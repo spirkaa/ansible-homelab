@@ -1,6 +1,7 @@
 [proxmox]
 spsrv
 spmaxi
+spmini
 
 [k8s_master]
 
