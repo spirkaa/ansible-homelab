@@ -36,3 +36,4 @@
 - name: Send test mail
   shell: echo "test mail" | /usr/bin/pvemailforward
   changed_when: false
+  when: config_file.changed
