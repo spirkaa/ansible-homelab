@@ -1,0 +1,28 @@
+---
+- name: Copy /etc/modprobe.d files
+  copy: 
+    src: files/{{ item }}
+    dest: /etc/modprobe.d
+  register: modprobe
+  loop:
+    - kvm.conf
+    - kvm-intel.conf
+
+- name: Copy /etc/modules
+  copy: 
+    src: files/modules
+    dest: /etc
+  register: modules
+
+- name: Edit grub config
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"'
+  register: grub
+  notify: update-grub
+
+- name: Reboot notification
+  debug:
+    msg: "Please reboot '{{ inventory_hostname }}' host!"
+  when: modprobe.changed or modules.changed or grub.changed

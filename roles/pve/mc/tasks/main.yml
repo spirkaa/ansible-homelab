@@ -1,0 +1,17 @@
+---
+- name: Install packages
+  apt:
+    state: present
+    name:
+      - mc
+
+- name: Create mc config directory
+  file:
+    path: ~/.config/mc
+    state: directory
+    recurse: yes
+
+- name: Copy mc config
+  copy:
+    src: files/mc.ini
+    dest: ~/.config/mc/ini

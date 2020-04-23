@@ -1,0 +1,4 @@
+Cmnd_Alias      MON=/usr/bin/ipmitool, /usr/sbin/smartctl
+Defaults!MON    !syslog, !pam_session
+telegraf        ALL=(root) NOPASSWD: MON
+ALL ALL=(ALL) NOPASSWD: /usr/sbin/smartctl

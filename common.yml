@@ -1,7 +1,0 @@
----
-- hosts: proxmox
-  gather_facts: no
-
-  roles:
-    - common/postfix
-    - common/rsnapshot

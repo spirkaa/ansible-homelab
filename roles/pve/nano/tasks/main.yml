@@ -1,0 +1,21 @@
+---
+- name: Install packages
+  apt:
+    state: present
+    name:
+      - nano
+
+- name: Install Improved Nano Syntax Highlighting Files
+  shell: curl https://raw.githubusercontent.com/scopatz/nanorc/master/install.sh | sh -l
+  args:
+    creates: ~/.nano/install.sh
+    warn: no
+
+- name: Configure nano
+  blockinfile:
+    path: ~/.nanorc
+    block: |
+      set autoindent
+      set tabsize 4
+      set tabstospaces
+    state: present

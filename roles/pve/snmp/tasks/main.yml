@@ -1,0 +1,52 @@
+---
+- name: Install packages
+  apt:
+    state: present
+    name:
+      - snmp
+      - snmpd
+      - libpve-apiclient-perl
+
+- name: Create systemd dir
+  file:
+    path: /etc/systemd/system/snmpd.service.d
+    state: directory
+
+- name: Copy service override
+  copy:
+    src: files/override.conf
+    dest: /etc/systemd/system/snmpd.service.d
+  notify: restart snmpd
+
+- name: Copy snmp extend scripts
+  copy:
+    src: files/extend
+    dest: /etc/snmp
+    mode: 0755
+  notify: restart snmpd
+
+- name: Copy smart.config
+  template:
+    src: templates/smart.config.j2
+    dest: /etc/snmp/extend/smart.config
+  notify: restart snmpd
+
+- name: Create a cron job
+  cron:
+    name: snmp_smart
+    minute: "*/3"
+    user: root
+    job: "/etc/snmp/extend/smart -u"
+    cron_file: snmp_smart
+
+- name: Copy snmpd.conf
+  template:
+    src: templates/snmpd.conf.j2
+    dest: /etc/snmp/snmpd.conf
+  notify: restart snmpd
+
+- name: Copy sudoers.d file
+  copy:
+    src: files/snmp_sudo
+    dest: /etc/sudoers.d
+    mode: 0440

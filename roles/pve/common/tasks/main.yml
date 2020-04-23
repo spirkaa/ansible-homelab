@@ -1,0 +1,5 @@
+---
+- name: Packages tasks
+  include_tasks: packages.yml
+- name: Proxmox tweaks
+  include_tasks: pve_tweaks.yml

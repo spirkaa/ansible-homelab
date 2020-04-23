@@ -1,0 +1,14 @@
+---
+- hosts: proxmox
+  gather_facts: no
+
+  roles:
+    - pve/common
+    - pve/kernel_modules
+    - pve/zsh
+    - pve/mc
+    - pve/nano
+    - pve/postfix
+    - pve/rsnapshot
+    - pve/telegraf
+    - pve/snmp

@@ -1,0 +1,14 @@
+---
+- name: Remove Proxmox nag screen
+  replace:
+    path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    regexp: "data.status \\!== \\'Active\\'"
+    replace: "false"
+  notify: restart pveproxy
+
+- name: Change Proxmox replication interval
+  lineinfile:
+    path: /lib/systemd/system/pvesr.timer
+    regexp: "^OnCalendar=minutely"
+    line: "OnCalendar=hourly"
+  notify: reload pvesr

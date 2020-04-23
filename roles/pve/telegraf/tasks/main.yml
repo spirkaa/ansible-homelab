@@ -1,0 +1,65 @@
+---
+- name: Install packages
+  apt:
+    state: present
+    name:
+      - sudo
+      - lm-sensors
+      - smartmontools
+      - hddtemp
+
+- block:
+    - name: Install packages
+      apt:
+        state: present
+        name:
+          - ipmitool
+
+    - name: Copy telegraf_ipmi script
+      copy: 
+        src: files/telegraf_ipmi
+        dest: /usr/local/bin
+        mode: 0755
+  when: inventory_hostname == "spsrv" or inventory_hostname == "spmaxi"
+
+- block:
+    - name: Copy hddtemp config generator
+      copy:
+        src: files/hddtemp_systemd_gen
+        dest: /usr/local/bin/hddtemp_systemd_gen
+        mode: 0755
+      register: hddtemp_cfg
+
+    - name: Creaty systemd dir
+      file:
+        path: /usr/lib/systemd/system
+        state: directory
+
+    - name: Configure hddtemp
+      shell: > 
+        /usr/local/bin/hddtemp_systemd_gen > /usr/lib/systemd/system/hddtemp.service
+      when: hddtemp_cfg.changed
+      notify: restart hddtemp
+  when: inventory_hostname == "spmini" or inventory_hostname == "spsrv"
+
+- name: Copy sudoers.d file
+  copy:
+    src: files/telegraf_sudo
+    dest: /etc/sudoers.d
+    mode: 0440
+
+- name: Download Telegraf package
+  get_url:
+    url: "{{ telegraf_agent_url }}"
+    dest: "/tmp/{{ telegraf_agent_package }}"
+
+- name: Install Telegraf package
+  apt:
+    deb: "/tmp/{{ telegraf_agent_package }}"
+    state: present
+
+- name: Copy telegraf.conf
+  template:
+    src: templates/telegraf.conf.j2
+    dest: /etc/telegraf/telegraf.conf
+  notify: restart telegraf

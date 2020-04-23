@@ -1,0 +1,10 @@
+---
+- name: restart pveproxy
+  service:
+    name: pveproxy
+    state: restarted
+
+- name: reload pvesr
+  service:
+    name: pvesr
+    state: reloaded

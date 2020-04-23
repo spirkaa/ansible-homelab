@@ -1,0 +1,37 @@
+---
+- name: Configure APT sources
+  copy: 
+    src: files/sources.list
+    dest: /etc/apt
+
+- name: Configure APT sources
+  copy: 
+    src: files/pve-no-subscription.list
+    dest: /etc/apt/sources.list.d
+
+- name: Configure APT sources
+  file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent
+
+- name: Upgrade packages
+  apt: name='*' state=latest
+
+- name: Install packages
+  apt:
+    state: present
+    name:
+      - openvswitch-switch
+      - tmux
+      - wget
+      - curl
+      - git
+      - patch
+      - net-tools
+      - htop
+      - iftop
+      - iotop
+      - ncdu
+      - bzip2
+      - zip
+      - unzip

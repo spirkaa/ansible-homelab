@@ -1,0 +1,18 @@
+smartctl=/usr/sbin/smartctl
+cache=/var/cache/smart
+useSN=0
+{% if inventory_hostname == "spsrv" %}
+nvme0n1
+sda
+sdb
+sdc
+sdd
+sde
+sdf
+{% endif %}
+{% if inventory_hostname == "spmini" %}
+sda
+{% endif %}
+{% if inventory_hostname == "spmaxi" %}
+nvme0n1
+{% endif %}
