@@ -1,5 +1,5 @@
 ---
-- name: VM creation tasks
+- name: Proxmox resource creation tasks
   include_tasks:
     file: create.yml
     apply:
@@ -13,21 +13,21 @@
       tags: dyn_inventory
   tags: dyn_inventory
 
-- name: VM startup tasks
+- name: Proxmox resource startup tasks
   include_tasks:
     file: state_start.yml
     apply:
       tags: [never, start]
   tags: [never, start]
 
-- name: VM shutdown tasks
+- name: Proxmox resource shutdown tasks
   include_tasks:
     file: state_shutdown.yml
     apply:
       tags: [never, shutdown]
   tags: [never, shutdown]
 
-- name: VM destroy tasks
+- name: Proxmox resource destroy tasks
   include_tasks:
     file: destroy.yml
     apply:

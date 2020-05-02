@@ -1,40 +1,45 @@
-# Количество ВМ (от 1 до 9)
+# Тип ресурса - vm или ct
+resource_type: vm
+
+# Количество ресурсов (от 1 до 9)
 vm_count: 3
 vm_index_list: "{{ range(0, lookup('vars', 'vm_count')) | list }}"
 
 # Основа для значений. Уникальное значение получается путем
 # присоединения цифры, то есть из 810 получится 8100, 8101 и т.д.
-vm_id_tpl: 810
-vm_name_tpl: k8s-n0
-vm_net_ip_tpl: 192.168.13.21
+vmid_tpl: 500
+name_tpl: tpl
+net_ip_tpl: 192.168.13.5
 
-# Одно значение для всех ВМ
-qcow2_base_path: /mnt/pve/spsrv-proxmox/template/qcow2
-qcow2_image_name: CentOS-7-x86_64-genericcloud-20200417.qcow2
-qcow2_image: "{{ qcow2_base_path }}/{{ qcow2_image_name }}"
+# Одно значение для всех
+vm_image: /mnt/pve/spmaxi-proxmox/template/qcow2/CentOS-7-x86_64-genericcloud-20200417.qcow2
+vm_ostype: l26
 
-resourse_pool: k8s
-resourse_pool_comment: Kubernetes Cluster
+ct_image: spmaxi-proxmox:vztmpl/centos-7.7-docker-20200425.tar.gz
+ct_ostype: centos
 
-vm_comment: This VM created with a little help of Ansible
-vm_cores: 2
-vm_mem: 4096
-vm_disk: 20G
-vm_disk_storage: local-lvm
+resourse_pool: ansible
+resourse_pool_comment: Created with a little help of Ansible
 
-vm_net_gw: 192.168.13.1
-vm_net_dns: 192.168.13.1
-vm_net_domain: home.devmem.ru
-vm_net_bridge: vmbr1
-vm_net_vlan: 13
-vm_net_cidr: /24
+comment: Created with a little help of Ansible
+cores: 2
+mem: 2048
+disk_size: 10
+disk_storage: local-lvm
+
+net_br: vmbr1
+net_vlan: 13
+net_cidr: 24
+net_gw: 192.168.13.1
+net_dns: 192.168.13.1
+net_domain: home.devmem.ru
 
 # Файл с ключами должен находиться на сервере Proxmox
-vm_ssh_keys: ~/.ssh/authorized_keys
+ssh_keys: ~/.ssh/authorized_keys
 
 # Значение зашифровано с помощью команды:
 # ansible-vault encrypt_string --vault-password-file ~/.passwd 'P@SsW0rD' --name 'vm_user_pass' 
-vm_user_pass: !vault |
+user_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           63373866353233376163666264613562653863366138333939663637346136303232623531353639
           6233323838326337396163333766383762633065656563340a653264653861303364363536383736

@@ -2,22 +2,34 @@
 - include_tasks: util_vm_status.yml
 
 - block:
-    - name: Start VM
-      vars:
-        vm_id: "{{ vm_id_tpl }}{{ item }}"
-        vmid_string: "vmid: {{ vm_id }}"
-      command: >
-        qm start {{ vm_id }}
-      loop: "{{ vm_index_list }}"
+  - name: Start VM
+    vars:
+      vmid: "{{ vmid_tpl }}{{ item }}"
+      vmid_string: "vmid: {{ vmid }}"
+    command: >
+      qm start {{ vmid }}
+    loop: "{{ vm_index_list }}"
+    when: >
+      resource_type == "vm" and
+      'running' not in vm_status.results[item].stdout
 
-    - name: Wait for VM ssh port become available
-      vars:
-        vm_id: "{{ vm_id_tpl }}{{ item }}"
-        vmid_string: "vmid: {{ vm_id }}"
-      wait_for:
-        host: "{{ vm_net_ip_tpl }}{{ item }}"
-        port: 22
-      loop: "{{ vm_index_list }}"
-  when: > 
-    vmid_string in vm_list.stdout and
-    'running' not in vm_status.results[item].stdout
+  - name: Start CT
+    vars:
+      vmid: "{{ vmid_tpl }}{{ item }}"
+      vmid_string: "vmid: {{ vmid }}"
+    command: >
+      pct start {{ vmid }}
+    loop: "{{ vm_index_list }}"
+    when: >
+      resource_type == "ct" and
+      'running' not in ct_status.results[item].stdout
+
+  - name: Wait for SSH port become available
+    vars:
+      vmid: "{{ vmid_tpl }}{{ item }}"
+      vmid_string: "vmid: {{ vmid }}"
+    wait_for:
+      host: "{{ net_ip_tpl }}{{ item }}"
+      port: 22
+    loop: "{{ vm_index_list }}"
+  when: vmid_string in vm_list.stdout

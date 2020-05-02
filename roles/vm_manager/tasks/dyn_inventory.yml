@@ -4,10 +4,10 @@
 - block:
     - name: Add first VM to k8s_master group
       vars:
-        vm_id: "{{ vm_id_tpl }}{{ item }}"
-        vmid_string: "vmid: {{ vm_id }}"
+        vmid: "{{ vmid_tpl }}{{ item }}"
+        vmid_string: "vmid: {{ vmid }}"
       add_host:
-        name: "{{ vm_net_ip_tpl }}{{ item }}"
+        name: "{{ net_ip_tpl }}{{ item }}"
         groups: k8s_master
         kubernetes_role: master
       loop: "{{ vm_index_list[:1] }}"
@@ -15,10 +15,10 @@
 
     - name: Add rest of VMs to k8s_nodes group
       vars:
-        vm_id: "{{ vm_id_tpl }}{{ item }}"
-        vmid_string: "vmid: {{ vm_id }}"
+        vmid: "{{ vmid_tpl }}{{ item }}"
+        vmid_string: "vmid: {{ vmid }}"
       add_host:
-        name: "{{ vm_net_ip_tpl }}{{ item }}"
+        name: "{{ net_ip_tpl }}{{ item }}"
         groups: k8s_nodes
         kubernetes_role: node
       loop: "{{ vm_index_list[1:] }}"

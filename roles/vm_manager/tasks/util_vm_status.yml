@@ -1,13 +1,26 @@
 ---
 - include_tasks: util_vm_list.yml
 
-- name: Get VM status
-  vars:
-    vm_id: "{{ vm_id_tpl }}{{ item }}"
-    vmid_string: "vmid: {{ vm_id }}"
-  shell: >
-    qm status {{ vm_id }}
-  register: vm_status
-  loop: "{{ vm_index_list }}"
-  changed_when: false
+- block:
+  - name: Get VM status
+    vars:
+      vmid: "{{ vmid_tpl }}{{ item }}"
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      qm status {{ vmid }}
+    register: vm_status
+    loop: "{{ vm_index_list }}"
+    changed_when: false
+    when: resource_type == "vm"
+
+  - name: Get CT status
+    vars:
+      vmid: "{{ vmid_tpl }}{{ item }}"
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      pct status {{ vmid }}
+    register: ct_status
+    loop: "{{ vm_index_list }}"
+    changed_when: false
+    when: resource_type == "ct"
   when: vmid_string in vm_list.stdout

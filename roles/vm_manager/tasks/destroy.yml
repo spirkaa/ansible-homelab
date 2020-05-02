@@ -2,13 +2,24 @@
 - include_tasks: util_pool_list.yml
 - include_tasks: util_vm_list.yml
 
-- name: Destroy VM
-  vars:
-    vm_id: "{{ vm_id_tpl }}{{ item }}"
-    vmid_string: "vmid: {{ vm_id }}"
-  shell: >
-    qm stop {{ vm_id }} && qm destroy {{ vm_id }}
-  loop: "{{ vm_index_list }}"
+- block:
+  - name: Destroy VM
+    vars:
+      vmid: "{{ vmid_tpl }}{{ item }}"
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      qm stop {{ vmid }} && qm destroy {{ vmid }}
+    loop: "{{ vm_index_list }}"
+    when: resource_type == "vm"
+
+  - name: Destroy CT
+    vars:
+      vmid: "{{ vmid_tpl }}{{ item }}"
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      pct stop {{ vmid }} && pct destroy {{ vmid }}
+    loop: "{{ vm_index_list }}"
+    when: resource_type == "ct"
   when: vmid_string in vm_list.stdout
 
 - name: Delete Resource Pool
