@@ -25,6 +25,7 @@
       - tmux
       - wget
       - curl
+      - aria2
       - git
       - patch
       - net-tools

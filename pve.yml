@@ -12,3 +12,4 @@
     - pve/rsnapshot
     - pve/telegraf
     - pve/snmp
+    - pve/smartd
