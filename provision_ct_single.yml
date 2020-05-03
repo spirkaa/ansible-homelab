@@ -1,0 +1,12 @@
+---
+- hosts: spmaxi
+  gather_facts: no
+
+  vars:
+    resource_type: ct
+    vmid: 5501
+    hostname: test-ct
+    net_ip: 192.168.13.50
+
+  roles: 
+    - vm_manager_single

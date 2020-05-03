@@ -1,0 +1,22 @@
+---
+- include_tasks: util_vm_list.yml
+
+- block:
+  - name: Get VM status
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      qm status {{ vmid }}
+    register: vm_status
+    changed_when: false
+    when: resource_type == 'vm'
+
+  - name: Get CT status
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      pct status {{ vmid }}
+    register: ct_status
+    changed_when: false
+    when: resource_type == 'ct'
+  when: vmid_string in vm_list.stdout

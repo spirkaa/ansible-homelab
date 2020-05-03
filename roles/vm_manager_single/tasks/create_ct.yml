@@ -1,0 +1,27 @@
+---
+- block:
+    - name: CT - Create
+      vars:
+        vmid_string: "vmid: {{ vmid }}"
+      command: >
+        pct create {{ vmid }} {{ ct_image }}
+          --pool {{ resourse_pool }}
+          --hostname {{ hostname }}
+          --description "{{ comment }}"
+          --cores {{ cores }}
+          --memory {{ mem }}
+          --nameserver {{ net_dns }}
+          --net0 name=eth0,bridge={{ net_br }},gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }},tag={{ net_vlan }}
+          --ostype {{ ct_ostype }}
+          --password {{ user_pass }}
+          --rootfs {{ disk_storage }}:{{ disk_size }}
+          --searchdomain {{ net_domain }}
+          --ssh-public-keys {{ ssh_keys }}
+      no_log: true
+
+    - name: CT - Allow Docker
+      vars:
+        vmid_string: "vmid: {{ vmid }}"
+      shell: >
+        echo "lxc.apparmor.profile: unconfined\nlxc.cap.drop: \nlxc.cgroup.devices.allow: a" >> /etc/pve/lxc/{{ vmid }}.conf
+  when: vmid_string not in vm_list.stdout

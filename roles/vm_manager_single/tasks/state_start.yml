@@ -1,0 +1,29 @@
+---
+- include_tasks: util_vm_status.yml
+
+- block:
+  - name: Start VM
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    command: >
+      qm start {{ vmid }}
+    when: >
+      resource_type == 'vm' and
+      'running' not in vm_status.stdout
+
+  - name: Start CT
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    command: >
+      pct start {{ vmid }}
+    when: >
+      resource_type == 'ct' and
+      'running' not in ct_status.stdout
+
+  - name: Wait for SSH port become available
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    wait_for:
+      host: "{{ net_ip }}"
+      port: 22
+  when: vmid_string in vm_list.stdout

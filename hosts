@@ -3,15 +3,29 @@ spsrv
 spmaxi
 spmini
 
+[ct]
+
+
+[vm]
+
+
 [k8s_master]
 
+
 [k8s_nodes]
+
 
 [k8s:children]
 k8s_master
 k8s_nodes
 
 [k8s:vars] 
+ansible_user=centos
+
+[ct:vars]
+ansible_user=root
+
+[vm:vars]
 ansible_user=centos
 
 [proxmox:vars]

@@ -1,0 +1,26 @@
+---
+- include_tasks: util_vm_list.yml
+
+- block:
+  - name: Add VM to inventory group
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    add_host:
+      name: "{{ hostname }}"
+      ansible_host: "{{ net_ip }}"
+      groups: vm
+    changed_when: false
+    register: result
+    when: resource_type == 'vm'
+
+  - name: Add CT to inventory group
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    add_host:
+      name: "{{ hostname }}"
+      ansible_host: "{{ net_ip }}"
+      groups: ct
+    changed_when: false
+    register: result
+    when: resource_type == 'ct'
+  when: vmid_string in vm_list.stdout

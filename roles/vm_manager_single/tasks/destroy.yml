@@ -1,0 +1,25 @@
+---
+- include_tasks: util_pool_list.yml
+- include_tasks: util_vm_list.yml
+
+- block:
+  - name: Destroy VM
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      qm stop {{ vmid }} && qm destroy {{ vmid }}
+    when: resource_type == "vm"
+
+  - name: Destroy CT
+    vars:
+      vmid_string: "vmid: {{ vmid }}"
+    shell: >
+      pct stop {{ vmid }} && pct destroy {{ vmid }}
+    when: resource_type == "ct"
+  when: vmid_string in vm_list.stdout
+
+- name: Delete Resource Pool
+  command: >
+    pvesh delete /pools/{{ resourse_pool }}
+  ignore_errors: yes
+  when: resourse_pool in pool_list.stdout
