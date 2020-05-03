@@ -7,6 +7,8 @@
     vmid: 5501
     hostname: test-ct
     net_ip: 192.168.13.50
+    ct_other_options: >
+      --swap 0
 
   roles: 
     - vm_manager_single
