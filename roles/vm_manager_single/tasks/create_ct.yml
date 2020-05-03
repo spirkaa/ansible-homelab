@@ -1,8 +1,6 @@
 ---
 - block:
     - name: CT - Create
-      vars:
-        vmid_string: "vmid: {{ vmid }}"
       command: >
         pct create {{ vmid }} {{ ct_image }}
           --pool {{ resourse_pool }}
@@ -20,8 +18,6 @@
       no_log: true
 
     - name: CT - Allow Docker
-      vars:
-        vmid_string: "vmid: {{ vmid }}"
       shell: >
         echo "lxc.apparmor.profile: unconfined\nlxc.cap.drop: \nlxc.cgroup.devices.allow: a" >> /etc/pve/lxc/{{ vmid }}.conf
   when: vmid_string not in vm_list.stdout

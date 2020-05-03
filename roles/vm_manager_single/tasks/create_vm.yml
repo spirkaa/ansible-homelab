@@ -1,8 +1,6 @@
 ---
 - block:
     - name: Create VM
-      vars:
-        vmid_string: "vmid: {{ vmid }}"
       command: >
         qm create {{ vmid }}
           --pool {{ resourse_pool }}
@@ -19,22 +17,16 @@
           --sshkeys "{{ ssh_keys }}"
 
     - name: Set VM default user password
-      vars:
-        vmid_string: "vmid: {{ vmid }}"
       command: >
         qm set {{ vmid }}
           --cipassword {{ user_pass }}
       no_log: true
 
     - name: Import qcow2 image as VM disk
-      vars:
-        vmid_string: "vmid: {{ vmid }}"
       command: >
         qm importdisk {{ vmid }} {{ vm_image }} {{ disk_storage }}
 
     - name: Confige VM hardware
-      vars:
-        vmid_string: "vmid: {{ vmid }}"
       command: >
         qm set {{ vmid }}
           --scsihw virtio-scsi-pci
@@ -46,8 +38,6 @@
           --vga serial0
 
     - name: Resize VM disk
-      vars:
-        vmid_string: "vmid: {{ vmid }}"
       command: >
         qm resize {{ vmid }} scsi0 {{ disk_size }}G
   when: vmid_string not in vm_list.stdout

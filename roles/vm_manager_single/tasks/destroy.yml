@@ -4,15 +4,11 @@
 
 - block:
   - name: Destroy VM
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     shell: >
       qm stop {{ vmid }} && qm destroy {{ vmid }}
     when: resource_type == "vm"
 
   - name: Destroy CT
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     shell: >
       pct stop {{ vmid }} && pct destroy {{ vmid }}
     when: resource_type == "ct"

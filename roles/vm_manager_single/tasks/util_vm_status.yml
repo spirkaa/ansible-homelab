@@ -3,8 +3,6 @@
 
 - block:
   - name: Get VM status
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     shell: >
       qm status {{ vmid }}
     register: vm_status
@@ -12,8 +10,6 @@
     when: resource_type == 'vm'
 
   - name: Get CT status
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     shell: >
       pct status {{ vmid }}
     register: ct_status

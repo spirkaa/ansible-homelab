@@ -3,8 +3,6 @@
 
 - block:
   - name: Shutdown VM
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     shell: >
       qm shutdown {{ vmid }} && qm wait {{ vmid }} -timeout 60
     when: >
@@ -12,8 +10,6 @@
       'stopped' not in vm_status.stdout
 
   - name: Shutdown CT
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     shell: >
       pct shutdown {{ vmid }}
     when: >

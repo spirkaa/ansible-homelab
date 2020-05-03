@@ -3,8 +3,6 @@
 
 - block:
   - name: Add VM to inventory group
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     add_host:
       name: "{{ hostname }}"
       ansible_host: "{{ net_ip }}"
@@ -14,8 +12,6 @@
     when: resource_type == 'vm'
 
   - name: Add CT to inventory group
-    vars:
-      vmid_string: "vmid: {{ vmid }}"
     add_host:
       name: "{{ hostname }}"
       ansible_host: "{{ net_ip }}"
