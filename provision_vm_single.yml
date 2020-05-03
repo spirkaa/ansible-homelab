@@ -7,6 +7,8 @@
     vmid: 5601
     hostname: test-vm
     net_ip: 192.168.13.60
+    vm_other_options: >
+      --onboot 1
 
   roles: 
     - vm_manager_single

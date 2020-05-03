@@ -15,6 +15,7 @@
           --nameserver {{ net_dns }}
           --searchdomain {{ net_domain }}
           --sshkeys "{{ ssh_keys }}"
+          {{ vm_other_options | default('', true) }}
 
     - name: Set VM default user password
       command: >
