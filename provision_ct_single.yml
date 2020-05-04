@@ -1,5 +1,5 @@
 ---
-- hosts: spmaxi
+- hosts: spsrv
   gather_facts: no
 
   vars:
@@ -9,6 +9,9 @@
     net_ip: 192.168.13.50
     ct_other_options: >
       --swap 0
+    lxc_options:
+      - "lxc.cgroup.devices.allow: c 226:* rwm"
+      - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
 
   roles: 
     - vm_manager_single
