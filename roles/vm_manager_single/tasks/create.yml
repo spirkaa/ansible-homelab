@@ -1,6 +1,5 @@
 ---
 - include_tasks: util_pool_list.yml
-- include_tasks: util_vm_list.yml
 
 - name: Create resource pool
   command: >

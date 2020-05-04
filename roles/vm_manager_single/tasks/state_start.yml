@@ -2,14 +2,14 @@
 - include_tasks: util_vm_status.yml
 
 - block:
-  - name: Start VM
+  - name: VM - Start
     command: >
       qm start {{ vmid }}
     when: >
       resource_type == 'vm' and
       'running' not in vm_status.stdout
 
-  - name: Start CT
+  - name: CT - Start
     command: >
       pct start {{ vmid }}
     when: >

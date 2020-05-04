@@ -2,7 +2,7 @@
 - include_tasks: util_vm_list.yml
 
 - block:
-  - name: Add VM to inventory group
+  - name: VM - Add to inventory group
     add_host:
       name: "{{ hostname }}"
       ansible_host: "{{ net_ip }}"
@@ -11,7 +11,7 @@
     register: result
     when: resource_type == 'vm'
 
-  - name: Add CT to inventory group
+  - name: VM - Add to inventory group
     add_host:
       name: "{{ hostname }}"
       ansible_host: "{{ net_ip }}"

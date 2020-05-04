@@ -1,5 +1,5 @@
 ---
-- name: Get VM/CT resources list from Proxmox
+- name: Get resources list from Proxmox
   command: >
     pvesh get /cluster/resources --type vm  --output-format yaml
   register: vm_list

@@ -2,14 +2,14 @@
 - include_tasks: util_vm_list.yml
 
 - block:
-  - name: Get VM status
+  - name: VM - Get status
     shell: >
       qm status {{ vmid }}
     register: vm_status
     changed_when: false
     when: resource_type == 'vm'
 
-  - name: Get CT status
+  - name: CT - Get status
     shell: >
       pct status {{ vmid }}
     register: ct_status
