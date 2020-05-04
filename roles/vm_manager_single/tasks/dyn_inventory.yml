@@ -11,7 +11,7 @@
     register: result
     when: resource_type == 'vm'
 
-  - name: VM - Add to inventory group
+  - name: CT - Add to inventory group
     add_host:
       name: "{{ hostname }}"
       ansible_host: "{{ net_ip }}"
