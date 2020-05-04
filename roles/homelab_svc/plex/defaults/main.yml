@@ -1,0 +1,5 @@
+---
+app_path: /docker/plex
+puid: "1000"
+pgid: "1000"
+tz: "Europe/Moscow"

@@ -1,0 +1,32 @@
+---
+- hosts: spmini
+  gather_facts: no
+
+  vars:
+    resource_type: ct
+    vmid: 200
+    hostname: plex
+    comment: Plex
+    cores: 4
+    mem: 4096
+    disk_size: 100
+    net_ip: 192.168.10.10
+    net_vlan: 10
+    net_gw: 192.168.10.1
+    net_dns: 192.168.10.1
+    net_domain: home.devmem.ru
+    ct_other_options: >
+      --onboot 1
+      --mp0 volume=/mnt/pve/spsrv-downloads,mp=/docker/plex/downloads,replicate=0
+    lxc_options:
+      - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
+
+  roles: 
+    - vm_manager_single
+
+
+- hosts: plex
+  gather_facts: no
+
+  roles: 
+    - {role: homelab_svc/plex, tags: plex}
