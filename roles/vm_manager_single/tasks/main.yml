@@ -3,8 +3,8 @@
   include_tasks:
     file: create.yml
     apply:
-      tags: create
-  tags: create
+      tags: [create, init]
+  tags: [create, init]
 
 - name: Dynamic inventory tasks
   include_tasks:
@@ -24,12 +24,12 @@
   include_tasks:
     file: state_shutdown.yml
     apply:
-      tags: [never, shutdown]
-  tags: [never, shutdown]
+      tags: [never, shutdown, stop]
+  tags: [never, shutdown, stop]
 
 - name: Proxmox resource destroy tasks
   include_tasks:
     file: destroy.yml
     apply:
-      tags: [never, destroy]
-  tags: [never, destroy]
+      tags: [never, destroy, delete]
+  tags: [never, destroy, delete]
