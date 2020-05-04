@@ -1,24 +1,44 @@
 ---
-- block:
-    - name: CT - Create
-      command: >
-        pct create {{ vmid }} {{ ct_image }}
-          --pool {{ resourse_pool }}
-          --hostname {{ hostname }}
-          --description "{{ comment }}"
-          --cores {{ cores }}
-          --memory {{ mem }}
-          --nameserver {{ net_dns }}
-          --net0 name=eth0,bridge={{ net_br }},gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }},tag={{ net_vlan }}
-          --ostype {{ ct_ostype }}
-          --password {{ user_pass }}
-          --rootfs {{ disk_storage }}:{{ disk_size }}
-          --searchdomain {{ net_domain }}
-          --ssh-public-keys {{ ssh_keys }}
-          {{ ct_other_options | default('', true) }}
-      no_log: true
+- include_tasks: util_vm_list.yml
 
-    - name: CT - Allow Docker
-      shell: >
-        echo "lxc.apparmor.profile: unconfined\nlxc.cap.drop: \nlxc.cgroup.devices.allow: a" >> /etc/pve/lxc/{{ vmid }}.conf
+- block:
+  - name: CT - Create
+    command: >
+      pct create {{ vmid }} {{ ct_image }}
+        --pool {{ resourse_pool }}
+        --hostname {{ hostname }}
+        --description "{{ comment }}"
+        --cores {{ cores }}
+        --memory {{ mem }}
+        --nameserver {{ net_dns }}
+        --net0 name=eth0,bridge={{ net_br }},gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }},tag={{ net_vlan }}
+        --ostype {{ ct_ostype }}
+        --password {{ user_pass }}
+        --rootfs {{ disk_storage }}:{{ disk_size }}
+        --searchdomain {{ net_domain }}
+        --ssh-public-keys {{ ssh_keys }}
+        {{ ct_other_options | default('', true) }}
+    no_log: true
+
+  - name: CT - Allow Docker
+    shell: >
+      echo "lxc.apparmor.profile: unconfined\nlxc.cap.drop: \nlxc.cgroup.devices.allow: a" >> /etc/pve/lxc/{{ vmid }}.conf
+
+  - block:
+    - name: CT - Copy config to tmp
+      command: >
+        cp /etc/pve/lxc/{{ vmid }}.conf /tmp/{{ vmid }}.conf
+
+    - name: CT - Add lxc options
+      lineinfile:
+        path: "/tmp/{{ vmid }}.conf"
+        line: "{{ lxc_options_item }}"
+      loop_control:
+        loop_var: lxc_options_item
+      loop: "{{ lxc_options }}"
+
+    - name: CT - Copy config back
+      command: >
+        cp /tmp/{{ vmid }}.conf /etc/pve/lxc/{{ vmid }}.conf
+    when: lxc_options is defined
   when: vmid_string not in vm_list.stdout
