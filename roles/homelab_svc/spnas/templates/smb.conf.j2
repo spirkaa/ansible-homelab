@@ -1,0 +1,67 @@
+[global]
+    server role = standalone server
+    workgroup = WORKGROUP
+    dns proxy = no
+    smb ports = 445
+    interfaces = eth0
+    bind interfaces only = yes
+    use sendfile = yes
+
+    log file = /dev/stdout
+    logging = file
+    max log size = 50
+
+    security = user
+    unix password sync = yes
+    map to guest = bad user
+    inherit acls = yes
+    acl allow execute always = yes
+    force user = {{ samba_user }}
+
+    load printers = no
+    printing = bsd
+    printcap name = /dev/null
+    disable spoolss = yes
+
+    veto files = /._*/.DS_Store/.T*/Thumbs.db/Network Trash Folder/Temporary Items/
+    delete veto files = yes
+    fruit:model = {{ samba_mimic_model }}
+
+[timemachine]
+    fruit:aapl = yes
+    fruit:time machine = yes
+    fruit:time machine max size = 1 T
+    path = /opt/data/backups/timemachine
+    valid users = {{ samba_user }}
+    browseable = no
+    writable = yes
+    vfs objects = catia fruit streams_xattr
+
+[winbackup]
+    path = /opt/data/backups/windows
+    public = no
+    writeable = yes
+    valid users = {{ samba_user }}
+
+[data]
+    path = /opt/data
+    public = no
+    writeable = yes
+    browseable = no
+    valid users = {{ samba_user }}
+
+[pvmhome]
+    path = /opt/data/pvmhome
+    public = no
+    writeable = yes
+    valid users = {{ samba_user }}
+
+[public]
+    path = /opt/data/public
+    public = yes
+    writable = yes
+
+[downloads]
+    path = /opt/data/downloads
+    public = yes
+    writeable = no

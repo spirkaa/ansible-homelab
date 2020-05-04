@@ -1,0 +1,36 @@
+---
+- hosts: spsrv
+  gather_facts: no
+
+  vars:
+    resource_type: ct
+    vmid: 201
+    hostname: spnas
+    comment: spnas
+    cores: 4
+    mem: 4096
+    disk_size: 16
+    net_ip: 192.168.10.11
+    net_vlan: 10
+    net_gw: 192.168.10.1
+    net_dns: 192.168.10.1
+    net_domain: home.devmem.ru
+    ct_other_options: >
+      --onboot 1
+      --mp0 volume=/mnt/tank1/ds1/backups/timemachine,mp=/docker/spnas/data/backups/timemachine,replicate=0
+      --mp1 volume=/mnt/tank1/ds1/backups/windows,mp=/docker/spnas/data/backups/windows,replicate=0
+      --mp2 volume=/mnt/tank1/ds1/cloud,mp=/docker/spnas/data/cloud,replicate=0
+      --mp3 volume=/mnt/tank1/ds1/docs,mp=/docker/spnas/data/docs,replicate=0
+      --mp4 volume=/mnt/tank1/ds1/downloads,mp=/docker/spnas/data/downloads,replicate=0
+      --mp5 volume=/mnt/tank1/ds1/public,mp=/docker/spnas/data/public,replicate=0
+      --mp6 volume=/mnt/tank1/ds1/pvmhome,mp=/docker/spnas/data/pvmhome,replicate=0
+
+  roles: 
+    - vm_manager_single
+
+
+- hosts: spnas
+  gather_facts: no
+
+  roles: 
+    - {role: homelab_svc/spnas, tags: spnas}

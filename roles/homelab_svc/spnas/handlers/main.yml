@@ -1,0 +1,8 @@
+---
+- name: samba - restart
+  docker_container:
+    name: samba
+    state: started
+    restart: yes
+  no_log: true
+  when: not samba_start.changed
