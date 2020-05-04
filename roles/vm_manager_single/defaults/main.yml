@@ -6,10 +6,10 @@ vmid_string: "vmid: {{ vmid }}"
 hostname: tpl
 net_ip: 192.168.13.55
 
-vm_image: /mnt/pve/spmaxi-proxmox/template/qcow2/CentOS-7-x86_64-genericcloud-20200417.qcow2
+vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/CentOS-7-x86_64-genericcloud-20200417.qcow2
 vm_ostype: l26
 
-ct_image: spmaxi-proxmox:vztmpl/centos-7.7-docker-20200425.tar.gz
+ct_image: spsrv-proxmox:vztmpl/centos-7.7-docker-20200425.tar.gz
 ct_ostype: centos
 
 resourse_pool: ansible
