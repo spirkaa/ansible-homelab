@@ -1,8 +1,7 @@
-Роль Ansible: Proxmox common
-===
+# Роль Ansible: Proxmox common
 
 Роль Ansible, которая устанавливает стандартный набор ПО и твики для Proxmox.
 
-Зависимости
----
+## Зависимости
+
 Нет

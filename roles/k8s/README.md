@@ -1,9 +1,8 @@
-Роль Ansible: Kubernetes
-===
+# Роль Ansible: Kubernetes
 
 Роль Ansible, которая устанавливает и настраивает пререквизиты, а затем разворачивает кластер Kubrenetes.
 
-Зависимости
----
+## Зависимости
+
 * geerlingguy.docker
 * geerlingguy.kubernetes

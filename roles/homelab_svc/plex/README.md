@@ -1,11 +1,11 @@
-Роль Ansible: Plex
-===
+# Роль Ansible: Plex
 
 Роль Ansible, которая запускает службу доступа к медиаконтенту в составе Docker контейнеров:
-  * Plex
-  * Tautulli
-  * Ombi
 
-Зависимости
----
+* Plex
+* Tautulli
+* Ombi
+
+## Зависимости
+
 Нет
