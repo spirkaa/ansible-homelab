@@ -1,0 +1,17 @@
+---
+- name: ombi - start
+  docker_container:
+    name: ombi
+    image: linuxserver/ombi:latest
+    pull: yes
+    ports:
+      - "3579:3579"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/ombi/config:/config"
+    restart_policy: unless-stopped
+    state: started
+  tags: ombi

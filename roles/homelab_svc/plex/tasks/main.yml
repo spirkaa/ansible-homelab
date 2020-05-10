@@ -1,71 +1,16 @@
 ---
-- name: plex - run
-  docker_container:
-    name: plex
-    image: linuxserver/plex:latest
-    pull: yes
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      VERSION: "latest"
-    devices:
-      - "/dev/dri:/dev/dri"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/dev/shm:/ram_transcode"
-      - "{{ app_path }}/plex/config:/config"
-      - "{{ app_path }}/downloads:/storage/downloads"
-    network_mode: host
-    restart_policy: unless-stopped
-    state: started
+- name: plex
+  include_tasks: plex.yml
   tags: plex
 
-- name: tautulli - run
-  docker_container:
-    name: tautulli
-    image: linuxserver/tautulli:latest
-    pull: yes
-    ports:
-      - "8181:8181"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/tautulli/config:/config"
-      - "{{ app_path }}/plex/config/Library/Application Support/Plex Media Server/Logs:/logs"
-    restart_policy: unless-stopped
-    state: started
+- name: tautulli
+  include_tasks: tautulli.yml
   tags: tautulli
 
-- name: ombi - run
-  docker_container:
-    name: ombi
-    image: linuxserver/ombi:latest
-    pull: yes
-    ports:
-      - "3579:3579"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/ombi/config:/config"
-    restart_policy: unless-stopped
-    state: started
+- name: ombi
+  include_tasks: ombi.yml
   tags: ombi
 
-- name: airvideohd - start
-  docker_container:
-    name: airvideohd
-    image: dmaxwell/airvideohd:latest
-    pull: yes
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/dev/shm:/conversionPath"
-      - "{{ app_path }}/airvideohd/config:/config"
-      - "{{ app_path }}/downloads/Video:/videos"
-    network_mode: host
-    restart_policy: unless-stopped
-    state: started
+- name: airvideohd
+  include_tasks: airvideohd.yml
   tags: airvideohd

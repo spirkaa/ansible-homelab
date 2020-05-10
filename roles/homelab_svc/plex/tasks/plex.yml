@@ -1,0 +1,21 @@
+---
+- name: plex - start
+  docker_container:
+    name: plex
+    image: linuxserver/plex:latest
+    pull: yes
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      VERSION: "latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/dev/shm:/ram_transcode"
+      - "{{ app_path }}/plex/config:/config"
+      - "{{ app_path }}/downloads:/storage/downloads"
+    devices:
+      - "/dev/dri:/dev/dri"
+    network_mode: host
+    restart_policy: unless-stopped
+    state: started
+  tags: plex
