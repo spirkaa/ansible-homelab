@@ -1,0 +1,8 @@
+---
+- name: gitea
+  include_tasks: gitea.yml
+  tags: gitea
+
+- name: code
+  include_tasks: code.yml
+  tags: code

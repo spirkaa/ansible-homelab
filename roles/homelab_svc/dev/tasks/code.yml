@@ -1,0 +1,23 @@
+---
+- name: code - start
+  docker_container:
+    name: code
+    image: linuxserver/code-server:latest
+    pull: yes
+    ports:
+      - "8443:8443"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+      PASSWORD: "{{ code_pass }}"
+      SUDO_PASSWORD: "{{ code_pass }}"
+      DOCKER_MODS: "linuxserver/mods:code-server-docker|linuxserver/mods:code-server-python3"
+    volumes:
+      - "/usr/bin/docker:/usr/bin/docker:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "{{ app_path }}/code/config:/config" 
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: code

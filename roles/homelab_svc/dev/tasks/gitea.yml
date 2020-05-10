@@ -1,0 +1,111 @@
+---
+- name: gitea-db - start
+  docker_container:
+    name: gitea-db
+    image: yobasystems/alpine-mariadb:latest
+    pull: yes
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ gitea_db_root_pass }}"
+      MYSQL_DATABASE: "{{ gitea_db_user }}"
+      MYSQL_USER: "{{ gitea_db_user }}"
+      MYSQL_PASSWORD: "{{ gitea_db_pass }}"
+      MYSQL_CHARSET: "utf8mb4"
+      MYSQL_COLLATION: "utf8mb4_unicode_ci"
+    volumes:
+      - "{{ app_path }}/gitea/db:/var/lib/mysql" 
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: gitea
+
+- name: gitea - start
+  docker_container:
+    name: gitea
+    image: gitea/gitea:latest
+    pull: yes
+    ports:
+      - "3000:3000"
+      - "127.0.0.1:2222:22"
+    env:
+      USER_UID: "{{ puid }}"
+      USER_GID: "{{ pgid }}"
+      DB_TYPE: "mysql"
+      DB_HOST: "gitea-db:3306"
+      DB_NAME: "{{ gitea_db_user }}"
+      DB_USER: "{{ gitea_db_user }}"
+      DB_PASSWD: "{{ gitea_db_pass }}"
+      APP_NAME: "Gitea"
+      RUN_MODE: "prod"
+      DOMAIN: "git.devmem.ru"
+      SSH_DOMAIN: "git.devmem.ru"
+      ROOT_URL: "https://git.devmem.ru/"
+      LFS_START_SERVER: "true"
+      DISABLE_REGISTRATION: "true"
+      REQUIRE_SIGNIN_VIEW: "true"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ app_path }}/gitea/data:/data" 
+    links:
+      - "gitea-db:gitea-db"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: gitea
+
+- name: gitea - ssh passthrough - create dir
+  file:
+    path: /app/gitea
+    state: directory
+    recurse: yes
+  tags: gitea
+
+- name: gitea - ssh passthrough - copy files
+  copy:
+    src: files/gitea
+    dest: /app/gitea
+    mode: "0755"
+  tags: gitea
+
+- name: gitea - ssh passthrough - create group
+  group:
+    name: git
+    gid: "{{ pgid }}"
+  tags: gitea
+
+- name: gitea - ssh passthrough - create user
+  user:
+    name: git
+    uid: "{{ puid }}"
+    group: git
+    generate_ssh_key: yes
+    password: ""
+    update_password: on_create
+  tags: gitea
+
+- name: gitea - ssh passthrough - create authorized_keys symlink
+  file:
+    src: "{{ app_path }}/gitea/data/git/.ssh/authorized_keys"
+    dest: "/home/git/.ssh/authorized_keys"
+    state: link
+    owner: git
+    group: git
+    force: yes
+    follow: no
+  tags: gitea
+
+- name: gitea - ssh passthrough - get id_rsa.pub content
+  command: cat "/home/git/.ssh/id_rsa.pub"
+  register: git_key
+  changed_when: no
+  tags: gitea
+
+- name: gitea - ssh passthrough - add ssh key
+  lineinfile:
+    path: "{{ app_path }}/gitea/data/git/.ssh/authorized_keys"
+    line: no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ git_key.stdout }}
+    owner: git
+    group: git
+    create: yes
+    state: present
+  tags: gitea
