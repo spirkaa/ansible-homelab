@@ -214,21 +214,6 @@
     state: started
   tags: bazarr
 
-- name: airvideohd - start
-  docker_container:
-    name: airvideohd
-    image: dmaxwell/airvideohd:latest
-    pull: yes
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/dev/shm:/conversionPath"
-      - "{{ app_path }}/airvideohd/config:/config"
-      - "{{ app_path }}/data/downloads/Video:/videos"
-    network_mode: host
-    restart_policy: unless-stopped
-    state: started
-  tags: airvideohd
-
 - name: samba - create dir
   file:
     path: "{{ app_path }}/samba/config"
