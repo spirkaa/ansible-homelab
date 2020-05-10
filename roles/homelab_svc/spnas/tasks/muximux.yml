@@ -1,0 +1,25 @@
+---
+- name: muximux - start
+  docker_container:
+    name: muximux
+    image: linuxserver/muximux:latest
+    pull: yes
+    ports:
+      - "80:80"
+      - "443:443"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/muximux/config:/config"
+    restart_policy: unless-stopped
+    state: started
+  tags: muximux
+
+- name: muximux - copy files
+  copy:
+    src: files/settings.ini.php
+    dest: "{{ app_path }}/muximux/config/www/muximux"
+    force: no
+  tags: muximux

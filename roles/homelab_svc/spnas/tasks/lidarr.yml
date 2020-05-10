@@ -1,0 +1,18 @@
+---
+- name: lidarr - start
+  docker_container:
+    name: lidarr
+    image: linuxserver/lidarr:latest
+    pull: yes
+    ports:
+      - "8686:8686"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/lidarr/config:/config"
+      - "{{ app_path }}/data/downloads:/downloads"
+    restart_policy: unless-stopped
+    state: started
+  tags: lidarr

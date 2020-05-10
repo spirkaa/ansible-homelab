@@ -1,0 +1,31 @@
+---
+- name: monitorrent - create dir
+  file:
+    path: "{{ app_path }}/monitorrent/config"
+    state: directory
+    recurse: yes
+  tags: monitorrent
+
+- name: monitorrent - touch db
+  file:
+    path: "{{ app_path }}/monitorrent/config/monitorrent.db"
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+  tags: monitorrent
+
+- name: monitorrent - start
+  docker_container:
+    name: monitorrent
+    image: werwolfby/alpine-monitorrent:latest
+    pull: yes
+    ports:
+    - "6687:6687"
+    env:
+      TZ: "{{ tz }}"
+    volumes:
+    - "/etc/localtime:/etc/localtime:ro"
+    - "{{ app_path }}/monitorrent/config/monitorrent.db:/var/www/monitorrent/monitorrent.db"
+    restart_policy: unless-stopped
+    state: started
+  tags: monitorrent

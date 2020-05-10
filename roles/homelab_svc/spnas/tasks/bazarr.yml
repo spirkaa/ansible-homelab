@@ -1,0 +1,18 @@
+---
+- name: bazarr - start
+  docker_container:
+    name: bazarr
+    image: linuxserver/bazarr:latest
+    pull: yes
+    ports:
+      - "6767:6767"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/bazarr/config:/config"
+      - "{{ app_path }}/data/downloads:/downloads"
+    restart_policy: unless-stopped
+    state: started
+  tags: bazarr

@@ -1,306 +1,40 @@
 ---
-- name: muximux - start
-  docker_container:
-    name: muximux
-    image: linuxserver/muximux:latest
-    pull: yes
-    ports:
-      - "80:80"
-      - "443:443"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/muximux/config:/config"
-    restart_policy: unless-stopped
-    state: started
+- name: muximux
+  include_tasks: muximux.yml
   tags: muximux
 
-- name: muximux - copy files
-  copy:
-    src: files/settings.ini.php
-    dest: "{{ app_path }}/muximux/config/www/muximux"
-    force: no
-  tags: muximux
-
-- name: delugevpn - create dir
-  file:
-    path: "{{ app_path }}/delugevpn/config/openvpn"
-    state: directory
-    recurse: yes
+- name: delugevpn
+  include_tasks: delugevpn.yml
   tags: delugevpn
 
-- name: delugevpn - copy files
-  copy:
-    src: files/pia-czech.ovpn
-    dest: "{{ app_path }}/delugevpn/config/openvpn"
-  tags: delugevpn
-
-- name: delugevpn - start
-  docker_container:
-    name: delugevpn
-    image: binhex/arch-delugevpn:test
-    pull: yes
-    ports:
-      - "8112:8112"
-      - "8118:8118"
-      - "58846:58846"
-      - "58946:58946"
-    env:
-      VPN_ENABLED: "yes"
-      VPN_USER: "{{ delugevpn_vpn_user }}"
-      VPN_PASS: "{{ delugevpn_vpn_pass }}"
-      VPN_PROV: "pia"
-      STRICT_PORT_FORWARD: "yes"
-      ENABLE_PRIVOXY: "yes"
-      LAN_NETWORK: "192.168.10.0/24,10.1.100.0/24"
-      NAME_SERVERS: "209.222.18.222,84.200.69.80,37.235.1.174,1.1.1.1,209.222.18.218,37.235.1.177,84.200.70.40,1.0.0.1"
-      DELUGE_DAEMON_LOG_LEVEL: "warning"
-      DELUGE_WEB_LOG_LEVEL: "warning"
-      ADDITIONAL_PORTS: "1234"
-      DEBUG: "false"
-      UMASK: "022"
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "delugevpn-data:/data"
-      - "{{ app_path }}/delugevpn/config:/config"
-      - "{{ app_path }}/data/downloads:/downloads"
-    capabilities:
-      - net_admin
-    restart_policy: unless-stopped
-    state: started
-  no_log: true
-  tags: delugevpn
-
-- name: jackett - create dir
-  file:
-    path: "{{ app_path }}/jackett"
-    state: directory
-    recurse: yes
+- name: jackett
+  include_tasks: jackett.yml
   tags: jackett
 
-- name: jackett - copy files
-  copy:
-    src: files/Definitions
-    dest: "{{ app_path }}/jackett"
-  tags: jackett
-
-- name: jackett - start
-  docker_container:
-    name: jackett
-    image: linuxserver/jackett:latest
-    pull: yes
-    ports:
-      - "9117:9117"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/jackett/config:/config"
-      - "{{ app_path }}/data/downloads:/downloads"
-      - "{{ app_path }}/jackett/Definitions/bitru.yml:/app/Jackett/Definitions/bitru.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/eniahd.yml:/app/Jackett/Definitions/eniahd.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/kinozal.yml:/app/Jackett/Definitions/kinozal.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/riperam.yml:/app/Jackett/Definitions/riperam.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/vanila.yml:/app/Jackett/Definitions/vanila.yml:ro"
-    restart_policy: unless-stopped
-    state: started
-  tags: jackett
-
-- name: monitorrent - create dir
-  file:
-    path: "{{ app_path }}/monitorrent/config"
-    state: directory
-    recurse: yes
+- name: monitorrent
+  include_tasks: monitorrent.yml
   tags: monitorrent
 
-- name: monitorrent- touch db
-  file:
-    path: "{{ app_path }}/monitorrent/config/monitorrent.db"
-    state: touch
-    access_time: preserve
-    modification_time: preserve
-  tags: monitorrent
-
-- name: monitorrent - start
-  docker_container:
-    name: monitorrent
-    image: werwolfby/alpine-monitorrent:latest
-    pull: yes
-    ports:
-    - "6687:6687"
-    env:
-      TZ: "{{ tz }}"
-    volumes:
-    - "/etc/localtime:/etc/localtime:ro"
-    - "{{ app_path }}/monitorrent/config/monitorrent.db:/var/www/monitorrent/monitorrent.db"
-    restart_policy: unless-stopped
-    state: started
-  tags: monitorrent
-
-- name: sonarr - start
-  docker_container:
-    name: sonarr
-    image: linuxserver/sonarr:preview
-    pull: yes
-    ports:
-      - "8989:8989"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/sonarr/config:/config"
-      - "{{ app_path }}/data/downloads:/downloads"
-    restart_policy: unless-stopped
-    state: started
+- name: sonarr
+  include_tasks: sonarr.yml
   tags: sonarr
 
-- name: radarr - start
-  docker_container:
-    name: radarr
-    image: linuxserver/radarr:preview
-    pull: yes
-    ports:
-      - "7878:7878"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/radarr/config:/config"
-      - "{{ app_path }}/data/downloads:/downloads"
-    restart_policy: unless-stopped
-    state: started
+- name: radarr
+  include_tasks: radarr.yml
   tags: radarr
 
-- name: lidarr - start
-  docker_container:
-    name: lidarr
-    image: linuxserver/lidarr:latest
-    pull: yes
-    ports:
-      - "8686:8686"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/lidarr/config:/config"
-      - "{{ app_path }}/data/downloads:/downloads"
-    restart_policy: unless-stopped
-    state: started
+- name: lidarr
+  include_tasks: lidarr.yml
   tags: lidarr
 
-- name: bazarr - start
-  docker_container:
-    name: bazarr
-    image: linuxserver/bazarr:latest
-    pull: yes
-    ports:
-      - "6767:6767"
-    env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-    volumes:
-      - "{{ app_path }}/bazarr/config:/config"
-      - "{{ app_path }}/data/downloads:/downloads"
-    restart_policy: unless-stopped
-    state: started
+- name: bazarr
+  include_tasks: bazarr.yml
   tags: bazarr
 
-- name: samba - create dir
-  file:
-    path: "{{ app_path }}/samba/config"
-    state: directory
-    recurse: yes
+- name: samba
+  include_tasks: samba.yml
   tags: samba
 
-- name: samba - copy files
-  template:
-    src: templates/smb.conf.j2
-    dest: "{{ app_path }}/samba/config/smb.conf"
-  notify: samba - restart
-  tags: samba
-
-- name: samba - start
-  docker_container:
-    name: samba
-    image: mbentley/timemachine:smb
-    pull: yes
-    env:
-      DEBUG_LEVEL: "0"
-      CUSTOM_SMB_CONF: "true"
-      SHARE_NAME: "timemachine"
-      MIMIC_MODEL: "{{ samba_mimic_model }}"
-      TM_UID: "{{ puid }}"
-      TM_GID: "{{ pgid }}"
-      TM_USERNAME: "{{ samba_user }}"
-      TM_GROUPNAME: "{{ samba_user }}"
-      PASSWORD: "{{ samba_pass }}"
-    volumes:
-      - "{{ app_path }}/data:/opt/data"
-      - "{{ app_path }}/samba/config/smb.conf:/etc/samba/smb.conf"
-      - "samba-var-lib:/var/lib/samba"
-      - "samba-var-cache:/var/cache/samba"
-      - "samba-run:/run/samba"
-    network_mode: host
-    restart_policy: unless-stopped
-    state: started
-  register: samba_start
-  no_log: true
-  tags: samba
-
-- name: nextcloud-db - start
-  docker_container:
-    name: nextcloud-db
-    image: yobasystems/alpine-mariadb:latest
-    pull: yes
-    env:
-      MYSQL_ROOT_PASSWORD: "{{ nextcloud_db_root_pass }}"
-      MYSQL_DATABASE: "{{ nextcloud_db_user }}"
-      MYSQL_USER: "{{ nextcloud_db_user }}"
-      MYSQL_PASSWORD: "{{ nextcloud_db_pass }}"
-      MYSQL_CHARSET: "utf8mb4"
-      MYSQL_COLLATION: "utf8mb4_unicode_ci"
-    volumes:
-      - "{{ app_path }}/nextcloud/db:/var/lib/mysql"
-    restart_policy: unless-stopped
-    state: started
-  no_log: true
-  tags: nextcloud
-
-- name: nextcloud - start
-  docker_container:
-    name: nextcloud
-    image: suprovsky/nextcloud:latest
-    pull: yes
-    ports:
-      - "8888:8888"
-    env:
-      UID: "{{ puid }}"
-      GID: "{{ pgid }}"
-      TZ: "{{ tz }}"
-      DB_TYPE: "mysql"
-      DB_HOST: "nextcloud-db"
-      DB_NAME: "{{ nextcloud_db_user }}"
-      DB_USER: "{{ nextcloud_db_user }}"
-      DB_PASSWORD: "{{ nextcloud_db_pass }}"
-      ADMIN_USER: "admin"
-      ADMIN_PASSWORD: "admin"
-    volumes:
-      - "{{ app_path }}/data/cloud/nextcloud:/data"
-      - "{{ app_path }}/nextcloud/config:/config"
-      - "{{ app_path }}/nextcloud/apps:/apps2"
-      - "nextcloud-themes:/nextcloud/themes"
-    links:
-      - "nextcloud-db:nextcloud-db"
-    restart_policy: unless-stopped
-    state: started
-  no_log: true
+- name: nextcloud
+  include_tasks: nextcloud.yml
   tags: nextcloud

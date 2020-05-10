@@ -1,0 +1,42 @@
+---
+- name: samba - create dir
+  file:
+    path: "{{ app_path }}/samba/config"
+    state: directory
+    recurse: yes
+  tags: samba
+
+- name: samba - copy files
+  template:
+    src: templates/smb.conf.j2
+    dest: "{{ app_path }}/samba/config/smb.conf"
+  notify: samba - restart
+  tags: samba
+
+- name: samba - start
+  docker_container:
+    name: samba
+    image: mbentley/timemachine:smb
+    pull: yes
+    env:
+      DEBUG_LEVEL: "0"
+      CUSTOM_SMB_CONF: "true"
+      SHARE_NAME: "timemachine"
+      MIMIC_MODEL: "{{ samba_mimic_model }}"
+      TM_UID: "{{ puid }}"
+      TM_GID: "{{ pgid }}"
+      TM_USERNAME: "{{ samba_user }}"
+      TM_GROUPNAME: "{{ samba_user }}"
+      PASSWORD: "{{ samba_pass }}"
+    volumes:
+      - "{{ app_path }}/data:/opt/data"
+      - "{{ app_path }}/samba/config/smb.conf:/etc/samba/smb.conf"
+      - "samba-var-lib:/var/lib/samba"
+      - "samba-var-cache:/var/cache/samba"
+      - "samba-run:/run/samba"
+    network_mode: host
+    restart_policy: unless-stopped
+    state: started
+  register: samba_start
+  no_log: true
+  tags: samba
