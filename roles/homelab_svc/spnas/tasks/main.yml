@@ -270,3 +270,52 @@
   register: samba_start
   no_log: true
   tags: samba
+
+- name: nextcloud-db - start
+  docker_container:
+    name: nextcloud-db
+    image: yobasystems/alpine-mariadb:latest
+    pull: yes
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ nextcloud_db_root_pass }}"
+      MYSQL_DATABASE: "{{ nextcloud_db_user }}"
+      MYSQL_USER: "{{ nextcloud_db_user }}"
+      MYSQL_PASSWORD: "{{ nextcloud_db_pass }}"
+      MYSQL_CHARSET: "utf8mb4"
+      MYSQL_COLLATION: "utf8mb4_unicode_ci"
+    volumes:
+      - "{{ app_path }}/nextcloud/db:/var/lib/mysql"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: nextcloud
+
+- name: nextcloud - start
+  docker_container:
+    name: nextcloud
+    image: suprovsky/nextcloud:latest
+    pull: yes
+    ports:
+      - "8888:8888"
+    env:
+      UID: "{{ puid }}"
+      GID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+      DB_TYPE: "mysql"
+      DB_HOST: "nextcloud-db"
+      DB_NAME: "{{ nextcloud_db_user }}"
+      DB_USER: "{{ nextcloud_db_user }}"
+      DB_PASSWORD: "{{ nextcloud_db_pass }}"
+      ADMIN_USER: "admin"
+      ADMIN_PASSWORD: "admin"
+    volumes:
+      - "{{ app_path }}/data/cloud/nextcloud:/data"
+      - "{{ app_path }}/nextcloud/config:/config"
+      - "{{ app_path }}/nextcloud/apps:/apps2"
+      - "nextcloud-themes:/nextcloud/themes"
+    links:
+      - "nextcloud-db:nextcloud-db"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: nextcloud
