@@ -1,0 +1,8 @@
+---
+- name: portainer
+  include_tasks: portainer.yml
+  tags: portainer
+
+- name: unifi
+  include_tasks: unifi.yml
+  tags: unifi

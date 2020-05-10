@@ -1,0 +1,17 @@
+---
+- name: portainer - start
+  docker_container:
+    name: portainer
+    image: portainer/portainer:latest
+    pull: yes
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "{{ app_path }}/portainer/data:/data"
+    command: -H unix:///var/run/docker.sock
+    restart_policy: unless-stopped
+    state: started
+  tags: portainer
