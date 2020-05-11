@@ -17,7 +17,7 @@
 - name: monitorrent - start
   docker_container:
     name: monitorrent
-    image: werwolfby/alpine-monitorrent:latest
+    image: "{{ monitorrent_image }}"
     pull: yes
     ports:
     - "6687:6687"

@@ -2,7 +2,7 @@
 - name: bazarr - start
   docker_container:
     name: bazarr
-    image: linuxserver/bazarr:latest
+    image: "{{ bazarr_image }}"
     pull: yes
     ports:
       - "6767:6767"

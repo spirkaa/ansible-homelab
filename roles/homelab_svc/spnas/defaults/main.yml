@@ -4,6 +4,18 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
+bazarr_image: linuxserver/bazarr:amd64-v0.8.4.3-ls77
+delugevpn_image: binhex/arch-delugevpn:2.0.4.dev23_g2f1c008a2-3-02
+jackett_image: linuxserver/jackett:v0.16.324-ls64
+lidarr_image: linuxserver/lidarr:0.7.1.1679-ls3
+monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
+muximux_image: linuxserver/muximux:66b11488-ls45
+nextcloud_db_image: yobasystems/alpine-mariadb:10.4.12
+nextcloud_image: suprovsky/nextcloud:latest
+radarr_image: linuxserver/radarr:3.0.0.2912-ls6
+samba_image: mbentley/timemachine:smb
+sonarr_image: linuxserver/sonarr:3.0.3.803-ls2
+
 delugevpn_vpn_user: "p2632588"
 delugevpn_vpn_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256

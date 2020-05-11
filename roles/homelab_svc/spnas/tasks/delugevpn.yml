@@ -15,7 +15,7 @@
 - name: delugevpn - start
   docker_container:
     name: delugevpn
-    image: binhex/arch-delugevpn:test
+    image: "{{ delugevpn_image }}"
     pull: yes
     ports:
       - "8112:8112"

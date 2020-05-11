@@ -15,7 +15,7 @@
 - name: jackett - start
   docker_container:
     name: jackett
-    image: linuxserver/jackett:latest
+    image: "{{ jackett_image }}"
     pull: yes
     ports:
       - "9117:9117"

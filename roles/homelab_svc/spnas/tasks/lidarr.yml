@@ -2,7 +2,7 @@
 - name: lidarr - start
   docker_container:
     name: lidarr
-    image: linuxserver/lidarr:latest
+    image: "{{ lidarr_image }}"
     pull: yes
     ports:
       - "8686:8686"

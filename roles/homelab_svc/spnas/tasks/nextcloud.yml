@@ -2,7 +2,7 @@
 - name: nextcloud-db - start
   docker_container:
     name: nextcloud-db
-    image: yobasystems/alpine-mariadb:latest
+    image: "{{ nextcloud_db_image }}"
     pull: yes
     env:
       MYSQL_ROOT_PASSWORD: "{{ nextcloud_db_root_pass }}"
@@ -21,7 +21,7 @@
 - name: nextcloud - start
   docker_container:
     name: nextcloud
-    image: suprovsky/nextcloud:latest
+    image: "{{ nextcloud_image }}"
     pull: yes
     ports:
       - "8888:8888"

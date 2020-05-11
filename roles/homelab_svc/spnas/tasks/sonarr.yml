@@ -2,7 +2,7 @@
 - name: sonarr - start
   docker_container:
     name: sonarr
-    image: linuxserver/sonarr:preview
+    image: "{{ sonarr_image }}"
     pull: yes
     ports:
       - "8989:8989"

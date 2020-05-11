@@ -16,7 +16,7 @@
 - name: samba - start
   docker_container:
     name: samba
-    image: mbentley/timemachine:smb
+    image: "{{ samba_image }}"
     pull: yes
     env:
       DEBUG_LEVEL: "0"
