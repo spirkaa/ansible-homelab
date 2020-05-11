@@ -1,0 +1,18 @@
+---
+- name: heimdall - start
+  docker_container:
+    name: heimdall
+    image: linuxserver/heimdall:latest
+    pull: yes
+    ports:
+      - "80:80"
+      - "443:443"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/heimdall/config:/config"
+    restart_policy: unless-stopped
+    state: started
+  tags: heimdall

@@ -1,4 +1,8 @@
 ---
+- name: heimdall
+  include_tasks: heimdall.yml
+  tags: heimdall
+
 - name: portainer
   include_tasks: portainer.yml
   tags: portainer
