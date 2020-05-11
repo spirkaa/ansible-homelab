@@ -8,8 +8,8 @@
     hostname: mgmt
     comment: Management
     cores: 2
-    mem: 2048
-    disk_size: 8
+    mem: 4096
+    disk_size: 16
     net_ip: 192.168.11.2
     net_vlan: 11
     net_gw: 192.168.11.1

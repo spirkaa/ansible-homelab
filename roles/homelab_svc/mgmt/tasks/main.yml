@@ -6,3 +6,7 @@
 - name: unifi
   include_tasks: unifi.yml
   tags: unifi
+
+- name: unms
+  include_tasks: unms.yml
+  tags: unms

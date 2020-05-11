@@ -1,0 +1,19 @@
+---
+- name: unms - start
+  docker_container:
+    name: unms
+    image: nico640/docker-unms:latest
+    pull: yes
+    ports:
+      - "9080:80"
+      - "9443:443"
+      - "2055:2055/udp"
+    env:
+      TZ: "{{ tz }}"
+      PUBLIC_HTTPS_PORT: "9443"
+      PUBLIC_WS_PORT: "9443"
+    volumes:
+      - "{{ app_path }}/unms/config:/config"
+    restart_policy: unless-stopped
+    state: started
+  tags: unms

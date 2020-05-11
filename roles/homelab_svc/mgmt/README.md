@@ -4,6 +4,7 @@
 
 * portainer
 * unifi-controller
+* unms
 
 ## Зависимости
 
