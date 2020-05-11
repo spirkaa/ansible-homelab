@@ -14,7 +14,6 @@
       SUDO_PASSWORD: "{{ code_pass }}"
       DOCKER_MODS: "linuxserver/mods:code-server-docker|linuxserver/mods:code-server-python3"
     volumes:
-      - "/usr/bin/docker:/usr/bin/docker:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "{{ app_path }}/code/config:/config" 
     restart_policy: unless-stopped
