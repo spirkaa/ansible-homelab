@@ -6,7 +6,7 @@
     pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/dev/shm:/conversionPath"
+      - "/dev/shm/airvideohd:/conversionPath"
       - "{{ app_path }}/airvideohd/config:/config"
       - "{{ app_path }}/downloads/Video:/videos"
     network_mode: host
