@@ -1,0 +1,8 @@
+---
+- name: npm - restart
+  docker_container:
+    name: npm
+    state: started
+    restart: yes
+  no_log: true
+  when: not npm_start.changed

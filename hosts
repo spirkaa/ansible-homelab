@@ -9,6 +9,7 @@ spnas
 mgmt
 dev
 stats
+rp
 
 [vm]
 

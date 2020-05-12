@@ -2,6 +2,7 @@
 - hosts: all
   gather_facts: no
 
+- import_playbook: deploy_homelab_svc_rp.yml
 - import_playbook: deploy_homelab_svc_mgmt.yml
 - import_playbook: deploy_homelab_svc_stats.yml
 - import_playbook: deploy_homelab_svc_dev.yml
