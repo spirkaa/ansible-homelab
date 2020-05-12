@@ -29,4 +29,4 @@
   gather_facts: no
 
   roles: 
-    - {role: homelab_svc/plex, tags: plex}
+    - {role: homelab_svc/plex, tags: [plex, svc]}

@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: no
+
+- import_playbook: deploy_homelab_svc_mgmt.yml
+- import_playbook: deploy_homelab_svc_stats.yml
+- import_playbook: deploy_homelab_svc_dev.yml
+- import_playbook: deploy_homelab_svc_spnas.yml
+- import_playbook: deploy_homelab_svc_plex.yml
+- import_playbook: deploy_homelab_upgrade_packages.yml

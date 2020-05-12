@@ -33,4 +33,4 @@
   gather_facts: no
 
   roles: 
-    - {role: homelab_svc/spnas, tags: spnas}
+    - {role: homelab_svc/spnas, tags: [spnas, svc]}

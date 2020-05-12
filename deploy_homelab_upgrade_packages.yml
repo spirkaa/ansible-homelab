@@ -1,0 +1,8 @@
+---
+- hosts: ct
+  gather_facts: no
+
+  tasks:
+    - name: Upgrade packages
+      package: name='*' state=latest
+  tags: upgrade_packages
