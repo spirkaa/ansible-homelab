@@ -1,0 +1,34 @@
+---
+- name: mosquitto - create dir
+  file:
+    path: "{{ app_path }}/mosquitto/config"
+    state: directory
+    recurse: yes
+  tags: mosquitto
+
+- name: mosquitto - copy files
+  copy:
+    src: files/mosquitto.conf
+    dest: "{{ app_path }}/mosquitto/config"
+  notify: mosquitto - restart
+  tags: mosquitto
+
+- name: mosquitto - start
+  docker_container:
+    name: mosquitto
+    image: "{{ mosquitto_image }}"
+    pull: yes
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - "{{ app_path }}/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf"
+      - "{{ app_path }}/mosquitto/data:/mosquitto/data"
+      - "{{ app_path }}/mosquitto/log:/mosquitto/log"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    restart_policy: unless-stopped
+    state: started
+  register: mosquitto_start
+  tags: mosquitto

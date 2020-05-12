@@ -1,0 +1,31 @@
+---
+- name: librenms - setup_database
+  command: docker exec librenms setup_database
+  register: result
+  retries: 3
+  delay: 10
+  until: result is not failed
+  changed_when: '"Nothing to migrate" not in result.stdout'
+  failed_when: '"Permission denied" in result.stdout'
+
+- name: librenms - restart
+  docker_container:
+    name: librenms
+    state: started
+    restart: yes
+  no_log: true
+  when: not librenms_start.changed
+
+- name: influxdb - restart
+  docker_container:
+    name: influxdb
+    state: started
+    restart: yes
+  when: not influxdb_start.changed
+
+- name: mosquitto - restart
+  docker_container:
+    name: mosquitto
+    state: started
+    restart: yes
+  when: not mosquitto_start.changed

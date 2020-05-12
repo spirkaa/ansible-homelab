@@ -1,0 +1,73 @@
+---
+- name: librenms-db - start
+  docker_container:
+    name: librenms-db
+    image: "{{ librenms_db_image }}"
+    pull: yes
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ librenms_db_root_pass }}"
+      MYSQL_DATABASE: "{{ librenms_db_user }}"
+      MYSQL_USER: "{{ librenms_db_user }}"
+      MYSQL_PASSWORD: "{{ librenms_db_pass }}"
+      MYSQL_CHARSET: "utf8mb4"
+      MYSQL_COLLATION: "utf8mb4_unicode_ci"
+    volumes:
+      - "{{ app_path }}/librenms/db:/var/lib/mysql" 
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    command: '--sql-mode="" --lower_case_table_names=0'
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: librenms
+
+- name: librenms - create dir
+  file:
+    path: "{{ app_path }}/librenms"
+    state: directory
+    recurse: yes
+  tags: librenms
+
+- name: librenms - copy files
+  copy:
+    src: files/config.custom.php
+    dest: "{{ app_path }}/librenms"
+  notify: librenms - restart
+  tags: librenms
+
+- name: librenms - start
+  docker_container:
+    name: librenms
+    image: "{{ librenms_image }}"
+    pull: yes
+    ports:
+      - "8081:80"
+    env:
+      TZ: "{{ tz }}"
+      DB_HOST: "librenms-db"
+      DB_NAME: "{{ librenms_db_user }}"
+      DB_USER: "{{ librenms_db_user }}"
+      DB_PASS: "{{ librenms_db_pass }}"
+      APP_KEY: "{{ librenms_app_key }}"
+      BASE_URL: "http://nms.stats"
+    volumes:
+      - "{{ app_path }}/librenms/logs/nginx:/var/log/nginx"
+      - "{{ app_path }}/librenms/logs/app:/opt/librenms/logs"
+      - "{{ app_path }}/librenms/rrd:/opt/librenms/rrd"
+      - "{{ app_path }}/librenms/config.custom.php:/opt/librenms/conf.d/config.custom.php"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    labels:
+      traefik.backend: "librenms"
+      traefik.frontend.rule: "Host:nms.stats"
+      traefik.port: "80"
+      traefik.docker.network: "traefik"
+      traefik.enable: "true"
+    restart_policy: unless-stopped
+    state: started
+  register: librenms_start
+  notify: librenms - setup_database
+  no_log: true
+  tags: librenms

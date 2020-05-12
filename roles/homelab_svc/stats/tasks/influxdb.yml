@@ -1,0 +1,33 @@
+---
+- name: influxdb - create dir
+  file:
+    path: "{{ app_path }}/influxdb/config"
+    state: directory
+    recurse: yes
+  tags: [influxdb, grafana]
+
+- name: influxdb - copy files
+  copy:
+    src: files/influxdb.conf
+    dest: "{{ app_path }}/influxdb/config"
+  notify: influxdb - restart
+  tags: [influxdb, grafana]
+
+- name: influxdb - start
+  docker_container:
+    name: influxdb
+    image: "{{ influxdb_image }}"
+    pull: yes
+    ports:
+      - "2003:2003"
+      - "8086:8086"
+    volumes:
+      - "{{ app_path }}/influxdb/config/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
+      - "{{ app_path }}/influxdb/db:/var/lib/influxdb"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    restart_policy: unless-stopped
+    state: started
+  register: influxdb_start
+  tags: [influxdb, grafana]

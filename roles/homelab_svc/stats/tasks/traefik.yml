@@ -1,0 +1,19 @@
+---
+- name: traefik - start
+  docker_container:
+    name: traefik
+    image: "{{ traefik_image }}"
+    pull: yes
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/dev/null:/traefik.toml"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    command: --web --docker --docker.domain=stats --docker.exposedbydefault=false --logLevel=INFO
+    restart_policy: unless-stopped
+    state: started
+  tags: traefik

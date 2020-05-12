@@ -1,0 +1,23 @@
+---
+- name: domoticz - start
+  docker_container:
+    name: domoticz
+    image: "{{ domoticz_image }}"
+    pull: yes
+    ports:
+      - "8082:8080"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ app_path }}/domoticz/config:/config"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    labels:
+      traefik.backend: "domoticz"
+      traefik.frontend.rule: "Host:dom.stats"
+      traefik.port: "8080"
+      traefik.docker.network: "traefik"
+      traefik.enable: "true"
+    restart_policy: unless-stopped
+    state: started
+  tags: domoticz

@@ -1,0 +1,29 @@
+---
+- name: create traefik network
+  docker_network:
+    name: traefik
+  tags: [traefik, domoticz, influxdb, grafana, librenms, mosquitto]
+
+- name: traefik
+  include_tasks: traefik.yml
+  tags: traefik
+
+- name: domoticz
+  include_tasks: domoticz.yml
+  tags: domoticz
+
+- name: influxdb
+  include_tasks: influxdb.yml
+  tags: [influxdb, grafana]
+
+- name: grafana
+  include_tasks: grafana.yml
+  tags: grafana
+
+- name: librenms
+  include_tasks: librenms.yml
+  tags: librenms
+
+- name: mosquitto
+  include_tasks: mosquitto.yml
+  tags: mosquitto
