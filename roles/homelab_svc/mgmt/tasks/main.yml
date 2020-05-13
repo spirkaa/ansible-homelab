@@ -1,4 +1,13 @@
 ---
+- name: create traefik network
+  docker_network:
+    name: traefik
+  tags: [traefik, heimdall, portainer, unifi, unms]
+
+- name: traefik
+  include_tasks: traefik.yml
+  tags: traefik
+
 - name: heimdall
   include_tasks: heimdall.yml
   tags: heimdall

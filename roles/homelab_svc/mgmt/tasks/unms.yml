@@ -14,6 +14,20 @@
       PUBLIC_WS_PORT: "9443"
     volumes:
       - "{{ app_path }}/unms/config:/config"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+      traefik.http.routers.unms_http.rule: "HostRegexp(`unms.mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.unms_http.entrypoints: "web"
+      traefik.http.routers.unms_http.middlewares: "redirect-to-https"
+      traefik.http.routers.unms.rule: "HostRegexp(`unms.mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.unms.entrypoints: "websecure"
+      traefik.http.routers.unms.tls: "true"
+      traefik.http.services.unms.loadbalancer.server.port: "443"
+      traefik.http.services.unms.loadbalancer.server.scheme: "https"
     restart_policy: unless-stopped
     state: started
   tags: unms

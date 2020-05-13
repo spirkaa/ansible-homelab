@@ -11,6 +11,14 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "{{ app_path }}/portainer/data:/data"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.portainer.rule: "HostRegexp(`portainer.mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.portainer.loadbalancer.server.port: "9000"
+      traefik.http.routers.portainer.entrypoints: "web"
     command: -H unix:///var/run/docker.sock
     restart_policy: unless-stopped
     state: started

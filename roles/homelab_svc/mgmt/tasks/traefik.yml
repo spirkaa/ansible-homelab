@@ -1,0 +1,26 @@
+---
+- name: traefik - start
+  docker_container:
+    name: traefik
+    image: traefik:2.2
+    pull: yes
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8090:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    command: >
+      --log.level=DEBUG
+      --api.insecure=true
+      --providers.docker=true
+      --providers.docker.exposedbydefault=false
+      --entrypoints.web.address=:80
+      --entrypoints.websecure.address=:443
+      --serverstransport.insecureskipverify=true
+    restart_policy: unless-stopped
+    state: started
+  tags: traefik

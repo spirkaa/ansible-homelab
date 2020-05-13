@@ -19,6 +19,20 @@
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ app_path }}/unifi/config:/config"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+      traefik.http.routers.unifi_http.rule: "HostRegexp(`unifi.mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.unifi_http.entrypoints: "web"
+      traefik.http.routers.unifi_http.middlewares: "redirect-to-https"
+      traefik.http.routers.unifi.rule: "HostRegexp(`unifi.mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.unifi.entrypoints: "websecure"
+      traefik.http.routers.unifi.tls: "true"
+      traefik.http.services.unifi.loadbalancer.server.port: "8443"
+      traefik.http.services.unifi.loadbalancer.server.scheme: "https"
     restart_policy: unless-stopped
     state: started
   tags: unifi

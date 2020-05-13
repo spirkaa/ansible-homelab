@@ -4,15 +4,19 @@
     name: heimdall
     image: linuxserver/heimdall:latest
     pull: yes
-    ports:
-      - "80:80"
-      - "443:443"
     env:
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
       TZ: "{{ tz }}"
     volumes:
       - "{{ app_path }}/heimdall/config:/config"
+    networks:
+      - name: traefik
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.heimdall.rule: "HostRegexp(`mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.heimdall.entrypoints: "web"
     restart_policy: unless-stopped
     state: started
   tags: heimdall
