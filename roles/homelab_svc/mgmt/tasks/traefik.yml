@@ -1,4 +1,37 @@
 ---
+- name: traefik - load cert vars
+  include_vars: ../../cert.yml
+  tags: traefik
+
+- name: traefik - create dir
+  file:
+    path: "{{ app_path }}/traefik/certs"
+    state: directory
+    recurse: yes
+  tags: traefik
+
+- name: traefik - copy certificate
+  copy:
+    content: "{{ ssl_certificate }}"
+    dest: "{{ app_path }}/traefik/certs/devmem.ru.crt"
+  notify: traefik - restart
+  tags: traefik
+
+- name: traefik - copy private key
+  copy:
+    content: "{{ ssl_private_key }}"
+    dest: "{{ app_path }}/traefik/certs/devmem.ru.key"
+  notify: traefik - restart
+  no_log: true
+  tags: traefik
+
+- name: traefik - copy config
+  copy:
+    src: files/traefik-dyn.toml
+    dest: "{{ app_path }}/traefik"
+  notify: traefik - restart
+  tags: traefik
+
 - name: traefik - start
   docker_container:
     name: traefik
@@ -10,12 +43,15 @@
       - "8090:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "{{ app_path }}/traefik/traefik-dyn.toml:/etc/traefik/traefik-dyn.toml"
+      - "{{ app_path }}/traefik/certs:/certs"
     networks:
       - name: traefik
     networks_cli_compatible: yes
     command: >
       --log.level=DEBUG
       --api.insecure=true
+      --providers.file.filename=/etc/traefik/traefik-dyn.toml
       --providers.docker=true
       --providers.docker.exposedbydefault=false
       --entrypoints.web.address=:80
@@ -23,4 +59,5 @@
       --serverstransport.insecureskipverify=true
     restart_policy: unless-stopped
     state: started
+  register: traefik_start
   tags: traefik

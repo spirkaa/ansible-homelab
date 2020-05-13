@@ -1,0 +1,7 @@
+---
+- name: traefik - restart
+  docker_container:
+    name: traefik
+    state: started
+    restart: yes
+  when: not traefik_start.changed
