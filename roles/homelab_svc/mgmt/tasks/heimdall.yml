@@ -16,7 +16,8 @@
     labels:
       traefik.enable: "true"
       traefik.http.routers.heimdall.rule: "HostRegexp(`mgmt{fqdn:(.home.devmem.ru)?}`)"
-      traefik.http.routers.heimdall.entrypoints: "web"
+      traefik.http.routers.heimdall.entrypoints: "websecure"
+      traefik.http.routers.heimdall.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: heimdall

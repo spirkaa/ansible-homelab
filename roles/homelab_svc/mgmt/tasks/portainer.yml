@@ -16,9 +16,10 @@
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
-      traefik.http.routers.portainer.rule: "HostRegexp(`portainer.mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.portainer.rule: "HostRegexp(`portainer{fqdn:(.home.devmem.ru)?}`)"
       traefik.http.services.portainer.loadbalancer.server.port: "9000"
-      traefik.http.routers.portainer.entrypoints: "web"
+      traefik.http.routers.portainer.entrypoints: "websecure"
+      traefik.http.routers.portainer.tls: "true"
     command: -H unix:///var/run/docker.sock
     restart_policy: unless-stopped
     state: started

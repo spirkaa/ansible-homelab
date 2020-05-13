@@ -40,7 +40,6 @@
     ports:
       - "80:80"
       - "443:443"
-      - "8090:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "{{ app_path }}/traefik/traefik-dyn.toml:/etc/traefik/traefik-dyn.toml"
@@ -49,14 +48,22 @@
       - name: traefik
     networks_cli_compatible: yes
     command: >
-      --log.level=DEBUG
-      --api.insecure=true
+      --log.level=ERROR
+      --api=true
       --providers.file.filename=/etc/traefik/traefik-dyn.toml
       --providers.docker=true
       --providers.docker.exposedbydefault=false
       --entrypoints.web.address=:80
+      --entrypoints.web.http.redirections.entryPoint.to=websecure
+      --entrypoints.web.http.redirections.entryPoint.scheme=https
       --entrypoints.websecure.address=:443
       --serverstransport.insecureskipverify=true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.traefik.rule: "HostRegexp(`traefik-{{ inventory_hostname }}{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.traefik.service: "api@internal"
+      traefik.http.routers.traefik.entrypoints: "websecure"
+      traefik.http.routers.traefik.tls: "true"
     restart_policy: unless-stopped
     state: started
   register: traefik_start
