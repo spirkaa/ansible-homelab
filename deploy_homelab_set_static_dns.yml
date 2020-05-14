@@ -1,0 +1,65 @@
+---
+- hosts: ubnt-erx
+  gather_facts: no
+
+  vars:
+    dn: home.devmem.ru
+    ip_plex: 192.168.10.10
+    ip_spnas: 192.168.10.11
+    ip_dev: 192.168.10.12
+    ip_mgmt: 192.168.11.2
+    ip_stats: 192.168.12.98
+    ip_rp: 192.168.12.254
+    dns_entries:
+      - { alias: "plex", inet: "{{ ip_plex }}" }
+      - { alias: "ombi", inet: "{{ ip_plex }}" }
+      - { alias: "tautulli", inet: "{{ ip_plex }}" }
+
+      - { alias: "spnas", inet: "{{ ip_spnas }}" }
+      - { alias: "traefik-spnas", inet: "{{ ip_spnas }}" }
+      - { alias: "deluge", inet: "{{ ip_spnas }}" }
+      - { alias: "jackett", inet: "{{ ip_spnas }}" }
+      - { alias: "monitorrent", inet: "{{ ip_spnas }}" }
+      - { alias: "sonarr", inet: "{{ ip_spnas }}" }
+      - { alias: "radarr", inet: "{{ ip_spnas }}" }
+      - { alias: "lidarr", inet: "{{ ip_spnas }}" }
+      - { alias: "bazarr", inet: "{{ ip_spnas }}" }
+      - { alias: "cloud", inet: "{{ ip_spnas }}" }
+
+      - { alias: "dev", inet: "{{ ip_dev }}" }
+      - { alias: "code", inet: "{{ ip_dev }}" }
+      - { alias: "git", inet: "{{ ip_dev }}" }
+
+      - { alias: "mgmt", inet: "{{ ip_mgmt }}" }
+      - { alias: "traefik-mgmt", inet: "{{ ip_mgmt }}" }
+      - { alias: "portainer", inet: "{{ ip_mgmt }}" }
+      - { alias: "unifi", inet: "{{ ip_mgmt }}" }
+      - { alias: "unms", inet: "{{ ip_mgmt }}" }
+
+      - { alias: "stats", inet: "{{ ip_stats }}" }
+      - { alias: "traefik-stats", inet: "{{ ip_stats }}" }
+      - { alias: "nms", inet: "{{ ip_stats }}" }
+      - { alias: "grafana", inet: "{{ ip_stats }}" }
+      - { alias: "influxdb", inet: "{{ ip_stats }}" }
+      - { alias: "dom", inet: "{{ ip_stats }}" }
+
+      - { alias: "rp", inet: "{{ ip_rp }}" }
+
+  tasks:
+    - name: Set static DNS mapping
+      edgeos_config:
+        lines:
+          - set system static-host-mapping host-name {{ dns_entry.alias }}.{{ dn }} inet {{ dns_entry.inet }}
+          - set system static-host-mapping host-name {{ dns_entry.alias }}.{{ dn }} alias {{ dns_entry.alias }}
+      loop_control:
+        loop_var: dns_entry
+      loop: "{{ dns_entries }}"
+      tags: dns
+
+    # - name: Delete static DNS mapping
+    #   edgeos_config:
+    #     lines:
+    #       - delete system static-host-mapping host-name {{ dns_entry.name }}.{{ dn }}
+    #   loop_control:
+    #     loop_var: dns_entry
+    #   loop: "{{ dns_entries }}"

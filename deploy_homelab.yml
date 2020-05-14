@@ -9,3 +9,4 @@
 - import_playbook: deploy_homelab_svc_spnas.yml
 - import_playbook: deploy_homelab_svc_plex.yml
 - import_playbook: deploy_homelab_upgrade_packages.yml
+- import_playbook: deploy_homelab_set_static_dns.yml

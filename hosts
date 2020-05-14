@@ -13,6 +13,8 @@ rp
 
 [vm]
 
+[router]
+ubnt-erx
 
 [k8s_master]
 
