@@ -25,8 +25,14 @@
       - "{{ app_path }}/influxdb/config/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
       - "{{ app_path }}/influxdb/db:/var/lib/influxdb"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.influxdb.rule: "HostRegexp(`influxdb{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.influxdb.loadbalancer.server.port: "8086"
+      traefik.http.routers.influxdb.entrypoints: "websecure"
+      traefik.http.routers.influxdb.tls: "true"
     restart_policy: unless-stopped
     state: started
   register: influxdb_start

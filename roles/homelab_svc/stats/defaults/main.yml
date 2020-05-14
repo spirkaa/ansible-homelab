@@ -10,7 +10,8 @@ influxdb_image: influxdb:1.8-alpine
 librenms_db_image: yobasystems/alpine-mariadb:latest
 librenms_image: jarischaefer/docker-librenms:latest
 mosquitto_image: eclipse-mosquitto:latest
-traefik_image: traefik:1.7-alpine
+
+app_network_name: traefik
 
 librenms_db_root_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256

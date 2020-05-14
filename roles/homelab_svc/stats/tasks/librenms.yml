@@ -14,7 +14,7 @@
     volumes:
       - "{{ app_path }}/librenms/db:/var/lib/mysql" 
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     command: '--sql-mode="" --lower_case_table_names=0'
     restart_policy: unless-stopped
@@ -41,8 +41,6 @@
     name: librenms
     image: "{{ librenms_image }}"
     pull: yes
-    ports:
-      - "8081:80"
     env:
       TZ: "{{ tz }}"
       DB_HOST: "librenms-db"
@@ -50,21 +48,20 @@
       DB_USER: "{{ librenms_db_user }}"
       DB_PASS: "{{ librenms_db_pass }}"
       APP_KEY: "{{ librenms_app_key }}"
-      BASE_URL: "http://nms.stats"
+      BASE_URL: "https://nms.home.devmem.ru"
     volumes:
       - "{{ app_path }}/librenms/logs/nginx:/var/log/nginx"
       - "{{ app_path }}/librenms/logs/app:/opt/librenms/logs"
       - "{{ app_path }}/librenms/rrd:/opt/librenms/rrd"
       - "{{ app_path }}/librenms/config.custom.php:/opt/librenms/conf.d/config.custom.php"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
-      traefik.backend: "librenms"
-      traefik.frontend.rule: "Host:nms.stats"
-      traefik.port: "80"
-      traefik.docker.network: "traefik"
       traefik.enable: "true"
+      traefik.http.routers.librenms.rule: "HostRegexp(`nms{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.librenms.entrypoints: "websecure"
+      traefik.http.routers.librenms.tls: "true"
     restart_policy: unless-stopped
     state: started
   register: librenms_start

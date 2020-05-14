@@ -4,19 +4,17 @@
     name: grafana
     image: "{{ grafana_image }}"
     pull: yes
-    ports:
-      - "3000:3000"
     volumes:
       - "{{ app_path }}/grafana/config:/var/lib/grafana"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
-      traefik.backend: "grafana"
-      traefik.frontend.rule: "Host:grafana.stats"
-      traefik.port: "3000"
-      traefik.docker.network: "traefik"
       traefik.enable: "true"
+      traefik.http.routers.grafana.rule: "HostRegexp(`grafana{fqdn:(.home.devmem.ru)?}`) || Host(`grafana.stats`)"
+      traefik.http.services.grafana.loadbalancer.server.port: "3000"
+      traefik.http.routers.grafana.entrypoints: "websecure"
+      traefik.http.routers.grafana.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: grafana

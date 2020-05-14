@@ -7,8 +7,7 @@
 * influxdb
 * librenms
 * mosquitto
-* traefik
 
 ## Зависимости
 
-Нет
+* Роль homelab_svc/traefik

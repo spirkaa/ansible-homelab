@@ -4,20 +4,18 @@
     name: domoticz
     image: "{{ domoticz_image }}"
     pull: yes
-    ports:
-      - "8082:8080"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ app_path }}/domoticz/config:/config"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
-      traefik.backend: "domoticz"
-      traefik.frontend.rule: "Host:dom.stats"
-      traefik.port: "8080"
-      traefik.docker.network: "traefik"
       traefik.enable: "true"
+      traefik.http.routers.domoticz.rule: "HostRegexp(`dom{fqdn:(.home.devmem.ru)?}`) || Host(`dom.stats`)"
+      traefik.http.services.domoticz.loadbalancer.server.port: "8080"
+      traefik.http.routers.domoticz.entrypoints: "websecure"
+      traefik.http.routers.domoticz.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: domoticz
