@@ -1,0 +1,20 @@
+---
+app_path: /docker
+tz: "Europe/Moscow"
+
+traefik_image: traefik:2.2
+
+traefik_network_name: traefik
+traefik_web_port: 80
+traefik_websecure_port: 443
+traefik_log_level: ERROR
+
+traefik_cert_name: cert
+traefik_cert_path_host: "{{ app_path }}/traefik/certs"
+traefik_cert_path: /etc/traefik/certs
+traefik_config_file_host: "{{ app_path }}/traefik/dyn.toml"
+traefik_config_file: /etc/traefik/dyn.toml
+
+traefik_domain_name: home.devmem.ru
+traefik_hostname_rule: >
+  HostRegexp(`traefik-{{ inventory_hostname_short }}{fqdn:(.{{ traefik_domain_name }})?}`)

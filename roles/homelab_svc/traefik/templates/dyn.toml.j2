@@ -1,0 +1,9 @@
+[[tls.certificates]]
+  certFile = "{{ traefik_cert_path }}/{{ traefik_cert_name }}.crt"
+  keyFile  = "{{ traefik_cert_path }}/{{ traefik_cert_name }}.key"
+
+[tls.stores]
+  [tls.stores.default]
+    [tls.stores.default.defaultCertificate]
+      certFile = "{{ traefik_cert_path }}/{{ traefik_cert_name }}.crt"
+      keyFile  = "{{ traefik_cert_path }}/{{ traefik_cert_name }}.key"

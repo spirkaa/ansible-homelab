@@ -1,11 +1,16 @@
 ---
-- name: traefik - load cert vars
-  include_vars: ../../cert.yml
+- name: traefik - create network
+  docker_network:
+    name: "{{ traefik_network_name }}"
+  tags: traefik
+
+- name: traefik - load certificate vars
+  include_vars: vars/cert.yml
   tags: traefik
 
 - name: traefik - create dir
   file:
-    path: "{{ app_path }}/traefik/certs"
+    path: "{{ traefik_cert_path_host }}"
     state: directory
     recurse: yes
   tags: traefik
@@ -13,54 +18,54 @@
 - name: traefik - copy certificate
   copy:
     content: "{{ ssl_certificate }}"
-    dest: "{{ app_path }}/traefik/certs/devmem.ru.crt"
+    dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.crt"
   notify: traefik - restart
   tags: traefik
 
-- name: traefik - copy private key
+- name: traefik - copy certificate private key
   copy:
     content: "{{ ssl_private_key }}"
-    dest: "{{ app_path }}/traefik/certs/devmem.ru.key"
+    dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.key"
   notify: traefik - restart
   no_log: true
   tags: traefik
 
 - name: traefik - copy config
-  copy:
-    src: files/traefik-dyn.toml
-    dest: "{{ app_path }}/traefik"
+  template:
+    src: templates/dyn.toml.j2
+    dest: "{{ traefik_config_file_host }}"
   notify: traefik - restart
   tags: traefik
 
 - name: traefik - start
   docker_container:
     name: traefik
-    image: traefik:2.2
+    image: "{{ traefik_image }}"
     pull: yes
     ports:
-      - "80:80"
-      - "443:443"
+      - "{{ traefik_web_port }}:80"
+      - "{{ traefik_websecure_port }}:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "{{ app_path }}/traefik/traefik-dyn.toml:/etc/traefik/traefik-dyn.toml"
-      - "{{ app_path }}/traefik/certs:/certs"
+      - "{{ traefik_config_file_host }}:{{ traefik_config_file }}"
+      - "{{ traefik_cert_path_host }}:{{ traefik_cert_path }}"
     networks:
-      - name: traefik
+      - name: "{{ traefik_network_name }}"
     networks_cli_compatible: yes
     command: >
-      --log.level=ERROR
+      --log.level={{ traefik_log_level }}
       --api=true
-      --providers.file.filename=/etc/traefik/traefik-dyn.toml
+      --providers.file.filename={{ traefik_config_file }}
       --providers.docker=true
       --providers.docker.exposedbydefault=false
-      --entrypoints.web.address=:80
+      --entrypoints.web.address=:{{ traefik_web_port }}
       --entrypoints.web.http.redirections.entryPoint.to=websecure
       --entrypoints.web.http.redirections.entryPoint.scheme=https
-      --entrypoints.websecure.address=:443
+      --entrypoints.websecure.address=:{{ traefik_websecure_port }}
       --serverstransport.insecureskipverify=true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.traefik.rule: "HostRegexp(`traefik-{{ inventory_hostname }}{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.traefik.rule: "{{ traefik_hostname_rule }}"
       traefik.http.routers.traefik.service: "api@internal"
       traefik.http.routers.traefik.entrypoints: "websecure"
       traefik.http.routers.traefik.tls: "true"

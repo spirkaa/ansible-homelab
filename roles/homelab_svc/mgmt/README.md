@@ -9,4 +9,4 @@
 
 ## Зависимости
 
-Нет
+* Роль homelab_svc/traefik

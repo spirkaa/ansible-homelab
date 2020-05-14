@@ -1,2 +1,3 @@
 ---
-dependencies: []
+dependencies:
+  - role: homelab_svc/traefik
