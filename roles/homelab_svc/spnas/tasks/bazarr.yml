@@ -4,8 +4,6 @@
     name: bazarr
     image: "{{ bazarr_image }}"
     pull: yes
-    ports:
-      - "6767:6767"
     env:
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
@@ -13,6 +11,15 @@
     volumes:
       - "{{ app_path }}/bazarr/config:/config"
       - "{{ app_path }}/data/downloads:/downloads"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.bazarr.rule: "HostRegexp(`bazarr{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.bazarr.loadbalancer.server.port: "6767"
+      traefik.http.routers.bazarr.entrypoints: "websecure"
+      traefik.http.routers.bazarr.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: bazarr

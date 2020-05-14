@@ -16,6 +16,8 @@ radarr_image: linuxserver/radarr:3.0.0.2912-ls6
 samba_image: mbentley/timemachine:smb
 sonarr_image: linuxserver/sonarr:3.0.3.803-ls2
 
+app_network_name: traefik
+
 delugevpn_vpn_user: "p2632588"
 delugevpn_vpn_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256

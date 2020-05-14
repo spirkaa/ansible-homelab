@@ -17,8 +17,6 @@
     name: jackett
     image: "{{ jackett_image }}"
     pull: yes
-    ports:
-      - "9117:9117"
     env:
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
@@ -31,6 +29,15 @@
       - "{{ app_path }}/jackett/Definitions/kinozal.yml:/app/Jackett/Definitions/kinozal.yml:ro"
       - "{{ app_path }}/jackett/Definitions/riperam.yml:/app/Jackett/Definitions/riperam.yml:ro"
       - "{{ app_path }}/jackett/Definitions/vanila.yml:/app/Jackett/Definitions/vanila.yml:ro"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.jackett.rule: "HostRegexp(`jackett{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.jackett.loadbalancer.server.port: "9117"
+      traefik.http.routers.jackett.entrypoints: "websecure"
+      traefik.http.routers.jackett.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: jackett

@@ -4,8 +4,6 @@
     name: sonarr
     image: "{{ sonarr_image }}"
     pull: yes
-    ports:
-      - "8989:8989"
     env:
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
@@ -13,6 +11,15 @@
     volumes:
       - "{{ app_path }}/sonarr/config:/config"
       - "{{ app_path }}/data/downloads:/downloads"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.sonarr.rule: "HostRegexp(`sonarr{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.sonarr.loadbalancer.server.port: "8989"
+      traefik.http.routers.sonarr.entrypoints: "websecure"
+      traefik.http.routers.sonarr.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: sonarr

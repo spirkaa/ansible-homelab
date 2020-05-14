@@ -45,6 +45,15 @@
       - "{{ app_path }}/data/downloads:/downloads"
     capabilities:
       - net_admin
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.delugevpn.rule: "HostRegexp(`deluge{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.delugevpn.loadbalancer.server.port: "8112"
+      traefik.http.routers.delugevpn.entrypoints: "websecure"
+      traefik.http.routers.delugevpn.tls: "true"
     restart_policy: unless-stopped
     state: started
   no_log: true

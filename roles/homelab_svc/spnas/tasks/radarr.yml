@@ -4,8 +4,6 @@
     name: radarr
     image: "{{ radarr_image }}"
     pull: yes
-    ports:
-      - "7878:7878"
     env:
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
@@ -13,6 +11,15 @@
     volumes:
       - "{{ app_path }}/radarr/config:/config"
       - "{{ app_path }}/data/downloads:/downloads"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.radarr.rule: "HostRegexp(`radarr{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.radarr.loadbalancer.server.port: "7878"
+      traefik.http.routers.radarr.entrypoints: "websecure"
+      traefik.http.routers.radarr.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: radarr

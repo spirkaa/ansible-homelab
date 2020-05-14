@@ -4,8 +4,6 @@
     name: lidarr
     image: "{{ lidarr_image }}"
     pull: yes
-    ports:
-      - "8686:8686"
     env:
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
@@ -13,6 +11,15 @@
     volumes:
       - "{{ app_path }}/lidarr/config:/config"
       - "{{ app_path }}/data/downloads:/downloads"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.lidarr.rule: "HostRegexp(`lidarr{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.lidarr.loadbalancer.server.port: "8686"
+      traefik.http.routers.lidarr.entrypoints: "websecure"
+      traefik.http.routers.lidarr.tls: "true"
     restart_policy: unless-stopped
     state: started
   tags: lidarr
