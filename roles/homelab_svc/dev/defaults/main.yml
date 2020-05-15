@@ -4,6 +4,10 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
+code_image: linuxserver/code-server:latest
+gitea_db_image: yobasystems/alpine-mariadb:10.4.12
+gitea_image: gitea/gitea:latest
+
 gitea_db_root_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           63653162353266393334326165396235386566363961366132323963303531613665313037373465

@@ -2,7 +2,7 @@
 - name: gitea-db - start
   docker_container:
     name: gitea-db
-    image: yobasystems/alpine-mariadb:latest
+    image: "{{ gitea_db_image }}"
     pull: yes
     env:
       MYSQL_ROOT_PASSWORD: "{{ gitea_db_root_pass }}"
@@ -21,7 +21,7 @@
 - name: gitea - start
   docker_container:
     name: gitea
-    image: gitea/gitea:latest
+    image: "{{ gitea_image }}"
     pull: yes
     ports:
       - "3000:3000"

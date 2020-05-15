@@ -2,7 +2,7 @@
 - name: code - start
   docker_container:
     name: code
-    image: linuxserver/code-server:latest
+    image: "{{ code_image }}"
     pull: yes
     ports:
       - "8443:8443"
