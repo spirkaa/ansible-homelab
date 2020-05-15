@@ -2,7 +2,7 @@
 - name: ombi - start
   docker_container:
     name: ombi
-    image: linuxserver/ombi:latest
+    image: "{{ ombi_image }}"
     pull: yes
     ports:
       - "3579:3579"

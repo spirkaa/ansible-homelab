@@ -2,7 +2,7 @@
 - name: plex - start
   docker_container:
     name: plex
-    image: linuxserver/plex:latest
+    image: "{{ plex_image }}"
     pull: yes
     env:
       PUID: "{{ puid }}"

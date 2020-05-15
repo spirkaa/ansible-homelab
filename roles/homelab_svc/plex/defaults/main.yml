@@ -3,3 +3,8 @@ app_path: /docker/plex
 puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
+
+airvideohd_image: dmaxwell/airvideohd:latest
+ombi_image: linuxserver/ombi:latest
+plex_image: linuxserver/plex:latest
+tautulli_image: linuxserver/tautulli:latest

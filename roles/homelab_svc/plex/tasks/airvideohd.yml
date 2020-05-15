@@ -2,7 +2,7 @@
 - name: airvideohd - start
   docker_container:
     name: airvideohd
-    image: dmaxwell/airvideohd:latest
+    image: "{{ airvideohd_image }}"
     pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

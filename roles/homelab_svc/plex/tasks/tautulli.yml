@@ -2,7 +2,7 @@
 - name: tautulli - start
   docker_container:
     name: tautulli
-    image: linuxserver/tautulli:latest
+    image: "{{ tautulli_image }}"
     pull: yes
     ports:
       - "8181:8181"
