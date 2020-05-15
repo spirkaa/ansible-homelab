@@ -1,0 +1,38 @@
+---
+- name: drone - start
+  docker_container:
+    name: drone
+    image: "{{ drone_image }}"
+    pull: yes
+    ports:
+      - "8080:80"
+    env:
+      DRONE_GIT_ALWAYS_AUTH: "true"
+      DRONE_GITEA_SERVER: "{{ gitea_root_url }}"
+      DRONE_GITEA_CLIENT_ID: "{{ drone_gitea_client_id }}"
+      DRONE_GITEA_CLIENT_SECRET: "{{ drone_gitea_client_secret }}"
+      DRONE_RPC_SECRET: "{{ drone_rpc_secret }}"
+      DRONE_SERVER_HOST: "{{ drone_host }}"
+      DRONE_SERVER_PROTO: "{{ drone_proto }}"
+    volumes:
+      - "{{ app_path }}/drone/data:/data" 
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: drone
+
+- name: drone-runner-docker - start
+  docker_container:
+    name: drone-runner-docker
+    image: "{{ drone_runner_docker_image }}"
+    pull: yes
+    env:
+      DRONE_RPC_HOST: "{{ drone_host }}"
+      DRONE_RPC_PROTO: "{{ drone_proto }}"
+      DRONE_RPC_SECRET: "{{ drone_rpc_secret }}"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: drone

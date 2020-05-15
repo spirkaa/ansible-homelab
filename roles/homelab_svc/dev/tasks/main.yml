@@ -1,8 +1,12 @@
 ---
+- name: code
+  include_tasks: code.yml
+  tags: code
+
 - name: gitea
   include_tasks: gitea.yml
   tags: gitea
 
-- name: code
-  include_tasks: code.yml
-  tags: code
+- name: drone
+  include_tasks: drone.yml
+  tags: drone
