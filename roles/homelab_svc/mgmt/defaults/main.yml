@@ -3,3 +3,10 @@ app_path: /docker/mgmt
 puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
+
+heimdall_image: linuxserver/heimdall:latest
+portainer_image: portainer/portainer:latest
+unifi_image: linuxserver/unifi-controller:latest
+unms_image: nico640/docker-unms:latest
+
+app_network_name: traefik

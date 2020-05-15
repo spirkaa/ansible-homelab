@@ -2,7 +2,7 @@
 - name: unms - start
   docker_container:
     name: unms
-    image: nico640/docker-unms:latest
+    image: "{{ unms_image }}"
     pull: yes
     ports:
       - "2055:2055/udp"
@@ -11,7 +11,7 @@
     volumes:
       - "{{ app_path }}/unms/config:/config"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"

@@ -2,7 +2,7 @@
 - name: unifi - start
   docker_container:
     name: unifi
-    image: linuxserver/unifi-controller:latest
+    image: "{{ unifi_image }}"
     pull: yes
     ports:
       - "3478:3478/udp"
@@ -20,7 +20,7 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ app_path }}/unifi/config:/config"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"

@@ -2,7 +2,7 @@
 - name: portainer - start
   docker_container:
     name: portainer
-    image: portainer/portainer:latest
+    image: "{{ portainer_image }}"
     pull: yes
     ports:
       - "8000:8000"
@@ -12,7 +12,7 @@
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "{{ app_path }}/portainer/data:/data"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"

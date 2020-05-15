@@ -2,7 +2,7 @@
 - name: heimdall - start
   docker_container:
     name: heimdall
-    image: linuxserver/heimdall:latest
+    image: "{{ heimdall_image }}"
     pull: yes
     env:
       PUID: "{{ puid }}"
@@ -11,7 +11,7 @@
     volumes:
       - "{{ app_path }}/heimdall/config:/config"
     networks:
-      - name: traefik
+      - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
