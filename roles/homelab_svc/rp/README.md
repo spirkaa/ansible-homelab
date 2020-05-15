@@ -2,7 +2,7 @@
 
 Роль Ansible, которая запускает Docker контейнеры:
 
-* nginx-proxy-manager
+* [jc21/nginx-proxy-manager](https://hub.docker.com/r/jc21/nginx-proxy-manager) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb)
 
 ## Зависимости
 
