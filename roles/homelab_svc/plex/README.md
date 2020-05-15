@@ -2,10 +2,10 @@
 
 Роль Ansible, которая запускает службу доступа к медиаконтенту в составе Docker контейнеров:
 
-* plex
-* tautulli
-* ombi
-* airvideohd
+* [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex)
+* [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli)
+* [linuxserver/ombi](https://hub.docker.com/r/linuxserver/ombi)
+* [dmaxwell/airvideohd](https://hub.docker.com/r/dmaxwell/airvideohd)
 
 ## Зависимости
 
