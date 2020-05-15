@@ -2,6 +2,7 @@
 
 Роль Ansible, которая запускает Docker контейнеры:
 
+* [bitwardenrs/server](https://hub.docker.com/r/bitwardenrs/server)
 * [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall)
 * [portainer/portainer](https://hub.docker.com/r/portainer/portainer)
 * [linuxserver/unifi-controller](https://hub.docker.com/r/linuxserver/unifi-controller)

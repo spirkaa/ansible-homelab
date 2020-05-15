@@ -1,0 +1,27 @@
+---
+- name: bitwarden - start
+  docker_container:
+    name: bitwarden
+    image: "{{ bitwarden_image }}"
+    pull: yes
+    ports:
+      - "19080:80"
+      - "3012:3012"
+    env:
+      ADMIN_TOKEN: "{{ bitwarden_admin_token }}"
+      SMTP_HOST: "{{ smtp_host }}"
+      SMTP_PORT: "{{ smtp_port }}"
+      SMTP_FROM: "{{ smtp_user }}"
+      SMTP_USERNAME: "{{ smtp_user }}"
+      SMTP_PASSWORD: "{{ smtp_pass }}"
+      SMTP_SSL: "true"
+      SIGNUPS_ALLOWED: "false"
+      WEBSOCKET_ENABLED: "true"
+      IP_HEADER: "X-Forwarded-For"
+      DOMAIN: "https://bw.devmem.ru"
+      LOG_FILE: "/data/bitwarden.log"
+    volumes:
+      - "{{ app_path }}/bitwarden/data:/data"
+    restart_policy: unless-stopped
+    state: started
+  tags: bitwarden

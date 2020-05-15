@@ -1,4 +1,8 @@
 ---
+- name: bitwarden
+  include_tasks: bitwarden.yml
+  tags: bitwarden
+
 - name: heimdall
   include_tasks: heimdall.yml
   tags: heimdall
