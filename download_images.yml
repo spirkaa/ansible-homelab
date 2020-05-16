@@ -4,12 +4,12 @@
 
   vars:
     os_images:
-      - 'https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2'
+      - 'https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2'
       - 'https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2'
       - 'https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img'
       - 'https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img'
-      - 'https://cloud.debian.org/images/cloud/buster/20200210-166/debian-10-genericcloud-amd64-20200210-166.qcow2'
-      - 'https://cloud.debian.org/images/cloud/OpenStack/current-10/debian-10-openstack-amd64.qcow2'
+      - 'https://cdimage.debian.org/images/cloud/buster/20200511-260/debian-10-genericcloud-amd64-20200511-260.qcow2'
+      - 'https://cdimage.debian.org/images/cloud/OpenStack/current-10/debian-10-openstack-amd64.qcow2'
     qcow2_path: /mnt/pve/spsrv-proxmox/template/qcow2
 
   tasks:
