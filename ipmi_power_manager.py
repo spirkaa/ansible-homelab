@@ -61,7 +61,7 @@ def set_power_off():
         auth_header: auth_token,
         'Content-Type': 'application/json'
     }
-    
+
     r = requests.post(
         baseuri+category_actions,
         headers=headers,

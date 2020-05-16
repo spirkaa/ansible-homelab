@@ -1,3 +1,8 @@
 ---
 - name: update-grub
   command: update-grub
+
+- name: show reboot msg
+  debug:
+    msg: "Please reboot '{{ inventory_hostname }}' host!"
+  listen: update-grub

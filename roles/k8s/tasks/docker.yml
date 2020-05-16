@@ -9,7 +9,7 @@
     recurse: yes
 
 - name: Copy daemon.json
-  copy: 
+  copy:
     src: files/daemon.json
     dest: /etc/docker
   notify: Restart docker service

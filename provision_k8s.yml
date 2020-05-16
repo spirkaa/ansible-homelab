@@ -3,5 +3,5 @@
   gather_facts: yes
   become: yes
 
-  roles: 
+  roles:
     - {role: k8s, tags: k8s}

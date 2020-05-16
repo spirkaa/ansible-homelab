@@ -1,3 +1,4 @@
+---
 - name: Install packages
   apt:
     state: present
@@ -10,6 +11,6 @@
     dest: /etc/rsnapshot.conf
 
 - name: Copy cron schedule
-  copy: 
+  copy:
     src: files/rsnapshot
     dest: /etc/cron.d

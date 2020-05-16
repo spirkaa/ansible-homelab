@@ -13,5 +13,5 @@
       - "lxc.cgroup.devices.allow: c 226:* rwm"
       - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
 
-  roles: 
+  roles:
     - vm_manager_single

@@ -9,5 +9,5 @@
     name_tpl: test-ct
     net_ip_tpl: 192.168.13.6
 
-  roles: 
+  roles:
     - vm_manager

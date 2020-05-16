@@ -12,7 +12,7 @@
       MYSQL_CHARSET: "utf8mb4"
       MYSQL_COLLATION: "utf8mb4_unicode_ci"
     volumes:
-      - "{{ app_path }}/gitea/db:/var/lib/mysql" 
+      - "{{ app_path }}/gitea/db:/var/lib/mysql"
     restart_policy: unless-stopped
     state: started
   no_log: true
@@ -45,7 +45,7 @@
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "{{ app_path }}/gitea/data:/data" 
+      - "{{ app_path }}/gitea/data:/data"
     links:
       - "gitea-db:gitea-db"
     restart_policy: unless-stopped
@@ -64,7 +64,7 @@
   copy:
     src: files/gitea
     dest: /app/gitea
-    mode: "0755"
+    mode: 0755
   tags: gitea
 
 - name: gitea - ssh passthrough - create group

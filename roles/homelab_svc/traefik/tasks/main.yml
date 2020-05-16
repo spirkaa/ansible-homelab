@@ -5,7 +5,7 @@
   tags: traefik
 
 - name: traefik - load certificate vars
-  include_vars: vars/cert.yml
+  include_vars: vars/cert.vault.yml
   tags: traefik
 
 - name: traefik - create dir

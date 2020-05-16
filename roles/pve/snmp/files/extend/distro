@@ -19,7 +19,7 @@ elif [ "${OS}" = "Linux" ] ; then
   if [ -f /etc/fedora-release ]; then
     DIST=$(cat /etc/fedora-release | awk '{print $1}')
     REV=`cat /etc/fedora-release | sed s/.*release\ // | sed s/\ .*//`
-        
+
   elif [ -f /etc/redhat-release ] ; then
     DIST=$(cat /etc/redhat-release | awk '{print $1}')
     if [ "${DIST}" = "CentOS" ]; then
@@ -63,7 +63,7 @@ elif [ "${OS}" = "Linux" ] ; then
     if [ -f /usr/bin/pveversion ]; then
       DIST="${DIST}/PVE `/usr/bin/pveversion | cut -d '/' -f 2`"
     fi
-    
+
   elif [ -f /etc/gentoo-release ] ; then
     DIST="Gentoo"
     REV=$(tr -d '[[:alpha:]]' </etc/gentoo-release | tr -d " ")
@@ -72,7 +72,7 @@ elif [ "${OS}" = "Linux" ] ; then
     DIST="Arch Linux"
     REV="" # Omit version since Arch Linux uses rolling releases
     IGNORE_LSB=1 # /etc/lsb-release would overwrite $REV with "rolling"
-    
+
   elif [ -f /etc/photon-release ] ; then
     DIST=$(head -1 < /etc/photon-release)
     REV=$(sed -n -e 's/^.*PHOTON_BUILD_NUMBER=//p' /etc/photon-release)

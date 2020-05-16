@@ -15,7 +15,7 @@
       DRONE_SERVER_HOST: "{{ drone_host }}"
       DRONE_SERVER_PROTO: "{{ drone_proto }}"
     volumes:
-      - "{{ app_path }}/drone/data:/data" 
+      - "{{ app_path }}/drone/data:/data"
     restart_policy: unless-stopped
     state: started
   no_log: true

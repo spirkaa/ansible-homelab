@@ -1409,7 +1409,7 @@
         selector: a[href^="./viewforum.php?f="] + b
         filters:
           - name: replace
-            args: ["ТБ", "TB"] 
+            args: ["ТБ", "TB"]
           - name: replace
             args: ["ГБ", "GB"]
           - name: replace

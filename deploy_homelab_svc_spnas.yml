@@ -25,12 +25,12 @@
       --mp5 volume=/mnt/tank1/ds1/public,mp=/docker/spnas/data/public,replicate=0
       --mp6 volume=/mnt/tank1/ds1/pvmhome,mp=/docker/spnas/data/pvmhome,replicate=0
 
-  roles: 
+  roles:
     - vm_manager_single
 
 
 - hosts: spnas
   gather_facts: no
 
-  roles: 
+  roles:
     - {role: homelab_svc/spnas, tags: [spnas, svc]}

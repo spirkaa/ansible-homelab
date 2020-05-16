@@ -21,12 +21,12 @@
     lxc_options:
       - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
 
-  roles: 
+  roles:
     - vm_manager_single
 
 
 - hosts: plex
   gather_facts: no
 
-  roles: 
+  roles:
     - {role: homelab_svc/plex, tags: [plex, svc]}

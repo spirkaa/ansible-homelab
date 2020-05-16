@@ -26,7 +26,7 @@ ubnt-erx
 k8s_master
 k8s_nodes
 
-[k8s:vars] 
+[k8s:vars]
 ansible_user=centos
 
 [ct:vars]

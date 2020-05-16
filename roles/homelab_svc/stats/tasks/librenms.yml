@@ -12,7 +12,7 @@
       MYSQL_CHARSET: "utf8mb4"
       MYSQL_COLLATION: "utf8mb4_unicode_ci"
     volumes:
-      - "{{ app_path }}/librenms/db:/var/lib/mysql" 
+      - "{{ app_path }}/librenms/db:/var/lib/mysql"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes

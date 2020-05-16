@@ -31,7 +31,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -424,4 +425,3 @@ pip-selfcheck.json
 
 # ---> Ansible
 *.retry
-

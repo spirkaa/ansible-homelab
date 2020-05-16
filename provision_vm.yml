@@ -11,5 +11,5 @@
     resourse_pool: k8s
     resourse_pool_comment: Kubernetes Cluster
 
-  roles: 
+  roles:
     - vm_manager

@@ -10,5 +10,5 @@
     vm_other_options: >
       --onboot 1
 
-  roles: 
+  roles:
     - vm_manager_single

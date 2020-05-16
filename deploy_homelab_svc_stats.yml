@@ -18,12 +18,12 @@
     ct_other_options: >
       --onboot 1
 
-  roles: 
+  roles:
     - vm_manager_single
 
 
 - hosts: stats
   gather_facts: no
 
-  roles: 
+  roles:
     - {role: homelab_svc/stats, tags: [stats, svc]}

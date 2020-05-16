@@ -1,0 +1,15 @@
+---
+- name: Update postfix lookup tables
+  command: postmap /etc/postfix/sasl_passwd
+  listen: postmap
+
+- name: Restart service
+  systemd:
+    state: restarted
+    name: postfix
+  listen: postfix config changed
+
+- name: Send test mail
+  shell: echo "test mail" | /usr/bin/pvemailforward
+  changed_when: false
+  listen: postfix config changed

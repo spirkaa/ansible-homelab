@@ -1,11 +1,11 @@
 ---
 - name: Configure APT sources
-  copy: 
+  copy:
     src: files/sources.list
     dest: /etc/apt
 
 - name: Configure APT sources
-  copy: 
+  copy:
     src: files/pve-no-subscription.list
     dest: /etc/apt/sources.list.d
 

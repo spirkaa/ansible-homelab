@@ -1,3 +1,4 @@
+---
 - name: Install packages
   apt:
     state: present
@@ -10,30 +11,17 @@
   template:
     src: templates/sasl_passwd.j2
     dest: /etc/postfix/sasl_passwd
-    mode: 600
+    mode: 0600
+  notify: postmap
 
 - name: Copy replacement rules
   template:
     src: templates/smtp_header_checks.j2
     dest: /etc/postfix/smtp_header_checks
+  notify: postfix config changed
 
 - name: Copy main.cf
   template:
     src: templates/main.cf.j2
     dest: /etc/postfix/main.cf
-  register: config_file
-
-- name: Update postfix lookup tables
-  command: postmap /etc/postfix/sasl_passwd
-  changed_when: false
-
-- name: Restart postfix service
-  systemd:
-    state: restarted
-    name: postfix
-  when: config_file.changed
-
-- name: Send test mail
-  shell: echo "test mail" | /usr/bin/pvemailforward
-  changed_when: false
-  when: config_file.changed
+  notify: postfix config changed

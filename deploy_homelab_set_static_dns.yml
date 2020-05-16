@@ -58,10 +58,10 @@
       loop: "{{ dns_entries }}"
       tags: dns
 
-    # - name: Delete static DNS mapping
-    #   edgeos_config:
-    #     lines:
-    #       - delete system static-host-mapping host-name {{ dns_entry.name }}.{{ dn }}
-    #   loop_control:
-    #     loop_var: dns_entry
-    #   loop: "{{ dns_entries }}"
+# - name: Delete static DNS mapping
+#   edgeos_config:
+#     lines:
+#       - delete system static-host-mapping host-name {{ dns_entry.name }}.{{ dn }}
+#   loop_control:
+#     loop_var: dns_entry
+#   loop: "{{ dns_entries }}"
