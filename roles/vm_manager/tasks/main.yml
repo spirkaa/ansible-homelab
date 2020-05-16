@@ -1,35 +1,35 @@
 ---
 - name: Proxmox resource creation tasks
-  include_tasks:
-    file: create.yml
+  include_tasks: create.yml
+  args:
     apply:
       tags: create
   tags: create
 
 - name: Dynamic inventory tasks
-  include_tasks:
-    file: dyn_inventory.yml
+  include_tasks: dyn_inventory.yml
+  args:
     apply:
       tags: dyn_inventory
   tags: dyn_inventory
 
 - name: Proxmox resource startup tasks
-  include_tasks:
-    file: state_start.yml
+  include_tasks: state_start.yml
+  args:
     apply:
       tags: [never, start]
   tags: [never, start]
 
 - name: Proxmox resource shutdown tasks
-  include_tasks:
-    file: state_shutdown.yml
+  include_tasks: state_shutdown.yml
+  args:
     apply:
       tags: [never, shutdown]
   tags: [never, shutdown]
 
 - name: Proxmox resource destroy tasks
-  include_tasks:
-    file: destroy.yml
+  include_tasks: destroy.yml
+  args:
     apply:
       tags: [never, destroy]
   tags: [never, destroy]
