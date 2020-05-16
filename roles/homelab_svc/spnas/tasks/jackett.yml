@@ -10,6 +10,7 @@
   copy:
     src: files/Definitions
     dest: "{{ app_path }}/jackett"
+  notify: jackett - restart
   tags: jackett
 
 - name: jackett - start
@@ -40,4 +41,5 @@
       traefik.http.routers.jackett.tls: "true"
     restart_policy: unless-stopped
     state: started
+  register: jackett_start
   tags: jackett

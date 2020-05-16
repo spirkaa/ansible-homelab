@@ -1,4 +1,11 @@
 ---
+- name: jackett - restart
+  docker_container:
+    name: jackett
+    state: started
+    restart: yes
+  when: not jackett_start.changed
+
 - name: samba - restart
   docker_container:
     name: samba
