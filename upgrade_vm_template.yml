@@ -1,0 +1,82 @@
+---
+- hosts: spsrv
+  gather_facts: no
+
+  vars:
+    resource_type: vm
+    vmid: 5777
+    hostname: templatevm
+    net_ip: 192.168.13.77
+    storage_path: /mnt/tank1/ds1/proxmox
+    templates_path: "{{ storage_path }}/template/qcow2"
+    vm_image: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud.qcow2"
+
+  roles:
+    - vm_manager_single
+
+  tasks:
+    - name: Set facts
+      set_fact:
+        target_vmid: "{{ vmid }}"
+        storage_path: "{{ storage_path }}"
+        templates_path: "{{ templates_path }}"
+
+
+- hosts: templatevm
+  gather_facts: no
+
+  handlers:
+    - name: run script
+      command: /tmp/sys_prep_cloud.sh
+      async: 1
+      poll: 0
+      become: yes
+
+  tasks:
+    - name: Wait for yum process to exit (cloud-init updates)
+      wait_for:
+        path: /var/run/yum.pid
+        state: absent
+        timeout: 600
+
+    - name: Copy script
+      copy:
+        src: files/sys_prep_cloud.sh
+        dest: /tmp
+        mode: 0755
+      notify: run script
+
+
+- hosts: spsrv
+  gather_facts: no
+
+  tasks:
+    - name: Check that VM is stopped
+      command: >
+        qm status {{ target_vmid }}
+      register: vm_status
+      retries: 5
+      delay: 5
+      until: "'stopped' in vm_status.stdout"
+      changed_when: false
+
+    - block:
+        - name: Convert disk to qcow2 (full-size)
+          command: >
+            qm move_disk {{ target_vmid }} scsi0 local-spsrv-proxmox --format qcow2 --delete
+
+        - name: Delete old template
+          file:
+            path: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2"
+            state: absent
+
+        - name: Convert qcow2 to template (shrinked)
+          command: >
+            qemu-img convert -O qcow2 -c
+            {{ storage_path }}/images/{{ target_vmid }}/vm-{{ target_vmid }}-disk-0.qcow2
+            {{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2
+
+        - name: Destroy VM
+          command: >
+            qm destroy {{ target_vmid }}
+      when: "'stopped' in vm_status.stdout"
