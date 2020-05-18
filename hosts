@@ -37,7 +37,3 @@ ansible_user=centos
 
 [proxmox:vars]
 ansible_user=root
-
-[all:vars]
-ansible_ssh_common_args='-o ServerAliveInterval=5 -o StrictHostKeyChecking=no'
-ansible_python_interpreter=auto_legacy_silent

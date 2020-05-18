@@ -1,5 +1,6 @@
 ---
 - hosts: ubnt-erx
+  strategy: linear
   gather_facts: no
 
   vars:
