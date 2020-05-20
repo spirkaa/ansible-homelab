@@ -1,0 +1,119 @@
+---
+- name: autodiscover - start
+  docker_container:
+    name: autodiscover
+    image: "{{ mail_autodiscover_image }}"
+    pull: yes
+    hostname: autodiscover
+    domainname: "{{ mail_domainname }}"
+    ports:
+    - "80:80"
+    env:
+      COMPANY_NAME: "{{ mail_domainname }}"
+      SUPPORT_URL: "https://{{ mail_domainname }}"
+      DOMAIN: "{{ mail_domainname }}"
+      IMAP_HOST: "{{ mail_domainname }}"
+      SMTP_HOST: "{{ mail_domainname }}"
+    restart_policy: unless-stopped
+    state: started
+  tags: mail
+
+- name: mail - create dir
+  file:
+    path: "{{ mail_cert_path_host }}"
+    state: directory
+    recurse: yes
+  tags: mail
+
+- name: mail - load certificate vars
+  include_vars: ../traefik/vars/cert.vault.yml
+  tags: mail
+
+- name: mail - copy certificate
+  copy:
+    content: "{{ ssl_certificate }}"
+    dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.crt"
+  notify: mail - restart
+  tags: mail
+
+- name: mail - copy certificate private key
+  copy:
+    content: "{{ ssl_private_key }}"
+    dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.key"
+  notify: mail - restart
+  no_log: true
+  tags: mail
+
+- name: mail - copy files
+  template:
+    src: templates/env-mailserver.j2
+    dest: "{{ app_path }}/mail/env-mailserver"
+  tags: mail
+
+- name: mail - start
+  docker_container:
+    name: mail
+    image: "{{ mail_image }}"
+    pull: yes
+    hostname: "{{ mail_hostname }}"
+    domainname: "{{ mail_domainname }}"
+    ports:
+    - "25:25"
+    - "143:143"
+    - "587:587"
+    - "993:993"
+    env_file: "{{ app_path }}/mail/env-mailserver"
+    env:
+      DMS_DEBUG: "0"
+      SSL_TYPE: "manual"
+      SSL_CERT_PATH: "{{ mail_cert_path }}/{{ mail_cert_name }}.crt"
+      SSL_KEY_PATH: "{{ mail_cert_path }}/{{ mail_cert_name }}.key"
+      DOVECOT_PASS_ATTRS: "{{ mail_dovecot_pass_attrs }}"
+      DOVECOT_USER_ATTRS: "{{ mail_dovecot_user_attrs }}"
+      DOVECOT_AUTH_BIND: "yes"
+    volumes:
+    - "{{ app_path }}/mail/data:/var/mail"
+    - "{{ app_path }}/mail/state:/var/mail-state"
+    - "{{ app_path }}/mail/log:/var/log/mail"
+    - "{{ mail_config_path_host }}/:/tmp/docker-mailserver/"
+    - "{{ app_path }}/mail/certs:{{ mail_cert_path }}:ro"
+    capabilities:
+    - net_admin
+    - sys_ptrace
+    restart_policy: unless-stopped
+    state: started
+  register: mail_start
+  no_log: true
+  tags: mail
+
+- name: mail - customize - fix dovecot auth_bind
+  command: docker exec mail sh -c 'echo "auth_bind = yes" >> /etc/dovecot/dovecot-ldap.conf.ext'
+  changed_when: true
+  when: mail_start.changed  # noqa 503
+  notify: mail - restart
+  tags: mail
+
+- name: mail - customize - fix ldap TLS_REQCERT
+  command: docker exec mail sh -c 'echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf'
+  changed_when: true
+  when: mail_start.changed  # noqa 503
+  notify: mail - restart
+  tags: mail
+
+- name: mail - generate dkim
+  command: docker exec mail sh -c 'generate-dkim-domain {{ mail_domainname }}'
+  register: dkim_result
+  changed_when: '"Creating DKIM private key" in dkim_result.stdout'
+  notify: mail - restart
+  tags: mail
+
+- name: mail - get dkim key
+  command: cat {{ mail_config_path_host }}/opendkim/keys/{{ mail_domainname }}/mail.txt
+  register: dkim_key
+  changed_when: no
+  tags: mail
+
+- name: mail - print dkim key
+  debug:
+    var: dkim_key.stdout_lines
+  tags: mail

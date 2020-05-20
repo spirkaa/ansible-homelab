@@ -1,0 +1,7 @@
+---
+- name: mail - restart
+  docker_container:
+    name: mail
+    state: started
+    restart: yes
+  no_log: true

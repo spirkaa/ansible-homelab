@@ -10,6 +10,7 @@
     ip_dev: 192.168.10.12
     ip_mgmt: 192.168.11.2
     ip_stats: 192.168.12.98
+    ip_mail: 192.168.12.250
     ip_rp: 192.168.12.254
     dns_entries:
       - { alias: "plex", inet: "{{ ip_plex }}" }
@@ -47,6 +48,8 @@
       - { alias: "grafana", inet: "{{ ip_stats }}" }
       - { alias: "influxdb", inet: "{{ ip_stats }}" }
       - { alias: "dom", inet: "{{ ip_stats }}" }
+
+      - { alias: "mail", inet: "{{ ip_mail }}" }
 
       - { alias: "rp", inet: "{{ ip_rp }}" }
 

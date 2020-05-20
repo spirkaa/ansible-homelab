@@ -10,6 +10,7 @@ mgmt
 dev
 stats
 rp
+mail
 
 [vm]
 

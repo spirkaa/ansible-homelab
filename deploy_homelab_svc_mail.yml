@@ -1,0 +1,30 @@
+---
+- hosts: spsrv
+  gather_facts: no
+
+  vars:
+    resource_type: ct
+    vmid: 206
+    hostname: mail
+    comment: Mail
+    cores: 2
+    mem: 2048
+    disk_size: 8
+    net_ip: 192.168.12.250
+    net_vlan: 12
+    net_gw: 192.168.12.1
+    net_dns: 192.168.12.1,208.67.222.222
+    net_domain: home.devmem.ru
+    ct_other_options: >
+      --onboot 1
+
+  roles:
+    - vm_manager_single
+    - portainer_api
+
+
+- hosts: mail
+  gather_facts: no
+
+  roles:
+    - {role: homelab_svc/mail, tags: [mail, svc]}
