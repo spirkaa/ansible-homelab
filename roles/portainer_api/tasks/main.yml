@@ -1,0 +1,37 @@
+---
+- name: Auth
+  uri:
+    url: "{{ portainer_api_url }}/auth"
+    method: POST
+    body_format: json
+    body: { "Username":"{{ portainer_api_user }}", "Password":"{{ portainer_api_pass }}" }
+  register: portainer_api_auth
+  tags: portainer_api
+
+- name: Get endpoints
+  uri:
+    url: "{{ portainer_api_url }}/endpoints"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ portainer_api_auth.json.jwt }}"
+  register: portainer_api_endpoints
+  tags: portainer_api
+
+- name: Add endpoint
+  uri:
+    url: "{{ portainer_api_url }}/endpoints"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      Name: "{{ portainer_api_hostname }}"
+      URL: "{{ portainer_api_endpoint_url }}"
+      PublicURL: "{{ portainer_api_endpoint_public_url }}"
+      EndpointType: 1
+    headers:
+      Authorization: "Bearer {{ portainer_api_auth.json.jwt }}"
+  register: portainer_api_endpoint_add
+  changed_when: >
+    portainer_api_endpoint_add.status == 200 and
+    portainer_api_endpoint_add.json.Name == hostname
+  when: hostname not in portainer_api_endpoints.json | json_query('[].Name')
+  tags: portainer_api
