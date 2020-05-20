@@ -1,0 +1,173 @@
+---
+- name: phpldapadmin - start
+  docker_container:
+    name: phpldapadmin
+    image: "{{ freeipa_phpldapadmin_image }}"
+    pull: yes
+    env:
+      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'{{ freeipa_hostname }}': [{'server': [{'tls': True}]}, {'login': [{'bind_id': '{{ freeipa_bind_id }}'}]}]}]"
+      PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "allow"
+      PHPLDAPADMIN_HTTPS: "false"
+      PHPLDAPADMIN_TRUST_PROXY_SSL: "true"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.phpldapadmin.rule: "HostRegexp(`ldap{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.phpldapadmin.entrypoints: "websecure"
+      traefik.http.routers.phpldapadmin.tls: "true"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: freeipa
+
+- name: freeipa - start
+  docker_container:
+    name: freeipa
+    image: "{{ freeipa_image }}"
+    pull: yes
+    hostname: "{{ freeipa_hostname }}"
+    ports:
+      - "389:389"  # ldap
+      - "636:636"  # ldaps
+      - "88:88"  # kerberos
+      - "88:88/udp"  # kerberos
+      - "464:464"  # kpasswd
+      - "464:464/udp"  # kpasswd
+      - "123:123/udp"  # ntp
+      - "53:53"  # dns
+      - "53:53/udp"  # dns
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "{{ freeipa_data_host_path }}:/data"
+      - "{{ freeipa_journal_host_path }}:/var/log/journal"
+    tmpfs:
+      - "/run"
+      - "/tmp"
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 0
+    security_opts:
+      - "seccomp:unconfined"
+    command: >
+      --unattended
+      --realm={{ app_base_domain | upper }}
+      --domain={{ app_base_domain }}
+      --ds-password={{ freeipa_ds_password }}
+      --admin-password={{ freeipa_admin_password }}
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.freeipa.rule: "HostRegexp(`ipa{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.freeipa.entrypoints: "websecure"
+      traefik.http.routers.freeipa.tls: "true"
+      traefik.http.services.freeipa.loadbalancer.server.port: "443"
+      traefik.http.services.freeipa.loadbalancer.server.scheme: "https"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: freeipa
+
+- name: freeipa - wait for install to finish
+  wait_for:
+    path: "{{ freeipa_data_host_path }}/var/log/ipaserver-install.log"
+    search_regex: "The ipa-server-install command was successful"
+    timeout: 1200
+  tags: freeipa
+
+- name: freeipa - customize - copy custom schema
+  vars:
+    realm: "{{ app_base_domain | replace('.','-') | upper }}"  # int.domain.com -> INT-DOMAIN-COM
+  copy:
+    src: files/98postfix-book.ldif
+    dest: "{{ freeipa_data_host_path }}/etc/dirsrv/slapd-{{ realm }}/schema"
+  notify: freeipa - restart
+  tags: freeipa
+
+- name: Force all notified handlers
+  meta: flush_handlers
+  tags: freeipa
+
+- name: freeipa - wait for ipa webui become available
+  uri:
+    url: "https://{{ freeipa_hostname }}/ipa/ui/"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 1
+  tags: freeipa
+
+- name: freeipa - customize - check if permisssion already exists
+  command: >
+    docker exec freeipa sh -c 'kdestroy 2> /dev/null;
+    echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
+    ipa permission-show "Read Postfix Book Attributes"'
+  register: permission_show
+  failed_when: permission_show.rc >= 1 and "permission not found" not in permission_show.stderr
+  changed_when: false
+  no_log: true
+  tags: freeipa
+
+- name: freeipa - customize - permisssion for custom schema attrs
+  command: >
+    docker exec freeipa sh -c 'kdestroy 2> /dev/null;
+    echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
+    ipa permission-add "Read Postfix Book Attributes"
+    --right=read --right=search --right=compare
+    --bindtype=all
+    --type=user
+    --attrs={mailHomeDirectory,mailAlias,mailUidNumber,mailGidNumber,mailEnabled,mailGroupMember,mailQuotaBytes,mailStorageDirectory,mailSieveRuleSource,mailForwardingAddr}'
+  register: permission_add
+  changed_when: '"Added permission" in permission_add.stdout'
+  when: '"Read Postfix Book Attributes" not in permission_show.stdout'
+  no_log: true
+  tags: freeipa
+
+- name: freeipa - customize - default user object classes
+  command: >
+    docker exec freeipa sh -c 'kdestroy 2> /dev/null;
+    echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
+    ipa config-mod
+    --userobjectclasses={top,person,organizationalperson,inetorgperson,inetuser,posixaccount,krbprincipalaux,krbticketpolicyaux,ipaobject,ipasshuser,PostfixBookMailAccount}'
+  register: userobjectclasses_mod
+  failed_when: >
+    userobjectclasses_mod.rc >= 1 and
+    "no modifications to be performed" not in userobjectclasses_mod.stderr
+  changed_when: '"PostfixBookMailAccount" in userobjectclasses_mod.stdout'
+  no_log: true
+  tags: freeipa
+
+- name: freeipa - customize - default mail domain
+  vars:
+    change_check_str: "Default e-mail domain: {{ freeipa_mail_domain }}"
+  command: >
+    docker exec freeipa sh -c 'kdestroy 2> /dev/null;
+    echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
+    ipa config-mod
+    --emaildomain={{ freeipa_mail_domain }}'
+  register: emaildomain_mod
+  failed_when: >
+    emaildomain_mod.rc >= 1 and
+    "no modifications to be performed" not in emaildomain_mod.stderr
+  changed_when: change_check_str in emaildomain_mod.stdout
+  no_log: true
+  tags: freeipa
+
+- name: freeipa - customize - password global policy
+  vars:
+    change_check_str: "Max lifetime (days): {{ freeipa_password_policy_maxlife }}"
+  command: >
+    docker exec freeipa sh -c 'kdestroy 2> /dev/null;
+    echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
+    ipa pwpolicy-mod global_policy
+    --maxlife={{ freeipa_password_policy_maxlife }}'
+  register: pwpolicy_mod
+  failed_when: >
+    pwpolicy_mod.rc >= 1 and
+    "no modifications to be performed" not in pwpolicy_mod.stderr
+  changed_when: change_check_str in emaildomain_mod.stdout
+  no_log: true
+  tags: freeipa

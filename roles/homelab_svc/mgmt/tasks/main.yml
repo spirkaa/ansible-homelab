@@ -3,6 +3,10 @@
   include_tasks: bitwarden.yml
   tags: bitwarden
 
+- name: freeipa
+  include_tasks: freeipa.yml
+  tags: freeipa
+
 - name: heimdall
   include_tasks: heimdall.yml
   tags: heimdall

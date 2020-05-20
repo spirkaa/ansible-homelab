@@ -1,0 +1,7 @@
+---
+- name: freeipa - restart
+  docker_container:
+    name: freeipa
+    state: started
+    restart: yes
+  no_log: true

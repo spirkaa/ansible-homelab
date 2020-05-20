@@ -20,6 +20,7 @@
 
   roles:
     - vm_manager_single
+    - portainer_api
 
 
 - hosts: mgmt
