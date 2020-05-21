@@ -24,7 +24,8 @@ mail_ldap_bind_pw: !vault |
           3265656133636464370a613134306533356130326333653134623765663035333438626561306162
           3163
 
-mail_ldap_access_filter: (objectclass=inetorgperson)(memberof=cn=mail_users,cn=groups,cn=accounts,{{ mail_ldap_search_base }})
+mail_ldap_access_group: mail_users
+mail_ldap_access_filter: (objectclass=inetorgperson)(memberof=cn={{ mail_ldap_access_group }},cn=groups,cn=accounts,{{ mail_ldap_search_base }})
 
 mail_ldap_query_filter_user: (&{{ mail_ldap_access_filter }}(mail=%s))
 mail_ldap_query_filter_group: (&{{ mail_ldap_access_filter }}(mailgroupmember=%s))
