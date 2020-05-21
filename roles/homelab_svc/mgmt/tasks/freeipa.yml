@@ -168,6 +168,6 @@
   failed_when: >
     pwpolicy_mod.rc >= 1 and
     "no modifications to be performed" not in pwpolicy_mod.stderr
-  changed_when: change_check_str in emaildomain_mod.stdout
+  changed_when: change_check_str in pwpolicy_mod.stdout
   no_log: true
   tags: freeipa
