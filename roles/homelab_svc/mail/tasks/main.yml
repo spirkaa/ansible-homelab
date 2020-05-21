@@ -103,13 +103,15 @@
   notify: mail - restart
   tags: mail
 
-- name: mail - get dkim key
-  command: cat {{ mail_config_path_host }}/opendkim/keys/{{ mail_domainname }}/mail.txt
-  register: dkim_key
-  changed_when: no
-  tags: mail
+- block:
+    - name: mail - get dkim key
+      command: cat {{ mail_config_path_host }}/opendkim/keys/{{ mail_domainname }}/mail.txt
+      register: dkim_key
+      changed_when: no
+      tags: mail
 
-- name: mail - print dkim key
-  debug:
-    var: dkim_key.stdout_lines
-  tags: mail
+    - name: mail - print dkim key
+      debug:
+        var: dkim_key.stdout_lines
+      tags: mail
+  when: dkim_result.changed
