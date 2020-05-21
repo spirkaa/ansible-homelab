@@ -5,7 +5,7 @@
     image: "{{ freeipa_phpldapadmin_image }}"
     pull: yes
     env:
-      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'{{ freeipa_hostname }}': [{'server': [{'tls': True}]}, {'login': [{'bind_id': '{{ freeipa_bind_id }}'}]}]}]"
+      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'{{ freeipa_hostname }}': [{'server': [{'tls': 'true'},{'hide_noaccess_base': 'true'}]}, {'login': [{'bind_id': '{{ freeipa_bind_id }}'},{'timeout': '60'}]}, {'appearance': [{'open_tree': 'true'}]}]}]"
       PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "allow"
       PHPLDAPADMIN_HTTPS: "false"
       PHPLDAPADMIN_TRUST_PROXY_SSL: "true"
