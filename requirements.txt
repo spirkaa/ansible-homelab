@@ -1,3 +1,4 @@
 openshift
 python-dotenv
+python-ldap
 requests

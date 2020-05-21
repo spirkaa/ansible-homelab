@@ -1,0 +1,30 @@
+---
+- name: freeipa - include_vars
+  include_vars:
+    file: ../defaults/main.yml
+
+- name: freeipa - ensure service account is present
+  ldap_entry:
+    dn: "{{ freeipa_service_bind_sysaccount_dn | default('uid=sudo,cn=sysaccounts,cn=etc,dc=home,dc=devmem,dc=ru') }}"
+    objectClass:
+      - account
+      - simplesecurityobject
+    attributes:
+      userPassword: "{{ freeipa_service_bind_sysaccount_pass | default('str0ng_passw0rd') }}"
+      passwordExpirationTime: "20380119031407Z"
+      nsIdleTimeout: "0"
+    state: absent
+    server_uri: "ldap://{{ freeipa_hostname }}/"
+    bind_dn: "cn=Directory Manager"
+    bind_pw: "{{ freeipa_ds_password }}"
+    start_tls: yes
+    validate_certs: no
+  delegate_to: localhost
+
+- name: freeipa - ensure service group is present
+  ipa_group:
+    name: "{{ freeipa_service_bind_group_name | default('ipausers') }}"
+    state: present
+    ipa_host: "{{ freeipa_hostname }}"
+    ipa_pass: "{{ freeipa_admin_password }}"
+  delegate_to: localhost
