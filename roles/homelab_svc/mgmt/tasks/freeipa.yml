@@ -140,22 +140,6 @@
   no_log: true
   tags: freeipa
 
-- name: freeipa - customize - default mail domain
-  vars:
-    change_check_str: "Default e-mail domain: {{ freeipa_mail_domain }}"
-  command: >
-    docker exec freeipa sh -c 'kdestroy 2> /dev/null;
-    echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
-    ipa config-mod
-    --emaildomain={{ freeipa_mail_domain }}'
-  register: emaildomain_mod
-  failed_when: >
-    emaildomain_mod.rc >= 1 and
-    "no modifications to be performed" not in emaildomain_mod.stderr
-  changed_when: change_check_str in emaildomain_mod.stdout
-  no_log: true
-  tags: freeipa
-
 - name: freeipa - customize - password global policy
   vars:
     change_check_str: "Max lifetime (days): {{ freeipa_password_policy_maxlife }}"
@@ -170,4 +154,11 @@
     "no modifications to be performed" not in pwpolicy_mod.stderr
   changed_when: change_check_str in pwpolicy_mod.stdout
   no_log: true
+  tags: freeipa
+
+- name: freeipa - customize - default mail domain
+  ipa_config:
+    ipadefaultemaildomain: "{{ freeipa_mail_domain }}"
+    ipa_host: "{{ freeipa_hostname }}"
+    ipa_pass: "{{ freeipa_admin_password }}"
   tags: freeipa
