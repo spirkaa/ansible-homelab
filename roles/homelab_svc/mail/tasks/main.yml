@@ -7,7 +7,7 @@
     hostname: autodiscover
     domainname: "{{ mail_domainname }}"
     ports:
-    - "80:80"
+      - "80:80"
     env:
       COMPANY_NAME: "{{ mail_domainname }}"
       SUPPORT_URL: "https://{{ mail_domainname }}"
@@ -58,10 +58,10 @@
     hostname: "{{ mail_hostname }}"
     domainname: "{{ mail_domainname }}"
     ports:
-    - "25:25"
-    - "143:143"
-    - "587:587"
-    - "993:993"
+      - "25:25"
+      - "143:143"
+      - "587:587"
+      - "993:993"
     env_file: "{{ app_path }}/mail/env-mailserver"
     env:
       DMS_DEBUG: "0"
@@ -72,32 +72,28 @@
       DOVECOT_USER_ATTRS: "{{ mail_dovecot_user_attrs }}"
       DOVECOT_AUTH_BIND: "yes"
     volumes:
-    - "{{ app_path }}/mail/data:/var/mail"
-    - "{{ app_path }}/mail/state:/var/mail-state"
-    - "{{ app_path }}/mail/log:/var/log/mail"
-    - "{{ mail_config_path_host }}/:/tmp/docker-mailserver/"
-    - "{{ app_path }}/mail/certs:{{ mail_cert_path }}:ro"
+      - "{{ app_path }}/mail/data:/var/mail"
+      - "{{ app_path }}/mail/state:/var/mail-state"
+      - "{{ app_path }}/mail/log:/var/log/mail"
+      - "{{ mail_config_path_host }}/:/tmp/docker-mailserver/"
+      - "{{ app_path }}/mail/certs:{{ mail_cert_path }}:ro"
     capabilities:
-    - net_admin
-    - sys_ptrace
+      - net_admin
+      - sys_ptrace
     restart_policy: unless-stopped
     state: started
   register: mail_start
   no_log: true
   tags: mail
 
-- name: mail - customize - fix dovecot auth_bind
-  command: docker exec mail sh -c 'echo "auth_bind = yes" >> /etc/dovecot/dovecot-ldap.conf.ext'
+- name: mail - customize
+  command: docker exec mail sh -c '{{ item }}'
   changed_when: true
   when: mail_start.changed  # noqa 503
   notify: mail - restart
-  tags: mail
-
-- name: mail - customize - fix ldap TLS_REQCERT
-  command: docker exec mail sh -c 'echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf'
-  changed_when: true
-  when: mail_start.changed  # noqa 503
-  notify: mail - restart
+  loop:
+    - echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf
+    - echo "auth_bind = yes" >> /etc/dovecot/dovecot-ldap.conf.ext
   tags: mail
 
 - name: mail - generate dkim
