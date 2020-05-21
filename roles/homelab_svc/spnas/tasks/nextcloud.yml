@@ -45,5 +45,16 @@
       - "nextcloud-db:nextcloud-db"
     restart_policy: unless-stopped
     state: started
+  register: nextcloud_start
   no_log: true
+  tags: nextcloud
+
+- name: nextcloud - customize
+  command: docker exec nextcloud sh -c '{{ item }}'
+  changed_when: true
+  when: nextcloud_start.changed  # noqa 503
+  notify: nextcloud - restart
+  loop:
+    - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
+    - echo "apc.enable_cli=1" >> /php/conf.d/apcu.ini
   tags: nextcloud

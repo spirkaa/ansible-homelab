@@ -13,3 +13,10 @@
     restart: yes
   no_log: true
   when: not samba_start.changed
+
+- name: nextcloud - restart
+  docker_container:
+    name: nextcloud
+    state: started
+    restart: yes
+  no_log: true
