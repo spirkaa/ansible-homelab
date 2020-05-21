@@ -1,0 +1,16 @@
+---
+- name: freeipa - include_vars
+  include_vars:
+    file: ../defaults/main.yml
+
+- name: freeipa - manage user '{{ user.uid }}'
+  ipa_user:
+    uid: "{{ user.uid }}"
+    givenname: "{{ user.givenname }}"
+    sn: "{{ user.sn }}"
+    password: "{{ user.password }}"
+    update_password: "{{ user.update_password | default('on_create') }}"
+    state: "{{ user.state | default('present') }}"
+    ipa_host: "{{ freeipa_hostname }}"
+    ipa_pass: "{{ freeipa_admin_password }}"
+  no_log: true

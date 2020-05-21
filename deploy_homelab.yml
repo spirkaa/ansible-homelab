@@ -2,12 +2,13 @@
 - hosts: all
   gather_facts: no
 
-- import_playbook: deploy_homelab_svc_mail.yml
-- import_playbook: deploy_homelab_svc_rp.yml
+- import_playbook: deploy_homelab_set_static_dns.yml
 - import_playbook: deploy_homelab_svc_mgmt.yml
+- import_playbook: deploy_homelab_manage_users.yml
+- import_playbook: deploy_homelab_svc_rp.yml
+- import_playbook: deploy_homelab_svc_mail.yml
 - import_playbook: deploy_homelab_svc_stats.yml
 - import_playbook: deploy_homelab_svc_dev.yml
 - import_playbook: deploy_homelab_svc_spnas.yml
 - import_playbook: deploy_homelab_svc_plex.yml
 - import_playbook: deploy_homelab_upgrade_packages.yml
-- import_playbook: deploy_homelab_set_static_dns.yml
