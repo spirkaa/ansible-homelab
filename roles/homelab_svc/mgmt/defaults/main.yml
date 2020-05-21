@@ -6,8 +6,8 @@ tz: "Europe/Moscow"
 
 bitwarden_image: bitwardenrs/server:alpine
 freeipa_image: freeipa/freeipa-server:latest
-freeipa_phpldapadmin_image: osixia/phpldapadmin:0.9.0
 heimdall_image: linuxserver/heimdall:latest
+phpldapadmin_image: osixia/phpldapadmin:0.9.0
 portainer_image: portainer/portainer:latest
 unifi_image: linuxserver/unifi-controller:latest
 unms_image: nico640/docker-unms:latest
@@ -54,6 +54,18 @@ freeipa_admin_password: !vault |
           33383564633237306134346439376362353262303330623232616265396662306139373661623938
           6663393731656539630a656566306666336231663262653065633966306136376461346436353630
           3730
-freeipa_bind_id: uid=admin,cn=users,cn=accounts,dc=home,dc=devmem,dc=ru
 freeipa_mail_domain: devmem.ru
 freeipa_password_policy_maxlife: "3650"
+freeipa_base_dn: dc=home,dc=devmem,dc=ru
+
+phpldapadmin_bind_id: uid=admin,cn=users,cn=accounts,{{ freeipa_base_dn }}
+
+portainer_ldap_bind_dn: uid=portainersvc,cn=sysaccounts,cn=etc,{{ freeipa_base_dn }}
+portainer_ldap_bind_pw: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35343831333135376532356663646137366334623332653534616332633662363438383830303864
+          3462333632636665616536336134636166326132663935640a373131306161356438663235393138
+          31623131323164356338373934343331343736313061363534393264376338396634613663313436
+          6163653266633863330a343434663561636430366266326635636134643234613863386166343635
+          6338
+portainer_ldap_access_group: portainer_users
