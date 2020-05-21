@@ -7,13 +7,20 @@
     hostname: autodiscover
     domainname: "{{ mail_domainname }}"
     ports:
-      - "80:80"
+      - "8000:8000"
     env:
       COMPANY_NAME: "{{ mail_domainname }}"
-      SUPPORT_URL: "https://{{ mail_domainname }}"
+      SUPPORT_URL: "https://autodiscover.{{ mail_domainname }}"
       DOMAIN: "{{ mail_domainname }}"
-      IMAP_HOST: "{{ mail_domainname }}"
-      SMTP_HOST: "{{ mail_domainname }}"
+      IMAP_HOST: "imap.{{ mail_domainname }}"
+      IMAP_PORT: "993"
+      IMAP_SOCKET: "SSL"
+      SMTP_HOST: "smtp.{{ mail_domainname }}"
+      SMTP_PORT: "587"
+      SMTP_SOCKET: "STARTTLS"
+      PROFILE_IDENTIFIER: "ru.devmem.autodiscover"
+      PROFILE_UUID: "92943D26-CAB3-4086-897D-DC6C0D8B1E86"
+      MAIL_UUID: "7A981A9E-D5D0-4EF8-87FE-39FD6A506FAC"
     restart_policy: unless-stopped
     state: started
   tags: mail

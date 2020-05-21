@@ -3,6 +3,7 @@
 Роль Ansible, которая запускает почтовый сервер в Docker контейнере:
 
 * [tvial/docker-mailserver](https://hub.docker.com/r/tvial/docker-mailserver)
+* [monogramm/autodiscover-email-settings](https://hub.docker.com/r/monogramm/autodiscover-email-settings)
 
 ## Зависимости
 
