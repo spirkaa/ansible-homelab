@@ -57,6 +57,12 @@
     dest: "{{ app_path }}/mail/env-mailserver"
   tags: mail
 
+- name: mail - copy files
+  copy:
+    src: files/15-mailboxes.conf
+    dest: "{{ app_path }}/mail"
+  tags: mail
+
 - name: mail - start
   docker_container:
     name: mail
@@ -84,6 +90,7 @@
       - "{{ app_path }}/mail/log:/var/log/mail"
       - "{{ mail_config_path_host }}/:/tmp/docker-mailserver/"
       - "{{ app_path }}/mail/certs:{{ mail_cert_path }}:ro"
+      - "{{ app_path }}/mail/15-mailboxes.conf:/etc/dovecot/conf.d/15-mailboxes.conf:ro"
     capabilities:
       - net_admin
       - sys_ptrace
