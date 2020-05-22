@@ -17,7 +17,9 @@
             32313064336530303561626165643933666163643538633461333534626365393965
         attrs:
           - name: mailAlias
-            value: postmaster@devmem.ru
+            value: "postmaster@devmem.ru"
+          - name: mailAlias
+            value: "@devmem.ru"
 
       - uid: ansible
         givenname: ansible
