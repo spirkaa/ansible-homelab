@@ -18,10 +18,41 @@
       SIGNUPS_ALLOWED: "false"
       WEBSOCKET_ENABLED: "true"
       IP_HEADER: "X-Forwarded-For"
-      DOMAIN: "https://bw.devmem.ru"
+      DOMAIN: "{{ bitwarden_domain }}"
       LOG_FILE: "/data/bitwarden.log"
     volumes:
       - "{{ app_path }}/bitwarden/data:/data"
     restart_policy: unless-stopped
     state: started
+  no_log: true
+  tags: bitwarden
+
+- name: bitwarden_ldap - configure freeipa
+  include_tasks: freeipa_service_bind.yml
+  vars:
+    freeipa_service_bind_sysaccount_dn: "{{ bitwarden_ldap_bind_dn }}"
+    freeipa_service_bind_sysaccount_pass: "{{ bitwarden_ldap_bind_pw }}"
+    freeipa_service_bind_group_name: "{{ bitwarden_ldap_access_group }}"
+  args:
+    apply:
+      tags: bitwarden
+  tags: bitwarden
+
+- name: bitwarden_ldap - copy files
+  template:
+    src: templates/bitwarden_ldap_config.toml.j2
+    dest: "{{ app_path }}/bitwarden/ldap_config.toml"
+  notify: bitwarden_ldap - restart
+  tags: bitwarden
+
+- name: bitwarden_ldap - start
+  docker_container:
+    name: bitwarden_ldap
+    image: "{{ bitwarden_ldap_image }}"
+    pull: yes
+    volumes:
+      - "{{ app_path }}/bitwarden/ldap_config.toml:/config.toml:ro"
+    restart_policy: unless-stopped
+    state: started
+  register: bitwarden_ldap_start
   tags: bitwarden

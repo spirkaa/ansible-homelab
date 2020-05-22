@@ -5,3 +5,10 @@
     state: started
     restart: yes
   no_log: true
+
+- name: bitwarden_ldap - restart
+  docker_container:
+    name: bitwarden_ldap
+    state: started
+    restart: yes
+  when: not bitwarden_ldap_start.changed
