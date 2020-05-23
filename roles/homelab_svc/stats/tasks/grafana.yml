@@ -5,7 +5,9 @@
     state: directory
     recurse: yes
   loop:
-    - "config"
+    - "config/provisioning/dashboards"
+    - "config/provisioning/datasources"
+    - "config/provisioning/notifiers"
     - "data"
   tags: grafana
 
@@ -14,6 +16,15 @@
     src: templates/ldap.toml.j2
     dest: "{{ app_path }}/grafana/config/ldap.toml"
   notify: grafana - restart
+  tags: grafana
+
+- name: grafana - copy files
+  copy:
+    src: files/{{ item }}
+    dest: "{{ app_path }}/grafana/config/{{ item }}"
+  notify: grafana - restart
+  loop:
+    - "provisioning/datasources/datasources.yml"
   tags: grafana
 
 - name: grafana - get data dir ownership
@@ -37,6 +48,7 @@
     env:
       GF_AUTH_LDAP_ENABLED: "true"
     volumes:
+      - "{{ app_path }}/grafana/config/provisioning:/etc/grafana/provisioning"
       - "{{ app_path }}/grafana/config/ldap.toml:/etc/grafana/ldap.toml"
       - "{{ app_path }}/grafana/data:/var/lib/grafana"
     networks:

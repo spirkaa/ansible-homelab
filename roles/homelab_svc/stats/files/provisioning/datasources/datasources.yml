@@ -1,0 +1,21 @@
+# config file version
+apiVersion: 1
+
+datasources:
+- name: Loki
+  type: loki
+  access: proxy
+  orgId: 1
+  uid: loki
+  url: http://loki:3100
+  editable: false
+  version: 1
+
+- name: Prometheus
+  type: prometheus
+  access: proxy
+  orgId: 1
+  uid: prometheus
+  url: http://prometheus:9090
+  editable: false
+  version: 1
