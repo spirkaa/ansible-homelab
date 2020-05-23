@@ -55,9 +55,13 @@
     command: >
       --log.level={{ traefik_log_level }}
       --api=true
+      --metrics.prometheus=true
+      --metrics.prometheus.entryPoint=metrics
+      --metrics.prometheus.manualrouting=true
       --providers.file.filename={{ traefik_config_file }}
       --providers.docker=true
       --providers.docker.exposedbydefault=false
+      --entryPoints.metrics.address=:8080
       --entrypoints.web.address=:{{ traefik_web_port }}
       --entrypoints.web.http.redirections.entryPoint.to=websecure
       --entrypoints.web.http.redirections.entryPoint.scheme=https
@@ -69,6 +73,10 @@
       traefik.http.routers.traefik.service: "api@internal"
       traefik.http.routers.traefik.entrypoints: "websecure"
       traefik.http.routers.traefik.tls: "true"
+      traefik.http.routers.traefik-metrics.rule: "{{ traefik_hostname_rule }} && PathPrefix(`/metrics`)"
+      traefik.http.routers.traefik-metrics.service: "prometheus@internal"
+      traefik.http.routers.traefik-metrics.entrypoints: "websecure"
+      traefik.http.routers.traefik-metrics.tls: "true"
     restart_policy: unless-stopped
     state: started
   register: traefik_start

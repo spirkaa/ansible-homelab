@@ -16,5 +16,4 @@ traefik_config_file_host: "{{ app_path }}/traefik/dyn.toml"
 traefik_config_file: /etc/traefik/dyn.toml
 
 traefik_domain_name: home.devmem.ru
-traefik_hostname_rule: >
-  HostRegexp(`traefik-{{ inventory_hostname_short }}{fqdn:(.{{ traefik_domain_name }})?}`)
+traefik_hostname_rule: HostRegexp(`traefik-{{ inventory_hostname_short }}{fqdn:(.{{ traefik_domain_name }})?}`)
