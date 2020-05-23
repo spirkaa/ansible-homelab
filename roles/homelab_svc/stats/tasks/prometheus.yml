@@ -7,27 +7,27 @@
   loop:
     - "config"
     - "data"
-  tags: prometheus
+  tags: [prometheus, grafana]
 
 - name: prometheus - copy files
   copy:
     src: files/prometheus.yml
     dest: "{{ app_path }}/prometheus/config"
   notify: prometheus - restart
-  tags: prometheus
+  tags: [prometheus, grafana]
 
 - name: prometheus - get data dir ownership
   stat:
     path: "{{ app_path }}/prometheus/data"
   register: prometheus_data
-  tags: prometheus
+  tags: [prometheus, grafana]
 
 - name: prometheus - set data dir ownership
   command: chown -R 65534:65534 {{ app_path }}/prometheus/data
   when: prometheus_data.stat.uid != 65534 or prometheus_data.stat.gid != 65534
   args:
     warn: no
-  tags: prometheus
+  tags: [prometheus, grafana]
 
 - name: prometheus - start
   docker_container:
@@ -49,4 +49,4 @@
     restart_policy: unless-stopped
     state: started
   register: prometheus_start
-  tags: prometheus
+  tags: [prometheus, grafana]
