@@ -1,20 +1,54 @@
 ---
+- name: grafana - create dir
+  file:
+    path: "{{ app_path }}/grafana/{{ item }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "config"
+    - "data"
+  tags: grafana
+
+- name: grafana - copy files
+  template:
+    src: templates/ldap.toml.j2
+    dest: "{{ app_path }}/grafana/config/ldap.toml"
+  notify: grafana - restart
+  tags: grafana
+
+- name: grafana - get data dir ownership
+  stat:
+    path: "{{ app_path }}/grafana/data"
+  register: grafana_data
+  tags: grafana
+
+- name: grafana - set data dir ownership
+  command: chown -R 472:472 {{ app_path }}/grafana/data
+  when: grafana_data.stat.uid != 472 or grafana_data.stat.gid != 472
+  args:
+    warn: no
+  tags: grafana
+
 - name: grafana - start
   docker_container:
     name: grafana
     image: "{{ grafana_image }}"
     pull: yes
+    env:
+      GF_AUTH_LDAP_ENABLED: "true"
     volumes:
-      - "{{ app_path }}/grafana/config:/var/lib/grafana"
+      - "{{ app_path }}/grafana/config/ldap.toml:/etc/grafana/ldap.toml"
+      - "{{ app_path }}/grafana/data:/var/lib/grafana"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
-      traefik.http.routers.grafana.rule: "HostRegexp(`grafana{fqdn:(.home.devmem.ru)?}`) || Host(`grafana.stats`)"
+      traefik.http.routers.grafana.rule: "HostRegexp(`grafana{fqdn:(.{{ app_base_domain }})?}`)"
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
       traefik.http.routers.grafana.entrypoints: "websecure"
       traefik.http.routers.grafana.tls: "true"
     restart_policy: unless-stopped
     state: started
+  register: grafana_start
   tags: grafana

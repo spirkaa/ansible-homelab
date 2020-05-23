@@ -18,3 +18,19 @@
 - name: mosquitto
   include_tasks: mosquitto.yml
   tags: mosquitto
+
+- name: grafana - configure freeipa
+  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  vars:
+    freeipa_service_bind_sysaccount_dn: "{{ grafana_ldap_bind_dn }}"
+    freeipa_service_bind_sysaccount_pass: "{{ grafana_ldap_bind_pw }}"
+    freeipa_service_bind_group_name: "{{ item }}"
+  args:
+    apply:
+      tags: grafana
+  loop:
+    - "{{ grafana_ldap_access_group }}"
+    - "{{ grafana_ldap_admins }}"
+    - "{{ grafana_ldap_editors }}"
+    - "{{ grafana_ldap_viewers }}"
+  tags: grafana

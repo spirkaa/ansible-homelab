@@ -29,3 +29,10 @@
     state: started
     restart: yes
   when: not mosquitto_start.changed
+
+- name: grafana - restart
+  docker_container:
+    name: grafana
+    state: started
+    restart: yes
+  when: not grafana_start.changed

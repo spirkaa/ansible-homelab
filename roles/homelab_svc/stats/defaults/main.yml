@@ -12,6 +12,30 @@ librenms_image: jarischaefer/docker-librenms:latest
 mosquitto_image: eclipse-mosquitto:latest
 
 app_network_name: traefik
+app_base_domain: home.devmem.ru
+
+ldap_server_host: ipa.{{ app_base_domain }}
+ldap_server_port: 389
+ldap_search_base: dc=home,dc=devmem,dc=ru
+ldap_search_base_users: cn=users,cn=accounts,dc=home,dc=devmem,dc=ru
+ldap_search_base_groups: cn=groups,cn=accounts,dc=home,dc=devmem,dc=ru
+
+grafana_ldap_bind_dn: uid=grafanasvc,cn=sysaccounts,cn=etc,{{ ldap_search_base }}
+grafana_ldap_bind_pw: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          61313863376133333761313665306166393561336235393730386636626239393136346139336330
+          3630383530353264346561303031313263666562313666660a363534343734346562636236666535
+          30376336323865383965303939353465643334303335396565333835363237363461326265333935
+          6135393634343535330a616534386366636537383435313261353566656533336431323533373166
+          3537
+grafana_ldap_access_group: grafana_users
+grafana_ldap_access_filter: (&(&(objectclass=inetorgperson)(memberof=cn={{ grafana_ldap_access_group }},{{ ldap_search_base_groups }}))(|(uid=%s)(mail=%s)))
+grafana_ldap_admins: grafana_admins
+grafana_ldap_admins_dn: cn={{ grafana_ldap_admins }},{{ ldap_search_base_groups }}
+grafana_ldap_editors: grafana_rw_users
+grafana_ldap_editors_dn: cn={{ grafana_ldap_editors }},{{ ldap_search_base_groups }}
+grafana_ldap_viewers: grafana_ro_users
+grafana_ldap_viewers_dn: cn={{ grafana_ldap_viewers }},{{ ldap_search_base_groups }}
 
 librenms_db_root_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
