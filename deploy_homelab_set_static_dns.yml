@@ -48,6 +48,7 @@
       - { alias: "grafana", inet: "{{ ip_stats }}" }
       - { alias: "influxdb", inet: "{{ ip_stats }}" }
       - { alias: "dom", inet: "{{ ip_stats }}" }
+      - { alias: "loki", inet: "{{ ip_stats }}" }
 
       - { alias: "mail", inet: "{{ ip_mail }}" }
 
@@ -67,7 +68,8 @@
 # - name: Delete static DNS mapping
 #   edgeos_config:
 #     lines:
-#       - delete system static-host-mapping host-name {{ dns_entry.name }}.{{ dn }}
+#       - delete system static-host-mapping host-name {{ dns_entry.alias }}.{{ dn }}
 #   loop_control:
 #     loop_var: dns_entry
 #   loop: "{{ dns_entries }}"
+#   tags: dns

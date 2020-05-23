@@ -1,0 +1,43 @@
+---
+- name: loki - create dir
+  file:
+    path: "{{ app_path }}/loki/data"
+    state: directory
+    recurse: yes
+  tags: loki
+
+- name: loki - get data dir ownership
+  stat:
+    path: "{{ app_path }}/loki/data"
+  register: loki_data
+  tags: loki
+
+- name: loki - set data dir ownership
+  command: chown -R 10001:10001 {{ app_path }}/loki/data
+  when: loki_data.stat.uid != 10001 or loki_data.stat.gid != 10001
+  args:
+    warn: no
+  tags: loki
+
+- name: loki - start
+  docker_container:
+    name: loki
+    image: "{{ loki_image }}"
+    pull: yes
+    ports:
+      - "3100:3100"
+    volumes:
+      - "{{ app_path }}/loki/data:/loki"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.loki.rule: "HostRegexp(`loki{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.services.loki.loadbalancer.server.port: "3100"
+      traefik.http.routers.loki.entrypoints: "websecure"
+      traefik.http.routers.loki.tls: "true"
+    command: -config.file=/etc/loki/local-config.yaml
+    restart_policy: unless-stopped
+    state: started
+  tags: loki
