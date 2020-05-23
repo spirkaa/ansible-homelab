@@ -1,0 +1,52 @@
+---
+- name: prometheus - create dir
+  file:
+    path: "{{ app_path }}/prometheus/{{ item }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "config"
+    - "data"
+  tags: prometheus
+
+- name: prometheus - copy files
+  copy:
+    src: files/prometheus.yml
+    dest: "{{ app_path }}/prometheus/config"
+  notify: prometheus - restart
+  tags: prometheus
+
+- name: prometheus - get data dir ownership
+  stat:
+    path: "{{ app_path }}/prometheus/data"
+  register: prometheus_data
+  tags: prometheus
+
+- name: prometheus - set data dir ownership
+  command: chown -R 65534:65534 {{ app_path }}/prometheus/data
+  when: prometheus_data.stat.uid != 65534 or prometheus_data.stat.gid != 65534
+  args:
+    warn: no
+  tags: prometheus
+
+- name: prometheus - start
+  docker_container:
+    name: prometheus
+    image: "{{ prometheus_image }}"
+    pull: yes
+    volumes:
+      - "{{ app_path }}/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "{{ app_path }}/prometheus/data:/prometheus"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.prometheus.rule: "HostRegexp(`prometheus{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.services.prometheus.loadbalancer.server.port: "9090"
+      traefik.http.routers.prometheus.entrypoints: "websecure"
+      traefik.http.routers.prometheus.tls: "true"
+    restart_policy: unless-stopped
+    state: started
+  register: prometheus_start
+  tags: prometheus

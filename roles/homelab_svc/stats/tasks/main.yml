@@ -3,6 +3,10 @@
   include_tasks: loki.yml
   tags: [loki, grafana]
 
+- name: prometheus
+  include_tasks: prometheus.yml
+  tags: [prometheus, grafana]
+
 - name: influxdb
   include_tasks: influxdb.yml
   tags: [influxdb, grafana]

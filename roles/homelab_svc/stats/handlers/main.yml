@@ -36,3 +36,10 @@
     state: started
     restart: yes
   when: not grafana_start.changed
+
+- name: prometheus - restart
+  docker_container:
+    name: prometheus
+    state: started
+    restart: yes
+  when: not prometheus_start.changed

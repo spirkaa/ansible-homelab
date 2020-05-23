@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 15s
+  external_labels:
+    monitor: 'homelab-monitor'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scheme: https
+    static_configs:
+      - targets: ['prometheus.home.devmem.ru']
+
+  - job_name: 'cadvisor'
+    scheme: https
+    static_configs:
+      - targets: ['stats.home.devmem.ru']
+
+  - job_name: 'traefik'
+    scheme: https
+    static_configs:
+      - targets: ['traefik-stats.home.devmem.ru']
+
+  - job_name: 'grafana'
+    scheme: https
+    static_configs:
+      - targets: ['grafana.home.devmem.ru']
+
+  - job_name: 'loki'
+    scheme: https
+    static_configs:
+      - targets: ['loki.home.devmem.ru']
+
+  # - job_name: 'node-exporter'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']

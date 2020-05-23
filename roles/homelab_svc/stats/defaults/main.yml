@@ -11,6 +11,7 @@ librenms_db_image: yobasystems/alpine-mariadb:10.4.12
 librenms_image: jarischaefer/docker-librenms:latest
 loki_image: grafana/loki:latest
 mosquitto_image: eclipse-mosquitto:latest
+prometheus_image: prom/prometheus:latest
 
 app_network_name: traefik
 app_base_domain: home.devmem.ru
