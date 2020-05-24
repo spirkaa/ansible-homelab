@@ -1,20 +1,32 @@
 ---
+- name: cadvisor - create network
+  docker_network:
+    name: "{{ app_network_name }}"
+  tags: cadvisor
+
 - name: cadvisor - start
   docker_container:
     name: cadvisor
     image: "{{ cadvisor_image }}"
     pull: yes
+    ports:
+      - "18080:8080"
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
       - "/sys:/sys:ro"
       - "/var/lib/docker/:/var/lib/docker:ro"
       - "/dev/disk/:/dev/disk:ro"
+    command: >
+      --docker_only=true
+      --store_container_labels=false
+      --whitelisted_container_labels=""
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: no
     labels:
       traefik.enable: "true"
+      traefik.docker.network: "{{ app_network_name }}"
       traefik.http.routers.cadvisor.rule: "HostRegexp(`{{ inventory_hostname_short }}{fqdn:(.{{ app_base_domain }})?}`) && PathPrefix(`/metrics`)"
       traefik.http.services.cadvisor.loadbalancer.server.port: "8080"
       traefik.http.routers.cadvisor.entrypoints: "websecure"
