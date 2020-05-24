@@ -1,2 +1,4 @@
 ---
-dependencies: []
+dependencies:
+  - role: homelab_svc/traefik
+  - role: homelab_svc/cadvisor

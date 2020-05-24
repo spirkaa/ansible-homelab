@@ -14,6 +14,7 @@
     ip_rp: 192.168.12.254
     dns_entries:
       - { alias: "plex", inet: "{{ ip_plex }}" }
+      - { alias: "traefik-plex", inet: "{{ ip_plex }}" }
       - { alias: "ombi", inet: "{{ ip_plex }}" }
       - { alias: "tautulli", inet: "{{ ip_plex }}" }
 
@@ -29,6 +30,7 @@
       - { alias: "cloud", inet: "{{ ip_spnas }}" }
 
       - { alias: "dev", inet: "{{ ip_dev }}" }
+      - { alias: "traefik-dev", inet: "{{ ip_dev }}" }
       - { alias: "code", inet: "{{ ip_dev }}" }
       - { alias: "git", inet: "{{ ip_dev }}" }
       - { alias: "drone", inet: "{{ ip_dev }}" }
@@ -52,6 +54,7 @@
       - { alias: "prometheus", inet: "{{ ip_stats }}" }
 
       - { alias: "mail", inet: "{{ ip_mail }}" }
+      - { alias: "traefik-mail", inet: "{{ ip_mail }}" }
 
       - { alias: "rp", inet: "{{ ip_rp }}" }
 

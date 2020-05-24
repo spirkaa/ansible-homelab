@@ -7,5 +7,7 @@
 
 ## Зависимости
 
+* Роль homelab_svc/traefik
+* Роль homelab_svc/cadvisor
 * Сертификат из роли `homelab_svc/traefik` в файле `../traefik/vars/cert.vault.yml`
 * LDAP сервер из роли `homelab_svc/mgmt`

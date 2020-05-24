@@ -8,4 +8,5 @@
 
 ## Зависимости
 
-Нет
+* Роль homelab_svc/traefik
+* Роль homelab_svc/cadvisor

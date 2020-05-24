@@ -9,25 +9,36 @@ scrape_configs:
     static_configs:
       - targets: ['prometheus.home.devmem.ru']
 
-  - job_name: 'cadvisor'
+  - job_name: 'loki'
     scheme: https
     static_configs:
-      - targets: ['stats.home.devmem.ru']
-
-  - job_name: 'traefik'
-    scheme: https
-    static_configs:
-      - targets: ['traefik-stats.home.devmem.ru']
+      - targets: ['loki.home.devmem.ru']
 
   - job_name: 'grafana'
     scheme: https
     static_configs:
       - targets: ['grafana.home.devmem.ru']
 
-  - job_name: 'loki'
+  - job_name: 'cadvisor'
     scheme: https
     static_configs:
-      - targets: ['loki.home.devmem.ru']
+      - targets: ['dev.home.devmem.ru']
+      - targets: ['mail.home.devmem.ru']
+      - targets: ['mgmt.home.devmem.ru']
+      - targets: ['plex.home.devmem.ru']
+      - targets: ['rp.home.devmem.ru']
+      - targets: ['spnas.home.devmem.ru']
+      - targets: ['stats.home.devmem.ru']
+
+  - job_name: 'traefik'
+    scheme: https
+    static_configs:
+      - targets: ['traefik-dev.home.devmem.ru']
+      - targets: ['traefik-mail.home.devmem.ru']
+      - targets: ['traefik-mgmt.home.devmem.ru']
+      - targets: ['traefik-plex.home.devmem.ru']
+      - targets: ['traefik-spnas.home.devmem.ru']
+      - targets: ['traefik-stats.home.devmem.ru']
 
   # - job_name: 'node-exporter'
   #   static_configs:
