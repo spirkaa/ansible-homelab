@@ -16,7 +16,9 @@
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
-    command: '--sql-mode="" --lower_case_table_names=0'
+    command:
+      --sql-mode=""
+      --lower_case_table_names=0
     restart_policy: unless-stopped
     state: started
   no_log: true
@@ -30,9 +32,9 @@
   tags: librenms
 
 - name: librenms - copy files
-  copy:
-    src: files/config.custom.php
-    dest: "{{ app_path }}/librenms"
+  template:
+    src: templates/config.custom.php.j2
+    dest: "{{ app_path }}/librenms/config.custom.php"
   notify: librenms - restart
   tags: librenms
 
@@ -67,4 +69,13 @@
   register: librenms_start
   notify: librenms - setup_database
   no_log: true
+  tags: librenms
+
+- name: librenms - customize
+  command: docker exec librenms sh -c '{{ item }}'
+  changed_when: true
+  when: librenms_start.changed  # noqa 503
+  notify: librenms - restart
+  loop:
+    - echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf
   tags: librenms
