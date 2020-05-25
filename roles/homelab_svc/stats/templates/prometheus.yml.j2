@@ -40,6 +40,18 @@ scrape_configs:
       - targets: ['traefik-spnas.home.devmem.ru']
       - targets: ['traefik-stats.home.devmem.ru']
 
+  - job_name: 'drone'
+    scheme: https
+    bearer_token: "{{ prometheus_drone_bearer_token }}"
+    static_configs:
+    - targets: ['drone.devmem.ru']
+
+  - job_name: 'gitea'
+    scheme: https
+    bearer_token: "{{ prometheus_gitea_bearer_token }}"
+    static_configs:
+    - targets: ['git.devmem.ru']
+
   # - job_name: 'node-exporter'
   #   static_configs:
   #     - targets: ['node-exporter:9100']

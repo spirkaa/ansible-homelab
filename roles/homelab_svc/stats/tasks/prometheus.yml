@@ -10,9 +10,9 @@
   tags: [prometheus, grafana]
 
 - name: prometheus - copy files
-  copy:
-    src: files/prometheus.yml
-    dest: "{{ app_path }}/prometheus/config"
+  template:
+    src: templates/prometheus.yml.j2
+    dest: "{{ app_path }}/prometheus/config/prometheus.yml"
   notify: prometheus - restart
   tags: [prometheus, grafana]
 
