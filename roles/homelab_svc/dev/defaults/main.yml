@@ -64,3 +64,4 @@ drone_rpc_secret: !vault |
           3233376130643632656434396532313631663863393136313461
 drone_host: drone.devmem.ru
 drone_proto: https
+drone_admin_user: piv
