@@ -34,6 +34,7 @@
 
 - name: mail - load certificate vars
   include_vars: ../traefik/vars/cert.vault.yml
+  no_log: true
   tags: mail
 
 - name: mail - copy certificate
