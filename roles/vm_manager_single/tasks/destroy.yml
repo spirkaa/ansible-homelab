@@ -10,7 +10,7 @@
 
   - name: CT - Destroy
     shell: >
-      pct stop {{ vmid }} || pct destroy {{ vmid }}
+      pct stop {{ vmid }}; pct destroy {{ vmid }}
     when: resource_type == "ct"
   when: vmid_string in vm_list.stdout
 
