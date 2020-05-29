@@ -6,6 +6,7 @@
 
 - name: traefik - load certificate vars
   include_vars: vars/cert.vault.yml
+  no_log: true
   tags: traefik
 
 - name: traefik - create dir
