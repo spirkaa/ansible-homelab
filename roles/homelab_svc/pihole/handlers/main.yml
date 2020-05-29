@@ -1,0 +1,10 @@
+---
+- name: pihole - restart
+  docker_container:
+    name: pihole
+    state: started
+    restart: yes
+  when: not pihole_start.changed
+
+- name: pihole - update lists
+  command: docker exec pihole sh -c '/usr/local/sbin/pihole-updatelists > /dev/null 2>&1'

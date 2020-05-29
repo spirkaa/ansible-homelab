@@ -1,0 +1,79 @@
+---
+- name: pihole - create dir
+  file:
+    path: "{{ app_path }}/pihole/config/dnsmasq.d"
+    state: directory
+    recurse: yes
+  tags: pihole
+
+- name: pihole - copy files
+  template:
+    src: templates/{{ item.src }}
+    dest: "{{ app_path }}/pihole/{{ item.dest }}"
+  loop:
+    - {src: Dockerfile.j2, dest: Dockerfile}
+    - {src: 10-internal.conf.j2, dest: config/dnsmasq.d/10-internal.conf}
+    - {src: pihole-updatelists.conf.j2, dest: config/pihole-updatelists.conf}
+  notify: pihole - restart
+  tags: pihole
+
+- name: pihole - build image
+  docker_image:
+    build:
+      path: "{{ app_path }}/pihole"
+      pull: no
+    name: devmem/pihole
+    tag: latest
+    source: build
+    force_source: yes
+    state: present
+  tags: pihole
+
+- name: pihole - start
+  docker_container:
+    name: pihole
+    image: devmem/pihole:latest
+    pull: no
+    hostname: "pihole.{{ app_base_domain }}"
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - "{{ app_path }}/pihole/config/pihole:/etc/pihole"
+      - "{{ app_path }}/pihole/config/dnsmasq.d:/etc/dnsmasq.d"
+      - "{{ app_path }}/pihole/config/pihole-updatelists.conf:/etc/pihole-updatelists.conf"
+    env:
+      TZ: "{{ tz }}"
+      WEBPASSWORD: "{{ pihole_web_pass }}"
+      DNS1: "1.1.1.1"
+      DNS2: "1.0.0.1"
+      DNSSEC: "True"
+    dns_servers:
+      - 127.0.0.1
+      - 1.1.1.1
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.pihole.rule: "HostRegexp(`{catchall:.*}`)"
+      traefik.http.services.pihole.loadbalancer.server.port: "80"
+      traefik.http.routers.pihole.entrypoints: "websecure"
+      traefik.http.routers.pihole.tls: "true"
+    restart_policy: unless-stopped
+    state: started
+  register: pihole_start
+  notify: pihole - update lists
+  no_log: true
+  tags: pihole
+
+- name: pihole - wait for container healthy state
+  docker_container_info:
+    name: pihole
+  register: result
+  retries: 10
+  delay: 6
+  until: result.container.State.Health.Status == 'healthy'
+  when: pihole_start.changed  # noqa 503
+  no_log: true
+  tags: pihole
