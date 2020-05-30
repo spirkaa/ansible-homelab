@@ -1,25 +1,40 @@
 # Ansible-Homelab
 
-Репозиторий, в котором собрана конфигурация моих домашних серверов и развернутых на них приложений.
+Репозиторий, в котором собрана конфигурация моих домашних серверов и развернутых на них приложений. И еще некоторые побочные плейбуки и роли, потому что лень создавать отдельный репозиторий и есть зависимости между ролями.
+
+## Использование
+
+* Одна команда для настройки хостов Proxmox, настройки DNS, создания контейнеров LXC и запуска в них сервисов на Docker
+
+      ansible-playbook main.yml
+
+* Чтобы сократить время выполнения, можно запускать отдельные задачи с помощью тегов
+  * `svc` - задачи сразу для всех docker-контейнеров
+  * `mgmt` (имя хоста) - задачи для конкретного хоста LXC
+  * `portainer` (имя контейнера) - задачи для конкретного docker-контейнера
+  * `upgrade_packages` - обновление пакетов на всех хостах LXC
+  * `dns` - задачи для DNS-сервера на роутере
+
+        ansible-playbook main.yml -t svc
 
 ## Команды для кластера Kubernetes
 
 * Одна команда, чтобы сделать всё
 
-      ansible-playbook main.yml -i hosts --vault-password-file ~/.passwd
+      ansible-playbook k8s.yml
 
 * Если кластер уже есть, можно пропустить все шаги настройки и сразу сгенерировать Inventory, установить тестовое приложение в кластере
 
-      ansible-playbook main.yml -i hosts --vault-password-file ~/.passwd -t dyn_inventory,deploy_hello_k8s
+      ansible-playbook k8s.yml -t dyn_inventory,deploy_hello_k8s
 
 * Завершить работу ВМ
 
-      ansible-playbook main.yml -i hosts --vault-password-file ~/.passwd -t shutdown
+      ansible-playbook k8s.yml -t shutdown
 
 * Запустить ВМ
 
-      ansible-playbook main.yml -i hosts --vault-password-file ~/.passwd -t start
+      ansible-playbook k8s.yml -t start
 
-* Удалить ВМ и начать всё сначала первой командой в списке
+* Удалить ВМ
 
-      ansible-playbook main.yml -i hosts --vault-password-file ~/.passwd -t destroy
+      ansible-playbook k8s.yml -t destroy

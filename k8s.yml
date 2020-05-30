@@ -1,0 +1,7 @@
+---
+- hosts: all
+  gather_facts: no
+
+- import_playbook: provision_vm.yml
+- import_playbook: provision_k8s.yml
+- import_playbook: deploy_hello_k8s.yml
