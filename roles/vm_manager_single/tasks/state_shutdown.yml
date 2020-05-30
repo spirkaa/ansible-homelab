@@ -2,14 +2,14 @@
 - include_tasks: util_vm_status.yml
 
 - block:
-  - name: VM - Shutdown
+  - name: "{{ hostname }} - Shutdown"
     shell: >
       qm shutdown {{ vmid }} && qm wait {{ vmid }} -timeout 60
     when: >
       resource_type == 'vm' and
       'stopped' not in vm_status.stdout
 
-  - name: CT - Shutdown
+  - name: "{{ hostname }} - Shutdown"
     shell: >
       pct shutdown {{ vmid }}
     when: >

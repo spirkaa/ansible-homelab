@@ -3,12 +3,12 @@
 - include_tasks: util_vm_list.yml
 
 - block:
-  - name: VM - Destroy
+  - name: "{{ hostname }} - Destroy"
     shell: >
       qm stop {{ vmid }} && qm destroy {{ vmid }}
     when: resource_type == "vm"
 
-  - name: CT - Destroy
+  - name: "{{ hostname }} - Destroy"
     shell: >
       pct stop {{ vmid }}; pct destroy {{ vmid }}
     when: resource_type == "ct"
