@@ -18,7 +18,6 @@
 
 ### Служебная учетная запись для доступа к FreeIPA
 
-
 То же самое, только в стиле DevGitSecOps, можно сделать и с помощью модуля [ldap_entry](https://docs.ansible.com/ansible/latest/modules/ldap_entry_module.html) в Ansible.
 
 <https://www.freeipa.org/page/HowTo/LDAP#System_Accounts>
