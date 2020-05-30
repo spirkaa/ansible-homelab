@@ -38,3 +38,12 @@
 - name: nextcloud
   include_tasks: nextcloud.yml
   tags: nextcloud
+
+- name: nextcloud - configure freeipa
+  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  vars:
+    freeipa_service_bind_group_name: nextcloud_users
+  args:
+    apply:
+      tags: nextcloud
+  tags: nextcloud

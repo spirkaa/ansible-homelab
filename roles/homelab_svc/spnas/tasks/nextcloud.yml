@@ -51,19 +51,9 @@
 
 - name: nextcloud - customize
   command: docker exec nextcloud sh -c '{{ item }}'
-  changed_when: true
   when: nextcloud_start.changed  # noqa 503
   notify: nextcloud - restart
   loop:
     - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
     - echo "apc.enable_cli=1" >> /php/conf.d/apcu.ini
-  tags: nextcloud
-
-- name: nextcloud - configure freeipa
-  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
-  vars:
-    freeipa_service_bind_group_name: nextcloud_users
-  args:
-    apply:
-      tags: nextcloud
   tags: nextcloud
