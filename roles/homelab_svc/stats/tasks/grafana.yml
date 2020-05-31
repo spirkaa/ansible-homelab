@@ -47,6 +47,13 @@
     pull: yes
     env:
       GF_AUTH_LDAP_ENABLED: "true"
+      GF_SMTP_ENABLED: "true"
+      GF_SMTP_HOST: "{{ smtp_host }}:{{ smtp_port }}"
+      GF_SMTP_USER: "{{ smtp_user }}"
+      GF_SMTP_PASSWORD: "{{ smtp_pass }}"
+      GF_SMTP_FROM_ADDRESS: "{{ smtp_user }}"
+      GF_SMTP_FROM_NAME: "grafana.{{ app_base_domain }}"
+      GF_SERVER_ENABLE_GZIP: "true"
     volumes:
       - "{{ app_path }}/grafana/config/provisioning:/etc/grafana/provisioning"
       - "{{ app_path }}/grafana/config/ldap.toml:/etc/grafana/ldap.toml"
