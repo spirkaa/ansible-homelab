@@ -15,10 +15,11 @@
       SMTP_USERNAME: "{{ smtp_user }}"
       SMTP_PASSWORD: "{{ smtp_pass }}"
       SMTP_SSL: "true"
+      SMTP_FROM_NAME: "{{ bitwarden_domain }}"
       SIGNUPS_ALLOWED: "false"
       WEBSOCKET_ENABLED: "true"
       IP_HEADER: "X-Forwarded-For"
-      DOMAIN: "{{ bitwarden_domain }}"
+      DOMAIN: "{{ bitwarden_url }}"
       LOG_FILE: "/data/bitwarden.log"
     volumes:
       - "{{ app_path }}/bitwarden/data:/data"
