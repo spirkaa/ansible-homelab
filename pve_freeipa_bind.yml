@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    proxmox_ldap_bind_dn: uid=proxmoxsvc,cn=sysaccounts,cn=etc,dc=home,dc=devmem,dc=ru
+    proxmox_ldap_bind_pw: !vault |
+              $ANSIBLE_VAULT;1.1;AES256
+              37393839613532396234316238326336623638623533383434373765303232616637333433393965
+              3863323034393337613362313464306130336266313332350a303264636664616565306130353432
+              30303963363030316537613561613837373430323333653666636462356635636163323937306534
+              3633616234613063300a306361323237613436323234653139323832313833323761323461383064
+              3735
+    proxmox_ldap_access_group: proxmox_users
+
+  tasks:
+    - name: proxmox - prepare freeipa
+      include_tasks: roles/homelab_svc/mgmt/tasks/freeipa_service_bind.yml
+      vars:
+        freeipa_service_bind_sysaccount_dn: "{{ proxmox_ldap_bind_dn }}"
+        freeipa_service_bind_sysaccount_pass: "{{ proxmox_ldap_bind_pw }}"
+        freeipa_service_bind_group_name: "{{ proxmox_ldap_access_group }}"
+      args:
+        apply:
+          tags: proxmox_ldap
+      tags: proxmox_ldap
