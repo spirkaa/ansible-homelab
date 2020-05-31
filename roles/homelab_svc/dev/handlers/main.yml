@@ -1,0 +1,7 @@
+---
+- name: gitea - restart
+  docker_container:
+    name: gitea
+    state: started
+    restart: yes
+  when: not gitea_start.changed

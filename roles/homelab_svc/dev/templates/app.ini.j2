@@ -1,0 +1,91 @@
+APP_NAME = Gitea
+RUN_MODE = prod
+RUN_USER = git
+
+[repository]
+ROOT = /data/git/repositories
+
+[repository.local]
+LOCAL_COPY_PATH = /data/gitea/tmp/local-repo
+
+[repository.upload]
+TEMP_PATH = /data/gitea/uploads
+
+[server]
+APP_DATA_PATH    = /data/gitea
+SSH_DOMAIN       = {{ gitea_domain }}
+HTTP_PORT        = 3000
+ROOT_URL         = {{ gitea_root_url }}/
+DISABLE_SSH      = false
+SSH_PORT         = 22
+SSH_LISTEN_PORT  = 22
+LFS_START_SERVER = true
+LFS_CONTENT_PATH = /data/git/lfs
+DOMAIN           = {{ gitea_domain }}
+LFS_JWT_SECRET   = {{ gitea_lfs_jwt_secret }}
+OFFLINE_MODE     = true
+
+[database]
+DB_TYPE  = mysql
+HOST     = {{ gitea_db_host }}
+NAME     = {{ gitea_db_user }}
+USER     = {{ gitea_db_user }}
+PASSWD   = {{ gitea_db_pass }}
+SSL_MODE = disable
+CHARSET  = utf8mb4
+
+[indexer]
+ISSUE_INDEXER_PATH = /data/gitea/indexers/issues.bleve
+
+[session]
+PROVIDER_CONFIG = /data/gitea/sessions
+PROVIDER        = file
+
+[picture]
+AVATAR_UPLOAD_PATH            = /data/gitea/avatars
+REPOSITORY_AVATAR_UPLOAD_PATH = /data/gitea/repo-avatars
+DISABLE_GRAVATAR              = true
+ENABLE_FEDERATED_AVATAR       = false
+
+[attachment]
+PATH = /data/gitea/attachments
+
+[log]
+ROOT_PATH = /data/gitea/log
+MODE      = file
+LEVEL     = info
+
+[security]
+INSTALL_LOCK   = true
+SECRET_KEY     = {{ gitea_secret_key }}
+INTERNAL_TOKEN = {{ gitea_internal_token }}
+
+[service]
+DISABLE_REGISTRATION              = true
+REQUIRE_SIGNIN_VIEW               = true
+REGISTER_EMAIL_CONFIRM            = false
+ENABLE_NOTIFY_MAIL                = true
+ALLOW_ONLY_EXTERNAL_REGISTRATION  = false
+ENABLE_CAPTCHA                    = false
+DEFAULT_KEEP_EMAIL_PRIVATE        = false
+DEFAULT_ALLOW_CREATE_ORGANIZATION = true
+DEFAULT_ENABLE_TIMETRACKING       = true
+NO_REPLY_ADDRESS                  = {{ gitea_domain }}
+
+[oauth2]
+JWT_SECRET = {{ gitea_jwt_secret }}
+
+[mailer]
+ENABLED = true
+HOST    = {{ smtp_host }}:{{ smtp_port }}
+FROM    = {{ gitea_domain }} <{{ smtp_user }}>
+USER    = {{ smtp_user }}
+PASSWD  = {{ smtp_pass }}
+
+[openid]
+ENABLE_OPENID_SIGNIN = false
+ENABLE_OPENID_SIGNUP = false
+
+[metrics]
+ENABLED = true
+TOKEN = {{ gitea_metrics_token }}

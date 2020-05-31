@@ -18,6 +18,22 @@
   no_log: true
   tags: gitea
 
+- name: gitea - create dir
+  file:
+    path: "{{ app_path }}/gitea/data/gitea/conf"
+    state: directory
+    recurse: yes
+  tags: gitea
+
+- name: gitea - copy files
+  template:
+    src: templates/{{ item.src }}
+    dest: "{{ app_path }}/{{ item.dest }}"
+  loop:
+    - {src: app.ini.j2, dest: gitea/data/gitea/conf/app.ini}
+  notify: gitea - restart
+  tags: gitea
+
 - name: gitea - start
   docker_container:
     name: gitea
@@ -30,14 +46,14 @@
       USER_UID: "{{ puid }}"
       USER_GID: "{{ pgid }}"
       DB_TYPE: "mysql"
-      DB_HOST: "gitea-db:3306"
+      DB_HOST: "{{ gitea_db_host }}"
       DB_NAME: "{{ gitea_db_user }}"
       DB_USER: "{{ gitea_db_user }}"
       DB_PASSWD: "{{ gitea_db_pass }}"
       APP_NAME: "Gitea"
       RUN_MODE: "prod"
-      DOMAIN: "{{ gitea_host }}"
-      SSH_DOMAIN: "{{ gitea_host }}"
+      DOMAIN: "{{ gitea_domain }}"
+      SSH_DOMAIN: "{{ gitea_domain }}"
       ROOT_URL: "{{ gitea_root_url }}/"
       LFS_START_SERVER: "true"
       DISABLE_REGISTRATION: "true"
@@ -50,6 +66,7 @@
       - "gitea-db:gitea-db"
     restart_policy: unless-stopped
     state: started
+  register: gitea_start
   no_log: true
   tags: gitea
 
