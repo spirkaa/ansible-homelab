@@ -50,7 +50,7 @@
       DB_USER: "{{ librenms_db_user }}"
       DB_PASS: "{{ librenms_db_pass }}"
       APP_KEY: "{{ librenms_app_key }}"
-      BASE_URL: "https://nms.home.devmem.ru"
+      BASE_URL: "{{ librenms_base_url }}"
     volumes:
       - "{{ app_path }}/librenms/logs/nginx:/var/log/nginx"
       - "{{ app_path }}/librenms/logs/app:/opt/librenms/logs"
@@ -61,7 +61,7 @@
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
-      traefik.http.routers.librenms.rule: "HostRegexp(`nms{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.librenms.rule: "HostRegexp(`nms{fqdn:(.{{ app_base_domain }})?}`)"
       traefik.http.routers.librenms.entrypoints: "websecure"
       traefik.http.routers.librenms.tls: "true"
     restart_policy: unless-stopped

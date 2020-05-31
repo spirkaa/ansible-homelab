@@ -74,6 +74,8 @@ librenms_app_key: !vault |
           61396638633535303731386334636564376339333865336135366262383039303361353862333533
           30343163643531323031636663656633306634366136393061333863366430653939663765656163
           363461363464363532666164306462316332
+librenms_domain: nms.{{ app_base_domain }}
+librenms_base_url: https://{{ librenms_domain }}
 librenms_ldap_bind_dn: uid=librenmssvc,cn=sysaccounts,cn=etc,{{ ldap_search_base }}
 librenms_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256

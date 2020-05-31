@@ -1,6 +1,17 @@
 <?php
 
-$config['enable_proxmox'] = 1;
+$config['email_backend'] = 'smtp';
+$config['email_smtp_secure'] = 'tls';
+$config['email_auto_tls'] = true;
+$config['email_smtp_timeout'] = 10;
+$config['email_html'] = true;
+$config['email_smtp_auth'] = true;
+$config['email_smtp_host'] = '{{ smtp_host }}';
+$config['email_smtp_port'] = '{{ smtp_port }}';
+$config['email_smtp_username'] = '{{ smtp_user }}';
+$config['email_smtp_password'] = '{{ smtp_pass }}';
+$config['email_from'] = '{{ smtp_user }}';
+$config['email_user'] = '{{ librenms_domain }}';
 
 $config['auth_mechanism'] = 'ldap';
 $config['auth_ldap_debug'] = false;
@@ -29,3 +40,11 @@ $config['auth_ldap_groupmemberattr'] = 'member';
 $config['auth_ldap_groupmembertype'] = 'fulldn';
 $config['auth_ldap_userdn'] = true;
 $config['auth_ldap_wildcard_ou'] = false;
+
+$config['enable_proxmox'] = 1;
+
+$config['int_customers'] = 0; # Hide Customer Port Parsing
+$config['int_transit'] = 0; # Hide Transit Types
+$config['int_peering'] = 0; # Hide Peering Types
+$config['int_core'] = 0; # Hide Core Port Types
+$config['int_l2tp'] = 0; # Hide L2TP Port Types
