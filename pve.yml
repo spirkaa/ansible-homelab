@@ -3,13 +3,13 @@
   gather_facts: no
 
   roles:
-    - pve/common
-    - pve/kernel_modules
-    - pve/zsh
-    - pve/mc
-    - pve/nano
-    - pve/postfix
-    - pve/rsnapshot
-    - pve/telegraf
-    - pve/snmp
-    - pve/smartd
+    - {role: pve/common, tags: [pve, pve_common]}
+    - {role: pve/kernel_modules, tags: [pve, pve_kernel_modules]}
+    - {role: pve/zsh, tags: [pve, pve_zsh]}
+    - {role: pve/mc, tags: [pve, pve_mc]}
+    - {role: pve/nano, tags: [pve, pve_nano]}
+    - {role: pve/postfix, tags: [pve, pve_postfix]}
+    - {role: pve/rsnapshot, tags: [pve, pve_rsnapshot]}
+    - {role: pve/telegraf, tags: [pve, pve_telegraf]}
+    - {role: pve/snmp, tags: [pve, pve_snmp]}
+    - {role: pve/smartd, tags: [pve, pve_smartd]}
