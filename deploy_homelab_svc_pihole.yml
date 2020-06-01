@@ -26,10 +26,5 @@
 - hosts: pihole
   gather_facts: no
 
-  pre_tasks:
-    - name: pihole - upgrade host packages
-      package: name='*' state=latest
-      tags: upgrade_packages
-
   roles:
     - {role: homelab_svc/pihole, tags: [pihole, svc]}
