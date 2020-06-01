@@ -35,7 +35,9 @@ SSL_MODE = disable
 CHARSET  = utf8mb4
 
 [indexer]
-ISSUE_INDEXER_PATH = /data/gitea/indexers/issues.bleve
+ISSUE_INDEXER_PATH   = /data/gitea/indexers/issues.bleve
+REPO_INDEXER_ENABLED = true
+REPO_INDEXER_PATH    = /data/gitea/indexers/repos.bleve
 
 [session]
 PROVIDER_CONFIG = /data/gitea/sessions
@@ -88,4 +90,4 @@ ENABLE_OPENID_SIGNUP = false
 
 [metrics]
 ENABLED = true
-TOKEN = {{ gitea_metrics_token }}
+TOKEN   = {{ gitea_metrics_token }}
