@@ -71,7 +71,7 @@
       loop_control:
         loop_var: dns_entry
       loop: "{{ dns_entries }}"
-      tags: dns
+      tags: [never, dns]
 
 # - name: Delete static DNS mapping
 #   edgeos_config:
@@ -80,4 +80,4 @@
 #   loop_control:
 #     loop_var: dns_entry
 #   loop: "{{ dns_entries }}"
-#   tags: dns
+#   tags: [never, dns]
