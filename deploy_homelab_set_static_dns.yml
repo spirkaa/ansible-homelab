@@ -35,6 +35,7 @@
       - { alias: "code", inet: "{{ ip_dev }}" }
       - { alias: "git", inet: "{{ ip_dev }}" }
       - { alias: "drone", inet: "{{ ip_dev }}" }
+      - { alias: "registry", inet: "{{ ip_dev }}" }
 
       - { alias: "mgmt", inet: "{{ ip_mgmt }}" }
       - { alias: "traefik-mgmt", inet: "{{ ip_mgmt }}" }

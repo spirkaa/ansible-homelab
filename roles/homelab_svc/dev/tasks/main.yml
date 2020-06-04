@@ -11,6 +11,10 @@
   include_tasks: drone.yml
   tags: drone
 
+- name: registry
+  include_tasks: registry.yml
+  tags: registry
+
 - name: gitea - configure freeipa
   include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:

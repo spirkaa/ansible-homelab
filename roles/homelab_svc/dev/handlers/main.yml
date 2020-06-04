@@ -5,3 +5,10 @@
     state: started
     restart: yes
   when: not gitea_start.changed
+
+- name: registry - restart
+  docker_container:
+    name: registry
+    state: started
+    restart: yes
+  when: not registry_start.changed
