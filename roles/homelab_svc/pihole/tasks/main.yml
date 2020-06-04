@@ -11,29 +11,16 @@
     src: templates/{{ item.src }}
     dest: "{{ app_path }}/pihole/{{ item.dest }}"
   loop:
-    - {src: Dockerfile.j2, dest: Dockerfile}
     - {src: 10-internal.conf.j2, dest: config/dnsmasq.d/10-internal.conf}
     - {src: pihole-updatelists.conf.j2, dest: config/pihole-updatelists.conf}
   notify: pihole - restart
   tags: pihole
 
-- name: pihole - build image
-  docker_image:
-    build:
-      path: "{{ app_path }}/pihole"
-      pull: no
-    name: devmem/pihole
-    tag: latest
-    source: build
-    force_source: yes
-    state: present
-  tags: pihole
-
 - name: pihole - start
   docker_container:
     name: pihole
-    image: devmem/pihole:latest
-    pull: no
+    image: "{{ pihole_image }}"
+    pull: yes
     hostname: "pihole.{{ app_base_domain }}"
     ports:
       - "53:53/tcp"
