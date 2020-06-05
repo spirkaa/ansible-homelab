@@ -11,6 +11,13 @@ LOCAL_COPY_PATH = /data/gitea/tmp/local-repo
 [repository.upload]
 TEMP_PATH = /data/gitea/uploads
 
+[repository.signing]
+SIGNING_KEY    = default
+INITIAL_COMMIT = always
+WIKI           = never
+CRUD_ACTIONS   = pubkey, parentsigned
+MERGES         = pubkey, basesigned, commitssigned
+
 [server]
 APP_DATA_PATH    = /data/gitea
 SSH_DOMAIN       = {{ gitea_domain }}

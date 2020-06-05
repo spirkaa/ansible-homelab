@@ -126,3 +126,45 @@
     create: yes
     state: present
   tags: gitea
+
+- name: gitea - gpg - check if key already exists
+  command: docker exec -u git gitea sh -c 'gpg --list-secret-keys | grep "gitea"'
+  register: gpg_key
+  changed_when: false
+  failed_when: gpg_key.rc == 2
+  tags: gitea
+
+- block:
+    - name: gitea - gpg - copy key template
+      copy:
+        src: files/gen-key-script
+        dest: "{{ app_path }}/gitea/data/git/.gnupg"
+        owner: git
+        group: git
+        mode: 0600
+      tags: gitea
+
+    - name: gitea - gpg - generate key
+      command: docker exec -u git gitea sh -c 'gpg --batch --gen-key /data/git/.gnupg/gen-key-script'
+      tags: gitea
+
+    - name: gitea - gpg - delete key template
+      file:
+        path: "{{ app_path }}/gitea/data/git/.gnupg/gen-key-script"
+        state: absent
+      tags: gitea
+
+    - name: gitea - gpg - get key id
+      command: docker exec -u git gitea sh -c 'gpg -k --keyid-format SHORT | grep "pub" | awk "{printf \$2}" | awk -F/ "{printf \$2}"'
+      register: gpg_key_id
+      changed_when: false
+      tags: gitea
+
+    - name: gitea - gpg - configure git signing
+      command: docker exec -u git gitea sh -c '{{ item }}'
+      loop:
+        - git config --global user.signingkey {{ gpg_key_id.stdout }}
+        - git config --global commit.gpgsign true
+      notify: gitea - restart
+      tags: gitea
+  when: gpg_key is defined and not gpg_key.stdout
