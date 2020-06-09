@@ -1,0 +1,80 @@
+---
+- name: gia - create network
+  docker_network:
+    name: "{{ gia_network }}"
+  tags: gia
+
+- name: gia-db - start
+  docker_container:
+    name: gia-db
+    image: "{{ gia_db_image }}"
+    pull: yes
+    env:
+      POSTGRES_HOST: gia-db
+      POSTGRES_USER: "{{ gia_db_user }}"
+      POSTGRES_PASSWORD: "{{ gia_db_pass }}"
+    volumes:
+      - "{{ app_path }}/db/data:/var/lib/postgresql/data"
+      - "{{ app_path }}/db/backups:/backups"
+    networks:
+      - name: "{{ gia_network }}"
+    networks_cli_compatible: yes
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: gia
+
+- name: gia-redis - start
+  docker_container:
+    name: gia-redis
+    image: "{{ gia_redis_image }}"
+    pull: yes
+    volumes:
+      - "{{ app_path }}/redis/data:/data"
+    networks:
+      - name: "{{ gia_network }}"
+    networks_cli_compatible: yes
+    restart_policy: unless-stopped
+    state: started
+  tags: gia
+
+- name: gia-api - start
+  docker_container:
+    name: gia-api
+    image: "{{ gia_api_image }}"
+    pull: yes
+    ports:
+      - "5000:5000"
+    env:
+      DJANGO_LOG_LEVEL: "DEBUG"
+      DJANGO_SETTINGS_MODULE: "config.settings.production"
+      DJANGO_SECRET_KEY: "{{ gia_api_django_secret_key }}"
+      DJANGO_ALLOWED_HOSTS: "{{ gia_api_django_allowed_hosts }}"
+      DJANGO_ADMIN_URL: "a/"
+      DJANGO_EMAIL_HOST: "{{ smtp_host }}"
+      DJANGO_EMAIL_HOST_USER: "{{ smtp_user }}"
+      DJANGO_EMAIL_HOST_PASSWORD: "{{ smtp_pass }}"
+      DATABASE_URL: "postgres://{{ gia_db_user }}:{{ gia_db_pass }}@gia-db:5432/{{ gia_db_user }}"
+      CACHE_URL: "redis://gia-redis:6379/1"
+    networks:
+      - name: "{{ gia_network }}"
+    networks_cli_compatible: yes
+    restart_policy: unless-stopped
+    state: started
+  notify: gia-api - setup database
+  no_log: true
+  tags: gia
+
+- name: gia-front - start
+  docker_container:
+    name: gia-front
+    image: "{{ gia_front_image }}"
+    pull: yes
+    ports:
+      - "8080:80"
+    networks:
+      - name: "{{ gia_network }}"
+    networks_cli_compatible: yes
+    restart_policy: unless-stopped
+    state: started
+  tags: gia

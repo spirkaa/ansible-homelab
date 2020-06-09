@@ -13,6 +13,7 @@
     ip_mail: 192.168.12.250
     ip_rp: 192.168.12.254
     ip_pihole: 192.168.16.2
+    ip_projects: 192.168.12.251
     dns_entries:
       - { alias: "plex", inet: "{{ ip_plex }}" }
       - { alias: "traefik-plex", inet: "{{ ip_plex }}" }
@@ -62,6 +63,9 @@
 
       - { alias: "pihole", inet: "{{ ip_pihole }}" }
       - { alias: "traefik-pihole", inet: "{{ ip_pihole }}" }
+
+      - { alias: "projects", inet: "{{ ip_projects }}" }
+      - { alias: "traefik-projects", inet: "{{ ip_projects }}" }
 
   tasks:
     - name: Set static DNS mapping

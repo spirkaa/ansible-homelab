@@ -12,4 +12,5 @@
 - import_playbook: deploy_homelab_svc_dev.yml
 - import_playbook: deploy_homelab_svc_spnas.yml
 - import_playbook: deploy_homelab_svc_plex.yml
+- import_playbook: deploy_homelab_svc_projects.yml
 - import_playbook: deploy_homelab_upgrade_packages.yml

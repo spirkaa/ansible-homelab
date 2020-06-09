@@ -1,0 +1,4 @@
+---
+- name: gia
+  include_tasks: gia.yml
+  tags: gia
