@@ -1,13 +1,3 @@
 ---
-- name: gia-api - backup database
-  command: docker exec gia-db backup
-  listen: gia-api - setup database
-
-- name: gia-api - setup database
-  command: docker exec gia-api python manage.py migrate
-  register: result
-  changed_when: '"No migrations to apply" not in result.stdout'
-
 - name: gia-api - invalidate cache
   command: docker exec gia-api python manage.py invalidate all
-  listen: gia-api - setup database

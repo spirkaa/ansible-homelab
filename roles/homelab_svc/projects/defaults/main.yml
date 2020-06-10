@@ -1,4 +1,6 @@
 ---
+tz: "Europe/Moscow"
+
 app_path: /docker/gia-api
 app_network_name: traefik
 app_base_domain: home.devmem.ru

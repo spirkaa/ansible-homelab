@@ -10,6 +10,7 @@
     image: "{{ gia_db_image }}"
     pull: yes
     env:
+      TZ: "{{ tz }}"
       POSTGRES_HOST: gia-db
       POSTGRES_USER: "{{ gia_db_user }}"
       POSTGRES_PASSWORD: "{{ gia_db_pass }}"
@@ -29,6 +30,8 @@
     name: gia-redis
     image: "{{ gia_redis_image }}"
     pull: yes
+    env:
+      TZ: "{{ tz }}"
     volumes:
       - "{{ app_path }}/redis/data:/data"
     networks:
@@ -38,14 +41,30 @@
     state: started
   tags: gia
 
+- name: gia-api - pull image
+  docker_image:
+    name: "{{ gia_api_image }}"
+    source: pull
+    force_source: yes
+    state: present
+  register: pull_image
+  tags: gia
+
+- name: gia-api - backup database
+  command: docker exec gia-db backup
+  when: pull_image.changed  # noqa 503
+  ignore_errors: yes
+  tags: gia
+
 - name: gia-api - start
   docker_container:
     name: gia-api
     image: "{{ gia_api_image }}"
-    pull: yes
+    pull: no
     ports:
       - "5000:5000"
     env:
+      TZ: "{{ tz }}"
       DJANGO_LOG_LEVEL: "DEBUG"
       DJANGO_SETTINGS_MODULE: "config.settings.production"
       DJANGO_SECRET_KEY: "{{ gia_api_django_secret_key }}"
@@ -61,7 +80,7 @@
     networks_cli_compatible: yes
     restart_policy: unless-stopped
     state: started
-  notify: gia-api - setup database
+  notify: gia-api - invalidate cache
   no_log: true
   tags: gia
 
@@ -72,6 +91,8 @@
     pull: yes
     ports:
       - "8080:80"
+    env:
+      TZ: "{{ tz }}"
     networks:
       - name: "{{ gia_network }}"
     networks_cli_compatible: yes
