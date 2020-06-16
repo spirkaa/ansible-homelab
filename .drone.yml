@@ -1,15 +1,14 @@
 ---
 kind: pipeline
-type: docker
-name: default
+name: build
 
 steps:
-- name: pihole
-  image: plugins/docker
-  settings:
-    repo: registry.home.devmem.ru/pihole
-    registry: registry.home.devmem.ru
-    dockerfile: ./roles/homelab_svc/pihole/files/pihole.Dockerfile
-    tags:
-    - ${DRONE_COMMIT_SHA:0:8}
-    - latest
+  - name: pihole
+    image: plugins/docker
+    settings:
+      registry: registry.home.devmem.ru
+      repo: registry.home.devmem.ru/pihole
+      dockerfile: ./roles/homelab_svc/pihole/files/pihole.Dockerfile
+      cache_from: registry.home.devmem.ru/pihole:latest
+      tags:
+        - latest
