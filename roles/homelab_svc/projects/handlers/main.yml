@@ -1,3 +1,1 @@
 ---
-- name: gia-api - invalidate cache
-  command: docker exec gia-api python manage.py invalidate all
