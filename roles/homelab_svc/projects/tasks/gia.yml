@@ -70,11 +70,13 @@
       DJANGO_SECRET_KEY: "{{ gia_api_django_secret_key }}"
       DJANGO_ALLOWED_HOSTS: "{{ gia_api_django_allowed_hosts }}"
       DJANGO_ADMIN_URL: "a/"
+      DJANGO_ADMIN_MAIL: "{{ gia_api_django_admin_mail }}"
       DJANGO_EMAIL_HOST: "{{ smtp_host }}"
       DJANGO_EMAIL_HOST_USER: "{{ smtp_user }}"
       DJANGO_EMAIL_HOST_PASSWORD: "{{ smtp_pass }}"
-      DATABASE_URL: "postgres://{{ gia_db_user }}:{{ gia_db_pass }}@gia-db:5432/{{ gia_db_user }}"
-      CACHE_URL: "redis://gia-redis:6379/1"
+      DJANGO_EMAIL_SUBJECT_PREFIX: "{{ gia_api_django_email_subject_prefix }}"
+      DJANGO_DATABASE_URL: "postgres://{{ gia_db_user }}:{{ gia_db_pass }}@gia-db:5432/{{ gia_db_user }}"
+      DJANGO_CACHE_URL: "redis://gia-redis:6379/1"
     networks:
       - name: "{{ gia_network }}"
     networks_cli_compatible: yes

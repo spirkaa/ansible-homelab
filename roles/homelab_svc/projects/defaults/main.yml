@@ -32,6 +32,8 @@ gia_api_django_secret_key: !vault |
           38343337383164643466663039616363666436613732393564373335356337633134656333326363
           646537323334633162346461643936656230
 gia_api_django_allowed_hosts: .devmem.ru
+gia_api_django_admin_mail: piv@devmem.ru
+gia_api_django_email_subject_prefix: [gia.devmem.ru]
 
 smtp_host: smtp.devmem.ru
 smtp_port: "587"
