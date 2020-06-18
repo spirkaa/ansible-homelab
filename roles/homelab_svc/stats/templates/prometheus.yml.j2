@@ -56,6 +56,11 @@ scrape_configs:
     static_configs:
     - targets: ['git.devmem.ru']
 
+  - job_name: 'gia-api'
+    scheme: https
+    static_configs:
+      - targets: ['gia-api.devmem.ru']
+
   # - job_name: 'node-exporter'
   #   static_configs:
   #     - targets: ['node-exporter:9100']
