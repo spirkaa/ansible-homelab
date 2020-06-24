@@ -5,6 +5,7 @@
 * [linuxserver/code-server](https://hub.docker.com/r/linuxserver/code-server)
 * [gitea/gitea](https://hub.docker.com/r/gitea/gitea) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb)
 * [drone/drone](https://hub.docker.com/r/drone/drone) + [drone/drone-runner-docker](https://hub.docker.com/r/drone/drone-runner-docker)
+* [registry](https://hub.docker.com/_/registry) + [joxit/docker-registry-ui](https://hub.docker.com/r/joxit/docker-registry-ui)
 
 ## Зависимости
 
