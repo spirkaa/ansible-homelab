@@ -1,4 +1,17 @@
 ---
+- name: tautulli - create dir
+  file:
+    path: "{{ app_path }}/tautulli/config/newsletter_template"
+    state: directory
+    recurse: yes
+  tags: tautulli
+
+- name: tautulli - copy files
+  copy:
+    src: files/recently_added.html
+    dest: "{{ app_path }}/tautulli/config/newsletter_template"
+  tags: tautulli
+
 - name: tautulli - start
   docker_container:
     name: tautulli
