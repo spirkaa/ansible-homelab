@@ -6,7 +6,7 @@ tz: "Europe/Moscow"
 
 bitwarden_image: bitwardenrs/server:alpine
 bitwarden_ldap_image: vividboarder/bitwarden_rs_ldap:alpine
-freeipa_image: freeipa/freeipa-server:latest
+freeipa_image: freeipa/freeipa-server:fedora-32
 heimdall_image: linuxserver/heimdall:latest
 phpldapadmin_image: osixia/phpldapadmin:0.9.0
 portainer_image: portainer/portainer:latest
