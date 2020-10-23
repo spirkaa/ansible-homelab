@@ -23,8 +23,10 @@ caps:
 
   modes:
     search: [q]
+    tv-search: [q]
     movie-search: [q]
     music-search: [q]
+    book-search: [q]
 
 settings:
   - name: striprussian
@@ -36,7 +38,6 @@ settings:
     label: Include Advertising
     default: "_"
     options:
-      "yes": "yes"
       "_": "yes"
       "no": "no"
   - name: sort
