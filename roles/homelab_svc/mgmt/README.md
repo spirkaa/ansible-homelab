@@ -2,12 +2,12 @@
 
 Роль Ansible, которая запускает Docker контейнеры:
 
-* [bitwardenrs/server](https://hub.docker.com/r/bitwardenrs/server)
-* [freeipa/freeipa-server](https://hub.docker.com/r/freeipa/freeipa-server) + [osixia/phpldapadmin](https://hub.docker.com/r/osixia/phpldapadmin)
-* [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall)
-* [portainer/portainer](https://hub.docker.com/r/portainer/portainer)
-* [linuxserver/unifi-controller](https://hub.docker.com/r/linuxserver/unifi-controller)
-* [nico640/docker-unms](https://hub.docker.com/r/nico640/docker-unms)
+* [bitwardenrs/server](https://hub.docker.com/r/bitwardenrs/server/tags)
+* [freeipa/freeipa-server](https://hub.docker.com/r/freeipa/freeipa-server/tags) + [osixia/phpldapadmin](https://hub.docker.com/r/osixia/phpldapadmin/tags)
+* [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall/tags)
+* [portainer/portainer](https://hub.docker.com/r/portainer/portainer/tags)
+* [linuxserver/unifi-controller](https://hub.docker.com/r/linuxserver/unifi-controller/tags)
+* [nico640/docker-unms](https://hub.docker.com/r/nico640/docker-unms/tags)
 
 ## Зависимости
 
