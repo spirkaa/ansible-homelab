@@ -1,6 +1,6 @@
 # Роль Ansible: Traefik
 
-Роль Ansible, которая запускает [Traefik](https://containo.us/traefik/) в Docker контейнере. Включены api и dashboard, а также переадресация всех запросов с http на https.
+Роль Ansible, которая запускает контейнер [Traefik](https://hub.docker.com/_/traefik?tab=tags). Включены api и dashboard, а также переадресация всех запросов с http на https.
 
 ## Настройки
 
