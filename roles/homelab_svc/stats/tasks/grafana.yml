@@ -54,6 +54,8 @@
       GF_SMTP_FROM_ADDRESS: "{{ smtp_user }}"
       GF_SMTP_FROM_NAME: "grafana.{{ app_base_domain }}"
       GF_SERVER_ENABLE_GZIP: "true"
+    ports:
+      - "3000:3000"
     volumes:
       - "{{ app_path }}/grafana/config/provisioning:/etc/grafana/provisioning"
       - "{{ app_path }}/grafana/config/ldap.toml:/etc/grafana/ldap.toml"
