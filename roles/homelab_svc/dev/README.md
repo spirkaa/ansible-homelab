@@ -2,10 +2,10 @@
 
 Роль Ansible, которая запускает Docker контейнеры:
 
-* [linuxserver/code-server](https://hub.docker.com/r/linuxserver/code-server)
-* [gitea/gitea](https://hub.docker.com/r/gitea/gitea) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb)
-* [drone/drone](https://hub.docker.com/r/drone/drone) + [drone/drone-runner-docker](https://hub.docker.com/r/drone/drone-runner-docker)
-* [registry](https://hub.docker.com/_/registry) + [joxit/docker-registry-ui](https://hub.docker.com/r/joxit/docker-registry-ui)
+* [linuxserver/code-server](https://hub.docker.com/r/linuxserver/code-server/tags)
+* [gitea/gitea](https://hub.docker.com/r/gitea/gitea/tags) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb/tags)
+* [drone/drone](https://hub.docker.com/r/drone/drone/tags) + [drone/drone-runner-docker](https://hub.docker.com/r/drone/drone-runner-docker/tags)
+* [registry](https://hub.docker.com/_/registry?tab=tags) + [joxit/docker-registry-ui](https://hub.docker.com/r/joxit/docker-registry-ui/tags)
 
 ## Зависимости
 
