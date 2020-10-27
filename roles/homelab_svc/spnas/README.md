@@ -11,7 +11,7 @@
 * [linuxserver/muximux](https://hub.docker.com/r/linuxserver/muximux/tags)
 * [werwolfby/alpine-monitorrent](https://hub.docker.com/r/werwolfby/alpine-monitorrent/tags)
 * [mbentley/timemachine](https://hub.docker.com/r/mbentley/timemachine/tags)
-* [suprovsky/nextcloud](https://hub.docker.com/r/suprovsky/nextcloud/tags) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb/tags)
+* [wonderfall/nextcloud](https://hub.docker.com/r/wonderfall/nextcloud/tags) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb/tags)
 
 ## Зависимости
 
