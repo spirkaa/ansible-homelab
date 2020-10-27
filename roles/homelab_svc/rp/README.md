@@ -2,7 +2,7 @@
 
 Роль Ansible, которая запускает обратный прокси-сервер в Docker контейнере:
 
-* [jc21/nginx-proxy-manager](https://hub.docker.com/r/jc21/nginx-proxy-manager) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb)
+* [jc21/nginx-proxy-manager](https://hub.docker.com/r/jc21/nginx-proxy-manager/tags) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb/tags)
 
 ## Зависимости
 
