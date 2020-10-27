@@ -6,6 +6,7 @@ tz: "Europe/Moscow"
 
 domoticz_image: cgatay/domoticz:master
 grafana_image: grafana/grafana:latest
+homeassistant_image: homeassistant/home-assistant:latest
 influxdb_image: influxdb:1.8-alpine
 librenms_db_image: yobasystems/alpine-mariadb:10.4.13
 librenms_image: jarischaefer/docker-librenms:latest

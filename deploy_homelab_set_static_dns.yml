@@ -55,6 +55,7 @@
       - { alias: "dom", inet: "{{ ip_stats }}" }
       - { alias: "loki", inet: "{{ ip_stats }}" }
       - { alias: "prometheus", inet: "{{ ip_stats }}" }
+      - { alias: "ha", inet: "{{ ip_stats }}" }
 
       - { alias: "mail", inet: "{{ ip_mail }}" }
       - { alias: "traefik-mail", inet: "{{ ip_mail }}" }

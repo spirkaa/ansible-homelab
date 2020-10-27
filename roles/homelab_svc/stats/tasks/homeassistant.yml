@@ -1,0 +1,23 @@
+---
+- name: homeassistant - start
+  docker_container:
+    name: homeassistant
+    image: "{{ homeassistant_image }}"
+    pull: yes
+    ports:
+      - "8123:8123"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ app_path }}/homeassistant/config:/config"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.homeassistant.rule: "HostRegexp(`ha{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.services.homeassistant.loadbalancer.server.port: "8123"
+      traefik.http.routers.homeassistant.entrypoints: "websecure"
+      traefik.http.routers.homeassistant.tls: "true"
+    restart_policy: unless-stopped
+    state: started
+  tags: homeassistant
