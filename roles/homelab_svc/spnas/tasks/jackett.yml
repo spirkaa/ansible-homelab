@@ -28,7 +28,11 @@
       - "{{ app_path }}/jackett/Definitions/bitru.yml:/app/Jackett/Definitions/bitru.yml:ro"
       - "{{ app_path }}/jackett/Definitions/eniahd.yml:/app/Jackett/Definitions/eniahd.yml:ro"
       - "{{ app_path }}/jackett/Definitions/kinozal.yml:/app/Jackett/Definitions/kinozal.yml:ro"
+      - "{{ app_path }}/jackett/Definitions/nntt.yml:/app/Jackett/Definitions/nntt.yml:ro"
+      - "{{ app_path }}/jackett/Definitions/piratbitl.yml:/app/Jackett/Definitions/piratbitl.yml:ro"
       - "{{ app_path }}/jackett/Definitions/riperam.yml:/app/Jackett/Definitions/riperam.yml:ro"
+      - "{{ app_path }}/jackett/Definitions/rus-media.yml:/app/Jackett/Definitions/rus-media.yml:ro"
+      - "{{ app_path }}/jackett/Definitions/selezen.yml:/app/Jackett/Definitions/selezen.yml:ro"
       - "{{ app_path }}/jackett/Definitions/vanila.yml:/app/Jackett/Definitions/vanila.yml:ro"
     networks:
       - name: "{{ app_network_name }}"
