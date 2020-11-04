@@ -1303,19 +1303,19 @@ settings:
   - name: sort
     type: select
     label: Sort requested from site
-    default: "t"
+    default: t
     options:
-      "t": "created"
-      "ts": "seeders"
-      "sz": "size"
-      "i": "title"
+      t: created
+      ts: seeders
+      sz: size
+      i: title
   - name: type
     type: select
     label: Order requested from site
-    default: "d"
+    default: d
     options:
-      "d": "desc"
-      "a": "asc"
+      d: desc
+      a: asc
 
 login:
   path: ucp.php?mode=login
@@ -1330,7 +1330,7 @@ login:
     - selector: fieldset:has(div.error)
   test:
     path: /
-    selector: a[href^="./ucp.php?mode=logout&sid="]
+    selector: :has(a[href*="/ucp.php?mode=logout&sid="])
 
 download:
   selector: a[href^="https://dl.vanila.org"]
@@ -1347,7 +1347,7 @@ search:
     sr: topics
     sf: titleonly
     tracker_search: torrent
-    keywords: "{{ if .Keywords }}{{ .Keywords }}{{else}}test{{end}}"
+    keywords: "{{ if .Keywords }}{{ .Keywords }}{{ else }}{{ .Today.Year }}{{ end }}"
     sk: "{{ .Config.sort }}"
     sd: "{{ .Config.type }}"
 
@@ -1454,9 +1454,12 @@ search:
           args: ["ноя", "Nov"]
         - name: replace
           args: ["дек", "Dec"]
+        - name: append
+          args: " +00:00" # auto adjusted by site account profile
         - name: dateparse
-          args: "02 Jan 2006, 15:04"
+          args: "02 Jan 2006, 15:04 -07:00"
     downloadvolumefactor:
       text: 0
     uploadvolumefactor:
       text: 1
+# phpBB
