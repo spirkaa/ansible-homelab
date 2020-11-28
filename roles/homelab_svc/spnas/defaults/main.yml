@@ -4,17 +4,17 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
-bazarr_image: linuxserver/bazarr:v0.9.0.6-ls95
+bazarr_image: linuxserver/bazarr:v0.9.0.7-ls97
 delugevpn_image: binhex/arch-delugevpn:2.0.4.dev38_g23a48dd01-2-15
-jackett_image: linuxserver/jackett:v0.16.2152-ls1
-lidarr_image: linuxserver/lidarr:0.8.0.1888-ls1
+jackett_image: linuxserver/jackett:v0.16.2256-ls7
+lidarr_image: linuxserver/lidarr:0.8.0.1918-ls5
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 muximux_image: linuxserver/muximux:a2b403f5-ls54
 nextcloud_db_image: yobasystems/alpine-mariadb:10.4.15
 nextcloud_image: wonderfall/nextcloud:20
-radarr_image: linuxserver/radarr:3.0.0.4075-ls29
+radarr_image: linuxserver/radarr:3.0.0.4194-ls2
 samba_image: mbentley/timemachine:smb
-sonarr_image: linuxserver/sonarr:3.0.4.1000-ls74
+sonarr_image: linuxserver/sonarr:3.0.4.1021-ls8
 
 app_network_name: traefik
 

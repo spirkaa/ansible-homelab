@@ -313,7 +313,7 @@ search:
     sf: titleonly
     fp: 1
     tracker_search: torrent
-    keywords: "{{ if .Keywords }}{{ .Keywords }}{{else}}{{ .Today.Year }}{{end}}"
+    keywords: "{{ if .Keywords }}{{ .Keywords }}{{ else }}{{ .Today.Year }}{{ end }}"
     sk: "{{ .Config.sort }}"
     sd: "{{ .Config.type }}"
     $raw: "{{ range .Categories }}&fid[]={{.}}{{end}}"
@@ -431,8 +431,10 @@ search:
           args: ["дек", "Dec"]
         - name: replace
           args: [",", ""]
+        - name: append
+          args: " +03:00" # MSK
         - name: dateparse
-          args: "02 Jan 2006 15:04"
+          args: "02 Jan 2006 15:04 -07:00"
     downloadvolumefactor:
       text: 0
     uploadvolumefactor:
