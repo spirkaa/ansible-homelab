@@ -34,9 +34,12 @@ settings:
     label: Strip Russian Letters
     default: false
   - name: adverts
-    type: checkbox
+    type: select
     label: Include Advertising
-    default: true
+    default: _
+    options:
+      _: yes
+      no: no
   - name: sort
     type: select
     label: Sort requested from site
@@ -51,8 +54,8 @@ search:
     - path: browse.php
   inputs:
     s: "{{ .Keywords }}"
+    rek: "{{ re_replace .Config.adverts \"_\" \"\" }}"
     sort: "{{ re_replace .Config.sort \"_\" \"\" }}"
-    $raw: "{{ if .Config.adverts }}{{ else }}&rek=no{{ end}}"
 
   rows:
     selector: table.browse-list > tbody > tr
