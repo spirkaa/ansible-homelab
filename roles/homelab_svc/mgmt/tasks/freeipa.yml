@@ -22,6 +22,12 @@
   no_log: true
   tags: freeipa
 
+- name: freeipa - delete old ipaupgrade.log
+  file:
+    path: "{{ freeipa_data_host_path }}/var/log/ipaupgrade.log"
+    state: absent
+  tags: freeipa
+
 - name: freeipa - start
   docker_container:
     name: freeipa
@@ -67,15 +73,33 @@
       traefik.http.services.freeipa.loadbalancer.server.scheme: "https"
     restart_policy: unless-stopped
     state: started
+  register: freeipa_start
   no_log: true
   tags: freeipa
 
-- name: freeipa - wait for install to finish
-  wait_for:
-    path: "{{ freeipa_data_host_path }}/var/log/ipaserver-install.log"
-    search_regex: "The ipa-server-install command was successful"
-    timeout: 1200
-  tags: freeipa
+- block:
+    - name: freeipa - wait for install to finish
+      wait_for:
+        path: "{{ freeipa_data_host_path }}/var/log/ipaserver-install.log"
+        search_regex: "The ipa-server-install command was successful"
+        timeout: 1200
+      tags: freeipa
+
+    - name: freeipa - wait for ipaupgrade.log
+      wait_for:
+        path: "{{ freeipa_data_host_path }}/var/log/ipaupgrade.log"
+        state: present
+        timeout: 30
+      tags: freeipa
+
+    - name: freeipa - wait for upgrade to finish
+      wait_for:
+        path: "{{ freeipa_data_host_path }}/var/log/ipaupgrade.log"
+        search_regex: "The ipa-server-upgrade command was successful"
+        timeout: 120
+      tags: freeipa
+  when: freeipa_start.changed
+  ignore_errors: yes
 
 - name: freeipa - customize - copy custom schema
   vars:
