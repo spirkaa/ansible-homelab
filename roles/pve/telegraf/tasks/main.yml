@@ -40,7 +40,7 @@
         /usr/local/bin/hddtemp_systemd_gen > /usr/lib/systemd/system/hddtemp.service
       when: hddtemp_cfg.changed
       notify: restart hddtemp
-  when: inventory_hostname == "spmini" or inventory_hostname == "spsrv"
+  when: inventory_hostname == "spsrv"
 
 - name: Copy sudoers.d file
   copy:

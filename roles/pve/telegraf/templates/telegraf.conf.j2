@@ -65,15 +65,12 @@
   use_sudo = true
   attributes = true
 
-{% if inventory_hostname == "spmini" or inventory_hostname == "spsrv" %}
-[[inputs.hddtemp]]
-{% endif %}
-
 {% if inventory_hostname == "spmini" %}
 [[inputs.sensors]]
 {% endif %}
 
 {% if inventory_hostname == "spsrv" %}
+[[inputs.hddtemp]]
 [[inputs.zfs]]
   poolMetrics = false
 {% endif %}
