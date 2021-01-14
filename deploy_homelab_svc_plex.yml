@@ -8,8 +8,8 @@
     hostname: plex
     comment: Plex
     cores: 4
-    mem: 4096
-    disk_size: 100
+    mem: 8192
+    disk_size: 150
     net_ip: 192.168.10.10
     net_vlan: 10
     net_gw: 192.168.10.1
