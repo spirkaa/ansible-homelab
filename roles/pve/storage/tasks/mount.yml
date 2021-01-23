@@ -1,0 +1,25 @@
+---
+- name: Create mount points
+  file:
+    dest: "{{ item.path }}"
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: 0777
+  with_items:
+    - "{{ parity_disks }}"
+    - "{{ data_disks }}"
+    - "{{ extra_mountpoints }}"
+
+- name: Mount disks
+  mount:
+    name: "{{ item.path }}"
+    src: "{{ item.diskbyid }}"
+    fstype: "{{ item.fs }}"
+    opts: "{{ item.opts }}"
+    state: present
+  with_items:
+    - "{{ parity_disks }}"
+    - "{{ data_disks }}"
+    - "{{ extra_mountpoints }}"
+  when: item.path != '/mnt/storage'

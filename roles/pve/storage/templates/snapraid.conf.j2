@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+#
+# SnapRAID configuration file
+
+# Parity location(s)
+{% for disk in parity_disks %}
+{{ loop.index }}-parity {{ disk.path }}/snapraid.parity
+{% endfor %}
+
+# Content file location(s)
+content /var/snapraid.content
+{% for disk in parity_disks %}
+{% if disk.content == true %}
+content {{ disk.path }}/snapraid.content
+{% endif %}
+{% endfor %}
+{% for disk in data_disks %}
+{% if disk.content == true %}
+content {{ disk.path }}/.snapraid.content
+{% endif %}
+{% endfor %}
+
+# Data disks
+{% for disk in data_disks %}
+data d0{{ loop.index }} {{ disk.path }}
+{% endfor %}
+
+exclude *.log
+exclude *.bak
+exclude *.unrecoverable
+exclude /tmp/
+exclude /lost+found/
+exclude *.!sync
+exclude aquota.group
+exclude aquota.user
+exclude .AppleDouble
+exclude ._AppleDouble
+exclude .DS_Store
+exclude ._.DS_Store
+exclude .Thumbs.db
+exclude .fseventsd
+exclude .Spotlight-V100
+exclude .TemporaryItems
+exclude .Trashes
+exclude .AppleDB

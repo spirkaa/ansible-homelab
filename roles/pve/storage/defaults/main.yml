@@ -1,0 +1,74 @@
+---
+main_storage_path: /mnt/storage
+
+parity_disks:
+  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGNMJ4Z-part1, path: /mnt/parity/parity01, fs: ext4, opts: defaults, content: false }
+  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGSUYPZ-part1, path: /mnt/parity/parity02, fs: ext4, opts: defaults, content: false }
+
+data_disks:
+  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_2SGEZJ8N-part1, path: /mnt/data/disk01, fs: ext4, opts: defaults, content: true }
+  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHUH8NZ-part1, path: /mnt/data/disk02, fs: ext4, opts: defaults, content: true }
+  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGRYMDZ-part1, path: /mnt/data/disk03, fs: ext4, opts: defaults, content: false }
+  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGAJ19Z-part1, path: /mnt/data/disk04, fs: ext4, opts: defaults, content: false }
+  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGN507Z-part1, path: /mnt/data/disk05, fs: ext4, opts: defaults, content: false }
+  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_7JKK8PRC-part1, path: /mnt/data/disk06, fs: ext4, opts: defaults, content: false }
+  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHVUJKZ-part1, path: /mnt/data/disk07, fs: ext4, opts: defaults, content: false }
+  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_7HK0X5ZN-part1, path: /mnt/data/disk08, fs: ext4, opts: defaults, content: false }
+
+extra_mountpoints:
+  - { path: "{{ main_storage_path }}" }
+
+zfs_disks:
+#  - ata-WDC_WD120EMFZ-11A6JA0_Z2KAEX5T
+#  - ata-WDC_WD120EMFZ-11A6JA0_Z2KJR39T
+
+fstab_mergerfs:
+  - { source: "/mnt/data/*", mountpoint: "{{ main_storage_path }}", fs: fuse.mergerfs, opts: "defaults,nonempty,allow_other,use_ino,cache.files=off,moveonenospc=true,category.create=mfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs" }
+
+mergerfs_version: 2.32.2
+mergerfs_package_name: "mergerfs_{{ mergerfs_version }}.debian-buster_amd64.deb"
+mergerfs_package_url: "https://github.com/trapexit/mergerfs/releases/download/{{ mergerfs_version }}/{{ mergerfs_package_name }}"
+
+snapraid_version: 11.5-1
+snapraid_package_name: "snapraid_{{ snapraid_version }}_amd64.deb"
+
+snapraid_bin_path: /usr/local/bin/snapraid
+snapraid_config_path: /etc/snapraid.conf
+snapraid_delete_threshold: 50
+snapraid_touch: true
+
+snapraid_run_scrub: true
+snapraid_run_scrub_percent: 12
+snapraid_run_scrub_age: 10
+
+snapraid_email_sendon: error
+
+snapraid_smtp_host: smtp.gmail.com
+snapraid_smtp_port: 465
+snapraid_use_ssl: true
+snapraid_email_address: devmem.ru@gmail.com
+snapraid_email_pass: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      65396535333864353935343534303734393962376434626432666139383536653237363435353634
+      6662636531623637653637303134636461613738636538380a616233356132366633313134306230
+      66663665393363636235356231356636336130346431333330376530383834376236333333306134
+      3839353032653237320a623336643539656262646662663961333663643965373933616164363638
+      3731
+snapraid_email_address_from: "{{ snapraid_email_address }}"
+snapraid_email_address_to: spirkaa@gmail.com
+
+snapraid_healthcheck_io_uuid: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      63366363316561336437313035373532323665383133643664326464313932653239633338633736
+      3036653963343065383965393938623361316636366564330a656561303536616666396138363738
+      65356131346665346263333761373137633261333233353830663862306463313966623638373861
+      6333623939343539380a376333336433313139636235646539623364656132343465656431643437
+      30643762353964376237653430373836363263643633303663383761303766393835313235376330
+      6235653739373662343238346362653561333434303564303938
+
+snapraid_run_path: /opt/snapraid-runner/snapraid-runner
+snapraid_run_conf: "{{ snapraid_run_path }}.conf"
+snapraid_run_bin: "{{ snapraid_run_path }}.py"
+snapraid_run_command: "python3 {{ snapraid_run_bin }} -c {{ snapraid_run_conf}} && curl -fsS --retry 3 https://hc-ping.com/{{ snapraid_healthcheck_io_uuid }} > /dev/null"
+snapraid_cron_jobs:
+  - { job: '{{ snapraid_run_command }}', name: 'snapraid_runner', weekday: '*', hour: '01' }

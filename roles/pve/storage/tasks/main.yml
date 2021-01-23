@@ -1,0 +1,9 @@
+---
+- block:
+    - name: Mount point tasks
+      include_tasks: mount.yml
+    - name: MergerFS tasks
+      include_tasks: mergerfs.yml
+    - name: Snapraid tasks
+      include_tasks: snapraid.yml
+  when: inventory_hostname == "spsrv"

@@ -1,0 +1,53 @@
+---
+- name: snapraid - check if installed
+  command: dpkg-query -W snapraid
+  ignore_errors: True
+  register: snapraid_is_installed
+  changed_when: snapraid_is_installed.rc != 0
+
+- block:
+    - name: snapraid - copy package
+      copy:
+        src: files/{{ snapraid_package_name }}
+        dest: /tmp
+
+    - name: snapraid - install package
+      apt:
+        deb: /tmp/{{ snapraid_package_name }}
+        state: present
+  when: snapraid_version not in snapraid_is_installed.stdout
+
+- name: snapraid - copy configuration
+  template:
+    src: snapraid.conf.j2
+    dest: /etc/snapraid.conf
+    owner: root
+    group: root
+    mode: 0664
+
+- name: snapraid-runner - clone repo
+  git:
+    repo: https://github.com/Chronial/snapraid-runner.git
+    dest: /opt/snapraid-runner
+    version: 68a03ce
+
+- name: snapraid-runner - copy configuration
+  template:
+    src: snapraid-runner.conf.j2
+    dest: "{{ snapraid_run_conf }}"
+    owner: root
+    group: root
+    mode: 0664
+
+- name: snapraid-runner - setup cron job
+  cron:
+    user: root
+    job: "{{ item.job }}"
+    name: "{{ item.name }}"
+    weekday: "{{ item.weekday | default('*') }}"
+    minute: "{{ item.minute | default('00') }}"
+    hour: "{{ item.hour | default('00') }}"
+    dom: "{{ item.dom | default('*') }}"
+  with_items:
+    - "{{ snapraid_cron_jobs }}"
+  no_log: true
