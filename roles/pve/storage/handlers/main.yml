@@ -1,0 +1,3 @@
+---
+- name: nfs - re-export
+  command: exportfs -ra

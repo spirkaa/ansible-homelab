@@ -1,0 +1,31 @@
+---
+- name: nfs - install packages
+  apt:
+    name:
+      - nfs-common
+      - nfs-kernel-server
+    state: present
+
+- name: nfs - ensure directories to export exist
+  file:  # noqa 208
+    path: "{{ item.strip().split()[0] }}"
+    state: directory
+  with_items: "{{ nfs_exports }}"
+
+- name: nfs - copy configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - { src: exports.j2, dest: /etc/exports }
+  notify: nfs - re-export
+
+- name: nfs - ensure service is running
+  service:
+    name: nfs-kernel-server
+    state: started
+    enabled: true
+  when: nfs_exports | length

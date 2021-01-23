@@ -6,4 +6,6 @@
       include_tasks: mergerfs.yml
     - name: Snapraid tasks
       include_tasks: snapraid.yml
+    - name: NFS tasks
+      include_tasks: nfs.yml
   when: inventory_hostname == "spsrv"
