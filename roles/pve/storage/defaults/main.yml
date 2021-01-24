@@ -41,6 +41,9 @@ snapraid_config_path: /etc/snapraid.conf
 snapraid_delete_threshold: 50
 snapraid_touch: true
 
+snapraid_log_path: /var/log/snapraid.log
+snapraid_log_size: 5000
+
 snapraid_run_scrub: true
 snapraid_run_scrub_percent: 12
 snapraid_run_scrub_age: 10
@@ -73,6 +76,6 @@ snapraid_healthcheck_io_uuid: !vault |
 snapraid_run_path: /opt/snapraid-runner/snapraid-runner
 snapraid_run_conf: "{{ snapraid_run_path }}.conf"
 snapraid_run_bin: "{{ snapraid_run_path }}.py"
-snapraid_run_command: "python3 {{ snapraid_run_bin }} -c {{ snapraid_run_conf}} && curl -fsS --retry 3 https://hc-ping.com/{{ snapraid_healthcheck_io_uuid }} > /dev/null"
+snapraid_run_command: "python3 {{ snapraid_run_bin }} -c {{ snapraid_run_conf}} && curl -fsS --retry 3 https://hc-ping.com/{{ snapraid_healthcheck_io_uuid }} > /dev/null 2>&1"
 snapraid_cron_jobs:
   - { job: '{{ snapraid_run_command }}', name: 'snapraid_runner', weekday: '*', hour: '01' }
