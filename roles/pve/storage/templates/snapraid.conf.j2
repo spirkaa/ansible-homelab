@@ -25,6 +25,7 @@ content {{ disk.path }}/.snapraid.content
 data d0{{ loop.index }} {{ disk.path }}
 {% endfor %}
 
+exclude incomplete/
 exclude *.log
 exclude *.bak
 exclude *.unrecoverable
