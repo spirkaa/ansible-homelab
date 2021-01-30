@@ -6,15 +6,15 @@ tz: "Europe/Moscow"
 
 bazarr_image: linuxserver/bazarr:v0.9.0.8-ls101
 delugevpn_image: binhex/arch-delugevpn:2.0.4.dev38_g23a48dd01-3-01
-jackett_image: linuxserver/jackett:v0.17.343-ls17
-lidarr_image: linuxserver/lidarr:nightly-0.8.0.2023-ls13
+jackett_image: linuxserver/jackett:development-v0.17.401-ls17
+lidarr_image: linuxserver/lidarr:develop-0.8.0.2042-ls2
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 muximux_image: linuxserver/muximux:a2b403f5-ls54
 nextcloud_db_image: yobasystems/alpine-mariadb:10.4.15
 nextcloud_image: wonderfall/nextcloud:20
-radarr_image: linuxserver/radarr:nightly-3.0.2.4446-ls10
+radarr_image: linuxserver/radarr:nightly-3.0.2.4504-ls11
 samba_image: mbentley/timemachine:smb
-sonarr_image: linuxserver/sonarr:preview-3.0.4.1083-ls38
+sonarr_image: linuxserver/sonarr:preview-3.0.4.1091-ls42
 
 app_network_name: traefik
 
