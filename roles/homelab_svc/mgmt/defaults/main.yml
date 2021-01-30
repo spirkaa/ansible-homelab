@@ -9,7 +9,7 @@ bitwarden_ldap_image: vividboarder/bitwarden_rs_ldap:alpine
 freeipa_image: freeipa/freeipa-server:fedora-33
 heimdall_image: linuxserver/heimdall:latest
 phpldapadmin_image: osixia/phpldapadmin:0.9.0
-portainer_image: portainer/portainer:latest
+portainer_image: portainer/portainer-ce:latest
 unifi_image: linuxserver/unifi-controller:latest
 unms_image: nico640/docker-unms:latest
 
