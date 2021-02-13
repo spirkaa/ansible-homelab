@@ -4,7 +4,7 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
-code_image: linuxserver/code-server:v3.8.0-ls62
+code_image: linuxserver/code-server:v3.9.0-ls69
 drone_image: drone/drone:1.10
 drone_runner_docker_image: drone/drone-runner-docker:1.6
 gitea_db_image: yobasystems/alpine-mariadb:10.4.15
