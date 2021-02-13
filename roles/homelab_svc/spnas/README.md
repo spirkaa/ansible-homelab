@@ -2,8 +2,8 @@
 
 Роль Ansible, которая запускает службу полуавтоматической загрузки торрентов и доступа к файлам по протоколам SMB, HTTP, WebDAV в составе Docker контейнеров:
 
-* [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr/tags)
 * [binhex/arch-delugevpn](https://hub.docker.com/r/binhex/arch-delugevpn/tags)
+* [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr/tags)
 * [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett/tags)
 * [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr/tags)
 * [linuxserver/radarr](https://hub.docker.com/r/linuxserver/radarr/tags)
