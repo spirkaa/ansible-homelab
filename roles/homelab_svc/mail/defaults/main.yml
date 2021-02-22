@@ -1,7 +1,7 @@
 ---
 app_path: /docker/mail
 
-mail_image: tvial/docker-mailserver:latest
+mail_image: mailserver/docker-mailserver:latest
 mail_autodiscover_image: monogramm/autodiscover-email-settings:latest
 
 mail_hostname: mail

@@ -41,6 +41,9 @@
   copy:
     content: "{{ ssl_certificate }}"
     dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.crt"
+    owner: root
+    group: root
+    mode: 0644
   notify: mail - restart
   tags: mail
 
@@ -48,6 +51,9 @@
   copy:
     content: "{{ ssl_private_key }}"
     dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.key"
+    owner: root
+    group: root
+    mode: 0644
   notify: mail - restart
   no_log: true
   tags: mail
@@ -56,12 +62,21 @@
   template:
     src: templates/env-mailserver.j2
     dest: "{{ app_path }}/mail/env-mailserver"
+    owner: root
+    group: root
+    mode: 0644
   tags: mail
 
 - name: mail - copy files
   copy:
-    src: files/15-mailboxes.conf
+    src: "files/{{ item }}"
     dest: "{{ app_path }}/mail"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - 10-master.conf
+    - 15-mailboxes.conf
   tags: mail
 
 - name: mail - start
@@ -77,20 +92,13 @@
       - "587:587"
       - "993:993"
     env_file: "{{ app_path }}/mail/env-mailserver"
-    env:
-      DMS_DEBUG: "0"
-      SSL_TYPE: "manual"
-      SSL_CERT_PATH: "{{ mail_cert_path }}/{{ mail_cert_name }}.crt"
-      SSL_KEY_PATH: "{{ mail_cert_path }}/{{ mail_cert_name }}.key"
-      DOVECOT_PASS_ATTRS: "{{ mail_dovecot_pass_attrs }}"
-      DOVECOT_USER_ATTRS: "{{ mail_dovecot_user_attrs }}"
-      DOVECOT_AUTH_BIND: "yes"
     volumes:
       - "{{ app_path }}/mail/data:/var/mail"
       - "{{ app_path }}/mail/state:/var/mail-state"
       - "{{ app_path }}/mail/log:/var/log/mail"
       - "{{ mail_config_path_host }}/:/tmp/docker-mailserver/"
       - "{{ app_path }}/mail/certs:{{ mail_cert_path }}:ro"
+      - "{{ app_path }}/mail/10-master.conf:/etc/dovecot/conf.d/10-master.conf:ro"
       - "{{ app_path }}/mail/15-mailboxes.conf:/etc/dovecot/conf.d/15-mailboxes.conf:ro"
     capabilities:
       - net_admin
@@ -101,18 +109,17 @@
   no_log: true
   tags: mail
 
-- name: mail - customize
+- name: mail - customize running container
   command: docker exec mail sh -c '{{ item }}'
   changed_when: true
   when: mail_start.changed  # noqa 503
   notify: mail - restart
   loop:
     - echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf
-    - echo "auth_bind = yes" >> /etc/dovecot/dovecot-ldap.conf.ext
   tags: mail
 
 - name: mail - generate dkim
-  command: docker exec mail sh -c 'generate-dkim-domain {{ mail_domainname }}'
+  command: docker exec mail sh -c 'generate-dkim-config 4096 {{ mail_domainname }}'
   register: dkim_result
   changed_when: '"Creating DKIM private key" in dkim_result.stdout'
   notify: mail - restart
