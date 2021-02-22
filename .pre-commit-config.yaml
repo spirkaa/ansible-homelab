@@ -7,13 +7,15 @@ repos:
     - id: mixed-line-ending
     - id: trailing-whitespace
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.25.0
+  rev: v1.26.0
   hooks:
     - id: yamllint
       args: [--strict]
       exclude: .pre-commit-config|files/|Definitions/|vault
-- repo: https://github.com/ansible/ansible-lint.git
-  rev: v4.3.7
+- repo: https://github.com/ansible-community/ansible-lint.git
+  rev: v5.0.2
   hooks:
     - id: ansible-lint
       entry: ansible-lint
+      additional_dependencies:
+        - ansible>=2.9,<2.10

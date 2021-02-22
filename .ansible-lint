@@ -1,6 +1,7 @@
-skip_list:
-  - '204'
-  - '208'
-  - '306'
-  - '403'
-  - '701'
+warn_list:
+  - load-failure
+  - meta-no-info
+  - no-handler
+  - package-latest
+  - risky-file-permissions
+  - risky-shell-pipe
