@@ -35,6 +35,9 @@
   template:
     src: templates/config.custom.php.j2
     dest: "{{ app_path }}/librenms/config.custom.php"
+    owner: "999"
+    group: "999"
+    mode: 0664
   notify: librenms - restart
   tags: librenms
 
@@ -74,7 +77,7 @@
 - name: librenms - customize
   command: docker exec librenms sh -c '{{ item }}'
   changed_when: true
-  when: librenms_start.changed  # noqa 503
+  when: librenms_start.changed
   notify: librenms - restart
   loop:
     - echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf

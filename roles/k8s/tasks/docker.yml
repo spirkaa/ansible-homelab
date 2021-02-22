@@ -12,6 +12,7 @@
   copy:
     src: files/daemon.json
     dest: /etc/docker
+    mode: 0644
   notify: Restart docker service
 
 - name: Force all notified handlers

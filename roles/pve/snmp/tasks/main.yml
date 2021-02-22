@@ -11,11 +11,13 @@
   file:
     path: /etc/systemd/system/snmpd.service.d
     state: directory
+    mode: 0755
 
 - name: Copy service override
   copy:
     src: files/override.conf
     dest: /etc/systemd/system/snmpd.service.d
+    mode: 0644
   notify: restart snmpd
 
 - name: Copy snmp extend scripts
@@ -29,6 +31,7 @@
   template:
     src: templates/smart.config.j2
     dest: /etc/snmp/extend/smart.config
+    mode: 0644
   notify: restart snmpd
 
 - name: Create a cron job
@@ -43,6 +46,7 @@
   template:
     src: templates/snmpd.conf.j2
     dest: /etc/snmp/snmpd.conf
+    mode: 0644
   notify: restart snmpd
 
 - name: Copy sudoers.d file

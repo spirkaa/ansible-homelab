@@ -10,6 +10,8 @@
   copy:
     src: files/Definitions
     dest: "{{ app_path }}/jackett"
+    mode: 0644
+    directory_mode: 0755
   notify: jackett - restart
   tags: jackett
 

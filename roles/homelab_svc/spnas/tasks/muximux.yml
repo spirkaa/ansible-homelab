@@ -26,5 +26,8 @@
   copy:
     src: files/settings.ini.php
     dest: "{{ app_path }}/muximux/config/www/muximux"
+    owner: "{{ puid }}"
+    group: "{{ pgid }}"
+    mode: 0664
     force: no
   tags: muximux

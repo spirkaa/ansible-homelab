@@ -4,6 +4,7 @@
       copy:
         src: files/buster-backports.list
         dest: /etc/apt/sources.list.d
+        mode: 0644
 
     - name: Install packages
       apt:

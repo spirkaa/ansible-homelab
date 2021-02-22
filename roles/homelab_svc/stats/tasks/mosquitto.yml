@@ -10,6 +10,9 @@
   copy:
     src: files/mosquitto.conf
     dest: "{{ app_path }}/mosquitto/config"
+    owner: "1883"
+    group: "1883"
+    mode: 0777
   notify: mosquitto - restart
   tags: mosquitto
 

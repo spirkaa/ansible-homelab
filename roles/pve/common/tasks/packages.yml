@@ -3,11 +3,13 @@
   copy:
     src: files/sources.list
     dest: /etc/apt
+    mode: 0644
 
 - name: Configure APT sources
   copy:
     src: files/pve-no-subscription.list
     dest: /etc/apt/sources.list.d
+    mode: 0644
 
 - name: Configure APT sources
   file:

@@ -3,6 +3,7 @@
   copy:
     src: files/{{ item }}
     dest: /etc/modprobe.d
+    mode: 0644
   notify: show reboot msg
   loop:
     - kvm.conf
@@ -12,6 +13,7 @@
   copy:
     src: files/modules
     dest: /etc
+    mode: 0644
   notify: show reboot msg
 
 - name: Edit grub config

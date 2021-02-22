@@ -15,4 +15,5 @@
   copy:
     src: files/mc.ini
     dest: ~/.config/mc/ini
+    mode: 0644
     force: no

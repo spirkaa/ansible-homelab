@@ -13,6 +13,7 @@
   template:
     src: templates/prometheus.yml.j2
     dest: "{{ app_path }}/prometheus/config/prometheus.yml"
+    mode: 0644
   notify: prometheus - restart
   tags: [prometheus, grafana]
 

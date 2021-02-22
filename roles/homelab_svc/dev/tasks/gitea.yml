@@ -29,6 +29,9 @@
   template:
     src: templates/{{ item.src }}
     dest: "{{ app_path }}/{{ item.dest }}"
+    owner: "{{ puid }}"
+    group: "{{ pgid }}"
+    mode: 0644
   loop:
     - {src: app.ini.j2, dest: gitea/data/gitea/conf/app.ini}
   notify: gitea - restart
@@ -123,6 +126,7 @@
     line: no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ git_key.stdout }}
     owner: git
     group: git
+    mode: 0600
     create: yes
     state: present
   tags: gitea

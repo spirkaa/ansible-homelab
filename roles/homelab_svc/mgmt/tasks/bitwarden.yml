@@ -32,6 +32,7 @@
   template:
     src: templates/bitwarden_ldap_config.toml.j2
     dest: "{{ app_path }}/bitwarden/ldap_config.toml"
+    mode: 0644
   notify: bitwarden_ldap - restart
   tags: bitwarden
 

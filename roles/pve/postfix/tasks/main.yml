@@ -18,10 +18,12 @@
   template:
     src: templates/smtp_header_checks.j2
     dest: /etc/postfix/smtp_header_checks
+    mode: 0644
   notify: postfix config changed
 
 - name: Copy main.cf
   template:
     src: templates/main.cf.j2
     dest: /etc/postfix/main.cf
+    mode: 0644
   notify: postfix config changed

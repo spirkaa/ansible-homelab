@@ -20,6 +20,7 @@
   copy:
     content: "{{ ssl_certificate }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.crt"
+    mode: 0644
   notify: traefik - restart
   tags: traefik
 
@@ -27,6 +28,7 @@
   copy:
     content: "{{ ssl_private_key }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.key"
+    mode: 0644
   notify: traefik - restart
   no_log: true
   tags: traefik
@@ -35,6 +37,7 @@
   template:
     src: templates/dyn.toml.j2
     dest: "{{ traefik_config_file_host }}"
+    mode: 0644
   notify: traefik - restart
   tags: traefik
 

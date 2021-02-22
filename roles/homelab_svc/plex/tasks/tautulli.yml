@@ -10,6 +10,9 @@
   copy:
     src: files/recently_added.html
     dest: "{{ app_path }}/tautulli/config/newsletter_template"
+    owner: "{{ puid }}"
+    group: "{{ pgid }}"
+    mode: 0644
   tags: tautulli
 
 - name: tautulli - start

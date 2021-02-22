@@ -41,8 +41,6 @@
   copy:
     content: "{{ ssl_certificate }}"
     dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.crt"
-    owner: root
-    group: root
     mode: 0644
   notify: mail - restart
   tags: mail
@@ -51,8 +49,6 @@
   copy:
     content: "{{ ssl_private_key }}"
     dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.key"
-    owner: root
-    group: root
     mode: 0644
   notify: mail - restart
   no_log: true
@@ -62,8 +58,6 @@
   template:
     src: templates/env-mailserver.j2
     dest: "{{ app_path }}/mail/env-mailserver"
-    owner: root
-    group: root
     mode: 0644
   tags: mail
 
@@ -71,8 +65,6 @@
   copy:
     src: "files/{{ item }}"
     dest: "{{ app_path }}/mail"
-    owner: root
-    group: root
     mode: 0644
   loop:
     - 10-master.conf
@@ -112,7 +104,7 @@
 - name: mail - customize running container
   command: docker exec mail sh -c '{{ item }}'
   changed_when: true
-  when: mail_start.changed  # noqa 503
+  when: mail_start.changed
   notify: mail - restart
   loop:
     - echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf

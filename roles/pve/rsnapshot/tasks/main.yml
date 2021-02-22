@@ -9,8 +9,10 @@
   template:
     src: templates/rsnapshot.conf.j2
     dest: /etc/rsnapshot.conf
+    mode: 0644
 
 - name: Copy cron schedule
   copy:
     src: files/rsnapshot
     dest: /etc/cron.d
+    mode: 0644

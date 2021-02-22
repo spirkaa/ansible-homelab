@@ -3,5 +3,4 @@ warn_list:
   - meta-no-info
   - no-handler
   - package-latest
-  - risky-file-permissions
   - risky-shell-pipe

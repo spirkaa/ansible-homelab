@@ -15,6 +15,7 @@
   template:
     src: templates/ldap.toml.j2
     dest: "{{ app_path }}/grafana/config/ldap.toml"
+    mode: 0644
   notify: grafana - restart
   tags: grafana
 
@@ -22,6 +23,7 @@
   copy:
     src: files/{{ item }}
     dest: "{{ app_path }}/grafana/config/{{ item }}"
+    mode: 0644
   notify: grafana - restart
   loop:
     - "provisioning/datasources/datasources.yml"

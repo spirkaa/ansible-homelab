@@ -51,7 +51,7 @@
 
 - name: nextcloud - customize
   command: docker exec nextcloud sh -c '{{ item }}'
-  when: nextcloud_start.changed  # noqa 503
+  when: nextcloud_start.changed
   notify: nextcloud - restart
   loop:
     - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf

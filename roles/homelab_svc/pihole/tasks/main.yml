@@ -10,6 +10,7 @@
   template:
     src: templates/{{ item.src }}
     dest: "{{ app_path }}/pihole/{{ item.dest }}"
+    mode: 0644
   loop:
     - {src: 10-internal.conf.j2, dest: config/dnsmasq.d/10-internal.conf}
     - {src: pihole-updatelists.conf.j2, dest: config/pihole-updatelists.conf}
@@ -61,6 +62,6 @@
   retries: 10
   delay: 6
   until: result.container.State.Health.Status == 'healthy'
-  when: pihole_start.changed  # noqa 503
+  when: pihole_start.changed
   no_log: true
   tags: pihole
