@@ -1,17 +1,4 @@
 ---
-- name: delugevpn - create dir
-  file:
-    path: "{{ app_path }}/delugevpn/config/openvpn"
-    state: directory
-    recurse: yes
-  tags: delugevpn
-
-- name: delugevpn - copy files
-  copy:
-    src: files/pia-czech.ovpn
-    dest: "{{ app_path }}/delugevpn/config/openvpn"
-  tags: delugevpn
-
 - name: delugevpn - start
   docker_container:
     name: delugevpn
@@ -27,7 +14,6 @@
       VPN_USER: "{{ delugevpn_vpn_user }}"
       VPN_PASS: "{{ delugevpn_vpn_pass }}"
       VPN_PROV: "pia"
-      # VPN_CLIENT: "openvpn"
       VPN_CLIENT: "wireguard"
       STRICT_PORT_FORWARD: "yes"
       ENABLE_PRIVOXY: "yes"
@@ -45,8 +31,6 @@
       - "delugevpn-data:/data"
       - "{{ app_path }}/delugevpn/config:/config"
       - "{{ app_path }}/data/downloads:/downloads"
-    # capabilities:
-    #   - net_admin
     sysctls:
       net.ipv4.conf.all.src_valid_mark: 1
     privileged: yes
