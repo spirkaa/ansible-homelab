@@ -32,14 +32,6 @@
   notify: npm - restart
   tags: npm
 
-- name: npm - copy files
-  template:
-    src: templates/production.json.j2
-    dest: "{{ app_path }}/npm/app/production.json"
-    force: no
-  notify: npm - restart
-  tags: npm
-
 - name: npm - start
   docker_container:
     name: npm
@@ -47,12 +39,16 @@
     pull: yes
     ports:
       - "80:80"
-      - "443:443"
       - "81:81"
+      - "443:443"
     env:
+      DB_MYSQL_HOST: "npm-db"
+      DB_MYSQL_PORT: "3306"
+      DB_MYSQL_USER: "{{ npm_db_user }}"
+      DB_MYSQL_PASSWORD: "{{ npm_db_pass }}"
+      DB_MYSQL_NAME: "{{ npm_db_user }}"
       DISABLE_IPV6: "true"
     volumes:
-      - "{{ app_path }}/npm/app/production.json:/app/config/production.json"
       - "{{ app_path }}/npm/app/data:/data"
       - "{{ app_path }}/npm/app/letsencrypt:/etc/letsencrypt"
     links:
