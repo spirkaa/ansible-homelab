@@ -1,7 +1,9 @@
 ---
 app_path: /docker/mail
 
-mail_image: mailserver/docker-mailserver:latest
+mailserver_version: 9.0.1
+
+mail_image: mailserver/docker-mailserver:{{ mailserver_version }}
 mail_autodiscover_image: monogramm/autodiscover-email-settings:latest
 
 mail_hostname: mail
@@ -9,8 +11,8 @@ mail_domainname: devmem.ru
 
 mail_cert_name: cert
 mail_cert_path: /tmp/certs
-mail_cert_path_host: "{{ app_path }}/mail/certs"
-mail_config_path_host: "{{ app_path }}/mail/config"
+mail_cert_path_host: "{{ app_path }}/certs"
+mail_config_path_host: "{{ app_path }}/config"
 
 mail_ldap_starttls: "yes"
 mail_ldap_server_host: ipa.home.devmem.ru
