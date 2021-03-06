@@ -4,11 +4,11 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
-delugevpn_image: binhex/arch-delugevpn:2.0.4.dev38-g23a48dd01-3-02
+delugevpn_image: binhex/arch-delugevpn:2.0.4.dev38-g23a48dd01-3-05
 bazarr_image: linuxserver/bazarr:v0.9.2-ls105
-jackett_image: linuxserver/jackett:development-v0.17.591-ls29
+jackett_image: linuxserver/jackett:development-v0.17.627-ls35
 lidarr_image: linuxserver/lidarr:nightly-0.8.0.2075-ls19
-radarr_image: linuxserver/radarr:nightly-3.1.0.4656-ls20
+radarr_image: linuxserver/radarr:nightly-3.1.0.4686-ls24
 sonarr_image: linuxserver/sonarr:preview-3.0.4.1132-ls65
 muximux_image: linuxserver/muximux:c6ee9050-ls71
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
