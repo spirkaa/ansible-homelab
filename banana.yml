@@ -9,6 +9,10 @@
   #  - {role: homelab_svc/traefik, tags: [banana, traefik]}
 
   tasks:
+    - name: upgrade packages
+      package: name='*' state=latest
+      tags: [banana, homeassistant]
+
     - name: include vars
       include_vars: roles/homelab_svc/stats/defaults/main.yml
       no_log: true
