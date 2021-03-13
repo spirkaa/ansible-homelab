@@ -59,6 +59,10 @@
       - "{{ app_path }}/librenms/logs/app:/opt/librenms/logs"
       - "{{ app_path }}/librenms/rrd:/opt/librenms/rrd"
       - "{{ app_path }}/librenms/config.custom.php:/opt/librenms/conf.d/config.custom.php"
+      - "librenms-storage:/opt/librenms/storage"
+      - "librenms-etc-nginx-ssl:/etc/nginx/ssl"
+      - "librenms-weathermap-configs:/opt/librenms/html/plugins/Weathermap/configs"
+      - "librenms-weathermap-output:/opt/librenms/html/plugins/Weathermap/output"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
