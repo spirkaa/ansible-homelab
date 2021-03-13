@@ -9,6 +9,8 @@
       PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "allow"
       PHPLDAPADMIN_HTTPS: "false"
       PHPLDAPADMIN_TRUST_PROXY_SSL: "true"
+    volumes:
+      - "phpldapadmin-var-www:/var/www/phpldapadmin"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
