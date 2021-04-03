@@ -1,5 +1,5 @@
 ---
-telegraf_agent_version: 1.17.0
+telegraf_agent_version: 1.18.0
 telegraf_agent_version_patch: 1
 telegraf_agent_package: "telegraf_{{ telegraf_agent_version }}-{{ telegraf_agent_version_patch }}_amd64.deb"
 telegraf_agent_url: "https://dl.influxdata.com/telegraf/releases/{{ telegraf_agent_package }}"
