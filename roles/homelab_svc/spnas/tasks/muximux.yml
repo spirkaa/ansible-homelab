@@ -20,14 +20,35 @@
       traefik.http.routers.muximux.tls: "true"
     restart_policy: unless-stopped
     state: started
+  register: muximux_start
+  tags: muximux
+
+- name: muximux - delete old front-end
+  file:
+    state: absent
+    path: "{{ muximux_www }}"
+  notify: muximux - restart
+  when: muximux_start.changed
+  tags: muximux
+
+- name: Force all notified handlers
+  meta: flush_handlers
+  tags: muximux
+
+- name: muximux - wait for settings.ini.php-example
+  wait_for:
+    path: "{{ muximux_www }}/muximux/settings.ini.php-example"
+    state: present
+    timeout: 30
+  when: muximux_start.changed
   tags: muximux
 
 - name: muximux - copy files
   copy:
     src: files/settings.ini.php
-    dest: "{{ app_path }}/muximux/config/www/muximux"
+    dest: "{{ muximux_www }}/muximux"
     owner: "{{ puid }}"
     group: "{{ pgid }}"
     mode: 0664
-    force: no
+  notify: muximux - restart
   tags: muximux

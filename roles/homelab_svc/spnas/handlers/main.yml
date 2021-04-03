@@ -20,3 +20,9 @@
     state: started
     restart: yes
   no_log: true
+
+- name: muximux - restart
+  docker_container:
+    name: muximux
+    state: started
+    restart: yes
