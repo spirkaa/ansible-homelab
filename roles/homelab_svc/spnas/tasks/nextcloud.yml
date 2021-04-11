@@ -49,11 +49,24 @@
   no_log: true
   tags: nextcloud
 
-- name: nextcloud - customize
-  command: docker exec nextcloud sh -c '{{ item }}'
+- block:
+    - name: nextcloud - wait for container startup is complete
+      uri:
+        url: "https://cloud.devmem.ru"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 120
+      delay: 10
+      tags: nextcloud
+
+    - name: nextcloud - execute commands in container
+      command: docker exec nextcloud sh -c '{{ item }}'
+      notify: nextcloud - restart
+      loop:
+        - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
+        - occ db:add-missing-columns
+        - occ db:add-missing-primary-keys
+        - occ db:add-missing-indices
+      tags: nextcloud
   when: nextcloud_start.changed
-  notify: nextcloud - restart
-  loop:
-    - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
-    - echo "apc.enable_cli=1" >> /php/conf.d/apcu.ini
-  tags: nextcloud
