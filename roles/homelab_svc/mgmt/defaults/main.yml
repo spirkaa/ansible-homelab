@@ -4,7 +4,7 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
-bitwarden_image: bitwardenrs/server:alpine
+bitwarden_image: vaultwarden/server:alpine
 bitwarden_ldap_image: vividboarder/bitwarden_rs_ldap:alpine
 freeipa_image: freeipa/freeipa-server:fedora-33
 heimdall_image: linuxserver/heimdall:latest
