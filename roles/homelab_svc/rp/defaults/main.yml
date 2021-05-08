@@ -1,7 +1,7 @@
 ---
 app_path: /docker/rp
 
-npm_db_image: yobasystems/alpine-mariadb:10.5.8
+npm_db_image: yobasystems/alpine-mariadb:10.5.9
 npm_image: jc21/nginx-proxy-manager:2.8.1
 
 npm_db_root_pass: !vault |
