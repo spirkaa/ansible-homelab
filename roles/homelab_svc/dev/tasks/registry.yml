@@ -40,9 +40,11 @@
     image: "{{ registry_ui_image }}"
     pull: yes
     env:
+      REGISTRY_TITLE: "{{ app_base_domain }}"
       DELETE_IMAGES: "true"
-      REGISTRY_TITLE: "My Private Docker Registry"
-      REGISTRY_URL: "http://registry:5000"
+      SHOW_CONTENT_DIGEST: "true"
+      SINGLE_REGISTRY: "true"
+      NGINX_PROXY_PASS_URL: "http://registry:5000"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
