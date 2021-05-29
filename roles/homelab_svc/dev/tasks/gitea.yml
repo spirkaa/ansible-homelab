@@ -101,6 +101,7 @@
     generate_ssh_key: yes
     password: ""
     update_password: on_create
+  no_log: true
   tags: gitea
 
 - name: gitea - ssh passthrough - create authorized_keys symlink

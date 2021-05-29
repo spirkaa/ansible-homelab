@@ -1,5 +1,6 @@
 ---
-- include_role:
+- name: Docker
+  include_role:
     name: geerlingguy.docker
 
 - name: Create docker.service.d directory
