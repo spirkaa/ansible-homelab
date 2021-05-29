@@ -4,8 +4,8 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
-bitwarden_image: vaultwarden/server:alpine
-bitwarden_ldap_image: vividboarder/bitwarden_rs_ldap:alpine
+vaultwarden_image: vaultwarden/server:alpine
+vaultwarden_ldap_image: vividboarder/vaultwarden_ldap:alpine
 freeipa_image: freeipa/freeipa-server:fedora-33
 heimdall_image: linuxserver/heimdall:latest
 phpldapadmin_image: osixia/phpldapadmin:0.9.0
@@ -50,7 +50,7 @@ freeipa_base_dn: dc=home,dc=devmem,dc=ru
 
 phpldapadmin_bind_id: uid=admin,cn=users,cn=accounts,{{ freeipa_base_dn }}
 
-bitwarden_admin_token: !vault |
+vaultwarden_admin_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           63383362363437633365353837356333336330363035613834356337346538363136386565633131
           6464363637653631326438343833383666366566656336320a393232353266613139376335633163
@@ -60,18 +60,18 @@ bitwarden_admin_token: !vault |
           33373939656639353132656665306139316138323335393966613963313933353064316133313561
           36366234346332356264643731303035313338363963653864623262633665326362353965313732
           33393164343133663765
-bitwarden_domain: bw.devmem.ru
-bitwarden_url: https://{{ bitwarden_domain }}
-bitwarden_ldap_bind_dn: uid=bitwardensvc,cn=sysaccounts,cn=etc,{{ freeipa_base_dn }}
-bitwarden_ldap_bind_pw: !vault |
+vaultwarden_domain: bw.devmem.ru
+vaultwarden_url: https://{{ vaultwarden_domain }}
+vaultwarden_ldap_bind_dn: uid=vaultwardensvc,cn=sysaccounts,cn=etc,{{ freeipa_base_dn }}
+vaultwarden_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           37326331313536396333636264346130373736653932303362333564386162643661366430613763
           6237613763623034323830633563626663663137363265370a613564623165323334383836343036
           61613238393361343865636435393961346463643438643039353664383364373439373239303638
           6563363631643138300a313739366361366336363864663564366163323133386663326230393463
           3663
-bitwarden_ldap_access_group: bitwarden_users
-bitwarden_ldap_filter: (&(objectclass=inetorgperson)(memberof=cn={{ bitwarden_ldap_access_group }},cn=groups,cn=accounts,{{ freeipa_base_dn }})(uid=*))
+vaultwarden_ldap_access_group: vaultwarden_users
+vaultwarden_ldap_filter: (&(objectclass=inetorgperson)(memberof=cn={{ vaultwarden_ldap_access_group }},cn=groups,cn=accounts,{{ freeipa_base_dn }})(uid=*))
 
 portainer_ldap_bind_dn: uid=portainersvc,cn=sysaccounts,cn=etc,{{ freeipa_base_dn }}
 portainer_ldap_bind_pw: !vault |

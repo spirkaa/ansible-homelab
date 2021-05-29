@@ -6,9 +6,9 @@
     restart: yes
   no_log: true
 
-- name: bitwarden_ldap - restart
+- name: vaultwarden_ldap - restart
   docker_container:
-    name: bitwarden_ldap
+    name: vaultwarden_ldap
     state: started
     restart: yes
-  when: not bitwarden_ldap_start.changed
+  when: not vaultwarden_ldap_start.changed

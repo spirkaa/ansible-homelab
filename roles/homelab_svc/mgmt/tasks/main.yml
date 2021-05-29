@@ -1,7 +1,7 @@
 ---
-- name: bitwarden
-  include_tasks: bitwarden.yml
-  tags: bitwarden
+- name: vaultwarden
+  include_tasks: vaultwarden.yml
+  tags: vaultwarden
 
 - name: freeipa
   include_tasks: freeipa.yml

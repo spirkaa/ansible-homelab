@@ -1,0 +1,60 @@
+---
+- name: vaultwarden - start
+  docker_container:
+    name: vaultwarden
+    image: "{{ vaultwarden_image }}"
+    pull: yes
+    ports:
+      - "19080:80"
+      - "3012:3012"
+    env:
+      ADMIN_TOKEN: "{{ vaultwarden_admin_token }}"
+      SMTP_HOST: "{{ smtp_host }}"
+      SMTP_PORT: "{{ smtp_port }}"
+      SMTP_FROM: "{{ smtp_user }}"
+      SMTP_USERNAME: "{{ smtp_user }}"
+      SMTP_PASSWORD: "{{ smtp_pass }}"
+      SMTP_SSL: "true"
+      SMTP_FROM_NAME: "{{ vaultwarden_domain }}"
+      SIGNUPS_ALLOWED: "false"
+      WEBSOCKET_ENABLED: "true"
+      IP_HEADER: "X-Forwarded-For"
+      DOMAIN: "{{ vaultwarden_url }}"
+      LOG_FILE: "/data/vaultwarden.log"
+    volumes:
+      - "{{ app_path }}/vaultwarden/data:/data"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: vaultwarden
+
+- name: vaultwarden_ldap - copy files
+  template:
+    src: templates/vaultwarden_ldap_config.toml.j2
+    dest: "{{ app_path }}/vaultwarden/ldap_config.toml"
+    mode: 0644
+  notify: vaultwarden_ldap - restart
+  tags: vaultwarden
+
+- name: vaultwarden_ldap - start
+  docker_container:
+    name: vaultwarden_ldap
+    image: "{{ vaultwarden_ldap_image }}"
+    pull: yes
+    volumes:
+      - "{{ app_path }}/vaultwarden/ldap_config.toml:/config.toml:ro"
+    restart_policy: unless-stopped
+    state: started
+  register: vaultwarden_ldap_start
+  tags: vaultwarden
+
+- name: vaultwarden_ldap - configure freeipa
+  include_tasks: freeipa_service_bind.yml
+  vars:
+    freeipa_service_bind_sysaccount_dn: "{{ vaultwarden_ldap_bind_dn }}"
+    freeipa_service_bind_sysaccount_pass: "{{ vaultwarden_ldap_bind_pw }}"
+    freeipa_service_bind_group_name: "{{ vaultwarden_ldap_access_group }}"
+  args:
+    apply:
+      tags: vaultwarden
+  tags: vaultwarden
