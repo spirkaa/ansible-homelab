@@ -13,7 +13,7 @@ sonarr_image: linuxserver/sonarr:develop-3.0.6.1262-ls174
 muximux_image: linuxserver/muximux:057352e8-ls77
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 nextcloud_db_image: yobasystems/alpine-mariadb:10.5.9
-nextcloud_image: wonderfall/nextcloud:21
+nextcloud_image: ghcr.io/wonderfall/nextcloud:21
 samba_image: mbentley/timemachine:smb
 
 app_network_name: traefik

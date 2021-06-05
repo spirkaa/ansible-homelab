@@ -38,8 +38,8 @@
       ADMIN_PASSWORD: "admin"
     volumes:
       - "{{ app_path }}/data/cloud/nextcloud:/data"
-      - "{{ app_path }}/nextcloud/config:/config"
-      - "{{ app_path }}/nextcloud/apps:/apps2"
+      - "{{ app_path }}/nextcloud/config:/nextcloud/config"
+      - "{{ app_path }}/nextcloud/apps:/nextcloud/apps2"
       - "nextcloud-themes:/nextcloud/themes"
     links:
       - "nextcloud-db:nextcloud-db"
@@ -60,11 +60,17 @@
       delay: 10
       tags: nextcloud
 
+    - name: nextcloud - fix ldap
+      command: docker exec --user root nextcloud sh -c '{{ item }}'
+      notify: nextcloud - restart
+      loop:
+        - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
+      tags: nextcloud
+
     - name: nextcloud - execute commands in container
       command: docker exec nextcloud sh -c '{{ item }}'
       notify: nextcloud - restart
       loop:
-        - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
         - occ db:add-missing-columns
         - occ db:add-missing-primary-keys
         - occ db:add-missing-indices
