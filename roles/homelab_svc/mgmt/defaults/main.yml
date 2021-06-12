@@ -6,7 +6,7 @@ tz: "Europe/Moscow"
 
 vaultwarden_image: vaultwarden/server:alpine
 vaultwarden_ldap_image: vividboarder/vaultwarden_ldap:alpine
-freeipa_image: freeipa/freeipa-server:fedora-33
+freeipa_image: freeipa/freeipa-server:fedora-34
 heimdall_image: linuxserver/heimdall:latest
 phpldapadmin_image: osixia/phpldapadmin:0.9.0
 portainer_image: portainer/portainer-ce:latest
