@@ -5,6 +5,7 @@ pgid: "1000"
 tz: "Europe/Moscow"
 
 domoticz_image: cgatay/domoticz:master
+esphome_image: esphome/esphome:latest
 grafana_image: grafana/grafana:latest
 homeassistant_image: homeassistant/home-assistant:latest
 influxdb_image: influxdb:1.8-alpine
