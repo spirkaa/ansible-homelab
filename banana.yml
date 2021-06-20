@@ -2,7 +2,12 @@
 - hosts: banana
   gather_facts: no
 
+  vars:
+    hostname: banana
+    net_ip: 192.168.20.2
+
   roles:
+  #  - {role: portainer_api, tags: [banana, portainer_api]}
   #  - {role: pve/zsh, tags: [banana, zsh]}
   #  - {role: pve/mc, tags: [banana, mc]}
   #  - {role: pve/nano, tags: [banana, nano]}
