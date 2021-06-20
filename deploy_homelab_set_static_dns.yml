@@ -14,6 +14,7 @@
     ip_rp: 192.168.12.254
     ip_pihole: 192.168.16.2
     ip_projects: 192.168.12.251
+    ip_banana: 192.168.20.2
     dns_entries:
       - { alias: "plex", inet: "{{ ip_plex }}" }
       - { alias: "traefik-plex", inet: "{{ ip_plex }}" }
@@ -55,18 +56,21 @@
       - { alias: "dom", inet: "{{ ip_stats }}" }
       - { alias: "loki", inet: "{{ ip_stats }}" }
       - { alias: "prometheus", inet: "{{ ip_stats }}" }
-      - { alias: "ha", inet: "{{ ip_stats }}" }
 
       - { alias: "mail", inet: "{{ ip_mail }}" }
       - { alias: "traefik-mail", inet: "{{ ip_mail }}" }
 
       - { alias: "rp", inet: "{{ ip_rp }}" }
+      - { alias: "esp", inet: "{{ ip_rp }}" }
+      - { alias: "ha", inet: "{{ ip_rp }}" }
 
       - { alias: "pihole", inet: "{{ ip_pihole }}" }
       - { alias: "traefik-pihole", inet: "{{ ip_pihole }}" }
 
       - { alias: "projects", inet: "{{ ip_projects }}" }
       - { alias: "traefik-projects", inet: "{{ ip_projects }}" }
+
+      - { alias: "banana", inet: "{{ ip_banana }}" }
 
   tasks:
     - name: Set static DNS mapping
