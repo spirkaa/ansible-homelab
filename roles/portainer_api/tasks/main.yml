@@ -26,7 +26,7 @@
       Name: "{{ portainer_api_hostname }}"
       URL: "{{ portainer_api_endpoint_url }}"
       PublicURL: "{{ portainer_api_endpoint_public_url }}"
-      EndpointType: 1
+      EndpointCreationType: 1
     headers:
       Authorization: "Bearer {{ portainer_api_auth.json.jwt }}"
   register: portainer_api_endpoint_add
