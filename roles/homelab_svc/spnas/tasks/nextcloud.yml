@@ -50,7 +50,14 @@
   tags: nextcloud
 
 - block:
-    - name: nextcloud - wait for container startup is complete
+    - name: nextcloud - fix ldap
+      command: docker exec --user root nextcloud sh -c '{{ item }}'
+      notify: nextcloud - restart
+      loop:
+        - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
+      tags: nextcloud
+
+    - name: nextcloud - wait for app startup is complete
       uri:
         url: "https://cloud.devmem.ru"
         status_code: 200
@@ -58,13 +65,6 @@
       until: result.status == 200
       retries: 120
       delay: 10
-      tags: nextcloud
-
-    - name: nextcloud - fix ldap
-      command: docker exec --user root nextcloud sh -c '{{ item }}'
-      notify: nextcloud - restart
-      loop:
-        - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
       tags: nextcloud
 
     - name: nextcloud - execute commands in container
