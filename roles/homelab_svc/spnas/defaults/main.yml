@@ -5,11 +5,11 @@ pgid: "1000"
 tz: "Europe/Moscow"
 
 delugevpn_image: binhex/arch-delugevpn:2.0.4.dev56-g2e466101f-1-01
-bazarr_image: linuxserver/bazarr:development-v0.9.6-beta.37-ls149
-jackett_image: linuxserver/jackett:development-v0.18.390-ls151
+bazarr_image: linuxserver/bazarr:development-v0.9.6-beta.40-ls152
+jackett_image: linuxserver/jackett:development-v0.18.407-ls155
 lidarr_image: linuxserver/lidarr:nightly-1.0.0.2255-ls58
-radarr_image: linuxserver/radarr:nightly-4.0.0.5120-ls102
-sonarr_image: linuxserver/sonarr:develop-3.0.6.1272-ls179
+radarr_image: linuxserver/radarr:nightly-4.0.0.5126-ls103
+sonarr_image: linuxserver/sonarr:develop-3.0.6.1276-ls181
 muximux_image: linuxserver/muximux:057352e8-ls77
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 nextcloud_db_image: yobasystems/alpine-mariadb:10.5.11
