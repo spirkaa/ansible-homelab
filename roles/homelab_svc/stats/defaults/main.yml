@@ -9,7 +9,7 @@ esphome_image: esphome/esphome:latest
 grafana_image: grafana/grafana:latest
 homeassistant_image: homeassistant/home-assistant:latest
 influxdb_image: influxdb:1.8-alpine
-librenms_db_image: yobasystems/alpine-mariadb:10.5.9
+librenms_db_image: yobasystems/alpine-mariadb:10.5.11
 librenms_image: jarischaefer/docker-librenms:latest
 loki_image: grafana/loki:latest
 mosquitto_image: eclipse-mosquitto:latest
