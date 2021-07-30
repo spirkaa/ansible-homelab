@@ -1,0 +1,26 @@
+---
+- name: bird - install packages
+  package:
+    state: present
+    name:
+      - bird
+
+- name: bird - create files
+  file:
+    path: "{{ bird_path }}/{{ item }}"
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+    mode: 0644
+  loop:
+    - ipsum.txt
+    - subnet.txt
+
+- name: bird - copy configuration
+  template:
+    src: bird.conf.j2
+    dest: "{{ bird_path }}/bird.conf"
+    owner: bird
+    group: bird
+    mode: 0640
+  notify: restart bird

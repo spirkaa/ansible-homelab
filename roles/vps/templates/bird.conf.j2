@@ -1,0 +1,30 @@
+log syslog all;
+router id {{ wg_server_private_ip }};
+
+protocol kernel {
+        scan time 60;
+        import none;
+        export none;
+}
+
+protocol device {
+        scan time 60;
+}
+
+protocol static static_bgp {
+        include "subnet.txt";
+        include "ipsum.txt";
+}
+{% for peer in wg_peers %}
+
+protocol bgp {{ peer.name }} {
+        description "{{ peer.name }}";
+        neighbor {{ peer.private_ip }} as {{ peer.as }};
+        import none;
+        export where proto = "static_bgp";
+        next hop self;
+        local as 64999;
+        source address {{ wg_server_private_ip }};
+        passive off;
+}
+{% endfor %}

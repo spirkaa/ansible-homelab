@@ -1,0 +1,30 @@
+---
+- name: wireguard - install packages
+  package:
+    state: present
+    name:
+      - iptables-persistent
+
+- name: wireguard - create directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: "{{ wg_server_path }}", mode: "0700" }
+    - { path: "{{ iptables_path }}", mode: "0755" }
+
+- name: wireguard - copy wg0 configuration
+  template:
+    src: wg0.conf.j2
+    dest: "{{ wg_server_path }}/wg0.conf"
+    mode: 0600
+  no_log: true
+  notify: restart wireguard
+
+- name: wireguard - copy iptables configuration
+  copy:
+    src: "files/rules.v4"
+    dest: "{{ iptables_path }}"
+    mode: 0640
+  notify: restart iptables

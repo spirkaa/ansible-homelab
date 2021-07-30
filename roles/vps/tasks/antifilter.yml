@@ -1,0 +1,20 @@
+---
+- name: antifilter - create directory
+  file:
+    path: /opt/antifilter
+    state: directory
+    mode: 0700
+
+- name: antifilter - copy files
+  copy:
+    src: "files/antifilter.sh"
+    dest: "{{ antifilter_path }}"
+    mode: 0700
+
+- name: antifilter - create a cron job
+  cron:
+    name: antifilter
+    minute: "*/30"
+    user: root
+    job: "{{ antifilter_path }}"
+    cron_file: ansible_antifilter

@@ -1,0 +1,13 @@
+---
+- hosts: vps
+  gather_facts: no
+
+  roles:
+    - { role: common/packages, tags: [vps, packages] }
+    - { role: common/zsh, tags: [vps, zsh] }
+    - { role: common/mc, tags: [vps, mc] }
+    - { role: common/nano, tags: [vps, nano] }
+    - { role: common/motd, tags: [vps, motd] }
+    - { role: common/sshd, tags: [vps, sshd] }
+    - { role: common/wireguard, tags: [vps, wireguard] }
+    - { role: vps, tags: [vps, vps_specific] }

@@ -1,3 +1,6 @@
+[vps]
+vps-sd-msk.devmem.ru
+
 [proxmox]
 spsrv
 spmaxi
@@ -47,3 +50,7 @@ ansible_user=root
 [banana:vars]
 ansible_user=root
 ansible_python_interpreter=/usr/bin/python3
+
+[vps:vars]
+ansible_user=root
+ansible_port=51858
