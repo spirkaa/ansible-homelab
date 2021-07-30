@@ -1,0 +1,23 @@
+---
+- name: Upgrade packages
+  package:
+    state: latest
+    name: '*'
+
+- name: Install packages
+  package:
+    state: present
+    name:
+      - tmux
+      - wget
+      - curl
+      - aria2
+      - git
+      - net-tools
+      - htop
+      - iftop
+      - iotop
+      - ncdu
+      - bzip2
+      - zip
+      - unzip
