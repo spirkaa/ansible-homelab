@@ -1,0 +1,31 @@
+---
+- name: Load authorized keys
+  include_vars: vars/keys.vault.yml
+  no_log: true
+
+- name: Set authorized keys
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ item }}"
+  loop: "{{ authorized_keys }}"
+  no_log: true
+  notify: restart sshd
+
+- name: Set sshd_config params
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    validate: /usr/sbin/sshd -T -f %s
+  loop:
+    - { regexp: "^#?Port", line: "Port 51858" }
+    - { regexp: "^#?LoginGraceTime", line: "LoginGraceTime 20" }
+    - { regexp: "^#?MaxAuthTries", line: "MaxAuthTries 3" }
+    - { regexp: "^#?ClientAliveInterval", line: "ClientAliveInterval 300" }
+    - { regexp: "^#?PubkeyAuthentication", line: "PubkeyAuthentication yes" }
+    - { regexp: "^#?PasswordAuthentication", line: "PasswordAuthentication no" }
+    - { regexp: "^#?PermitEmptyPasswords", line: "PermitEmptyPasswords no" }
+    - { regexp: "^#?AuthenticationMethods", line: "AuthenticationMethods publickey" }
+    - { regexp: "^#?X11Forwarding", line: "X11Forwarding no" }
+  notify: restart sshd
