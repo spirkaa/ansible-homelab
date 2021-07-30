@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  apt:
+  package:
     state: present
     name:
       - nano
@@ -15,7 +15,6 @@
   blockinfile:
     path: ~/.nanorc
     block: |
-      set autoindent
       set tabsize 4
       set tabstospaces
     state: present

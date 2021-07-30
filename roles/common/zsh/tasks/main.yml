@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  apt:
+  package:
     state: present
     name:
       - zsh
@@ -23,4 +23,6 @@
     creates: ~/.zpreztorc
 
 - name: Remove .zlogout
-  file: path=~/.zlogout state=absent
+  file:
+    path: ~/.zlogout
+    state: absent

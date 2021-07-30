@@ -17,24 +17,13 @@
     state: absent
 
 - name: Upgrade packages
-  apt: name='*' state=latest
+  package:
+    state: latest
+    name: '*'
 
 - name: Install packages
-  apt:
+  package:
     state: present
     name:
       - openvswitch-switch
-      - tmux
-      - wget
-      - curl
-      - aria2
-      - git
       - patch
-      - net-tools
-      - htop
-      - iftop
-      - iotop
-      - ncdu
-      - bzip2
-      - zip
-      - unzip

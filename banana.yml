@@ -7,17 +7,14 @@
     net_ip: 192.168.20.2
 
   roles:
+    - {role: common/packages, tags: [banana, packages]}
   #  - {role: portainer_api, tags: [banana, portainer_api]}
-  #  - {role: pve/zsh, tags: [banana, zsh]}
-  #  - {role: pve/mc, tags: [banana, mc]}
-  #  - {role: pve/nano, tags: [banana, nano]}
+  #  - {role: common/zsh, tags: [banana, zsh]}
+  #  - {role: common/mc, tags: [banana, mc]}
+  #  - {role: common/nano, tags: [banana, nano]}
   #  - {role: homelab_svc/traefik, tags: [banana, traefik]}
 
   tasks:
-    - name: upgrade packages
-      package: name='*' state=latest
-      tags: [banana, homeassistant]
-
     - name: include vars
       include_vars: roles/homelab_svc/stats/defaults/main.yml
       no_log: true
