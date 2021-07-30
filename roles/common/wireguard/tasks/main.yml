@@ -1,0 +1,26 @@
+---
+- name: Add repository
+  copy:
+    src: files/buster-backports.list
+    dest: /etc/apt/sources.list.d
+    mode: 0644
+
+- name: Install packages
+  package:
+    state: present
+    update_cache: yes
+    name:
+      - wireguard
+
+- name: Enable kernel module
+  modprobe:
+    name: wireguard
+    state: present
+
+- name: Enable packet forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    reload: yes
+    state: present

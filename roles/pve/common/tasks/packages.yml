@@ -27,3 +27,4 @@
     name:
       - openvswitch-switch
       - patch
+      - pve-headers

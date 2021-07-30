@@ -14,5 +14,5 @@
     - {role: pve/telegraf, tags: [pve, pve_telegraf]}
     - {role: pve/snmp, tags: [pve, pve_snmp]}
     - {role: pve/smartd, tags: [pve, pve_smartd]}
-    - {role: pve/wireguard, tags: [pve, pve_wireguard]}
     - {role: pve/storage, tags: [pve, pve_storage]}
+    - {role: common/wireguard, tags: [pve, pve_wireguard]}
