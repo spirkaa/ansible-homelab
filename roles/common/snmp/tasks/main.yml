@@ -1,0 +1,38 @@
+---
+- name: Install packages
+  package:
+    state: present
+    name:
+      - snmp
+      - snmpd
+
+- name: Create systemd dir
+  file:
+    path: /etc/systemd/system/snmpd.service.d
+    state: directory
+    mode: 0755
+
+- name: Copy service override
+  copy:
+    src: files/override.conf
+    dest: /etc/systemd/system/snmpd.service.d
+    mode: 0644
+  notify: restart snmpd
+
+- name: Get snmpd.conf content
+  command: cat /etc/snmp/snmpd.conf
+  register: snmpd_conf
+  no_log: true
+  changed_when: false
+
+- name: Copy snmpd.conf
+  template:
+    src: templates/snmpd.conf.j2
+    dest: /etc/snmp/snmpd.conf
+    mode: 0644
+  no_log: true
+  notify: restart snmpd
+  when: >
+    snmp_rocommunity | string not in snmpd_conf.stdout or
+    snmp_syslocation not in snmpd_conf.stdout or
+    snmp_syscontact not in snmpd_conf.stdout

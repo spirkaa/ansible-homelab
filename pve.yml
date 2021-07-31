@@ -2,17 +2,21 @@
 - hosts: proxmox
   gather_facts: no
 
+  vars:
+    snmp_syslocation: krs
+
   roles:
-    - {role: common/packages, tags: [pve, pve_packages]}
-    - {role: common/zsh, tags: [pve, pve_zsh]}
-    - {role: common/mc, tags: [pve, pve_mc]}
-    - {role: common/nano, tags: [pve, pve_nano]}
-    - {role: pve/common, tags: [pve, pve_common]}
-    - {role: pve/kernel_modules, tags: [pve, pve_kernel_modules]}
-    - {role: pve/postfix, tags: [pve, pve_postfix]}
-    - {role: pve/rsnapshot, tags: [pve, pve_rsnapshot]}
-    - {role: pve/telegraf, tags: [pve, pve_telegraf]}
-    - {role: pve/snmp, tags: [pve, pve_snmp]}
-    - {role: pve/smartd, tags: [pve, pve_smartd]}
-    - {role: pve/storage, tags: [pve, pve_storage]}
-    - {role: common/wireguard, tags: [pve, pve_wireguard]}
+    - { role: common/packages, tags: [pve, pve_packages] }
+    - { role: common/zsh, tags: [pve, pve_zsh] }
+    - { role: common/mc, tags: [pve, pve_mc] }
+    - { role: common/nano, tags: [pve, pve_nano] }
+    - { role: pve/common, tags: [pve, pve_common] }
+    - { role: pve/kernel_modules, tags: [pve, pve_kernel_modules] }
+    - { role: pve/postfix, tags: [pve, pve_postfix] }
+    - { role: pve/rsnapshot, tags: [pve, pve_rsnapshot] }
+    - { role: pve/telegraf, tags: [pve, pve_telegraf] }
+    - { role: common/snmp, tags: [pve, pve_snmp] }
+    - { role: pve/snmp, tags: [pve, pve_snmp] }
+    - { role: pve/smartd, tags: [pve, pve_smartd] }
+    - { role: pve/storage, tags: [pve, pve_storage] }
+    - { role: common/wireguard, tags: [pve, pve_wireguard] }

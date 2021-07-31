@@ -5,14 +5,16 @@
   vars:
     hostname: banana
     net_ip: 192.168.20.2
+    snmp_syslocation: cml
 
   roles:
-    - {role: common/packages, tags: [banana, packages]}
-  #  - {role: portainer_api, tags: [banana, portainer_api]}
-  #  - {role: common/zsh, tags: [banana, zsh]}
-  #  - {role: common/mc, tags: [banana, mc]}
-  #  - {role: common/nano, tags: [banana, nano]}
-  #  - {role: homelab_svc/traefik, tags: [banana, traefik]}
+    - { role: common/packages, tags: [banana, packages] }
+  #  - { role: common/snmp, tags: [banana, snmp] }
+  #  - { role: portainer_api, tags: [banana, portainer_api] }
+  #  - { role: common/zsh, tags: [banana, zsh] }
+  #  - { role: common/mc, tags: [banana, mc] }
+  #  - { role: common/nano, tags: [banana, nano] }
+  #  - { role: homelab_svc/traefik, tags: [banana, traefik] }
 
   tasks:
     - name: include vars

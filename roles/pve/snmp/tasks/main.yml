@@ -1,24 +1,9 @@
 ---
 - name: Install packages
-  apt:
+  package:
     state: present
     name:
-      - snmp
-      - snmpd
       - libpve-apiclient-perl
-
-- name: Create systemd dir
-  file:
-    path: /etc/systemd/system/snmpd.service.d
-    state: directory
-    mode: 0755
-
-- name: Copy service override
-  copy:
-    src: files/override.conf
-    dest: /etc/systemd/system/snmpd.service.d
-    mode: 0644
-  notify: restart snmpd
 
 - name: Copy snmp extend scripts
   copy:
@@ -34,23 +19,28 @@
     mode: 0644
   notify: restart snmpd
 
-- name: Create a cron job
-  cron:
-    name: snmp_smart
-    minute: "*/3"
-    user: root
-    job: "/etc/snmp/extend/smart -u"
-    cron_file: snmp_smart
-
-- name: Copy snmpd.conf
-  template:
-    src: templates/snmpd.conf.j2
-    dest: /etc/snmp/snmpd.conf
-    mode: 0644
-  notify: restart snmpd
-
 - name: Copy sudoers.d file
   copy:
     src: files/snmp_sudo
     dest: /etc/sudoers.d
     mode: 0440
+
+- name: Create a cron job
+  cron:
+    name: snmp_smart
+    minute: "*/5"
+    user: root
+    job: "/etc/snmp/extend/smart -u"
+    cron_file: snmp_smart
+
+- name: Update snmpd.conf
+  blockinfile:
+    path: /etc/snmp/snmpd.conf
+    block: |
+      extend .1.3.6.1.4.1.2021.7890.1 distro /etc/snmp/extend/distro
+      extend proxmox /usr/bin/sudo /etc/snmp/extend/proxmox
+      extend smart /etc/snmp/extend/smart
+      {% if inventory_hostname == "spsrv" %}
+      extend ups-nut /etc/snmp/extend/ups-nut.sh
+      {% endif %}
+  notify: restart snmpd
