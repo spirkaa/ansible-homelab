@@ -3,6 +3,7 @@
   gather_facts: no
 
   vars:
+    sshd_port: 51858
     snmp_syslocation: sale-dedic.com
 
   roles:

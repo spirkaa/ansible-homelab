@@ -1,0 +1,4 @@
+---
+sshd_port: 22
+sshd_password_authentication: 'no'
+sshd_authentication_methods: publickey

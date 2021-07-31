@@ -19,13 +19,13 @@
     line: "{{ item.line }}"
     validate: /usr/sbin/sshd -T -f %s
   loop:
-    - { regexp: "^#?Port", line: "Port 51858" }
+    - { regexp: "^#?Port", line: "Port {{ sshd_port }}" }
     - { regexp: "^#?LoginGraceTime", line: "LoginGraceTime 20" }
     - { regexp: "^#?MaxAuthTries", line: "MaxAuthTries 3" }
     - { regexp: "^#?ClientAliveInterval", line: "ClientAliveInterval 300" }
     - { regexp: "^#?PubkeyAuthentication", line: "PubkeyAuthentication yes" }
-    - { regexp: "^#?PasswordAuthentication", line: "PasswordAuthentication no" }
+    - { regexp: "^#?PasswordAuthentication", line: "PasswordAuthentication {{ sshd_password_authentication }}" }
     - { regexp: "^#?PermitEmptyPasswords", line: "PermitEmptyPasswords no" }
-    - { regexp: "^#?AuthenticationMethods", line: "AuthenticationMethods publickey" }
+    - { regexp: "^#?AuthenticationMethods", line: "AuthenticationMethods {{ sshd_authentication_methods }}" }
     - { regexp: "^#?X11Forwarding", line: "X11Forwarding no" }
   notify: restart sshd

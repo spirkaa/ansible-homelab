@@ -1,5 +1,5 @@
 ---
 - name: restart sshd
-  systemd:
+  service:
     state: restarted
     name: sshd
