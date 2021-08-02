@@ -23,14 +23,6 @@
   include_tasks: mosquitto.yml
   tags: mosquitto
 
-- name: domoticz
-  include_tasks: domoticz.yml
-  tags: domoticz
-
-# - name: homeassistant
-#   include_tasks: homeassistant.yml
-#   tags: homeassistant
-
 - name: grafana - configure freeipa
   include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
