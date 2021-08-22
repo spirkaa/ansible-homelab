@@ -36,12 +36,9 @@ settings:
     label: Strip Russian Letters
     default: false
   - name: adverts
-    type: select
+    type: checkbox
     label: Include Advertising
-    default: _
-    options:
-      _: yes
-      no: no
+    default: true
   - name: sort
     type: select
     label: Sort requested from site
@@ -56,8 +53,8 @@ search:
     - path: browse.php
   inputs:
     s: "{{ .Keywords }}"
-    rek: "{{ re_replace .Config.adverts \"_\" \"\" }}"
     sort: "{{ re_replace .Config.sort \"_\" \"\" }}"
+    $raw: "{{ if .Config.adverts }}{{ else }}&rek=no{{ end}}"
 
   rows:
     selector: table.browse-list > tbody > tr
@@ -125,7 +122,7 @@ search:
     date:
       # Сегодня в 09:09 от
       # Вчера в 22:47 от
-      selector: td:nth-child(2) div.b-info div span:nth-child(2):contains("Сегодня"),  td:nth-child(2) div.b-info div span:nth-child(2):contains("Вчера")
+      selector: td:nth-child(2) div.b-info div span:nth-child(1):contains("Сегодня"),  td:nth-child(2) div.b-info div span:nth-child(1):contains("Вчера")
       optional: true
       filters:
         - name: regexp
@@ -136,7 +133,7 @@ search:
           args: ["Вчера в", "Yesterday"]
     date:
       # 08 ноября 2019 в 23:53 от
-      selector: td:nth-child(2) div.b-info div span:nth-child(2):not(:contains("Сегодня")):not(:contains("Вчера"))
+      selector: td:nth-child(2) div.b-info div span:nth-child(1):not(:contains("Сегодня")):not(:contains("Вчера"))
       optional: true
       filters:
         - name: regexp
