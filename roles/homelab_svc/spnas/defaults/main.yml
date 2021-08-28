@@ -5,9 +5,9 @@ pgid: "1000"
 tz: "Europe/Moscow"
 
 delugevpn_image: binhex/arch-delugevpn:2.0.4.dev56-g2e466101f-1-01
-bazarr_image: linuxserver/bazarr:development-v0.9.8-beta.5-ls183
-jackett_image: linuxserver/jackett:development-v0.18.582-ls191
-lidarr_image: linuxserver/lidarr:nightly-1.0.0.2298-ls68
+bazarr_image: linuxserver/bazarr:development-v0.9.8-beta.11-ls189
+jackett_image: linuxserver/jackett:development-v0.18.613-ls198
+lidarr_image: linuxserver/lidarr:nightly-1.0.0.2300-ls69
 radarr_image: linuxserver/radarr:nightly-4.0.0.5226-ls116
 sonarr_image: linuxserver/sonarr:develop-3.0.6.1309-ls193
 muximux_image: linuxserver/muximux:057352e8-ls77
