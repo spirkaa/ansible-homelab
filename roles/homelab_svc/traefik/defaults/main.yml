@@ -2,7 +2,7 @@
 app_path: /docker
 tz: "Europe/Moscow"
 
-traefik_image: traefik:2.4
+traefik_image: traefik:2.5
 
 traefik_network_name: traefik
 traefik_web_port: 80
