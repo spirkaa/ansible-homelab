@@ -1,0 +1,28 @@
+---
+- name: Create docker.service.d directory
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    recurse: yes
+
+- name: Copy daemon.json
+  copy:
+    src: files/daemon.json
+    dest: /etc/docker
+    mode: 0644
+  notify: Restart docker service
+
+- name: Copy override.conf
+  copy:
+    src: files/override.conf
+    dest: /etc/systemd/system/docker.service.d
+    mode: 0644
+  notify: Restart docker service
+
+# - name: Open docker tcp port
+#   firewalld:
+#     port: 2375/tcp
+#     state: enabled
+#     permanent: yes
+#     immediate: yes
+#   ignore_errors: yes

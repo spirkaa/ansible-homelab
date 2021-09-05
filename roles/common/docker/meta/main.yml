@@ -1,0 +1,18 @@
+---
+dependencies:
+  - role: geerlingguy.pip
+    vars:
+      pip_install_packages:
+        - name: zipp
+          version: "<2"
+        - name: configparser
+          version: "<5"
+        - name: cryptography
+          version: "3.3.2"
+        - name: docker
+        - name: docker-compose
+          version: "1.29.2"
+
+  - role: geerlingguy.docker
+    vars:
+      docker_compose_version: "1.29.2"

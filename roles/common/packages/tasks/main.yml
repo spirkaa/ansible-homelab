@@ -1,6 +1,7 @@
 ---
 - name: Upgrade packages
   package:
+    update_cache: yes
     state: latest
     name: '*'
 
@@ -9,6 +10,7 @@
     state: present
     name:
       - tmux
+      - rsync
       - wget
       - curl
       - aria2
