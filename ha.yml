@@ -1,0 +1,29 @@
+---
+- hosts: ha
+  gather_facts: yes
+
+  vars:
+    hostname: ha
+    net_ip: 192.168.20.176
+    snmp_syslocation: cml
+
+  roles:
+    - { role: common/packages, tags: [ha, packages] }
+  #  - { role: common/docker, tags: [ha, docker] }
+  #  - { role: common/snmp, tags: [ha, snmp] }
+  #  - { role: portainer_api, tags: [ha, portainer_api] }
+  #  - { role: common/zsh, tags: [ha, zsh] }
+  #  - { role: common/mc, tags: [ha, mc] }
+  #  - { role: common/nano, tags: [ha, nano] }
+  #  - { role: common/motd, tags: [ha, motd] }
+  #  - { role: homelab_svc/traefik, tags: [ha, traefik] }
+
+  tasks:
+    - name: include vars
+      include_vars: roles/homelab_svc/stats/defaults/main.yml
+      no_log: true
+      tags: [ha, homeassistant]
+
+    - name: install homeassistant
+      include_tasks: roles/homelab_svc/stats/tasks/homeassistant.yml
+      tags: [ha, homeassistant]

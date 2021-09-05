@@ -6,8 +6,8 @@ spsrv
 spmaxi
 spmini
 
-[banana]
-192.168.20.2
+[ha]
+192.168.20.176
 
 [ct]
 plex
@@ -47,7 +47,7 @@ ansible_user=centos
 [proxmox:vars]
 ansible_user=root
 
-[banana:vars]
+[ha:vars]
 ansible_user=root
 ansible_python_interpreter=/usr/bin/python3
 
