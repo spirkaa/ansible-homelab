@@ -18,6 +18,7 @@
 
 - name: Upgrade packages
   package:
+    update_cache: yes
     state: latest
     name: '*'
 

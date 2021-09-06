@@ -6,11 +6,11 @@
     snmp_syslocation: krs
 
   roles:
+    - { role: pve/common, tags: [pve, pve_common] }
     - { role: common/packages, tags: [pve, pve_packages] }
     - { role: common/zsh, tags: [pve, pve_zsh] }
     - { role: common/mc, tags: [pve, pve_mc] }
     - { role: common/nano, tags: [pve, pve_nano] }
-    - { role: pve/common, tags: [pve, pve_common] }
     - { role: pve/kernel_modules, tags: [pve, pve_kernel_modules] }
     - { role: pve/postfix, tags: [pve, pve_postfix] }
     - { role: pve/rsnapshot, tags: [pve, pve_rsnapshot] }

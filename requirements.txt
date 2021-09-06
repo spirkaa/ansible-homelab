@@ -1,4 +1,6 @@
+docker
 openshift
+pre-commit
 python-dotenv
 python-ldap
 requests
