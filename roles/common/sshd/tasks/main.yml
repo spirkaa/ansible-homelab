@@ -20,6 +20,7 @@
     validate: /usr/sbin/sshd -T -f %s
   loop:
     - { regexp: "^#?Port", line: "Port {{ sshd_port }}" }
+    - { regexp: "^#?PermitRootLogin", line: "PermitRootLogin {{ sshd_permit_root_login }}" }
     - { regexp: "^#?LoginGraceTime", line: "LoginGraceTime 20" }
     - { regexp: "^#?MaxAuthTries", line: "MaxAuthTries 3" }
     - { regexp: "^#?ClientAliveInterval", line: "ClientAliveInterval 300" }

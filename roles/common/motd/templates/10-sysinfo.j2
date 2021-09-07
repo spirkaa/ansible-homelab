@@ -27,7 +27,7 @@ swap_usage=`free -m | awk '/^Swap:/ {total=$2; used=$3} END {printf("%3.1f%%", u
 users=`users | wc -w`
 time=`uptime | grep -ohe 'up .*' | sed 's/,/\ hours/g' | awk '{ printf $2" "$3 }'`
 processes=`ps aux | wc -l`
-ip=`ip -o -4 addr list eth0 | awk '{printf "%s ",$4}'`
+ip=`ip -o -4 addr list {{ ansible_default_ipv4.alias }} | awk '{printf "%s ",$4}'`
 
 echo "System information as of: $date"
 echo

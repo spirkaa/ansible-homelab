@@ -24,5 +24,10 @@
     directory_mode: 0755
   loop:
     - 00-header
-    - 10-sysinfo
     - 90-footer
+
+- name: Copy 10-sysinfo
+  template:
+    src: templates/10-sysinfo.j2
+    dest: /etc/update-motd.d/10-sysinfo
+    mode: 0755

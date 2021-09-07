@@ -21,11 +21,13 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-[ -r /etc/lsb-release ] && . /etc/lsb-release
-
-if [ -z "$DISTRIB_DESCRIPTION" ] && [ -x /usr/bin/lsb_release ]; then
-        # Fall back to using the very slow lsb_release utility
-        DISTRIB_DESCRIPTION=$(lsb_release -s -d)
+if [ -z "$DISTRIB_DESCRIPTION" ]; then
+    if [ -x /usr/bin/pveversion ]; then
+        DISTRIB_DESCRIPTION="Proxmox VE `/usr/bin/pveversion | cut -d '/' -f 2`"
+    elif [ -f /etc/os-release ]; then
+        . /etc/os-release
+        DISTRIB_DESCRIPTION="$PRETTY_NAME"
+    fi
 fi
 
 figlet $(hostname)
