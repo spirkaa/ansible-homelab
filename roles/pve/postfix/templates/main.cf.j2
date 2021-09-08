@@ -14,12 +14,13 @@ append_dot_mydomain = no
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 #mydestination = $myhostname, localhost.$mydomain, localhost
-#relayhost =
+
 mynetworks = 127.0.0.0/8
+inet_protocols = ipv4
 inet_interfaces = loopback-only
 recipient_delimiter = +
 
-relayhost = [smtp.gmail.com]:587
+relayhost = {{ postfix_host }}
 smtp_use_tls = yes
 smtp_sasl_auth_enable = yes
 smtp_sasl_security_options = noanonymous

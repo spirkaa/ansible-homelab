@@ -1,4 +1,5 @@
 ---
+postfix_host: "[smtp.gmail.com]:587"
 postfix_email: devmem.ru@gmail.com
 postfix_pass: !vault |
       $ANSIBLE_VAULT;1.1;AES256

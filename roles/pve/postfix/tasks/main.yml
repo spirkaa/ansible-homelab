@@ -1,29 +1,19 @@
 ---
 - name: Install packages
-  apt:
+  package:
     state: present
     name:
       - postfix
       - postfix-pcre
       - libsasl2-modules
 
-- name: Copy auth info
+- name: Copy files
   template:
-    src: templates/sasl_passwd.j2
-    dest: /etc/postfix/sasl_passwd
-    mode: 0600
-  notify: postmap
-
-- name: Copy replacement rules
-  template:
-    src: templates/smtp_header_checks.j2
-    dest: /etc/postfix/smtp_header_checks
-    mode: 0644
-  notify: postfix config changed
-
-- name: Copy main.cf
-  template:
-    src: templates/main.cf.j2
-    dest: /etc/postfix/main.cf
-    mode: 0644
+    src: "{{ item.src }}"
+    dest: "/etc/postfix/{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: sasl_passwd.j2, dest: sasl_passwd, mode: 600 }
+    - { src: smtp_header_checks.j2, dest: smtp_header_checks, mode: 644 }
+    - { src: main.cf.j2, dest: main.cf, mode: 644 }
   notify: postfix config changed
