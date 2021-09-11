@@ -1,8 +1,8 @@
 ---
 id: piratbitl
 name: PiratBitL
-description: "this is the PiratBit indexer with Login enabled in the config."
-language: ru-ru
+description: "PirateBit is a RUSSIAN Public Torrent Tracker for MOVIES / TV / GENERAL. This supports login."
+language: ru-RU
 type: semi-private
 encoding: UTF-8
 links:
@@ -738,8 +738,9 @@ search:
           args: ["WEBDLRip", "WEBDL"]
         - name: replace
           args: ["HDTVRip", "HDTV"]
+        # normalize to SXXEYY format
         - name: re_replace
-          args: ["[\\:\\-\\/\\|\\[\\]]", " "]
+          args: ["[\\:\\-\\/\\|]", " "]
         - name: re_replace
           args: ["(.+)\\s+[CСcс]езон\\s+(\\d+)\\s+[CСcс]ерии\\s+(\\d+)\\s+(\\d+)\\s+из\\s+\\d+(.+)", "$1 S$2E$3-$4 rus $5"]
         - name: re_replace
