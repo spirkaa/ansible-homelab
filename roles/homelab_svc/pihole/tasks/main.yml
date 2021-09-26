@@ -33,8 +33,7 @@
     env:
       TZ: "{{ tz }}"
       WEBPASSWORD: "{{ pihole_web_pass }}"
-      DNS1: "1.1.1.1"
-      DNS2: "1.0.0.1"
+      PIHOLE_DNS_: "1.1.1.1;1.0.0.1"
       DNSSEC: "True"
     dns_servers:
       - 127.0.0.1
