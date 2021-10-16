@@ -4,7 +4,6 @@ puid: "1000"
 pgid: "1000"
 tz: "Europe/Moscow"
 
-domoticz_image: cgatay/domoticz:master
 esphome_image: esphome/esphome:latest
 grafana_image: grafana/grafana:latest
 homeassistant_image: homeassistant/home-assistant:latest
