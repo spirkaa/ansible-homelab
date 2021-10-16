@@ -1,17 +1,14 @@
 ---
 - name: Configure APT sources
-  copy:
-    src: files/sources.list
-    dest: /etc/apt
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     mode: 0644
+  loop:
+    - { src: sources.list.j2, dest: /etc/apt/sources.list }
+    - { src: pve-no-subscription.list.j2, dest: /etc/apt/sources.list.d/pve-no-subscription.list }
 
-- name: Configure APT sources
-  copy:
-    src: files/pve-no-subscription.list
-    dest: /etc/apt/sources.list.d
-    mode: 0644
-
-- name: Configure APT sources
+- name: Remove PVE Enterprise repo
   file:
     path: /etc/apt/sources.list.d/pve-enterprise.list
     state: absent
