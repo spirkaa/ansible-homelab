@@ -9,7 +9,7 @@
     comment: spnas
     cores: 4
     mem: 4096
-    disk_size: 16
+    disk_size: 20
     net_ip: 192.168.10.11
     net_vlan: 10
     net_gw: 192.168.10.1

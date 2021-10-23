@@ -8,8 +8,8 @@
     hostname: stats
     comment: Monitoring
     cores: 2
-    mem: 4096
-    disk_size: 50
+    mem: 3072
+    disk_size: 60
     net_ip: 192.168.12.98
     net_vlan: 12
     net_gw: 192.168.12.1

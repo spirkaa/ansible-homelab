@@ -9,7 +9,7 @@
     comment: Development
     cores: 2
     mem: 2048
-    disk_size: 8
+    disk_size: 16
     net_ip: 192.168.10.12
     net_vlan: 10
     net_gw: 192.168.10.1
