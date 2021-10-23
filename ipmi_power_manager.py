@@ -6,70 +6,55 @@ import requests
 import urllib3
 from dotenv import load_dotenv
 
-logger = logging.getLogger('__name__')
+logger = logging.getLogger("__name__")
+logging.basicConfig(
+        format="%(asctime)s [%(levelname)8s] [%(name)s:%(lineno)s:%(funcName)20s()] --- %(message)s",
+        level=logging.INFO,
+    )
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 urllib3.disable_warnings()
 
 load_dotenv()
 
-IPMI_USERNAME = os.getenv('IPMI_USERNAME')
-IPMI_PASSWORD = os.getenv('IPMI_PASSWORD')
+IPMI_USERNAME = os.getenv("IPMI_USERNAME")
+IPMI_PASSWORD = os.getenv("IPMI_PASSWORD")
 
-baseuri = 'https://spmaxi-ipmi/redfish/v1/'
-category_auth = 'SessionService/Sessions'
-category_actions = 'Systems/1/Actions/ComputerSystem.Reset'
-auth_header = 'X-Auth-Token'
+API_ROOT = "https://spmaxi-ipmi.home.devmem.ru/redfish/v1/"
+API_AUTH = "SessionService/Sessions"
+API_ACTIONS_RESET = "Systems/1/Actions/ComputerSystem.Reset"
 
-parser = argparse.ArgumentParser(description='Supermicro IPMI Power Manager')
-parser.add_argument('--on', dest='power_state', action='store_true')
-parser.add_argument('--off', dest='power_state', action='store_false')
+POWER_STATE_ON = "On"
+POWER_STATE_OFF = "GracefulShutdown"
 
+parser = argparse.ArgumentParser(description="Supermicro IPMI Power Manager")
+parser.add_argument("--on", dest="power_state", action="store_true")
+parser.add_argument("--off", dest="power_state", action="store_false")
 args = parser.parse_args()
 
-def get_auth_token():
-    payload = F'{{"UserName": "{IPMI_USERNAME}","Password": "{IPMI_PASSWORD}"}}'
-    headers = {
-        'Content-Type': 'application/json'
-    }
-    r = requests.post(
-        baseuri+category_auth,
-        headers=headers,
-        data=payload,
-        verify=False)
-    return r.headers[auth_header]
-
-
-def set_power_on():
-    payload = '{"ResetType": "On"}'
-    auth_token = get_auth_token()
-    headers = {
-        auth_header: auth_token,
-        'Content-Type': 'application/json'
-    }
-
-    r = requests.post(
-        baseuri+category_actions,
-        headers=headers,
-        data=payload,
-        verify=False)
-    print(r.text.encode('utf8'))
-
-
-def set_power_off():
-    payload = '{"ResetType": "GracefulShutdown"}'
-    auth_token = get_auth_token()
-    headers = {
-        auth_header: auth_token,
-        'Content-Type': 'application/json'
-    }
-
-    r = requests.post(
-        baseuri+category_actions,
-        headers=headers,
-        data=payload,
-        verify=False)
-    print(r.text.encode('utf8'))
-
 if args.power_state:
-    set_power_on()
+    power_state = POWER_STATE_ON
 else:
-    set_power_off()
+    power_state = POWER_STATE_OFF
+
+
+def get_auth_headers():
+    logger.debug("Get session headers")
+    endpoint_url = API_ROOT + API_AUTH
+    payload = f'{{"UserName": "{IPMI_USERNAME}","Password": "{IPMI_PASSWORD}"}}'
+    headers = {"Content-Type": "application/json"}
+
+    r = requests.post(endpoint_url, headers=headers, data=payload, verify=False)
+    return r.headers
+
+
+def set_power_state(value):
+    logger.debug("Set power state to '%s'", value)
+    endpoint_url = API_ROOT + API_ACTIONS_RESET
+    payload = f'{{"ResetType": "{value}"}}'
+    headers = get_auth_headers()
+
+    r = requests.post(endpoint_url, headers=headers, data=payload, verify=False)
+    print(r.json())
+
+
+set_power_state(power_state)
