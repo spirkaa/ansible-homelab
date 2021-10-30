@@ -24,4 +24,3 @@ wg_peers:
 
 antifilter_path: /opt/antifilter/antifilter.sh
 bird_path: /etc/bird
-iptables_path: /etc/iptables

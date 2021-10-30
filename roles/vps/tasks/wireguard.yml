@@ -7,12 +7,9 @@
 
 - name: wireguard - create directories
   file:
-    path: "{{ item.path }}"
+    path: "{{ wg_server_path }}"
     state: directory
-    mode: "{{ item.mode }}"
-  loop:
-    - { path: "{{ wg_server_path }}", mode: "0700" }
-    - { path: "{{ iptables_path }}", mode: "0755" }
+    mode: 0700
 
 - name: wireguard - copy wg0 configuration
   template:
@@ -22,9 +19,21 @@
   no_log: true
   notify: restart wireguard
 
-- name: wireguard - copy iptables configuration
-  copy:
-    src: "files/rules.v4"
-    dest: "{{ iptables_path }}"
-    mode: 0640
-  notify: restart iptables
+- name: wireguard - configure iptables - forwarding
+  iptables:
+    chain: FORWARD
+    in_interface: wg0
+    jump: ACCEPT
+    action: insert
+    comment: "forwarding for wg0"
+  notify: save iptables
+
+- name: wireguard - configure iptables - masquerade
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth0
+    jump: MASQUERADE
+    action: insert
+    comment: "masquerade for eth0"
+  notify: save iptables
