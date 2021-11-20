@@ -5,12 +5,12 @@ pgid: "1000"
 tz: "Europe/Moscow"
 
 code_image: linuxserver/code-server:v3.12.0-ls97
-drone_image: drone/drone:2.4
+drone_image: drone/drone:2.5
 drone_runner_docker_image: drone/drone-runner-docker:latest
 gitea_db_image: yobasystems/alpine-mariadb:10.5.11
 gitea_image: gitea/gitea:latest
 registry_image: registry:2.7.1
-registry_ui_image: joxit/docker-registry-ui:2.0
+registry_ui_image: joxit/docker-registry-ui:2.1
 
 app_network_name: traefik
 app_base_domain: home.devmem.ru
