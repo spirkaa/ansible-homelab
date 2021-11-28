@@ -6,10 +6,10 @@ tz: "Europe/Moscow"
 
 delugevpn_image: binhex/arch-delugevpn:2.0.4.dev56-g2e466101f-1-03
 bazarr_image: linuxserver/bazarr:development-v1.0.1-ls231
-jackett_image: linuxserver/jackett:development-v0.20.41-ls285
+jackett_image: linuxserver/jackett:development-v0.20.71-ls293
 lidarr_image: linuxserver/lidarr:nightly-1.0.0.2365-ls96
-radarr_image: linuxserver/radarr:nightly-4.0.0.5515-ls159
-sonarr_image: linuxserver/sonarr:develop-3.0.6.1375-ls218
+radarr_image: linuxserver/radarr:nightly-4.0.0.5532-ls165
+sonarr_image: linuxserver/sonarr:develop-3.0.6.1390-ls223
 muximux_image: linuxserver/muximux:version-057352e8
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 nextcloud_db_image: yobasystems/alpine-mariadb:10.5.11
