@@ -4,6 +4,7 @@
     state: present
     name:
       - libpve-apiclient-perl
+      - sudo
 
 - name: Copy snmp extend scripts
   copy:
