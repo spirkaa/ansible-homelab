@@ -5,7 +5,7 @@ pgid: "1000"
 tz: "Europe/Moscow"
 
 code_image: linuxserver/code-server:v3.12.0-ls97
-drone_image: drone/drone:2.5
+drone_image: drone/drone:2.6
 drone_runner_docker_image: drone/drone-runner-docker:latest
 gitea_db_image: yobasystems/alpine-mariadb:10.5.11
 gitea_image: gitea/gitea:latest
