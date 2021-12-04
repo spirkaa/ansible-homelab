@@ -1,7 +1,7 @@
 ---
 app_path: /docker/mail
 
-mailserver_version: 10.2.0
+mailserver_version: 10.3.0
 
 mail_image: mailserver/docker-mailserver:{{ mailserver_version }}
 mail_autodiscover_image: monogramm/autodiscover-email-settings:latest
