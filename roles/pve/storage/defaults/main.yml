@@ -50,18 +50,12 @@ snapraid_run_scrub_age: 10
 
 snapraid_email_sendon: error
 
-snapraid_smtp_host: smtp.gmail.com
+snapraid_smtp_host: "{{ inventory__smtp_port_ext }}"
 snapraid_smtp_port: 465
 snapraid_use_ssl: true
-snapraid_email_address: devmem.ru@gmail.com
-snapraid_email_pass: !vault |
-      $ANSIBLE_VAULT;1.1;AES256
-      65396535333864353935343534303734393962376434626432666139383536653237363435353634
-      6662636531623637653637303134636461613738636538380a616233356132366633313134306230
-      66663665393363636235356231356636336130346431333330376530383834376236333333306134
-      3839353032653237320a623336643539656262646662663961333663643965373933616164363638
-      3731
-snapraid_email_address_from: "{{ snapraid_email_address }}"
+snapraid_email_address: "{{ inventory__smtp_username_ext }}"
+snapraid_email_pass: "{{ inventory__smtp_password_ext }}"
+snapraid_email_address_from: "{{ inventory__smtp_username_ext }}"
 snapraid_email_address_to: spirkaa@gmail.com
 
 snapraid_healthcheck_io_uuid: !vault |

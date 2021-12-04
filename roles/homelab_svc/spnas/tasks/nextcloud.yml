@@ -59,7 +59,7 @@
 
     - name: nextcloud - wait for app startup is complete
       uri:
-        url: "https://cloud.devmem.ru"
+        url: https://cloud.{{ inventory__site }}
         status_code: 200
       register: result
       until: result.status == 200

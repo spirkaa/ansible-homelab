@@ -1,6 +1,6 @@
 ---
 app_path: /docker
-tz: "Europe/Moscow"
+tz: "{{ inventory__docker_tz }}"
 
 traefik_image: traefik:2.5
 
@@ -15,5 +15,5 @@ traefik_cert_path: /etc/traefik/certs
 traefik_config_file_host: "{{ app_path }}/traefik/dyn.toml"
 traefik_config_file: /etc/traefik/dyn.toml
 
-traefik_domain_name: home.devmem.ru
+traefik_domain_name: "{{ inventory__homelab_domain }}"
 traefik_hostname_rule: HostRegexp(`traefik-{{ inventory_hostname_short }}{fqdn:(.{{ traefik_domain_name }})?}`)

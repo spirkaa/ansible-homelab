@@ -30,7 +30,7 @@
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
-      traefik.http.routers.monitorrent.rule: "HostRegexp(`monitorrent{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.monitorrent.rule: "HostRegexp(`monitorrent{fqdn:(.{{ inventory__homelab_domain }})?}`)"
       traefik.http.services.monitorrent.loadbalancer.server.port: "6687"
       traefik.http.routers.monitorrent.entrypoints: "websecure"
       traefik.http.routers.monitorrent.tls: "true"

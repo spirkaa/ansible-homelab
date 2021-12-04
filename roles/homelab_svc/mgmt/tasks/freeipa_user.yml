@@ -17,12 +17,12 @@
 
 - name: freeipa - set attributes for user '{{ user.uid }}'
   ldap_attr:
-    dn: "uid={{ user.uid }},cn=users,cn=accounts,{{ freeipa_base_dn }}"
+    dn: uid={{ user.uid }},cn=users,cn=accounts,{{ freeipa_base_dn }}
     name: "{{ item.name }}"
     values: "{{ item.value }}"
     state: "{{ item.state | default('present') }}"
-    server_uri: "ldap://{{ freeipa_hostname }}/"
-    bind_dn: "cn=Directory Manager"
+    server_uri: ldap://{{ freeipa_hostname }}/
+    bind_dn: cn=Directory Manager
     bind_pw: "{{ freeipa_ds_password }}"
     start_tls: yes
     validate_certs: no

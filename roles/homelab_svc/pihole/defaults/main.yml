@@ -1,11 +1,11 @@
 ---
 app_path: /docker/pihole
-tz: "Europe/Moscow"
+tz: "{{ inventory__docker_tz }}"
 
 pihole_image: registry.home.devmem.ru/pihole:latest
 
-app_network_name: traefik
-app_base_domain: home.devmem.ru
+app_network_name: "{{ inventory__docker_network }}"
+app_base_domain: "{{ inventory__homelab_domain }}"
 
 pihole_forward_dns: 192.168.16.1
 pihole_web_pass: !vault |

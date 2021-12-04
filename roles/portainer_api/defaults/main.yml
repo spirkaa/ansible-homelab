@@ -1,5 +1,5 @@
 ---
-portainer_api_url: https://portainer.home.devmem.ru/api
+portainer_api_url: https://portainer.{{ inventory__homelab_domain }}/api
 portainer_api_user: ansible
 portainer_api_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256

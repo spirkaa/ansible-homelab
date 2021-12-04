@@ -14,8 +14,8 @@
       passwordExpirationTime: "20380119031407Z"
       nsIdleTimeout: "0"
     state: present
-    server_uri: "ldap://{{ freeipa_hostname }}/"
-    bind_dn: "cn=Directory Manager"
+    server_uri: ldap://{{ freeipa_hostname }}/
+    bind_dn: cn=Directory Manager
     bind_pw: "{{ freeipa_ds_password }}"
     start_tls: yes
     validate_certs: no

@@ -15,7 +15,7 @@
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
-      traefik.http.routers.muximux.rule: "HostRegexp(`spnas{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.muximux.rule: "HostRegexp(`spnas{fqdn:(.{{ inventory__homelab_domain }})?}`)"
       traefik.http.routers.muximux.entrypoints: "websecure"
       traefik.http.routers.muximux.tls: "true"
     restart_policy: unless-stopped
@@ -44,9 +44,9 @@
   tags: muximux
 
 - name: muximux - copy files
-  copy:
-    src: files/settings.ini.php
-    dest: "{{ muximux_www }}/muximux"
+  template:
+    src: templates/settings.ini.php.j2
+    dest: "{{ muximux_www }}/muximux/settings.ini.php"
     owner: "{{ puid }}"
     group: "{{ pgid }}"
     mode: 0664

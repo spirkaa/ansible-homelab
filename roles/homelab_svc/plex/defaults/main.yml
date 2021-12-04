@@ -1,8 +1,8 @@
 ---
 app_path: /docker/plex
-puid: "1000"
-pgid: "1000"
-tz: "Europe/Moscow"
+puid: "{{ inventory__docker_puid }}"
+pgid: "{{ inventory__docker_pgid }}"
+tz: "{{ inventory__docker_tz }}"
 
 airvideohd_image: dmaxwell/airvideohd:latest
 ombi_image: linuxserver/ombi:latest

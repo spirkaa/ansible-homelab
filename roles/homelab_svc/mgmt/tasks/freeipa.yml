@@ -121,7 +121,7 @@
 
 - name: freeipa - wait for ipa webui become available
   uri:
-    url: "https://{{ freeipa_hostname }}/ipa/ui/"
+    url: https://{{ freeipa_hostname }}/ipa/ui/
     status_code: 200
   register: result
   until: result.status == 200

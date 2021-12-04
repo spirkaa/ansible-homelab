@@ -7,7 +7,7 @@ mail_image: mailserver/docker-mailserver:{{ mailserver_version }}
 mail_autodiscover_image: monogramm/autodiscover-email-settings:latest
 
 mail_hostname: mail
-mail_domainname: devmem.ru
+mail_domainname: "{{ inventory__site }}"
 
 mail_cert_name: cert
 mail_cert_path: /tmp/certs
@@ -15,8 +15,8 @@ mail_cert_path_host: "{{ app_path }}/certs"
 mail_config_path_host: "{{ app_path }}/config"
 
 mail_ldap_starttls: "yes"
-mail_ldap_server_host: ipa.home.devmem.ru
-mail_ldap_search_base: dc=home,dc=devmem,dc=ru
+mail_ldap_server_host: ipa.{{ inventory__homelab_domain }}
+mail_ldap_search_base: "{{ inventory__ldap_base_dn }}"
 mail_ldap_bind_dn: uid=mailsvc,cn=sysaccounts,cn=etc,{{ mail_ldap_search_base }}
 mail_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256

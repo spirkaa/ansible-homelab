@@ -7,59 +7,59 @@ scrape_configs:
   - job_name: 'prometheus'
     scheme: https
     static_configs:
-      - targets: ['prometheus.home.devmem.ru']
+      - targets: ['prometheus.{{ inventory__homelab_domain }}']
 
   - job_name: 'loki'
     scheme: https
     static_configs:
-      - targets: ['loki.home.devmem.ru']
+      - targets: ['loki.{{ inventory__homelab_domain }}']
 
   - job_name: 'grafana'
     scheme: https
     static_configs:
-      - targets: ['grafana.home.devmem.ru']
+      - targets: ['grafana.{{ inventory__homelab_domain }}']
 
   - job_name: 'cadvisor'
     scheme: https
     static_configs:
-      - targets: ['dev.home.devmem.ru']
-      - targets: ['mail.home.devmem.ru']
-      - targets: ['mgmt.home.devmem.ru']
-      - targets: ['pihole.home.devmem.ru']
-      - targets: ['plex.home.devmem.ru']
-      - targets: ['projects.home.devmem.ru']
-      - targets: ['rp.home.devmem.ru']
-      - targets: ['spnas.home.devmem.ru']
-      - targets: ['stats.home.devmem.ru']
+      - targets: ['dev.{{ inventory__homelab_domain }}']
+      - targets: ['mail.{{ inventory__homelab_domain }}']
+      - targets: ['mgmt.{{ inventory__homelab_domain }}']
+      - targets: ['pihole.{{ inventory__homelab_domain }}']
+      - targets: ['plex.{{ inventory__homelab_domain }}']
+      - targets: ['projects.{{ inventory__homelab_domain }}']
+      - targets: ['rp.{{ inventory__homelab_domain }}']
+      - targets: ['spnas.{{ inventory__homelab_domain }}']
+      - targets: ['stats.{{ inventory__homelab_domain }}']
 
   - job_name: 'traefik'
     scheme: https
     static_configs:
-      - targets: ['traefik-dev.home.devmem.ru']
-      - targets: ['traefik-mail.home.devmem.ru']
-      - targets: ['traefik-mgmt.home.devmem.ru']
-      - targets: ['traefik-pihole.home.devmem.ru']
-      - targets: ['traefik-plex.home.devmem.ru']
-      - targets: ['traefik-projects.home.devmem.ru']
-      - targets: ['traefik-spnas.home.devmem.ru']
-      - targets: ['traefik-stats.home.devmem.ru']
+      - targets: ['traefik-dev.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-mail.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-mgmt.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-pihole.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-plex.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-projects.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-spnas.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-stats.{{ inventory__homelab_domain }}']
 
   - job_name: 'drone'
     scheme: https
     bearer_token: "{{ prometheus_drone_bearer_token }}"
     static_configs:
-    - targets: ['drone.devmem.ru']
+    - targets: ['drone.{{ inventory__site }}']
 
   - job_name: 'gitea'
     scheme: https
     bearer_token: "{{ prometheus_gitea_bearer_token }}"
     static_configs:
-    - targets: ['git.devmem.ru']
+    - targets: ['git.{{ inventory__site }}']
 
   - job_name: 'gia-api'
     scheme: https
     static_configs:
-      - targets: ['gia-api.devmem.ru']
+      - targets: ['gia-api.{{ inventory__site }}']
 
   # - job_name: 'node-exporter'
   #   static_configs:

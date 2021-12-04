@@ -1,5 +1,5 @@
 ---
 cadvisor_image: gcr.io/cadvisor/cadvisor:v0.38.8
 
-app_network_name: traefik
-app_base_domain: home.devmem.ru
+app_network_name: "{{ inventory__docker_network }}"
+app_base_domain: "{{ inventory__homelab_domain }}"

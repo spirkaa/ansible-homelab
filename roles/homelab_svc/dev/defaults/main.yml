@@ -1,8 +1,8 @@
 ---
 app_path: /docker/dev
-puid: "1000"
-pgid: "1000"
-tz: "Europe/Moscow"
+puid: "{{ inventory__docker_puid }}"
+pgid: "{{ inventory__docker_pgid }}"
+tz: "{{ inventory__docker_tz }}"
 
 code_image: linuxserver/code-server:v3.12.0-ls97
 drone_image: drone/drone:2.6
@@ -12,19 +12,13 @@ gitea_image: gitea/gitea:latest
 registry_image: registry:2.7.1
 registry_ui_image: joxit/docker-registry-ui:2.1
 
-app_network_name: traefik
-app_base_domain: home.devmem.ru
+app_network_name: "{{ inventory__docker_network }}"
+app_base_domain: "{{ inventory__homelab_domain }}"
 
-smtp_host: smtp.devmem.ru
-smtp_port: "587"
-smtp_user: noreply@devmem.ru
-smtp_pass: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          34383138383533303362626662626235653861616339643536323465373262303064316365666365
-          6535356536323436383364633432316138653939346331620a623164643030313564653936323763
-          34303431343461313561626366356665343135383232653363636364653862323133616533393761
-          3164303233343337650a656338386335616630343137343735316238663032633533366262393137
-          61613737396330356538333530636162623131376334373065333237633936366561
+smtp_host: "{{ inventory__smtp_host }}"
+smtp_port: "{{ inventory__smtp_port }}"
+smtp_user: "{{ inventory__smtp_username }}"
+smtp_pass: "{{ inventory__smtp_password }}"
 
 gitea_db_root_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -42,7 +36,7 @@ gitea_db_pass: !vault |
           6238323363316662320a386333316165326534653364633038353531373335613231383832303262
           38653938346237643362643835633365343730616139373634383361613439393866
 gitea_db_host: gitea-db:3306
-gitea_domain: git.devmem.ru
+gitea_domain: git.{{ inventory__site }}
 gitea_root_url: "https://{{ gitea_domain }}"
 gitea_lfs_jwt_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -89,7 +83,7 @@ gitea_metrics_token: !vault |
           3132326134376535340a666639626564666462313361333138333732613638346138383137316462
           37653065643135303737356534643034616165613334356566306437393766393737356434653339
           3866393737333937613865616665363537336465656631636163
-gitea_ldap_bind_dn: uid=giteasvc,cn=sysaccounts,cn=etc,dc=home,dc=devmem,dc=ru
+gitea_ldap_bind_dn: uid=giteasvc,cn=sysaccounts,cn=etc,{{ inventory__ldap_base_dn }}
 gitea_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           39303563393838393836313536393236663434636339393166663236306535666330383735346631
@@ -124,6 +118,6 @@ drone_rpc_secret: !vault |
           6263323233333333660a656532373465396261663631303330326663623832316138646338306263
           31323439366163623831363831626437313961623736343739356361363038333064306562616165
           3233376130643632656434396532313631663863393136313461
-drone_host: drone.devmem.ru
+drone_host: drone.{{ inventory__site }}
 drone_proto: https
 drone_admin_user: piv

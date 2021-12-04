@@ -15,7 +15,7 @@
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
-      traefik.http.routers.heimdall.rule: "HostRegexp(`mgmt{fqdn:(.home.devmem.ru)?}`)"
+      traefik.http.routers.heimdall.rule: "HostRegexp(`mgmt{fqdn:(.{{ inventory__homelab_domain }})?}`)"
       traefik.http.routers.heimdall.entrypoints: "websecure"
       traefik.http.routers.heimdall.tls: "true"
     restart_policy: unless-stopped

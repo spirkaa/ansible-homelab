@@ -1,8 +1,8 @@
 ---
 app_path: /docker/spnas
-puid: "1000"
-pgid: "1000"
-tz: "Europe/Moscow"
+puid: "{{ inventory__docker_puid }}"
+pgid: "{{ inventory__docker_pgid }}"
+tz: "{{ inventory__docker_tz }}"
 
 delugevpn_image: binhex/arch-delugevpn:2.0.4.dev56-g2e466101f-1-03
 bazarr_image: linuxserver/bazarr:development-v1.0.2-beta.2-ls235
@@ -16,7 +16,7 @@ nextcloud_db_image: yobasystems/alpine-mariadb:10.5.11
 nextcloud_image: ghcr.io/wonderfall/nextcloud:22
 samba_image: mbentley/timemachine:smb
 
-app_network_name: traefik
+app_network_name: "{{ inventory__docker_network }}"
 
 delugevpn_vpn_user: "p2632588"
 delugevpn_vpn_pass: !vault |
