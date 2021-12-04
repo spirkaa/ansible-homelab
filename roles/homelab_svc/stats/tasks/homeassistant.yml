@@ -24,3 +24,37 @@
     restart_policy: unless-stopped
     state: started
   tags: homeassistant
+
+- name: grocy - start
+  docker_container:
+    name: grocy
+    image: "{{ grocy_image }}"
+    pull: yes
+    ports:
+      - "9283:80"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/grocy/config:/config"
+    restart_policy: unless-stopped
+    state: started
+  tags: grocy
+
+- name: barcodebuddy - start
+  docker_container:
+    name: barcodebuddy
+    image: "{{ barcodebuddy_image }}"
+    pull: yes
+    ports:
+      - "9284:80"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/barcodebuddy/config:/config"
+    restart_policy: unless-stopped
+    state: started
+  tags: barcodebuddy
