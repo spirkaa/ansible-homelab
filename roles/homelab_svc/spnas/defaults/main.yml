@@ -4,16 +4,16 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-delugevpn_image: binhex/arch-delugevpn:2.0.4.dev56-g2e466101f-1-03
-bazarr_image: linuxserver/bazarr:development-v1.0.2-beta.5-ls238
-jackett_image: linuxserver/jackett:development-v0.20.141-ls303
+delugevpn_image: binhex/arch-delugevpn:2.0.5-1-01
+bazarr_image: linuxserver/bazarr:development-v1.0.2-beta.8-ls241
+jackett_image: linuxserver/jackett:development-v0.20.173-ls309
 lidarr_image: linuxserver/lidarr:nightly-1.0.0.2378-ls100
-radarr_image: linuxserver/radarr:nightly-4.0.0.5580-ls176
-sonarr_image: linuxserver/sonarr:develop-3.0.6.1399-ls228
+radarr_image: linuxserver/radarr:nightly-4.0.0.5597-ls180
+sonarr_image: linuxserver/sonarr:develop-3.0.6.1405-ls232
 muximux_image: linuxserver/muximux:version-057352e8
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 nextcloud_db_image: yobasystems/alpine-mariadb:10.5.11
-nextcloud_image: ghcr.io/wonderfall/nextcloud:22
+nextcloud_image: ghcr.io/wonderfall/nextcloud:23
 samba_image: mbentley/timemachine:smb
 
 app_network_name: "{{ inventory__docker_network }}"
