@@ -4,7 +4,7 @@
   gather_facts: no
 
   vars:
-    dn: home.devmem.ru
+    dn: "{{ inventory__homelab_domain }}"
     ip_plex: 192.168.10.10
     ip_spnas: 192.168.10.11
     ip_dev: 192.168.10.12
@@ -14,7 +14,7 @@
     ip_rp: 192.168.12.254
     ip_pihole: 192.168.16.2
     ip_projects: 192.168.12.251
-    ip_banana: 192.168.20.2
+    ip_ha: 192.168.20.176
     dns_entries:
       - { alias: "plex", inet: "{{ ip_plex }}" }
       - { alias: "traefik-plex", inet: "{{ ip_plex }}" }
@@ -53,7 +53,6 @@
       - { alias: "nms", inet: "{{ ip_stats }}" }
       - { alias: "grafana", inet: "{{ ip_stats }}" }
       - { alias: "influxdb", inet: "{{ ip_stats }}" }
-      - { alias: "dom", inet: "{{ ip_stats }}" }
       - { alias: "loki", inet: "{{ ip_stats }}" }
       - { alias: "prometheus", inet: "{{ ip_stats }}" }
 
@@ -61,8 +60,6 @@
       - { alias: "traefik-mail", inet: "{{ ip_mail }}" }
 
       - { alias: "rp", inet: "{{ ip_rp }}" }
-      - { alias: "esp", inet: "{{ ip_rp }}" }
-      - { alias: "ha", inet: "{{ ip_rp }}" }
 
       - { alias: "pihole", inet: "{{ ip_pihole }}" }
       - { alias: "traefik-pihole", inet: "{{ ip_pihole }}" }
@@ -70,7 +67,10 @@
       - { alias: "projects", inet: "{{ ip_projects }}" }
       - { alias: "traefik-projects", inet: "{{ ip_projects }}" }
 
-      - { alias: "banana", inet: "{{ ip_banana }}" }
+      - { alias: "ha", inet: "{{ ip_ha }}" }
+      - { alias: "traefik-ha", inet: "{{ ip_ha }}" }
+      - { alias: "esp", inet: "{{ ip_ha }}" }
+      - { alias: "grocy", inet: "{{ ip_ha }}" }
 
   tasks:
     - name: Set static DNS mapping
