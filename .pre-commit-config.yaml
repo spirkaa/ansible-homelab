@@ -13,7 +13,7 @@ repos:
       args: [--strict]
       exclude: .pre-commit-config|files/|Definitions/|vault
 - repo: https://github.com/ansible-community/ansible-lint.git
-  rev: v5.2.1
+  rev: v5.3.1
   hooks:
     - id: ansible-lint
       entry: ansible-lint
