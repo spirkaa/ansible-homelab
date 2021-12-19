@@ -56,7 +56,7 @@ snapraid_use_ssl: true
 snapraid_email_address: "{{ inventory__smtp_username_ext }}"
 snapraid_email_pass: "{{ inventory__smtp_password_ext }}"
 snapraid_email_address_from: "{{ inventory__smtp_username_ext }}"
-snapraid_email_address_to: spirkaa@gmail.com
+snapraid_email_address_to: "{{ inventory__admin_mail }}"
 
 snapraid_healthcheck_io_uuid: !vault |
       $ANSIBLE_VAULT;1.1;AES256

@@ -7,4 +7,4 @@ snmp_rocommunity: !vault |
           3665643761363762380a393039323037653038366639663738376139396630346433356630336632
           6364
 snmp_syslocation: home
-snmp_syscontact: spirkaa@gmail.com
+snmp_syscontact: "{{ inventory__admin_mail }}"
