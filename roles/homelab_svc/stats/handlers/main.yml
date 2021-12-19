@@ -6,7 +6,9 @@
   delay: 10
   until: result is not failed
   changed_when: '"Nothing to migrate" not in result.stdout'
-  failed_when: '"Permission denied" in result.stdout'
+  failed_when: >
+    ("Permission denied" in result.stdout) or
+    ("Could not connect to database" in result.stdout)
 
 - name: librenms - restart
   docker_container:
