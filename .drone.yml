@@ -3,6 +3,17 @@ kind: pipeline
 name: build images
 
 steps:
+  - name: jenkins
+    image: plugins/docker
+    settings:
+      registry: registry.home.devmem.ru
+      repo: registry.home.devmem.ru/jenkins
+      dockerfile: ./roles/homelab_svc/dev/files/jenkins/jenkins.Dockerfile
+      context: ./roles/homelab_svc/dev/files/jenkins
+      cache_from: registry.home.devmem.ru/jenkins:latest
+      tags:
+        - latest
+
   - name: pihole
     image: plugins/docker
     settings:
