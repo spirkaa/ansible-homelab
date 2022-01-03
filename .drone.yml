@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: build
+name: build images
 
 steps:
   - name: pihole
@@ -9,6 +9,7 @@ steps:
       registry: registry.home.devmem.ru
       repo: registry.home.devmem.ru/pihole
       dockerfile: ./roles/homelab_svc/pihole/files/pihole.Dockerfile
+      context: ./roles/homelab_svc/pihole/files
       cache_from: registry.home.devmem.ru/pihole:latest
       tags:
         - latest
