@@ -1,0 +1,113 @@
+jenkins:
+  numExecutors: 0
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  securityRealm:
+    ldap:
+      configurations:
+      - server: "{{ jenkins_ldap_server }}"
+        rootDN: "{{ jenkins_ldap_root_dn }}"
+        managerDN: "{{ jenkins_ldap_bind_dn }}"
+        managerPasswordSecret: "{{ jenkins_ldap_bind_pw }}"
+        userSearch: "{{ jenkins_ldap_user_search }}"
+        inhibitInferRootDN: false
+      disableMailAddressResolver: false
+      disableRolePrefixing: true
+      groupIdStrategy: "caseInsensitive"
+      userIdStrategy: "caseInsensitive"
+  clouds:
+  - docker:
+      name: "docker"
+      dockerApi:
+        dockerHost:
+          uri: "unix:///var/run/docker.sock"
+      templates:
+      - connector: "attach"
+        dockerTemplateBase:
+          image: "jenkins/agent:latest"
+          user: "root"
+          mounts:
+          - "type=bind,source=/usr/bin/docker,destination=/usr/bin/docker"
+          - "type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock"
+        instanceCapStr: "99"
+        labelString: "worker"
+        name: "worker"
+        remoteFs: "/home/jenkins/agent"
+        removeVolumes: true
+unclassified:
+  location:
+    adminAddress: "{{ inventory__admin_mail }}"
+    url: "{{ jenkins_url }}"
+  giteaServers:
+    servers:
+    - displayName: "Gitea"
+      manageHooks: false
+      serverUrl: "{{ gitea_root_url }}"
+  ansiColorBuildWrapper:
+    globalColorMapName: "xterm"
+  timestamper:
+    allPipelines: true
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - giteaAccessToken:
+          description: "gitea-piv-token"
+          id: "gitea-piv-token"
+          scope: GLOBAL
+          token: "{{ jenkins_gitea_token }}"
+      - basicSSHUserPrivateKey:
+          description: "jenkins-ssh-key"
+          id: "jenkins-ssh-key"
+          scope: GLOBAL
+          username: "root"
+          privateKeySource:
+            directEntry:
+              privateKey: |
+                {{ jenkins_ssh_key | string | indent(width=16) }}
+      - string:
+          description: "ansible-vault-password"
+          id: "ansible-vault-password"
+          scope: GLOBAL
+          secret: "{{ jenkins_ansible_vault_password }}"
+jobs:
+# https://jenkinsci.github.io/job-dsl-plugin/#path/organizationFolder
+# https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/integrations/src/test/resources/io/jenkins/plugins/casc/SeedJobTest_withGiteaOrganisation.yml
+  - script: >
+      organizationFolder('piv') {
+        description('Personal Gitea Repos')
+        organizations {
+          gitea {
+            serverUrl("{{ gitea_root_url }}")
+            repoOwner("piv")
+            credentialsId("gitea-piv-token")
+
+            traits {
+              giteaExcludeArchivedRepositories {}
+              giteaTagDiscovery {}
+              giteaBranchDiscovery {
+                strategyId(1)
+              }
+              giteaPullRequestDiscovery {
+                strategyId(2)
+              }
+              giteaForkDiscovery {
+                strategyId(1)
+                trust {
+                  giteaTrustContributors {}
+                }
+              }
+              giteaWebhookRegistration {
+                mode('ITEM')
+              }
+            }
+          }
+        }
+        configure { node ->
+            node / triggers / 'com.cloudbees.hudson.plugins.folder.computed.PeriodicFolderTrigger' {
+              spec('H H/4 * * *')
+              interval(86400000)
+            }
+          }
+      }

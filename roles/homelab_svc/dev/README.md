@@ -6,6 +6,7 @@
 * [gitea/gitea](https://hub.docker.com/r/gitea/gitea/tags) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb/tags)
 * [drone/drone](https://hub.docker.com/r/drone/drone/tags) + [drone/drone-runner-docker](https://hub.docker.com/r/drone/drone-runner-docker/tags)
 * [registry](https://hub.docker.com/_/registry?tab=tags) + [joxit/docker-registry-ui](https://hub.docker.com/r/joxit/docker-registry-ui/tags)
+* [jenkins](https://www.jenkins.io/)
 
 ## Зависимости
 

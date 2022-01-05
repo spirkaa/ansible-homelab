@@ -19,6 +19,14 @@
 
         ansible-playbook main.yml -t svc
 
+## Как добавить новое приложение
+
+1. Конфигурация в Ansible
+2. Записи DNS в `deploy_homelab_set_static_dns.yml` для локального доступа через Traefik
+3. Записи DNS на хостинге для доступа через интернет
+4. Прокси хост в `Nginx Proxy Manager`
+5. Пользователи в группе приложения в `FreeIPA`
+
 ## Команды для кластера Kubernetes
 
 * Одна команда, чтобы сделать всё

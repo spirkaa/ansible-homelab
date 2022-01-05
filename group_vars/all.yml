@@ -30,4 +30,5 @@ inventory__smtp_password_ext: !vault |
           3839353032653237320a623336643539656262646662663961333663643965373933616164363638
           3731
 
+inventory__ldap_domain: ipa.{{ inventory__homelab_domain }}
 inventory__ldap_base_dn: dc=home,dc=devmem,dc=ru

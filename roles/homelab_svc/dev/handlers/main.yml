@@ -12,3 +12,10 @@
     state: started
     restart: yes
   when: not registry_start.changed
+
+- name: jenkins - restart
+  docker_container:
+    name: jenkins
+    state: started
+    restart: yes
+  when: not jenkins_start.changed

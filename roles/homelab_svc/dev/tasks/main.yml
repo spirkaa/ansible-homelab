@@ -11,6 +11,10 @@
   include_tasks: drone.yml
   tags: drone
 
+- name: jenkins
+  include_tasks: jenkins.yml
+  tags: jenkins
+
 - name: registry
   include_tasks: registry.yml
   tags: registry
@@ -25,3 +29,14 @@
     apply:
       tags: gitea
   tags: gitea
+
+- name: jenkins - configure freeipa
+  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  vars:
+    freeipa_service_bind_sysaccount_dn: "{{ jenkins_ldap_bind_dn }}"
+    freeipa_service_bind_sysaccount_pass: "{{ jenkins_ldap_bind_pw }}"
+    freeipa_service_bind_group_name: "{{ jenkins_ldap_access_group }}"
+  args:
+    apply:
+      tags: jenkins
+  tags: jenkins
