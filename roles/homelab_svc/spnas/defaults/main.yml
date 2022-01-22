@@ -5,10 +5,10 @@ pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
 delugevpn_image: binhex/arch-delugevpn:2.0.5-1-04
-bazarr_image: linuxserver/bazarr:development-v1.0.3-beta.10-ls261
-jackett_image: linuxserver/jackett:development-v0.20.314-ls332
-lidarr_image: linuxserver/lidarr:nightly-1.0.0.2422-ls108
-radarr_image: linuxserver/radarr:nightly-alpine-4.0.2.5829-ls25
+bazarr_image: linuxserver/bazarr:development-version-v1.0.3-beta.14
+jackett_image: linuxserver/jackett:development-v0.20.422-ls340
+lidarr_image: linuxserver/lidarr:nightly-alpine-1.0.0.2426-ls6
+radarr_image: linuxserver/radarr:nightly-alpine-4.0.3.5879-ls34
 sonarr_image: linuxserver/sonarr:develop-alpine-3.0.6.1432-ls3
 muximux_image: linuxserver/muximux:version-057352e8
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
