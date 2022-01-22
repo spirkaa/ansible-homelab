@@ -4,8 +4,8 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-code_image: linuxserver/code-server:v3.12.0-ls97
-drone_image: drone/drone:2.7
+code_image: linuxserver/code-server:v4.0.1-ls109
+drone_image: drone/drone:2.8
 drone_runner_docker_image: drone/drone-runner-docker:latest
 gitea_db_image: yobasystems/alpine-mariadb:10.5.11
 gitea_image: gitea/gitea:latest
