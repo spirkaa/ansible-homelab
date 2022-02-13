@@ -47,9 +47,9 @@ sudo /bin/sed -i '/1.1.1.1.1/'d /etc/rsyslog.conf
 # 10. clean hosts
 hostname_check=$(hostname)
 if ! [[ "${hostname_check}" =~ "local" ]]; then
-    sudo cp -v /etc/hosts /etc/hosts.sys_prep
-    sudo sed -i "s,$(hostname),,g" /etc/hosts
-    sudo sed -i "s,$(hostname -s),,g" /etc/hosts
+    sudo cp -v /etc/hosts /etc/hosts.sys_prep
+    sudo sed -i "s,$(hostname),,g" /etc/hosts
+    sudo sed -i "s,$(hostname -s),,g" /etc/hosts
 fi
 
 sudo cloud-init clean

@@ -7,9 +7,10 @@
     vmid: 5777
     hostname: templatevm
     net_ip: 192.168.13.77
-    storage_path: /mnt/tank1/ds1/proxmox
+    storage_path: /mnt/tank0/ds0/proxmox
     templates_path: "{{ storage_path }}/template/qcow2"
-    vm_image: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud.qcow2"
+    vm_image: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-2111.qcow2"
+    updated_iamge_name: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2"
 
   roles:
     - vm_manager_single
@@ -17,9 +18,9 @@
   tasks:
     - name: Set facts
       set_fact:
-        target_vmid: "{{ vmid }}"
+        vmid: "{{ vmid }}"
         storage_path: "{{ storage_path }}"
-        templates_path: "{{ templates_path }}"
+        updated_iamge_name: "{{ updated_iamge_name }}"
 
 
 - hosts: templatevm
@@ -53,7 +54,7 @@
   tasks:
     - name: Check that VM is stopped
       command: >
-        qm status {{ target_vmid }}
+        qm status {{ vmid }}
       register: vm_status
       retries: 5
       delay: 5
@@ -63,20 +64,20 @@
     - block:
         - name: Convert disk to qcow2 (full-size)
           command: >
-            qm move_disk {{ target_vmid }} scsi0 local-spsrv-proxmox --format qcow2 --delete
+            qm move_disk {{ vmid }} scsi0 local-spsrv-proxmox --format qcow2 --delete
 
         - name: Delete old template
           file:
-            path: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2"
+            path: "{{ updated_iamge_name }}"
             state: absent
 
         - name: Convert qcow2 to template (shrinked)
           command: >
             qemu-img convert -O qcow2 -c
-            {{ storage_path }}/images/{{ target_vmid }}/vm-{{ target_vmid }}-disk-0.qcow2
-            {{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2
+            {{ storage_path }}/images/{{ vmid }}/vm-{{ vmid }}-disk-0.qcow2
+            {{ updated_iamge_name }}
 
         - name: Destroy VM
           command: >
-            qm destroy {{ target_vmid }}
+            qm destroy {{ vmid }}
       when: "'stopped' in vm_status.stdout"
