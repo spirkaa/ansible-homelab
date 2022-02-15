@@ -12,7 +12,7 @@
   #  - { role: common/docker, tags: [ha, docker] }
   #  - { role: common/snmp, tags: [ha, snmp] }
   #  - { role: portainer_api, tags: [ha, portainer_api] }
-  #  - { role: common/zsh, tags: [ha, zsh] }
+  #  - { role: spirkaa.zsh_prezto, tags: [ha, zsh] }
   #  - { role: common/mc, tags: [ha, mc] }
   #  - { role: common/nano, tags: [ha, nano] }
   #  - { role: common/motd, tags: [ha, motd] }

@@ -8,7 +8,7 @@
   roles:
     - { role: pve/common, tags: [pve, pve_common] }
     - { role: common/packages, tags: [pve, pve_packages] }
-    - { role: common/zsh, tags: [pve, pve_zsh] }
+    - { role: spirkaa.zsh_prezto, tags: [pve, pve_zsh] }
     - { role: common/mc, tags: [pve, pve_mc] }
     - { role: common/nano, tags: [pve, pve_nano] }
     - { role: common/motd, tags: [pve, pve_motd] }
