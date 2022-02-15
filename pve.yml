@@ -10,7 +10,7 @@
     - { role: common/packages, tags: [pve, pve_packages] }
     - { role: spirkaa.zsh_prezto, tags: [pve, pve_zsh] }
     - { role: common/mc, tags: [pve, pve_mc] }
-    - { role: common/nano, tags: [pve, pve_nano] }
+    - { role: spirkaa.nano, tags: [pve, pve_nano] }
     - { role: common/motd, tags: [pve, pve_motd] }
     - { role: common/sshd, tags: [pve, pve_sshd] }
     - { role: pve/kernel_modules, tags: [pve, pve_kernel_modules] }

@@ -1,5 +1,6 @@
 ---
 roles:
+  - src: spirkaa.nano
   - src: spirkaa.zsh_prezto
   - src: geerlingguy.pip
   - src: geerlingguy.docker

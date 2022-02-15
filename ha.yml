@@ -14,7 +14,7 @@
   #  - { role: portainer_api, tags: [ha, portainer_api] }
   #  - { role: spirkaa.zsh_prezto, tags: [ha, zsh] }
   #  - { role: common/mc, tags: [ha, mc] }
-  #  - { role: common/nano, tags: [ha, nano] }
+  #  - { role: spirkaa.nano, tags: [ha, nano] }
   #  - { role: common/motd, tags: [ha, motd] }
   #  - { role: homelab_svc/traefik, tags: [ha, traefik] }
 
