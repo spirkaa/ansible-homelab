@@ -4,6 +4,7 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
+vault_image: vault:latest
 vaultwarden_image: vaultwarden/server:alpine
 vaultwarden_ldap_image: vividboarder/vaultwarden_ldap:alpine
 freeipa_image: freeipa/freeipa-server:fedora-34
@@ -74,3 +75,38 @@ portainer_ldap_bind_pw: !vault |
           6163653266633863330a343434663561636430366266326635636134643234613863386166343635
           6338
 portainer_ldap_access_group: portainer_users
+
+vault_unseal_key: "{{ lookup('env','VAULT_UNSEAL_KEY') }}"
+vault_token: "{{ lookup('env','VAULT_TOKEN') }}"
+vault_local_config: "{{ lookup('file', 'vault/config.json') }}"
+vault_docker_exec: docker exec -e VAULT_TOKEN={{ vault_token }} vault sh -c
+vault_api_addr: http://127.0.0.1:8200
+vault_ldap_url: ldap://{{ inventory__ldap_domain }}
+vault_ldap_bind_dn: uid=vaultsvc,{{ inventory__ldap_sysaccounts_dn }}
+vault_ldap_bind_pw: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63373331636439626234393038616631653661626664323964636530356436653230626534363736
+          6362636261383531613638356563663939383037383831630a666561653735633936653961386534
+          31613437643738393831376633376234336362303631623861643533393635376338616535363265
+          3631376637383738650a633836343661643436656235323830343633623232383837613231313438
+          30306635363433656363383433623231623931633730356431336133343636353531
+vault_ldap_access_group: vault_users
+vault_ldap_admins: vault_admins
+vault_ldap_rw_users: vault_rw_users
+vault_ldap_ro_users: vault_ro_users
+vault_ldap_user_filter: (&(objectclass=inetorgperson)(memberof=cn={{ vault_ldap_access_group }},{{ inventory__ldap_groups_dn }})({% raw %}{{.UserAttr}}={{.Username}}{% endraw %}))
+vault_ldap_user_attr: uid
+vault_ldap_group_filter: (member={% raw %}{{.UserDN}}{% endraw %})
+vault_ldap_group_attr: cn
+vault_ldap_config: "{{ lookup('template', 'vault_ldap_config.j2') }}"
+
+vault_policies:
+  - name: admins
+    policy: "{{ lookup('file', 'vault/policy_admins.hcl') }}"
+    group: "{{ vault_ldap_admins }}"
+  - name: rw_users
+    policy: "{{ lookup('file', 'vault/policy_rw_users.hcl') }}"
+    group: "{{ vault_ldap_rw_users }}"
+  - name: ro_users
+    policy: "{{ lookup('file', 'vault/policy_ro_users.hcl') }}"
+    group: "{{ vault_ldap_ro_users }}"

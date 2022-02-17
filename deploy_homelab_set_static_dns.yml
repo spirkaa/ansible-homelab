@@ -48,6 +48,7 @@
       - { alias: "bw", inet: "{{ ip_mgmt }}" }
       - { alias: "ipa", inet: "{{ ip_mgmt }}" }
       - { alias: "ldap", inet: "{{ ip_mgmt }}" }
+      - { alias: "vault", inet: "{{ ip_mgmt }}" }
 
       - { alias: "stats", inet: "{{ ip_stats }}" }
       - { alias: "traefik-stats", inet: "{{ ip_stats }}" }
