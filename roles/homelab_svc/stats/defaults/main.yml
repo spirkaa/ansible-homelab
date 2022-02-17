@@ -24,13 +24,7 @@ smtp_port: "{{ inventory__smtp_port }}"
 smtp_user: "{{ inventory__smtp_username }}"
 smtp_pass: "{{ inventory__smtp_password }}"
 
-ldap_server_host: ipa.{{ app_base_domain }}
-ldap_server_port: 389
-ldap_search_base: "{{ inventory__ldap_base_dn }}"
-ldap_search_base_users: cn=users,cn=accounts,{{ ldap_search_base }}
-ldap_search_base_groups: cn=groups,cn=accounts,{{ ldap_search_base }}
-
-grafana_ldap_bind_dn: uid=grafanasvc,cn=sysaccounts,cn=etc,{{ ldap_search_base }}
+grafana_ldap_bind_dn: uid=grafanasvc,{{ inventory__ldap_sysaccounts_dn }}
 grafana_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61313863376133333761313665306166393561336235393730386636626239393136346139336330
@@ -39,13 +33,13 @@ grafana_ldap_bind_pw: !vault |
           6135393634343535330a616534386366636537383435313261353566656533336431323533373166
           3537
 grafana_ldap_access_group: grafana_users
-grafana_ldap_access_filter: (&(&(objectclass=inetorgperson)(memberof=cn={{ grafana_ldap_access_group }},{{ ldap_search_base_groups }}))(|(uid=%s)(mail=%s)))
+grafana_ldap_access_filter: (&(&(objectclass=inetorgperson)(memberof=cn={{ grafana_ldap_access_group }},{{ inventory__ldap_groups_dn }}))(|(uid=%s)(mail=%s)))
 grafana_ldap_admins: grafana_admins
-grafana_ldap_admins_dn: cn={{ grafana_ldap_admins }},{{ ldap_search_base_groups }}
+grafana_ldap_admins_dn: cn={{ grafana_ldap_admins }},{{ inventory__ldap_groups_dn }}
 grafana_ldap_editors: grafana_rw_users
-grafana_ldap_editors_dn: cn={{ grafana_ldap_editors }},{{ ldap_search_base_groups }}
+grafana_ldap_editors_dn: cn={{ grafana_ldap_editors }},{{ inventory__ldap_groups_dn }}
 grafana_ldap_viewers: grafana_ro_users
-grafana_ldap_viewers_dn: cn={{ grafana_ldap_viewers }},{{ ldap_search_base_groups }}
+grafana_ldap_viewers_dn: cn={{ grafana_ldap_viewers }},{{ inventory__ldap_groups_dn }}
 
 librenms_db_root_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -73,7 +67,7 @@ librenms_app_key: !vault |
           363461363464363532666164306462316332
 librenms_domain: nms.{{ app_base_domain }}
 librenms_base_url: https://{{ librenms_domain }}
-librenms_ldap_bind_dn: uid=librenmssvc,cn=sysaccounts,cn=etc,{{ ldap_search_base }}
+librenms_ldap_bind_dn: uid=librenmssvc,{{ inventory__ldap_sysaccounts_dn }}
 librenms_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           33393463633232623430646435633362323931383132656430333438326531373965626437633362

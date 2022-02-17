@@ -4,7 +4,7 @@
   gather_facts: no
 
   vars:
-    proxmox_ldap_bind_dn: uid=proxmoxsvc,cn=sysaccounts,cn=etc,{{ inventory__ldap_base_dn }}
+    proxmox_ldap_bind_dn: uid=proxmoxsvc,{{ inventory__ldap_sysaccounts_dn }}
     proxmox_ldap_bind_pw: !vault |
               $ANSIBLE_VAULT;1.1;AES256
               37393839613532396234316238326336623638623533383434373765303232616637333433393965

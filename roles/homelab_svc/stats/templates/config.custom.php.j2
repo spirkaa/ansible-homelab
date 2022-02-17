@@ -19,8 +19,8 @@ $config['auth_ldap_version'] = 3;
 $config['auth_ldap_timeout'] = 5;
 $config['auth_ldap_cache_ttl'] = 300;
 
-$config['auth_ldap_server'] = '{{ ldap_server_host }}';
-$config['auth_ldap_port'] = {{ ldap_server_port }};
+$config['auth_ldap_server'] = '{{ inventory__ldap_domain }}';
+$config['auth_ldap_port'] = {{ inventory__ldap_port }};
 $config['auth_ldap_starttls'] = true;
 $config['auth_ldap_binduser'] = '';
 $config['auth_ldap_binddn'] = '{{ librenms_ldap_bind_dn }}';
@@ -30,9 +30,9 @@ $config['auth_ldap_emailattr'] = 'mail';
 $config['auth_ldap_uid_attribute'] = 'uidnumber';
 $config['auth_ldap_attr']['uid'] = 'uid';
 $config['auth_ldap_prefix'] = 'uid=';
-$config['auth_ldap_suffix'] = ',{{ ldap_search_base_users }}';
+$config['auth_ldap_suffix'] = ',{{ inventory__ldap_users_dn }}';
 
-$config['auth_ldap_groupbase'] = '{{ ldap_search_base_groups }}';
+$config['auth_ldap_groupbase'] = '{{ inventory__ldap_groups_dn }}';
 $config['auth_ldap_groups']['{{ librenms_ldap_admins }}']['level'] = 10;
 $config['auth_ldap_groups']['{{ librenms_ldap_admins_ro }}']['level'] = 5;
 $config['auth_ldap_groups']['{{ librenms_ldap_users }}']['level'] = 1;

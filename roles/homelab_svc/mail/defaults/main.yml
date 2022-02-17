@@ -15,9 +15,7 @@ mail_cert_path_host: "{{ app_path }}/certs"
 mail_config_path_host: "{{ app_path }}/config"
 
 mail_ldap_starttls: "yes"
-mail_ldap_server_host: ipa.{{ inventory__homelab_domain }}
-mail_ldap_search_base: "{{ inventory__ldap_base_dn }}"
-mail_ldap_bind_dn: uid=mailsvc,cn=sysaccounts,cn=etc,{{ mail_ldap_search_base }}
+mail_ldap_bind_dn: uid=mailsvc,{{ inventory__ldap_sysaccounts_dn }}
 mail_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           38303832646430653739333239333133333132626636393938373435373836363536353963656239
@@ -27,7 +25,7 @@ mail_ldap_bind_pw: !vault |
           3163
 
 mail_ldap_access_group: mail_users
-mail_ldap_access_filter: (objectclass=inetorgperson)(memberof=cn={{ mail_ldap_access_group }},cn=groups,cn=accounts,{{ mail_ldap_search_base }})
+mail_ldap_access_filter: (objectclass=inetorgperson)(memberof=cn={{ mail_ldap_access_group }},{{ inventory__ldap_groups_dn }})
 
 mail_ldap_query_filter_user: (&{{ mail_ldap_access_filter }}(mail=%s))
 mail_ldap_query_filter_group: (&{{ mail_ldap_access_filter }}(mailgroupmember=%s))

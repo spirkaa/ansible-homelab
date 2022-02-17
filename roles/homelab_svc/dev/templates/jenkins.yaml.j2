@@ -6,8 +6,8 @@ jenkins:
   securityRealm:
     ldap:
       configurations:
-      - server: "{{ jenkins_ldap_server }}"
-        rootDN: "{{ jenkins_ldap_root_dn }}"
+      - server: "{{ inventory__ldap_domain }}"
+        rootDN: "{{ inventory__ldap_base_dn }}"
         managerDN: "{{ jenkins_ldap_bind_dn }}"
         managerPasswordSecret: "{{ jenkins_ldap_bind_pw }}"
         userSearch: "{{ jenkins_ldap_user_search }}"

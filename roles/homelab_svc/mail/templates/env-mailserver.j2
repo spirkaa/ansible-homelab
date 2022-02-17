@@ -278,11 +278,11 @@ LDAP_START_TLS={{ mail_ldap_starttls }}
 # If you going to use the mailserver in combination with docker-compose you can set the service name here
 # empty => mail.domain.com
 # Specify the dns-name/ip-address where the ldap-server
-LDAP_SERVER_HOST={{ mail_ldap_server_host }}
+LDAP_SERVER_HOST={{ inventory__ldap_domain }}
 
 # empty => ou=people,dc=domain,dc=com
 # => e.g. LDAP_SEARCH_BASE=dc=mydomain,dc=local
-LDAP_SEARCH_BASE={{ mail_ldap_search_base }}
+LDAP_SEARCH_BASE={{ inventory__ldap_base_dn }}
 
 # empty => cn=admin,dc=domain,dc=com
 # => take a look at examples of SASL_LDAP_BIND_DN

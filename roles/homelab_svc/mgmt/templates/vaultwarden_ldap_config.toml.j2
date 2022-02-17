@@ -1,9 +1,9 @@
 vaultwarden_url = "{{ vaultwarden_url }}"
 vaultwarden_admin_token = "{{ vaultwarden_admin_token }}"
-ldap_host = "{{ freeipa_hostname }}"
+ldap_host = "{{ inventory__ldap_domain }}"
 ldap_bind_dn = "{{ vaultwarden_ldap_bind_dn }}"
 ldap_bind_password = "{{ vaultwarden_ldap_bind_pw }}"
-ldap_search_base_dn = "{{ freeipa_base_dn }}"
+ldap_search_base_dn = "{{ inventory__ldap_base_dn }}"
 ldap_search_filter = "{{ vaultwarden_ldap_filter }}"
 ldap_mail_field = "mail"
 ldap_sync_interval_seconds = 3600

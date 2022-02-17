@@ -1,6 +1,6 @@
 [[servers]]
-host = "{{ ldap_server_host }}"
-port = {{ ldap_server_port }}
+host = "{{ inventory__ldap_domain }}"
+port = {{ inventory__ldap_port }}
 use_ssl = true
 start_tls = true
 ssl_skip_verify = true
@@ -9,9 +9,8 @@ bind_dn = "{{ grafana_ldap_bind_dn }}"
 bind_password = "{{ grafana_ldap_bind_pw }}"
 
 search_filter = "{{ grafana_ldap_access_filter }}"
-search_base_dns = ["{{ ldap_search_base_users }}"]
-
-group_search_base_dns = ["{{ ldap_search_base_groups }}"]
+search_base_dns = ["{{ inventory__ldap_users_dn }}"]
+group_search_base_dns = ["{{ inventory__ldap_groups_dn }}"]
 
 [servers.attributes]
 name = "givenName"

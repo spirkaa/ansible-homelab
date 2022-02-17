@@ -84,7 +84,7 @@ gitea_metrics_token: !vault |
           3132326134376535340a666639626564666462313361333138333732613638346138383137316462
           37653065643135303737356534643034616165613334356566306437393766393737356434653339
           3866393737333937613865616665363537336465656631636163
-gitea_ldap_bind_dn: uid=giteasvc,cn=sysaccounts,cn=etc,{{ inventory__ldap_base_dn }}
+gitea_ldap_bind_dn: uid=giteasvc,{{ inventory__ldap_sysaccounts_dn }}
 gitea_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           39303563393838393836313536393236663434636339393166663236306535666330383735346631
@@ -125,9 +125,7 @@ drone_admin_user: piv
 
 jenkins_home: jenkins/jenkins_home
 jenkins_url: https://jenkins.{{ inventory__site }}/
-jenkins_ldap_server: "{{ inventory__ldap_domain }}"
-jenkins_ldap_root_dn: "{{ inventory__ldap_base_dn }}"
-jenkins_ldap_bind_dn: uid=jenkinssvc,cn=sysaccounts,cn=etc,{{ inventory__ldap_base_dn }}
+jenkins_ldap_bind_dn: uid=jenkinssvc,{{ inventory__ldap_sysaccounts_dn }}
 jenkins_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           30623531323133623332623537643562343333303234373833613563373132396237343836333937
@@ -136,7 +134,7 @@ jenkins_ldap_bind_pw: !vault |
           3834386339663838310a326266303965353734383863643733643735333931323431393836616663
           31626264363732633262306336623532643832306535373633616265393536383035
 jenkins_ldap_access_group: jenkins_users
-jenkins_ldap_user_search: (&(objectclass=inetorgperson)(memberof=cn={{ jenkins_ldap_access_group }},cn=groups,cn=accounts,{{ jenkins_ldap_root_dn }})(uid={0}))
+jenkins_ldap_user_search: (&(objectclass=inetorgperson)(memberof=cn={{ jenkins_ldap_access_group }},{{ inventory__ldap_groups_dn }})(uid={0}))
 jenkins_gitea_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           64646137643863373533373438353930333431393436613065393038626135616439623665626136

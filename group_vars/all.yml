@@ -31,7 +31,11 @@ inventory__smtp_password_ext: !vault |
           3731
 
 inventory__ldap_domain: ipa.{{ inventory__homelab_domain }}
+inventory__ldap_port: 389
 inventory__ldap_base_dn: dc=home,dc=devmem,dc=ru
+inventory__ldap_users_dn: cn=users,cn=accounts,{{ inventory__ldap_base_dn }}
+inventory__ldap_groups_dn: cn=groups,cn=accounts,{{ inventory__ldap_base_dn }}
+inventory__ldap_sysaccounts_dn: cn=sysaccounts,cn=etc,{{ inventory__ldap_base_dn }}
 
 zsh_prezto_repo: https://github.com/spirkaa/prezto.git
 zsh_prezto_repo_version: 12f6ac6

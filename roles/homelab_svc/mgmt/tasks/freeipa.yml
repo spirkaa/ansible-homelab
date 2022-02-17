@@ -5,7 +5,7 @@
     image: "{{ phpldapadmin_image }}"
     pull: yes
     env:
-      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'{{ freeipa_hostname }}': [{'server': [{'tls': 'true'},{'hide_noaccess_base': 'true'}]}, {'login': [{'bind_id': '{{ phpldapadmin_bind_id }}'},{'timeout': '60'}]}, {'appearance': [{'open_tree': 'true'}]}]}]"
+      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'{{ inventory__ldap_domain }}': [{'server': [{'tls': 'true'},{'hide_noaccess_base': 'true'}]}, {'login': [{'bind_id': '{{ phpldapadmin_bind_id }}'},{'timeout': '60'}]}, {'appearance': [{'open_tree': 'true'}]}]}]"
       PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "allow"
       PHPLDAPADMIN_HTTPS: "false"
       PHPLDAPADMIN_TRUST_PROXY_SSL: "true"
@@ -35,7 +35,7 @@
     name: freeipa
     image: "{{ freeipa_image }}"
     pull: yes
-    hostname: "{{ freeipa_hostname }}"
+    hostname: "{{ inventory__ldap_domain }}"
     ports:
       - "389:389"  # ldap
       - "636:636"  # ldaps
@@ -121,7 +121,7 @@
 
 - name: freeipa - wait for ipa webui become available
   uri:
-    url: https://{{ freeipa_hostname }}/ipa/ui/
+    url: https://{{ inventory__ldap_domain }}/ipa/ui/
     status_code: 200
   register: result
   until: result.status == 200
@@ -188,6 +188,6 @@
 - name: freeipa - customize - default mail domain
   ipa_config:
     ipadefaultemaildomain: "{{ freeipa_mail_domain }}"
-    ipa_host: "{{ freeipa_hostname }}"
+    ipa_host: "{{ inventory__ldap_domain }}"
     ipa_pass: "{{ freeipa_admin_password }}"
   tags: freeipa

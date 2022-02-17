@@ -21,7 +21,6 @@ smtp_port: "{{ inventory__smtp_port }}"
 smtp_user: "{{ inventory__smtp_username }}"
 smtp_pass: "{{ inventory__smtp_password }}"
 
-freeipa_hostname: ipa.{{ app_base_domain }}
 freeipa_data_host_path: "{{ app_path }}/freeipa/data"
 freeipa_journal_host_path: "{{ app_path }}/freeipa/journal"
 freeipa_ds_password: !vault |
@@ -40,9 +39,8 @@ freeipa_admin_password: !vault |
           3636
 freeipa_mail_domain: "{{ inventory__site }}"
 freeipa_password_policy_maxlife: "3650"
-freeipa_base_dn: "{{ inventory__ldap_base_dn }}"
 
-phpldapadmin_bind_id: uid=admin,cn=users,cn=accounts,{{ freeipa_base_dn }}
+phpldapadmin_bind_id: uid=admin,cn=users,cn=accounts,{{ inventory__ldap_base_dn }}
 
 vaultwarden_admin_token: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -56,7 +54,7 @@ vaultwarden_admin_token: !vault |
           33393164343133663765
 vaultwarden_domain: bw.{{ inventory__site }}
 vaultwarden_url: https://{{ vaultwarden_domain }}
-vaultwarden_ldap_bind_dn: uid=vaultwardensvc,cn=sysaccounts,cn=etc,{{ freeipa_base_dn }}
+vaultwarden_ldap_bind_dn: uid=vaultwardensvc,{{ inventory__ldap_sysaccounts_dn }}
 vaultwarden_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           37326331313536396333636264346130373736653932303362333564386162643661366430613763
@@ -65,9 +63,9 @@ vaultwarden_ldap_bind_pw: !vault |
           6563363631643138300a313739366361366336363864663564366163323133386663326230393463
           3663
 vaultwarden_ldap_access_group: vaultwarden_users
-vaultwarden_ldap_filter: (&(objectclass=inetorgperson)(memberof=cn={{ vaultwarden_ldap_access_group }},cn=groups,cn=accounts,{{ freeipa_base_dn }})(uid=*))
+vaultwarden_ldap_filter: (&(objectclass=inetorgperson)(memberof=cn={{ vaultwarden_ldap_access_group }},{{ inventory__ldap_groups_dn }})(uid=*))
 
-portainer_ldap_bind_dn: uid=portainersvc,cn=sysaccounts,cn=etc,{{ freeipa_base_dn }}
+portainer_ldap_bind_dn: uid=portainersvc,{{ inventory__ldap_sysaccounts_dn }}
 portainer_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35343831333135376532356663646137366334623332653534616332633662363438383830303864
