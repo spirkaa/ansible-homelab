@@ -37,7 +37,7 @@
   changed_when: false
   tags: vault
 
-- name: vault - set fact "vault_status"
+- name: vault - status - set_fact
   set_fact:
     vault_status: "{{ _vault_status.stdout | from_json }}"
   tags: vault
@@ -49,21 +49,21 @@
       no_log: true
       tags: vault
 
-    - name: vault - set facts
+    - name: vault - init - set_fact
       set_fact:
         vault_unseal_key: "{{ _vault_init_result.stdout | from_json | json_query('unseal_keys_b64[0]') }}"
         vault_token: "{{ _vault_init_result.stdout | from_json | json_query('root_token') }}"
       no_log: true
       tags: vault
 
-    - name: vault - print keys
+    - name: vault - init - print creds
       debug:
         msg: "export VAULT_UNSEAL_KEY={{ vault_unseal_key }}; export VAULT_TOKEN={{ vault_token }}"
       tags: vault
   when: not vault_status.initialized
 
 - block:
-    - name: vault - prompt for unseal key
+    - name: vault - unseal - prompt for key
       pause:
         prompt: "Enter Unseal Key"
       register: prompt
@@ -71,7 +71,7 @@
       changed_when: false
       tags: vault
 
-    - name: Set fact "vault_unseal_key"
+    - name: Set  - unseal - set_fact
       set_fact:
         vault_unseal_key: "{{ prompt.user_input }}"
       tags: vault
@@ -100,10 +100,7 @@
     - name: vault - auth enable
       command: |
         {{ vault_docker_exec }} 'vault auth enable {{ item }}'
-      loop:
-        - approle
-        - kubernetes
-        - ldap
+      loop: "{{ vault_auth_methods }}"
       register: _vault_auth_enable_result
       failed_when: _vault_auth_enable_result.rc == 2 and "already in use" not in _vault_auth_enable_result.stderr
       changed_when: '"Success!" in _vault_auth_enable_result.stdout'
@@ -111,10 +108,8 @@
 
     - name: vault - secrets enable
       command: |
-        {{ vault_docker_exec }} 'vault secrets enable {{ item }}'
-      loop:
-        - kv-v2
-        - pki
+        {{ vault_docker_exec }} 'vault secrets enable -path={{ item.path | default(item.name) }} {{ item.name }}'
+      loop: "{{ vault_secrets_engines }}"
       register: _vault_secrets_enable_result
       failed_when: _vault_secrets_enable_result.rc == 2 and "already in use" not in _vault_secrets_enable_result.stderr
       changed_when: '"Success!" in _vault_secrets_enable_result.stdout'
@@ -137,6 +132,33 @@
       command: |
         {{ vault_docker_exec }} 'vault write auth/ldap/groups/{{ item.group }} policies={{ item.name }}'
       loop: "{{ vault_policies }}"
+      tags: vault
+
+    - name: vault - ansible approle - create
+      command: |
+        {{ vault_docker_exec }} 'vault write auth/approle/role/ansible \
+        token_policies="ansible" \
+        token_ttl=1h \
+        token_max_ttl=4h'
+      tags: vault
+
+    - name: vault - ansible approle - get role-id
+      command: |
+        {{ vault_docker_exec }} 'vault read -field=role_id auth/approle/role/ansible/role-id'
+      register: _vault_role_id_result
+      changed_when: false
+      tags: vault
+
+    - name: vault - ansible approle - get secret-id
+      command: |
+        {{ vault_docker_exec }} 'vault write -f -field=secret_id auth/approle/role/ansible/secret-id'
+      register: _vault_secret_id_result
+      tags: vault
+
+    - name: vault - ansible approle - print creds
+      debug:
+        msg: "export VAULT_ROLE_ID={{ _vault_role_id_result.stdout }}; export VAULT_SECRET_ID={{ _vault_secret_id_result.stdout }}"
+      no_log: false
       tags: vault
   no_log: true
   when: vault_token | length

@@ -2,6 +2,7 @@
 
 Роль Ansible, которая запускает Docker контейнеры:
 
+* [vault](https://hub.docker.com/_/vault//?tab=tags)
 * [vaultwarden/server](https://hub.docker.com/r/vaultwarden/server/tags) + [vividboarder/vaultwarden_ldap](https://hub.docker.com/r/vividboarder/vaultwarden_ldap/tags)
 * [freeipa/freeipa-server](https://hub.docker.com/r/freeipa/freeipa-server/tags) + [osixia/phpldapadmin](https://hub.docker.com/r/osixia/phpldapadmin/tags)
 * [linuxserver/heimdall](https://hub.docker.com/r/linuxserver/heimdall/tags)

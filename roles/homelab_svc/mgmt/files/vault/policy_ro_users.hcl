@@ -1,3 +1,3 @@
-path "kv-v2/*" {
+path "secret/*" {
   capabilities = ["read", "list"]
 }
