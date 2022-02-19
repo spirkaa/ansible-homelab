@@ -155,6 +155,16 @@
   no_log: true
   tags: freeipa
 
+- name: freeipa - customize - check if default user object classes already modified
+  command: >
+    docker exec freeipa sh -c 'kdestroy 2> /dev/null;
+    echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
+    ipa config-show --all'
+  register: config_show
+  changed_when: false
+  no_log: true
+  tags: freeipa
+
 - name: freeipa - customize - default user object classes
   command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
@@ -166,6 +176,7 @@
     userobjectclasses_mod.rc >= 1 and
     "no modifications to be performed" not in userobjectclasses_mod.stderr
   changed_when: '"PostfixBookMailAccount" in userobjectclasses_mod.stdout'
+  when: '"PostfixBookMailAccount" not in config_show.stdout'
   no_log: true
   tags: freeipa
 
