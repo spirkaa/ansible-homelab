@@ -8,7 +8,7 @@
 - name: antifilter - copy files
   copy:
     src: "files/antifilter.sh"
-    dest: "{{ antifilter_path }}"
+    dest: "{{ vps_antifilter_path }}"
     mode: 0700
 
 - name: antifilter - create a cron job
@@ -16,5 +16,5 @@
     name: antifilter
     minute: "*/30"
     user: root
-    job: "{{ antifilter_path }}"
+    job: "{{ vps_antifilter_path }}"
     cron_file: ansible_antifilter

@@ -7,7 +7,7 @@
 
 - name: bird - create files
   file:
-    path: "{{ bird_path }}/{{ item }}"
+    path: "{{ vps_bird_config_path }}/{{ item }}"
     state: touch
     access_time: preserve
     modification_time: preserve
@@ -19,7 +19,7 @@
 - name: bird - copy configuration
   template:
     src: bird.conf.j2
-    dest: "{{ bird_path }}/bird.conf"
+    dest: "{{ vps_bird_config_path }}/bird.conf"
     owner: bird
     group: bird
     mode: 0640

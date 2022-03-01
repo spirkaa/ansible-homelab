@@ -1,5 +1,5 @@
 log syslog all;
-router id {{ wg_server_private_ip }};
+router id {{ vps_wg_private_ip }};
 
 protocol kernel {
         scan time 60;
@@ -15,7 +15,7 @@ protocol static static_bgp {
         include "subnet.txt";
         include "ipsum.txt";
 }
-{% for peer in wg_peers %}
+{% for peer in vps_wg_peers %}
 
 protocol bgp {{ peer.name }} {
         description "{{ peer.name }}";
@@ -24,7 +24,7 @@ protocol bgp {{ peer.name }} {
         export where proto = "static_bgp";
         next hop self;
         local as 64999;
-        source address {{ wg_server_private_ip }};
+        source address {{ vps_wg_private_ip }};
         passive off;
 }
 {% endfor %}

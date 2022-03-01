@@ -1,8 +1,10 @@
 ---
-wg_server_path: /etc/wireguard
-wg_server_private_ip: 10.255.255.1
-wg_server_port: 51820
-wg_server_privkey: !vault |
+vps_wan_interface: eth0
+vps_wg_interface: wg0
+vps_wg_config_path: /etc/wireguard
+vps_wg_private_ip: 10.255.255.1
+vps_wg_port: 51820
+vps_wg_privkey: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           62663761363331363436363135333266616635656562323136326239383737336336653132643239
           3464636536623262373461373464313231323737366566660a363035653664313733666565383938
@@ -10,7 +12,7 @@ wg_server_privkey: !vault |
           3438643365653166640a643238363234333930356463666537356665333963653531633938663364
           63346431303466326431363263333065633238313930386261306337656262326534303732313933
           3363363332323132373736306432613361323237626365316137
-wg_server_pubkey: !vault |
+vps_wg_pubkey: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           32643633313662316265353766353466393365633763633039353931333938656536306266646238
           3233323037373633363938663865343436383431353734310a663232313534303139653563633932
@@ -18,9 +20,20 @@ wg_server_pubkey: !vault |
           6537326537303638300a623631623439633962623763663964333066363861633539613732666463
           65396636303733636264623463373963303635373739393261373132626365333433303538303933
           3037653138353066616433613162343966666465656630323666
-wg_peers:
-  - { name: krs, as: 64646, pubkey: Y6YxXdrCaAS/609owOXLRr17iq7T+NIgRkwQRuMbX2g=, private_ip: 10.255.255.10 }
-  - { name: cml, as: 64647, pubkey: neMYevYaQuS3xpQPU7yA+c5cmTRXenGhQ7S8EYDLYDw=, private_ip: 10.255.255.20 }
+vps_wg_peers:
+  - name: krs
+    as: 64646
+    pubkey: Y6YxXdrCaAS/609owOXLRr17iq7T+NIgRkwQRuMbX2g=
+    private_ip: 10.255.255.10
+    public_ip: 81.88.215.162
+  - name: cml
+    as: 64647
+    pubkey: neMYevYaQuS3xpQPU7yA+c5cmTRXenGhQ7S8EYDLYDw=
+    private_ip: 10.255.255.20
 
-antifilter_path: /opt/antifilter/antifilter.sh
-bird_path: /etc/bird
+vps_antifilter_path: /opt/antifilter/antifilter.sh
+vps_bird_config_path: /etc/bird
+
+vps_iptables_forward_ports:
+  - { port: "80", proto: "tcp", comment: "http", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8080 }
+  - { port: "443", proto: "tcp", comment: "https", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8443 }

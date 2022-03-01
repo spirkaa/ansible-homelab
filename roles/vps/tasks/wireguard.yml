@@ -7,14 +7,14 @@
 
 - name: wireguard - create directories
   file:
-    path: "{{ wg_server_path }}"
+    path: "{{ vps_wg_config_path }}"
     state: directory
     mode: 0700
 
-- name: wireguard - copy wg0 configuration
+- name: wireguard - copy configuration
   template:
-    src: wg0.conf.j2
-    dest: "{{ wg_server_path }}/wg0.conf"
+    src: wireguard.conf.j2
+    dest: "{{ vps_wg_config_path }}/{{ vps_wg_interface }}.conf"
     mode: 0600
   no_log: true
   notify: restart wireguard
@@ -22,18 +22,47 @@
 - name: wireguard - configure iptables - forwarding
   iptables:
     chain: FORWARD
-    in_interface: wg0
+    in_interface: "{{ vps_wg_interface }}"
     jump: ACCEPT
     action: insert
-    comment: "forwarding for wg0"
+    comment: "forwarding for {{ vps_wg_interface }}"
   notify: save iptables
 
 - name: wireguard - configure iptables - masquerade
   iptables:
     table: nat
     chain: POSTROUTING
-    out_interface: eth0
+    out_interface: "{{ vps_wan_interface }}"
     jump: MASQUERADE
     action: insert
-    comment: "masquerade for eth0"
+    comment: "masquerade for {{ vps_wan_interface }}"
+  notify: save iptables
+
+- name: wireguard - configure iptables - forward ports
+  iptables:
+    table: nat
+    chain: PREROUTING
+    in_interface: "{{ vps_wan_interface }}"
+    protocol: "{{ item.proto }}"
+    destination_port: "{{ item.port }}"
+    to_destination: "{{ item.to_dest }}:{{ item.to_port }}"
+    jump: DNAT
+    action: insert
+    comment: "{{ item.comment }}"
+  loop: "{{ vps_iptables_forward_ports }}"
+  notify: save iptables
+
+- name: wireguard - configure iptables - SNAT
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    source: "{{ vps_wg_peers[0].public_ip }}"
+    protocol: "{{ item.proto }}"
+    destination_port: "{{ item.to_port }}"
+    to_source: "{{ vps_wg_private_ip }}"
+    out_interface: "{{ vps_wg_interface }}"
+    jump: SNAT
+    action: insert
+    comment: "{{ item.comment }}"
+  loop: "{{ vps_iptables_forward_ports }}"
   notify: save iptables

@@ -1,7 +1,7 @@
 ---
 - name: restart wireguard
   service:
-    name: wg-quick@wg0
+    name: wg-quick@{{ vps_wg_interface }}
     enabled: yes
     state: restarted
 
@@ -15,7 +15,7 @@
   listen: save iptables
 
 - name: execute antifilter
-  command: "{{ antifilter_path }}"
+  command: "{{ vps_antifilter_path }}"
   listen: restart bird
 
 - name: restart bird

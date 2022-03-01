@@ -1,7 +1,9 @@
 ---
 - name: wireguard tasks
   include_tasks: wireguard.yml
+
 - name: antifilter tasks
   include_tasks: antifilter.yml
+
 - name: bird tasks
   include_tasks: bird.yml
