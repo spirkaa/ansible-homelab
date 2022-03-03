@@ -10,7 +10,7 @@ homeassistant_image: homeassistant/home-assistant:latest
 barcodebuddy_image: f0rc3/barcodebuddy-docker:latest
 grocy_image: linuxserver/grocy:latest
 influxdb_image: influxdb:1.8-alpine
-librenms_db_image: yobasystems/alpine-mariadb:10.5.11
+librenms_db_image: yobasystems/alpine-mariadb:10.6.4
 librenms_image: jarischaefer/docker-librenms:latest
 loki_image: grafana/loki:latest
 mosquitto_image: eclipse-mosquitto:latest
