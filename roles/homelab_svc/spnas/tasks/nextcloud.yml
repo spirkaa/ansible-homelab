@@ -13,6 +13,7 @@
       MYSQL_COLLATION: "utf8mb4_unicode_ci"
     volumes:
       - "{{ app_path }}/nextcloud/db:/var/lib/mysql"
+    command: --skip-innodb-read-only-compressed
     restart_policy: unless-stopped
     state: started
   no_log: true
