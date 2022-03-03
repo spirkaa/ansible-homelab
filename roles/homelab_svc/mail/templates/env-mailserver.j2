@@ -1,13 +1,13 @@
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– Mailserver Environment Variables ––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- Mailserver Environment Variables ----------
+# -----------------------------------------------
 
 # DOCUMENTATION FOR THESE VARIABLES IS FOUND UNDER
 # https://docker-mailserver.github.io/docker-mailserver/edge/config/environment/
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– General Section –––––––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- General Section ---------------------------
+# -----------------------------------------------
 
 # empty => uses the `hostname` command to get the mail server's canonical hostname
 # => Specify a fully-qualified domainname to serve mail for.  This is used for many of the config features so if you can't set your hostname (e.g. you're in a container platform that doesn't let you) specify it in this environment variable.
@@ -33,7 +33,7 @@ ONE_DIR=1
 POSTMASTER_ADDRESS=
 
 # Check for updates on container start and then once a day
-# If an update is available, a mail is send to POSTMASTER_ADDRESS
+# If an update is available, a mail is sent to POSTMASTER_ADDRESS
 # 0 => Update check disabled
 # 1 => Update check enabled
 ENABLE_UPDATE_CHECK=1
@@ -46,9 +46,12 @@ UPDATE_CHECK_INTERVAL=1d
 # **WARNING**: Adding the docker network's gateway to the list of trusted hosts, e.g. using the `network` or
 # `connected-networks` option, can create an open relay
 # https://github.com/docker-mailserver/docker-mailserver/issues/1405#issuecomment-590106498
-# empty => localhost only
-# host => Add docker host (ipv4 only)
-# network => Add all docker containers (ipv4 only)
+# The same can happen for rootless podman. To prevent this, set the value to "none" or configure slirp4netns
+# https://github.com/docker-mailserver/docker-mailserver/issues/2377
+# <empty> => container ip only
+# none => Explicitly force authentication
+# host => Add docker container network (ipv4 only)
+# network => Add all docker container networks (ipv4 only)
 # connected-networks => Add all connected docker networks (ipv4 only)
 PERMIT_DOCKER=
 
@@ -91,6 +94,13 @@ ENABLE_AMAVIS=1
 # 1/2      => Show default informational output
 # 3/4/5    => log debug information (very verbose)
 AMAVIS_LOGLEVEL=0
+
+# This enables the [zen.spamhaus.org](https://www.spamhaus.org/zen/) DNS block list in postfix
+# and various [lists](https://github.com/docker-mailserver/docker-mailserver/blob/f7465a50888eef909dbfc01aff4202b9c7d8bc00/target/postfix/main.cf#L58-L66) in postscreen.
+# Note: Emails will be rejected, if they don't pass the block list checks!
+# **0** => DNS block lists are disabled
+# 1     => DNS block lists are enabled
+ENABLE_DNSBL=0
 
 # If you enable Fail2Ban, don't forget to add the following lines to your `docker-compose.yml`:
 #    cap_add:
@@ -181,9 +191,9 @@ PFLOGSUMM_TRIGGER=daily_cron
 # => Specify the recipient address(es)
 PFLOGSUMM_RECIPIENT=
 
-# From address for pflogsumm reports.
+# Sender address (`FROM`) for pflogsumm reports if pflogsumm reports are enabled.
 #
-# not set => Use REPORT_SENDER or POSTMASTER_ADDRESS
+# not set => Use REPORT_SENDER
 # => Specify the sender address
 PFLOGSUMM_SENDER=
 
@@ -199,6 +209,12 @@ LOGWATCH_INTERVAL=daily
 # not set => Use REPORT_RECIPIENT or POSTMASTER_ADDRESS
 # => Specify the recipient address(es)
 LOGWATCH_RECIPIENT=
+
+# Sender address (`FROM`) for logwatch reports if logwatch reports are enabled.
+#
+# not set => Use REPORT_SENDER
+# => Specify the sender address
+LOGWATCH_SENDER=
 
 # Enables a report being sent (created by pflogsumm) on a regular basis. (deprecated)
 # **0** => Report emails are disabled
@@ -219,24 +235,40 @@ REPORT_SENDER=
 # Note: This Variable actually controls logrotate inside the container and rotates the log depending on this setting. The main log output is still available in its entirety via `docker logs mail` (Or your respective container name). If you want to control logrotation for the docker generated logfile see: [Docker Logging Drivers](https://docs.docker.com/config/containers/logging/configure/)
 REPORT_INTERVAL=daily
 
-# Choose TCP/IP protocols to use
+# Choose TCP/IP protocols for postfix to use
 # **all** => All possible protocols.
 # ipv4 => Use only IPv4 traffic. Most likely you want this behind Docker.
 # ipv6 => Use only IPv6 traffic.
 #
-# Note: More details in http://www.postfix.org/postconf.5.html#inet_protocols
+# Note: More details at http://www.postfix.org/postconf.5.html#inet_protocols
 POSTFIX_INET_PROTOCOLS=ipv4
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– SpamAssassin Section ––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# Choose TCP/IP protocols for dovecot to use
+# **all** => Listen on all interfaces
+# ipv4 => Listen only on IPv4 interfaces. Most likely you want this behind Docker.
+# ipv6 => Listen only on IPv6 interfaces.
+#
+# Note: More information at https://dovecot.org/doc/dovecot-example.conf
+DOVECOT_INET_PROTOCOLS=ipv4
+
+# -----------------------------------------------
+# --- SpamAssassin Section ----------------------
+# -----------------------------------------------
 
 ENABLE_SPAMASSASSIN=1
 
 # deliver spam messages in the inbox (eventually tagged using SA_SPAM_SUBJECT)
 SPAMASSASSIN_SPAM_TO_INBOX=1
 
-# spam messages will be moved in the Junk folder (SPAMASSASSIN_SPAM_TO_INBOX=1 required)
+# KAM is a 3rd party SpamAssassin ruleset, provided by the McGrail Foundation.
+# If SpamAssassin is enabled, KAM can be used in addition to the default ruleset.
+# - **0** => KAM disabled
+# - 1 => KAM enabled
+#
+# Note: only has an effect if `ENABLE_SPAMASSASSIN=1`
+ENABLE_SPAMASSASSIN_KAM=1
+
+# this setting needs `SPAMASSASSIN_SPAM_TO_INBOX=1`
 MOVE_SPAM_TO_JUNK=1
 
 # add spam info headers if at, or above that level:
@@ -251,18 +283,18 @@ SA_KILL=6.31
 # add tag to subject if spam detected
 SA_SPAM_SUBJECT=***SPAM*****
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– Fetchmail Section –––––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- Fetchmail Section -------------------------
+# -----------------------------------------------
 
 ENABLE_FETCHMAIL=0
 
 # The interval to fetch mail in seconds
 FETCHMAIL_POLL=300
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– LDAP Section ––––––––––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- LDAP Section ------------------------------
+# -----------------------------------------------
 
 # A second container for the ldap service is necessary (i.e. https://github.com/osixia/docker-openldap)
 # For preparing the ldap server to use in combination with this container this article may be helpful: http://acidx.net/wordpress/2014/06/installing-a-mailserver-with-postfix-dovecot-sasl-ldap-roundcube/
@@ -308,9 +340,9 @@ LDAP_QUERY_FILTER_ALIAS={{ mail_ldap_query_filter_alias }}
 # => Specify how ldap should be asked for domains
 LDAP_QUERY_FILTER_DOMAIN={{ mail_ldap_query_filter_domain }}
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– Dovecot Section –––––––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- Dovecot Section ---------------------------
+# -----------------------------------------------
 
 # empty => no
 # yes => LDAP over TLS enabled for Dovecot
@@ -334,9 +366,9 @@ DOVECOT_AUTH_BIND=yes
 DOVECOT_PASS_ATTRS={{ mail_dovecot_pass_attrs }}
 DOVECOT_USER_ATTRS={{ mail_dovecot_user_attrs }}
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– Postgrey Section ––––––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- Postgrey Section --------------------------
+# -----------------------------------------------
 
 ENABLE_POSTGREY=0
 # greylist for N seconds
@@ -348,9 +380,9 @@ POSTGREY_TEXT="Delayed by Postgrey"
 # whitelist host after N successful deliveries (N=0 to disable whitelisting)
 POSTGREY_AUTO_WHITELIST_CLIENTS=5
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– SASL Section ––––––––––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- SASL Section ------------------------------
+# -----------------------------------------------
 
 ENABLE_SASLAUTHD=1
 
@@ -427,9 +459,9 @@ SASLAUTHD_LDAP_AUTH_METHOD=
 # Any value => Fills the `ldap_mech` option
 SASLAUTHD_LDAP_MECH=
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– SRS Section –––––––––––––––––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- SRS Section -------------------------------
+# -----------------------------------------------
 
 # envelope_sender => Rewrite only envelope sender address (default)
 # header_sender => Rewrite only header sender (not recommended)
@@ -450,9 +482,9 @@ SRS_EXCLUDE_DOMAINS=
 # rotate and expire keys
 SRS_SECRET=
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– Default Relay Host Section ––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- Default Relay Host Section ----------------
+# -----------------------------------------------
 
 # Setup relaying all mail through a default relay host
 #
@@ -460,9 +492,9 @@ SRS_SECRET=
 # default host and optional port to relay all mail through
 DEFAULT_RELAY_HOST=
 
-# –––––––––––––––––––––––––––––––––––––––––––––––
-# ––– Multi-Domain Relay Section ––––––––––––––––
-# –––––––––––––––––––––––––––––––––––––––––––––––
+# -----------------------------------------------
+# --- Multi-Domain Relay Section ----------------
+# -----------------------------------------------
 
 # Setup relaying for multiple domains based on the domain name of the sender
 # optionally uses usernames and passwords in postfix-sasl-password.cf and relay host mappings in postfix-relaymap.cf
