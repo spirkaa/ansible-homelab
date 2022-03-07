@@ -1,0 +1,61 @@
+---
+- name: npm-db - start
+  docker_container:
+    name: npm-db
+    image: "{{ npm_db_image }}"
+    pull: yes
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ npm_db_root_pass }}"
+      MYSQL_DATABASE: "{{ npm_db_user }}"
+      MYSQL_USER: "{{ npm_db_user }}"
+      MYSQL_PASSWORD: "{{ npm_db_pass }}"
+      MYSQL_CHARSET: "utf8mb4"
+      MYSQL_COLLATION: "utf8mb4_unicode_ci"
+    volumes:
+      - "{{ app_path }}/npm/db:/var/lib/mysql"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: npm
+
+- name: npm - create dir
+  file:
+    path: "{{ app_path }}/npm/app/data/nginx"
+    state: directory
+    recurse: yes
+  tags: npm
+
+- name: npm - copy files
+  copy:
+    src: files/custom
+    dest: "{{ app_path }}/npm/app/data/nginx"
+    mode: 0644
+    directory_mode: 0755
+  notify: npm - restart
+  tags: npm
+
+- name: npm - start
+  docker_container:
+    name: npm
+    image: "{{ npm_image }}"
+    pull: yes
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    env:
+      DB_MYSQL_HOST: "npm-db"
+      DB_MYSQL_PORT: "3306"
+      DB_MYSQL_USER: "{{ npm_db_user }}"
+      DB_MYSQL_PASSWORD: "{{ npm_db_pass }}"
+      DB_MYSQL_NAME: "{{ npm_db_user }}"
+      DISABLE_IPV6: "true"
+    volumes:
+      - "{{ app_path }}/npm/app/data:/data"
+      - "{{ app_path }}/npm/app/letsencrypt:/etc/letsencrypt"
+    links:
+      - "npm-db:npm-db"
+    restart_policy: unless-stopped
+    state: started
+  register: npm_start
+  tags: npm

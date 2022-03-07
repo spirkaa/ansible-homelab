@@ -3,6 +3,7 @@ app_path: /docker/rp
 
 npm_db_image: yobasystems/alpine-mariadb:10.6.4
 npm_image: jc21/nginx-proxy-manager:2.9.16
+goaccess_image: xavierh/goaccess-for-nginxproxymanager:latest
 
 npm_db_root_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
