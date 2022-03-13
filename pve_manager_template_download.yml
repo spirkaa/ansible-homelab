@@ -3,16 +3,25 @@
   gather_facts: no
 
   vars:
-    os_images:
-      - "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
-      - "https://cdimage.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2"
-      - "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2111.qcow2"
-    qcow2_path: /mnt/pve/spsrv-proxmox/template/qcow2
+    template_image_url:
+      - https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img
+      - https://cdimage.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2
+      - https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2111.qcow2
+    template_image_path: /mnt/pve/spsrv-proxmox/template/qcow2
 
   tasks:
-    - name: Download cloud images
-      get_url:
-        url: "{{ item }}"
-        dest: "{{ qcow2_path }}/{{ item | basename }}"
-      loop: "{{ os_images }}"
+    - block:
+        - name: template image - download
+          get_url:
+            url: "{{ item }}"
+            dest: "{{ template_image_path }}/{{ item | basename }}"
+            force: yes
+          loop: "{{ template_image_url }}"
+
+        - name: template image - customize
+          command: >
+            virt-customize -a {{ template_image_path }}/{{ item | basename }}
+              --install qemu-guest-agent
+          changed_when: true
+          loop: "{{ template_image_url }}"
       run_once: true
