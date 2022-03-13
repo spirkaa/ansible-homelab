@@ -7,7 +7,7 @@
 
 - name: antifilter - copy files
   copy:
-    src: "files/antifilter.sh"
+    src: files/antifilter.sh
     dest: "{{ vps_antifilter_path }}"
     mode: 0700
 

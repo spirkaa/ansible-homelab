@@ -13,8 +13,7 @@
     modification_time: preserve
     mode: 0644
   loop:
-    - ipsum.txt
-    - subnet.txt
+    - allyouneed.txt
 
 - name: bird - copy configuration
   template:
