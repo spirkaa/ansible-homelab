@@ -1,0 +1,22 @@
+---
+- name: jellyfin - start
+  docker_container:
+    name: jellyfin
+    image: "{{ jellyfin_image }}"
+    pull: yes
+    ports:
+      - "8096:8096"
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      JELLYFIN_PublishedServerUrl: https://j.{{ inventory__site }}
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/dev/shm:/ram_transcode"
+      - "{{ app_path }}/jellyfin/config:/config"
+      - "{{ app_path }}/downloads:/storage/downloads"
+    devices:
+      - "/dev/dri:/dev/dri"
+    restart_policy: unless-stopped
+    state: started
+  tags: jellyfin

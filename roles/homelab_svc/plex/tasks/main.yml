@@ -1,4 +1,8 @@
 ---
+- name: jellyfin
+  include_tasks: jellyfin.yml
+  tags: jellyfin
+
 - name: plex
   include_tasks: plex.yml
   tags: plex

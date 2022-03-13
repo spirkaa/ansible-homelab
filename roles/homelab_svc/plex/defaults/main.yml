@@ -8,3 +8,4 @@ airvideohd_image: dmaxwell/airvideohd:latest
 ombi_image: linuxserver/ombi:latest
 plex_image: linuxserver/plex:latest
 tautulli_image: linuxserver/tautulli:latest
+jellyfin_image: linuxserver/jellyfin:latest

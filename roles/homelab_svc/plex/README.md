@@ -1,7 +1,8 @@
 # Роль Ansible: Plex
 
-Роль Ansible, которая запускает службу доступа к медиаконтенту в составе Docker контейнеров:
+Роль Ansible, которая запускает службы доступа к медиаконтенту в составе Docker контейнеров:
 
+* [linuxserver/jellyfin](https://hub.docker.com/r/linuxserver/jellyfin/tags)
 * [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex/tags)
 * [linuxserver/tautulli](https://hub.docker.com/r/linuxserver/tautulli/tags)
 * [linuxserver/ombi](https://hub.docker.com/r/linuxserver/ombi/tags)
