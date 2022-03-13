@@ -30,7 +30,8 @@ ubnt-erx
 ansible_user=root
 
 [vm:vars]
-ansible_user=centos
+ansible_user=ubuntu
+ansible_python_interpreter=/usr/bin/python3
 
 [proxmox:vars]
 ansible_user=root
