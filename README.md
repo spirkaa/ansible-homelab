@@ -26,25 +26,3 @@
 3. Записи DNS на хостинге для доступа через интернет
 4. Прокси хост в `Nginx Proxy Manager`
 5. Пользователи в группе приложения в `FreeIPA`
-
-## Команды для кластера Kubernetes
-
-* Одна команда, чтобы сделать всё
-
-      ansible-playbook k8s.yml
-
-* Если кластер уже есть, можно пропустить все шаги настройки и сразу сгенерировать Inventory, установить тестовое приложение в кластере
-
-      ansible-playbook k8s.yml -t dyn_inventory,deploy_hello_k8s
-
-* Завершить работу ВМ
-
-      ansible-playbook k8s.yml -t shutdown
-
-* Запустить ВМ
-
-      ansible-playbook k8s.yml -t start
-
-* Удалить ВМ
-
-      ansible-playbook k8s.yml -t destroy

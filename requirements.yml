@@ -4,5 +4,4 @@ roles:
   - src: spirkaa.zsh_prezto
   - src: geerlingguy.pip
   - src: geerlingguy.docker
-  - src: geerlingguy.kubernetes
 collections: []

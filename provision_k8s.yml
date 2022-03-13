@@ -1,7 +1,0 @@
----
-- hosts: k8s
-  gather_facts: yes
-  become: yes
-
-  roles:
-    - {role: k8s, tags: k8s}
