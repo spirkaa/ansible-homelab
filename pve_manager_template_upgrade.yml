@@ -13,7 +13,7 @@
     updated_iamge_name: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2"
 
   roles:
-    - vm_manager_single
+    - pve_manager
 
   tasks:
     - name: Set facts

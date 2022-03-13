@@ -4,9 +4,9 @@
 
   vars:
     os_images:
-      - 'https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2111.qcow2'
-      - 'https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img'
-      - 'https://cdimage.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2'
+      - "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
+      - "https://cdimage.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2"
+      - "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2111.qcow2"
     qcow2_path: /mnt/pve/spsrv-proxmox/template/qcow2
 
   tasks:

@@ -22,7 +22,7 @@
       - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
 
   roles:
-    - vm_manager_single
+    - pve_manager
     - portainer_api
 
 

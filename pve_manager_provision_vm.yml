@@ -11,4 +11,4 @@
       --onboot 1
 
   roles:
-    - vm_manager_single
+    - pve_manager
