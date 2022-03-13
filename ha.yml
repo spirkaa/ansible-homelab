@@ -9,13 +9,12 @@
 
   roles:
     - { role: common/packages, tags: [ha, packages] }
-  #  - { role: common/docker, tags: [ha, docker] }
-  #  - { role: common/snmp, tags: [ha, snmp] }
-  #  - { role: portainer_api, tags: [ha, portainer_api] }
   #  - { role: spirkaa.zsh_prezto, tags: [ha, zsh] }
-  #  - { role: common/mc, tags: [ha, mc] }
   #  - { role: spirkaa.nano, tags: [ha, nano] }
   #  - { role: common/motd, tags: [ha, motd] }
+  #  - { role: common/snmp, tags: [ha, snmp] }
+  #  - { role: common/docker, tags: [ha, docker] }
+  #  - { role: portainer_api, tags: [ha, portainer_api] }
   #  - { role: homelab_svc/traefik, tags: [ha, traefik] }
 
   tasks:

@@ -11,7 +11,6 @@
   roles:
     - { role: common/packages, tags: [vps, packages] }
     - { role: spirkaa.zsh_prezto, tags: [vps, zsh] }
-    - { role: common/mc, tags: [vps, mc] }
     - { role: spirkaa.nano, tags: [vps, nano] }
     - { role: common/motd, tags: [vps, motd] }
     - { role: common/sshd, tags: [vps, sshd] }
