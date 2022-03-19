@@ -18,10 +18,17 @@
             force: yes
           loop: "{{ template_image_url }}"
 
-        - name: template image - customize
+        - name: template image - install qemu-guest-agent
           command: >
             virt-customize -a {{ template_image_path }}/{{ item | basename }}
               --install qemu-guest-agent
+          changed_when: true
+          loop: "{{ template_image_url }}"
+
+        - name: template image - reset machine-id
+          command: >
+            virt-customize -a {{ template_image_path }}/{{ item | basename }}
+              --run-command "echo -n > /etc/machine-id"
           changed_when: true
           loop: "{{ template_image_url }}"
       run_once: true
