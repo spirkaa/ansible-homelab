@@ -8,7 +8,7 @@ code_image: linuxserver/code-server:4.1.0-ls116
 drone_image: drone/drone:2.11
 drone_runner_docker_image: drone/drone-runner-docker:latest
 gitea_db_image: yobasystems/alpine-mariadb:10.6.4
-gitea_image: gitea/gitea:latest
+gitea_image: gitea/gitea:dev
 jenkins_image: registry.home.devmem.ru/jenkins:latest
 registry_image: registry:2.8
 registry_ui_image: joxit/docker-registry-ui:2.1
@@ -39,6 +39,7 @@ gitea_db_pass: !vault |
 gitea_db_host: gitea-db:3306
 gitea_domain: git.{{ inventory__site }}
 gitea_root_url: "https://{{ gitea_domain }}"
+gitea_ssh_user: git
 gitea_lfs_jwt_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           39393364363766336630303936616437356134643738633538323636626231323632303365333263
