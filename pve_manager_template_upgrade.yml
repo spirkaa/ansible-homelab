@@ -10,7 +10,7 @@
     storage_path: /mnt/tank0/ds0/proxmox
     templates_path: "{{ storage_path }}/template/qcow2"
     vm_image: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-2111.qcow2"
-    updated_iamge_name: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2"
+    updated_image_name: "{{ templates_path }}/CentOS-7-x86_64-GenericCloud-updated.qcow2"
 
   roles:
     - pve_manager
@@ -20,7 +20,7 @@
       set_fact:
         vmid: "{{ vmid }}"
         storage_path: "{{ storage_path }}"
-        updated_iamge_name: "{{ updated_iamge_name }}"
+        updated_image_name: "{{ updated_image_name }}"
 
 
 - hosts: templatevm
@@ -65,19 +65,22 @@
         - name: Convert disk to qcow2 (full-size)
           command: >
             qm move_disk {{ vmid }} scsi0 local-spsrv-proxmox --format qcow2 --delete
+          changed_when: true
 
         - name: Delete old template
           file:
-            path: "{{ updated_iamge_name }}"
+            path: "{{ updated_image_name }}"
             state: absent
 
         - name: Convert qcow2 to template (shrinked)
           command: >
             qemu-img convert -O qcow2 -c
             {{ storage_path }}/images/{{ vmid }}/vm-{{ vmid }}-disk-0.qcow2
-            {{ updated_iamge_name }}
+            {{ updated_image_name }}
+          changed_when: true
 
         - name: Destroy VM
           command: >
             qm destroy {{ vmid }}
+          changed_when: true
       when: "'stopped' in vm_status.stdout"
