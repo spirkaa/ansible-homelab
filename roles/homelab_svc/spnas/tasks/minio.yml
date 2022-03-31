@@ -1,0 +1,34 @@
+---
+- name: minio - start
+  docker_container:
+    name: minio
+    image: "{{ minio_image }}"
+    pull: yes
+    user: 1000:1000
+    command: "server /data --console-address :9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env:
+      MINIO_BROWSER_REDIRECT_URL: "{{ minio_browser_redirect_url }}"
+      MINIO_ROOT_USER: "{{ minio_root_user }}"
+      MINIO_ROOT_PASSWORD: "{{ minio_root_password }}"
+    volumes:
+      - "{{ app_path }}/data/minio:/data"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.portainer.rule: "HostRegexp(`minio{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.services.portainer.loadbalancer.server.port: "9001"
+      traefik.http.routers.portainer.entrypoints: "websecure"
+      traefik.http.routers.portainer.tls: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart_policy: unless-stopped
+    state: started
+  tags: minio

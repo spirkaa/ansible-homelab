@@ -35,6 +35,10 @@
   include_tasks: samba.yml
   tags: samba
 
+- name: minio
+  include_tasks: minio.yml
+  tags: minio
+
 - name: nextcloud
   include_tasks: nextcloud.yml
   tags: nextcloud
