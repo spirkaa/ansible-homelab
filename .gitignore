@@ -427,3 +427,4 @@ pip-selfcheck.json
 *.retry
 plugins/
 roles_galaxy/
+.vault_password
