@@ -21,14 +21,8 @@ app_network_name: "{{ inventory__docker_network }}"
 
 muximux_www: "{{ app_path }}/muximux/config/www"
 
-delugevpn_vpn_user: "p2632588"
-delugevpn_vpn_pass: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          32666134356362303735623831313838633366336539613733306238336333613635616565313231
-          3534616439656233336261363465633232653939353965610a316462383937303238373864636135
-          63383065643737653436383638653833626136353134626637326461643731643633303830336335
-          3131633430643036630a633562616332323162393566373834323737616239656566613632333930
-          3031
+delugevpn_vpn_user: "{{ inventory__piavpn_user }}"
+delugevpn_vpn_pass: "{{ inventory__piavpn_pass }}"
 
 samba_mimic_model: "Xserve"
 samba_user: "spirkaa"
