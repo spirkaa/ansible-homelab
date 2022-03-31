@@ -22,9 +22,9 @@ projects
 
 [vm]
 
-[router]
-ubnt-erx
-
+[routers]
+ubnt-erx-krs
+ubnt-erx-cml
 
 [ct:vars]
 ansible_user=root

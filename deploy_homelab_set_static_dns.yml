@@ -1,5 +1,5 @@
 ---
-- hosts: ubnt-erx
+- hosts: ubnt-erx-krs
   strategy: linear
   gather_facts: no
 
