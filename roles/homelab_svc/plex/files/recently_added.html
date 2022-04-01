@@ -645,9 +645,9 @@
                                                                                             </tr>
                                                                                         </table>
                                                                                     </td>
-                                                                                    % if movie['rating']:
-                                                                                    <% rating = int(round(float(movie['rating']) / 2)) %>
-                                                                                    <td class="star-rating-container" title="${int(float(movie['rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
+                                                                                    % if movie['rating'] or movie['audience_rating']:
+                                                                                    <% rating = int(round(float(movie['rating'] or movie['audience_rating']) / 2)) %>
+                                                                                    <td class="star-rating-container" title="${int(float(movie['rating'] or movie['audience_rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
                                                                                         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;">
                                                                                             <tr>
                                                                                                 % for _ in range(rating):
@@ -752,9 +752,9 @@
                                                                             <p class="nowrap mb5" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-weight: 400;margin: 0;margin-bottom: 5px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;max-width: 325px;color: #ffffff;">
                                                                                 % for i, season in enumerate(show['season'][:8]):
                                                                                     % if season['episode_count'] == 1:
-                                                                                        Season ${season['media_index']} &middot; Episode ${season['episode'][0]['media_index']} - ${season['episode'][0]['title']}
+                                                                                        ${season['title']} &middot; Episode ${season['episode'][0]['media_index']} - ${season['episode'][0]['title']}
                                                                                     % else:
-                                                                                        Season ${season['media_index']} &middot; Episodes ${season['episode_range']}
+                                                                                        ${season['title']} &middot; Episodes ${season['episode_range']}
                                                                                     % endif
                                                                                     % if i < min(show['season_count'], 7):
                                                                                         <br>
@@ -798,9 +798,9 @@
                                                                                             </tr>
                                                                                         </table>
                                                                                     </td>
-                                                                                    % if show['rating']:
-                                                                                    <% rating = int(round(float(show['rating']) / 2)) %>
-                                                                                    <td class="star-rating-container" title="${int(float(show['rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
+                                                                                    % if show['rating'] or show['audience_rating']:
+                                                                                    <% rating = int(round(float(show['rating'] or show['audience_rating']) / 2)) %>
+                                                                                    <td class="star-rating-container" title="${int(float(show['rating'] or show['audience_rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
                                                                                         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;">
                                                                                             <tr>
                                                                                                 % for _ in range(rating):
@@ -914,9 +914,9 @@
                                                                                             </tr>
                                                                                         </table>
                                                                                     </td>
-                                                                                    % if album['rating']:
-                                                                                    <% rating = int(round(float(album['rating']) / 2)) %>
-                                                                                    <td class="star-rating-container" title="${int(float(album['rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
+                                                                                    % if album['rating'] or album['audience_rating']:
+                                                                                    <% rating = int(round(float(album['rating'] or album['audience_rating']) / 2)) %>
+                                                                                    <td class="star-rating-container" title="${int(float(album['rating'] or album['audience_rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
                                                                                         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;">
                                                                                             <tr>
                                                                                                 % for _ in range(rating):
@@ -1032,9 +1032,9 @@
                                                                                             </tr>
                                                                                         </table>
                                                                                     </td>
-                                                                                    % if video['rating']:
-                                                                                    <% rating = int(round(float(video['rating']) / 2)) %>
-                                                                                    <td class="star-rating-container" title="${int(float(video['rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
+                                                                                    % if video['rating'] or video['audience_rating']:
+                                                                                    <% rating = int(round(float(video['rating'] or video['audience_rating']) / 2)) %>
+                                                                                    <td class="star-rating-container" title="${int(float(video['rating'] or video['audience_rating'])/0.1)}%" align="right" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;width: 65px;">
                                                                                         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%;">
                                                                                             <tr>
                                                                                                 % for _ in range(rating):
