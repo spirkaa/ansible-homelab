@@ -4,21 +4,21 @@
     file: ../defaults/main.yml
   no_log: true
 
-- name: freeipa - manage user '{{ user.uid }}'
+- name: freeipa - manage user '{{ user.key }}'
   ipa_user:
-    uid: "{{ user.uid }}"
-    givenname: "{{ user.givenname }}"
-    sn: "{{ user.sn }}"
-    password: "{{ user.password }}"
-    update_password: "{{ user.update_password | default('on_create') }}"
-    state: "{{ user.state | default('present') }}"
+    uid: "{{ user.key }}"
+    givenname: "{{ user.value.givenname }}"
+    sn: "{{ user.value.sn }}"
+    password: "{{ user.value.password }}"
+    update_password: "{{ user.value.update_password | default('on_create') }}"
+    state: "{{ user.value.state | default('present') }}"
     ipa_host: "{{ inventory__ldap_domain }}"
     ipa_pass: "{{ freeipa_admin_password }}"
   no_log: true
 
-- name: freeipa - set attributes for user '{{ user.uid }}'
+- name: freeipa - set attributes for user '{{ user.key }}'
   ldap_attr:
-    dn: uid={{ user.uid }},cn=users,cn=accounts,{{ inventory__ldap_base_dn }}
+    dn: uid={{ user.key }},cn=users,cn=accounts,{{ inventory__ldap_base_dn }}
     name: "{{ item.name }}"
     values: "{{ item.value }}"
     state: "{{ item.state | default('present') }}"
@@ -27,5 +27,5 @@
     bind_pw: "{{ freeipa_ds_password }}"
     start_tls: yes
     validate_certs: no
-  loop: "{{ user.attrs }}"
-  when: user.attrs | default(false)
+  loop: "{{ user.value.attrs }}"
+  when: user.value.attrs | default(false)
