@@ -12,8 +12,8 @@
     dest: "{{ app_path }}/pihole/{{ item.dest }}"
     mode: 0644
   loop:
-    - {src: 10-internal.conf.j2, dest: config/dnsmasq.d/10-internal.conf}
-    - {src: pihole-updatelists.conf.j2, dest: config/pihole-updatelists.conf}
+    - { src: 10-internal.conf.j2, dest: config/dnsmasq.d/10-internal.conf }
+    - { src: pihole-updatelists.conf.j2, dest: config/pihole-updatelists.conf }
   notify: pihole - restart
   tags: pihole
 

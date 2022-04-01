@@ -12,7 +12,7 @@
     dest: "{{ app_path }}/{{ item.dest }}"
     mode: 0644
   loop:
-    - {src: jenkins.yaml.j2, dest: "{{ jenkins_home }}/casc_configs/jenkins.yaml"}
+    - { src: jenkins.yaml.j2, dest: "{{ jenkins_home }}/casc_configs/jenkins.yaml" }
   notify: jenkins - restart
   no_log: true
   tags: jenkins

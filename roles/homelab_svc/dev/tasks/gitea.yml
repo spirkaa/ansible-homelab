@@ -19,7 +19,7 @@
 - name: gitea - ssh passthrough - get pub key of created user
   command: cat /home/git/.ssh/id_rsa.pub
   register: git_key
-  changed_when: no
+  changed_when: false
   tags: gitea
 
 - name: gitea - ssh passthrough - add pub key to authorized_keys

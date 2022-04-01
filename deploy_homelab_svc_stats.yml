@@ -27,4 +27,4 @@
   gather_facts: no
 
   roles:
-    - {role: homelab_svc/stats, tags: [stats, svc]}
+    - { role: homelab_svc/stats, tags: [stats, svc] }
