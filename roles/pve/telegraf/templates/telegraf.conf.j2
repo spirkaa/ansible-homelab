@@ -26,8 +26,8 @@
 
 
 [[outputs.influxdb]]
-  urls = ["{{ influxdb_url }}"]
-  database = "{{ influxdb_db }}"
+  urls = ["{{ telegraf_influxdb_url }}"]
+  database = "{{ telegraf_influxdb_db }}"
   retention_policy = ""
   write_consistency = "any"
   timeout = "5s"

@@ -1,8 +1,8 @@
 ---
-telegraf_agent_version: 1.21.1
+telegraf_agent_version: 1.22.0
 telegraf_agent_version_patch: 1
 telegraf_agent_package: "telegraf_{{ telegraf_agent_version }}-{{ telegraf_agent_version_patch }}_amd64.deb"
 telegraf_agent_url: "https://dl.influxdata.com/telegraf/releases/{{ telegraf_agent_package }}"
 
-influxdb_url: http://stats:8086
-influxdb_db: telegraf
+telegraf_influxdb_url: http://stats.{{ inventory__homelab_domain }}:8086
+telegraf_influxdb_db: telegraf
