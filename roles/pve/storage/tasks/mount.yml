@@ -22,4 +22,4 @@
     - "{{ parity_disks }}"
     - "{{ data_disks }}"
     - "{{ extra_mountpoints }}"
-  when: item.path != '/mnt/storage'
+  when: item.path != "/mnt/storage"
