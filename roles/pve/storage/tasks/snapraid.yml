@@ -28,9 +28,9 @@
 
 - name: snapraid-runner - clone repo
   git:
-    repo: https://github.com/Chronial/snapraid-runner.git
-    dest: /opt/snapraid-runner
-    version: 68a03ce
+    repo: "{{ snapraid_run_repo }}"
+    dest: "{{ snapraid_run_dest }}"
+    version: "{{ snapraid_run_version }}"
 
 - name: snapraid-runner - copy configuration
   template:
@@ -42,7 +42,7 @@
 
 - name: snapraid-runner - setup cron job
   cron:
-    user: root
+    user: "{{ item.user | default('root') }}"
     job: "{{ item.job }}"
     name: "{{ item.name }}"
     weekday: "{{ item.weekday | default('*') }}"

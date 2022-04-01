@@ -20,20 +20,25 @@ sendon = {{ snapraid_email_sendon }}
 ; set to false to get full program output via email
 short = true
 subject = [SnapRAID] Status Report:
-from = {{ snapraid_email_address_from }}
+from = {{ snapraid_smtp_username }}
 to = {{ snapraid_email_address_to }}
+; maximum email size in KiB
+maxsize = 20000
 
 [smtp]
 host = {{ snapraid_smtp_host }}
 ; leave empty for default port
 port = {{ snapraid_smtp_port }}
 ; set to "true" to activate
-ssl = {{ snapraid_use_ssl }}
-user = {{ snapraid_email_address }}
-password = {{ snapraid_email_pass }}
+ssl = false
+tls = {{ snapraid_smtp_tls }}
+user = {{ snapraid_smtp_username }}
+password = {{ snapraid_smtp_password }}
 
 [scrub]
 ; set to true to run scrub after sync
 enabled = {{ snapraid_run_scrub }}
-percentage = {{ snapraid_run_scrub_percent }}
+; scrub plan - either a percentage or one of [bad, new, full]
+plan = {{ snapraid_run_scrub_plan }}
+; minimum block age (in days) for scrubbing. Only used with percentage plans
 older-than = {{ snapraid_run_scrub_age }}

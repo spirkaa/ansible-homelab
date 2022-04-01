@@ -45,31 +45,33 @@ snapraid_log_path: /var/log/snapraid.log
 snapraid_log_size: 5000
 
 snapraid_run_scrub: true
-snapraid_run_scrub_percent: 12
+snapraid_run_scrub_plan: 12
 snapraid_run_scrub_age: 10
 
 snapraid_email_sendon: error
-
-snapraid_smtp_host: "{{ inventory__smtp_port_ext }}"
-snapraid_smtp_port: 465
-snapraid_use_ssl: true
-snapraid_email_address: "{{ inventory__smtp_username_ext }}"
-snapraid_email_pass: "{{ inventory__smtp_password_ext }}"
-snapraid_email_address_from: "{{ inventory__smtp_username_ext }}"
 snapraid_email_address_to: "{{ inventory__admin_mail }}"
 
-snapraid_healthcheck_io_uuid: !vault |
-      $ANSIBLE_VAULT;1.1;AES256
-      65383137353662663930336136383239346639656139313966393163646232353263303733613633
-      6435626564393736396135643632353730326231333861300a396333613964666265363930303235
-      35343965613734356336376165393764663464363063313264666331393833363363393037353162
-      3439646333346539320a366562326264356263653161656561636366336132633636336238396365
-      33363064316431373461303330346465383639646131383261666239333731646431323561306336
-      3565666134386166626363633465326663643631616233353365
+snapraid_smtp_host: "{{ inventory__smtp_host }}"
+snapraid_smtp_port: "{{ inventory__smtp_port }}"
+snapraid_smtp_tls: true
+snapraid_smtp_username: "{{ inventory__smtp_username }}"
+snapraid_smtp_password: "{{ inventory__smtp_password }}"
 
-snapraid_run_path: /opt/snapraid-runner/snapraid-runner
+snapraid_run_repo: https://github.com/Chronial/snapraid-runner.git
+snapraid_run_version: 60b8b67
+snapraid_run_dest: /opt/snapraid-runner
+snapraid_run_path: "{{ snapraid_run_dest }}/snapraid-runner"
 snapraid_run_conf: "{{ snapraid_run_path }}.conf"
 snapraid_run_bin: "{{ snapraid_run_path }}.py"
-snapraid_run_command: "python3 {{ snapraid_run_bin }} -c {{ snapraid_run_conf}} && curl -fsS --retry 3 https://hc-ping.com/{{ snapraid_healthcheck_io_uuid }} > /dev/null 2>&1"
+
+snapraid_run_healthcheck_io: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          61616433616564636161666330323562373639373565326235656664313332653237663562323935
+          6663326630323831633436386336326162616238616263380a386261616664303066393736336236
+          63653265346238333535636666666364646631663466643561663364633666356162306638376336
+          6634643464376139380a636530346539393137353632613765313535333162653532323363643064
+          37613235383662623338316335303035326238323761643533373435306531346630663639383939
+          3939363638303937333336343061643331353136303931643961
+snapraid_run_command: python3 {{ snapraid_run_bin }} -c {{ snapraid_run_conf}} > /dev/null 2>&1 && curl -fsS --retry 3 https://hc-ping.com/{{ snapraid_run_healthcheck_io }} > /dev/null 2>&1
 snapraid_cron_jobs:
-  - { job: '{{ snapraid_run_command }}', name: 'snapraid_runner', weekday: '*', hour: '01' }
+  - { job: "{{ snapraid_run_command }}", name: "snapraid_runner", weekday: "*", hour: "01" }
