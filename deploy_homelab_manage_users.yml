@@ -4,12 +4,12 @@
   gather_facts: no
 
   tasks:
-    - name: manage homelab users
+    - name: manage users
       include_tasks: roles/homelab_svc/mgmt/tasks/freeipa_user.yml
       loop_control:
         loop_var: user
       loop: "{{ lookup('dict', inventory__ldap_users) }}"
       args:
         apply:
-          tags: manage_users
-      tags: manage_users
+          tags: [never, manage_users]
+      tags: [never, manage_users]

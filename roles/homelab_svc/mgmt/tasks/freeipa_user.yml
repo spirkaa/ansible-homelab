@@ -5,7 +5,7 @@
   no_log: true
 
 - name: freeipa - manage user '{{ user.key }}'
-  ipa_user:
+  community.general.ipa_user:
     uid: "{{ user.key }}"
     givenname: "{{ user.value.givenname }}"
     sn: "{{ user.value.sn }}"
@@ -29,3 +29,14 @@
     validate_certs: no
   loop: "{{ user.value.attrs }}"
   when: user.value.attrs | default(false)
+
+- name: freeipa - manage user groups '{{ user.key }}'
+  community.general.ipa_group:
+    cn: "{{ item | default('ipausers') }}"
+    user: "{{ user.key }}"
+    append: yes
+    state: present
+    ipa_host: "{{ inventory__ldap_domain }}"
+    ipa_pass: "{{ freeipa_admin_password }}"
+  loop: "{{ user.value.groups }}"
+  when: user.value.groups | default(false)

@@ -71,6 +71,17 @@ inventory__ldap_users:
         value: postmaster@{{ inventory__site }}
       - name: mailAlias
         value: "@{{ inventory__site }}"
+    groups:
+      - gitea_users
+      - grafana_admins
+      - jenkins_users
+      - librenms_admins
+      - mail_users
+      - nextcloud_users
+      - portainer_users
+      - proxmox_admins
+      - vault_admins
+      - vaultwarden_users
   pvm:
     givenname: Vladimir
     sn: Pavlov
@@ -81,6 +92,12 @@ inventory__ldap_users:
           32353936353534373734626231636461393433383832636637323563303736393033353861656136
           6331316339353932630a646262353866376635326531396538303838363732383061353066343937
           6431
+    groups:
+      - gitea_users
+      - grafana_rw_users
+      - mail_users
+      - nextcloud_users
+      - vaultwarden_users
   noreply:
     givenname: noreply
     sn: noreply
@@ -91,6 +108,8 @@ inventory__ldap_users:
           64616339376261626562306135313038323839636232636262396265313537363066356261613337
           6132633466393339660a656438353134326133633464386632313861343638396236306432396437
           62306338306265333833343330316366666137626161653761323934396264643263
+    groups:
+      - mail_users
   ansible:
     givenname: ansible
     sn: ansible
@@ -101,6 +120,8 @@ inventory__ldap_users:
           34393232346534666235333132336162396331656664356131313030323135626265633331666633
           6239653536313664340a636161373834363131393235396332323866326439656165353865373162
           3831
+    groups:
+      - portainer_users
   argocd:
     givenname: argocd
     sn: argocd
@@ -111,3 +132,5 @@ inventory__ldap_users:
           61393830386332646165666334393236653232653036356339376434646164653166303235613930
           3963383963356432340a363961303865643236376235386438383763333831353064346438646263
           39616330636365316562623936323962623731366439306564653433336532323234
+    groups:
+      - gitea_users

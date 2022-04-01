@@ -4,4 +4,6 @@ roles:
   - src: spirkaa.zsh_prezto
   - src: geerlingguy.pip
   - src: geerlingguy.docker
-collections: []
+collections:
+  - name: community.general
+    version: 4.6.1
