@@ -10,11 +10,12 @@
       - "9000:9000"
       - "9001:9001"
     env:
+      MINIO_SERVER_URL: "{{ minio_server_url }}"
       MINIO_BROWSER_REDIRECT_URL: "{{ minio_browser_redirect_url }}"
       MINIO_ROOT_USER: "{{ minio_root_user }}"
       MINIO_ROOT_PASSWORD: "{{ minio_root_password }}"
     volumes:
-      - "{{ app_path }}/data/minio:/data"
+      - "{{ app_path }}/data/minio/data:/data"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes

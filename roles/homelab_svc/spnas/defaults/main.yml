@@ -24,8 +24,8 @@ muximux_www: "{{ app_path }}/muximux/config/www"
 delugevpn_vpn_user: "{{ inventory__piavpn_user }}"
 delugevpn_vpn_pass: "{{ inventory__piavpn_pass }}"
 
-samba_mimic_model: "Xserve"
-samba_user: "spirkaa"
+samba_mimic_model: Xserve
+samba_user: spirkaa
 samba_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61303964323933356337643731316135666630386239323463393564306536653635323062636134
@@ -41,7 +41,7 @@ nextcloud_db_root_pass: !vault |
           62663235313537303539316237626632633065616632393138393633363338386164666630643561
           6532323962323563650a663537626333343137346366363461623963326138303634343337383966
           62343037383162323036613030663432353339646232613361633437373436656233
-nextcloud_db_user: "nextcloud"
+nextcloud_db_user: nextcloud
 nextcloud_db_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           38636537353963656533643235613561653838363366666435636232326163323138313666363365
@@ -50,8 +50,9 @@ nextcloud_db_pass: !vault |
           3462666332643461370a336137643338393562333461613130363362303266326338383438396531
           64353363613164633134393663663339366236366237653563336130316264363131
 
-minio_browser_redirect_url: "https://minio.{{ inventory__homelab_domain }}"
-minio_root_user: "minio"
+minio_server_url: https://s3.{{ inventory__site }}
+minio_browser_redirect_url: https://minio.{{ inventory__homelab_domain }}
+minio_root_user: minio
 minio_root_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35663537313734356533306335323263663034626361323930333730366562306264623831663530
