@@ -1,6 +1,9 @@
 ---
 - name: Update postfix lookup tables
-  command: postmap /etc/postfix/sasl_passwd
+  command: postmap /etc/postfix/{{ item }}
+  loop:
+    - sasl_passwd
+    - smtp_generic_maps
   listen: postfix config changed
 
 - name: Restart postfix

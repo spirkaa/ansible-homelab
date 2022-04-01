@@ -1,4 +1,4 @@
 ---
-postfix_host: "[{{ inventory__smtp_host_ext }}]:{{ inventory__smtp_port_ext }}"
-postfix_email: "{{ inventory__smtp_username_ext }}"
-postfix_pass: "{{ inventory__smtp_password_ext }}"
+postfix_host: "[{{ inventory__smtp_host }}]:{{ inventory__smtp_port }}"
+postfix_email: "{{ inventory__smtp_username }}"
+postfix_pass: "{{ inventory__smtp_password }}"
