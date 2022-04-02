@@ -1,0 +1,62 @@
+---
+- name: Load rclone configs
+  include_vars: vars/rclone_configs.vault.yml
+  no_log: true
+
+- block:
+    - name: Check whether rclone is installed
+      command: dpkg-query -W rclone
+      ignore_errors: True
+      register: rclone_is_installed
+      changed_when: rclone_is_installed.rc != 0
+
+    - block:
+        - name: Download rclone package
+          get_url:
+            url: "{{ rclone_url }}"
+            dest: /tmp/{{ rclone_url | basename }}
+
+        - name: Install rclone package
+          apt:
+            deb: /tmp/{{ rclone_url | basename }}
+            state: present
+      when: rclone_version not in rclone_is_installed.stdout
+
+    - name: Create config dir
+      file:
+        path: '{{ rclone_config_location | dirname }}'
+        state: directory
+        mode: 0700
+
+    - name: Copy config
+      template:
+        src: rclone.conf.j2
+        dest: '{{ rclone_config_location }}'
+        mode: 0600
+      no_log: true
+
+    - name: Create scripts dir
+      file:
+        path: "{{ rclone_sync_path }}"
+        state: directory
+        recurse: yes
+
+    - name: Copy scripts
+      template:
+        src: rclone-sync.j2
+        dest: "{{ rclone_sync_path }}/{{ item.name }}"
+        mode: 0755
+      loop: "{{ rclone_sync_config }}"
+
+    - name: Setup cron jobs
+      cron:
+        user: "{{ item.user | default('root') }}"
+        job: "/opt/rclone-sync/{{ item.name }} > /dev/null 2>&1 && curl -fsS --retry 3 https://hc-ping.com/{{ inventory__healthchecksio_slug }}/{{ item.name }} > /dev/null 2>&1"
+        name: "{{ item.name }}"
+        weekday: "{{ item.weekday | default('*') }}"
+        minute: "{{ item.minute | default('00') }}"
+        hour: "{{ item.hour | default('00') }}"
+        dom: "{{ item.dom | default('*') }}"
+      loop: "{{ rclone_sync_config }}"
+      no_log: true
+  when: inventory_hostname == "spsrv"

@@ -1,0 +1,25 @@
+---
+rclone_version: 1.58.0
+rclone_url: https://github.com/rclone/rclone/releases/download/v{{ rclone_version }}/rclone-v{{ rclone_version }}-linux-amd64.deb
+
+rclone_config_location: /root/.config/rclone/rclone.conf
+
+rclone_sync_path: /opt/rclone-sync
+rclone_sync_config:
+  - name: rclone-sync-proxmox
+    src: /mnt/tank0/ds0/proxmox/dump
+    dest: "gdrive-spnas-proxmox:"
+    weekday: "*"
+    hour: "03"
+  - name: rclone-sync-downloads
+    src: /mnt/storage/downloads
+    dest: "gdrive-spnas-downloads:"
+    exclude: "--exclude incomplete/** --exclude tmp/**"
+    weekday: "2,5"
+    hour: "05"
+  - name: rclone-sync-cloud
+    src: /mnt/tank0/ds0/cloud
+    dest: "gdrive-spnas-cloud:"
+    exclude: "--exclude .dropbox.cache/**"
+    weekday: "3,6"
+    hour: "05"

@@ -14,6 +14,7 @@
     - { role: common/sshd, tags: [pve, pve_sshd] }
     - { role: pve/kernel_modules, tags: [pve, pve_kernel_modules] }
     - { role: pve/postfix, tags: [pve, pve_postfix] }
+    - { role: pve/rclone, tags: [pve, pve_rclone] }
     - { role: pve/rsnapshot, tags: [pve, pve_rsnapshot] }
     - { role: pve/telegraf, tags: [pve, pve_telegraf] }
     - { role: common/snmp, tags: [pve, pve_snmp] }
