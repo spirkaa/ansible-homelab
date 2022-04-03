@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  apt:
+  package:
     state: present
     name:
       - rsnapshot

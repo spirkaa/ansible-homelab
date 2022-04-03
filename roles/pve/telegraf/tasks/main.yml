@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  apt:
+  package:
     state: present
     name:
       - sudo
@@ -10,7 +10,7 @@
 
 - block:
     - name: Install packages
-      apt:
+      package:
         state: present
         name:
           - ipmitool

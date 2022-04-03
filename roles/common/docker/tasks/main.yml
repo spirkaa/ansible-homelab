@@ -18,11 +18,3 @@
     dest: /etc/systemd/system/docker.service.d
     mode: 0644
   notify: Restart docker service
-
-# - name: Open docker tcp port
-#   firewalld:
-#     port: 2375/tcp
-#     state: enabled
-#     permanent: yes
-#     immediate: yes
-#   ignore_errors: yes

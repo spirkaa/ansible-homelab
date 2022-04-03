@@ -1,5 +1,5 @@
 ---
 - name: restart smartd
-  systemd:
-    state: restarted
+  service:
     name: smartd
+    state: restarted

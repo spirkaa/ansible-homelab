@@ -1,11 +1,11 @@
 ---
 - name: restart telegraf
-  systemd:
-    state: restarted
+  service:
     name: telegraf
+    state: restarted
 
 - name: restart hddtemp
-  systemd:
+  service:
+    name: hddtemp
     state: restarted
     daemon_reload: yes
-    name: hddtemp
