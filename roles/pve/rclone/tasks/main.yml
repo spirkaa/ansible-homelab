@@ -33,6 +33,7 @@
         src: rclone.conf.j2
         dest: '{{ rclone_config_location }}'
         mode: 0600
+        force: no
       no_log: true
 
     - name: Create scripts dir
