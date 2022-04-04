@@ -71,6 +71,12 @@ credentials:
           id: "ansible-vault-password"
           scope: GLOBAL
           secret: "{{ jenkins_ansible_vault_password }}"
+      - usernamePassword:
+          description: "gitea-user"
+          id: "gitea-user"
+          scope: GLOBAL
+          username: "{{ jenkins_gitea_user }}"
+          password: "{{ jenkins_gitea_user_password }}"
 jobs:
 # https://jenkinsci.github.io/job-dsl-plugin/#path/organizationFolder
 # https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/integrations/src/test/resources/io/jenkins/plugins/casc/SeedJobTest_withGiteaOrganisation.yml
