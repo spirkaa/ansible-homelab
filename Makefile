@@ -19,5 +19,5 @@ run:
 		--volume "${HOME}:${HOME}" \
 		--volume "/etc/passwd:/etc/passwd" \
 		--user "$(shell id -u ${USER}):$(shell id -g ${USER})" \
-		--workdir "$(shell pwd)/.." \
+		--workdir "$(shell pwd)" \
 		${TAG}
