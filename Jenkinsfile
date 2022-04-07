@@ -19,7 +19,7 @@ pipeline {
     DOCKERFILE = '.docker/Dockerfile'
     LABEL_AUTHORS = 'Ilya Pavlov <piv@devmem.ru>'
     LABEL_TITLE = 'Ansible'
-    LABEL_DESCRIPTION = 'Ansible with collections'
+    LABEL_DESCRIPTION = 'Ansible for CI/CD pipelines'
     LABEL_URL = 'https://www.ansible.com'
     LABEL_CREATED = sh(script: "date '+%Y-%m-%dT%H:%M:%S%:z'", returnStdout: true).toString().trim()
   }
