@@ -2,10 +2,10 @@
 
 TAG=git.devmem.ru/cr/ansible
 
-default: build run
+default: run
 
 build:
-	@DOCKER_BUILDKIT=1 docker build --tag ${TAG} -f .docker/Dockerfile  .
+	@DOCKER_BUILDKIT=1 docker build --tag ${TAG} -f .docker/Dockerfile .
 
 run:
 	@docker run \
