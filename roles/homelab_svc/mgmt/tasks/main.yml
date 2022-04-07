@@ -26,3 +26,7 @@
 - name: unms
   include_tasks: unms.yml
   tags: unms
+
+- name: authentik
+  include_tasks: authentik.yml
+  tags: authentik

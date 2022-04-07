@@ -61,6 +61,7 @@ inventory__ldap_users:
       - name: mailAlias
         value: "@{{ inventory__site }}"
     groups:
+      - authentik_users
       - gitea_users
       - grafana_admins
       - jenkins_users
