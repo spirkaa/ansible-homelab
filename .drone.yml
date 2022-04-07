@@ -2,6 +2,10 @@
 kind: pipeline
 name: build images
 
+trigger:
+  event:
+    - cron
+
 steps:
   - name: jenkins
     image: plugins/docker
