@@ -6,6 +6,10 @@ pipeline {
     parallelsAlwaysFailFast()
   }
 
+    triggers {
+      cron('15 16 * * 4')
+    }
+
   environment {
     REGISTRY = 'git.devmem.ru'
     REGISTRY_CREDS_ID = 'gitea-user'
@@ -22,6 +26,15 @@ pipeline {
 
   stages {
     stage('Build image') {
+      when {
+        anyOf {
+          triggeredBy 'TimerTrigger'
+          triggeredBy cause: 'UserIdCause'
+          changeset 'Jenkinsfile'
+          changeset '.docker/Dockerfile'
+          changeset 'requirements.*'
+        }
+      }
       steps {
         script{
           docker.withRegistry("https://${REGISTRY}", "${REGISTRY_CREDS_ID}") {
