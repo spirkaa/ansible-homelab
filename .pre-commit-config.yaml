@@ -11,7 +11,7 @@ repos:
     hooks:
       - id: yamllint
         args: [--strict]
-        exclude: .pre-commit-config|files/|Definitions/|vault
+        exclude: .pre-commit-config|.github/|files/|Definitions/|vault
   - repo: https://github.com/ansible-community/ansible-lint.git
     rev: v6.0.2
     hooks:
