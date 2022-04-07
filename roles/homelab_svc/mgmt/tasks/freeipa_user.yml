@@ -17,10 +17,9 @@
   no_log: true
 
 - name: freeipa - set attributes for user '{{ user.key }}'
-  ldap_attr:
+  community.general.ldap_attrs:
     dn: uid={{ user.key }},cn=users,cn=accounts,{{ inventory__ldap_base_dn }}
-    name: "{{ item.name }}"
-    values: "{{ item.value }}"
+    attributes: "{{ item.name }}={{ item.value }}"
     state: "{{ item.state | default('present') }}"
     server_uri: ldap://{{ inventory__ldap_domain }}/
     bind_dn: cn=Directory Manager

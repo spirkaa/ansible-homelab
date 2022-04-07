@@ -13,3 +13,4 @@
         apply:
           tags: [never, manage_users]
       tags: [never, manage_users]
+      no_log: true

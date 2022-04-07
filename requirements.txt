@@ -1,6 +1,16 @@
+# Ansible
+ansible-core
+ansible-lint
 docker
-pexpect
-pre-commit
-python-dotenv
+jmespath
+mitogen
 python-ldap
+yamllint
+
+# Python
+pexpect
+python-dotenv
 requests
+
+# Dev
+pre-commit

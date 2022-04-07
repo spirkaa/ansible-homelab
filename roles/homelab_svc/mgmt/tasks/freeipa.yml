@@ -197,7 +197,7 @@
   tags: freeipa
 
 - name: freeipa - customize - default mail domain
-  ipa_config:
+  community.general.ipa_config:
     ipadefaultemaildomain: "{{ freeipa_mail_domain }}"
     ipa_host: "{{ inventory__ldap_domain }}"
     ipa_pass: "{{ freeipa_admin_password }}"

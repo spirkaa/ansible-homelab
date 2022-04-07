@@ -1,7 +1,12 @@
 warn_list:
+  - experimental
+  - fqcn-builtins
   - ignore-errors
   - load-failure
   - meta-no-info
+  - no-changed-when
   - no-handler
   - package-latest
+  - risky-file-permissions
   - risky-shell-pipe
+  - yaml

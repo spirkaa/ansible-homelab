@@ -5,7 +5,7 @@
   no_log: true
 
 - name: freeipa - ensure service account is present
-  ldap_entry:
+  community.general.ldap_entry:
     dn: "{{ freeipa_service_bind_sysaccount_dn | default('uid=sudo,cn=sysaccounts,cn=etc,dc=home,dc=devmem,dc=ru') }}"
     objectClass:
       - account
@@ -23,7 +23,7 @@
   delegate_to: localhost
 
 - name: freeipa - ensure service group is present
-  ipa_group:
+  community.general.ipa_group:
     name: "{{ freeipa_service_bind_group_name | default('ipausers') }}"
     state: present
     ipa_host: "{{ inventory__ldap_domain }}"
