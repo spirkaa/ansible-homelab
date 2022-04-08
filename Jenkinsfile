@@ -4,6 +4,7 @@ pipeline {
   options {
     buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '60'))
     parallelsAlwaysFailFast()
+    disableConcurrentBuilds()
   }
 
     triggers {
@@ -12,6 +13,7 @@ pipeline {
 
   environment {
     REGISTRY = 'git.devmem.ru'
+    REGISTRY_URL = "https://${REGISTRY}"
     REGISTRY_CREDS_ID = 'gitea-user'
     IMAGE_OWNER = 'cr'
     IMAGE_NAME = 'ansible'
@@ -24,6 +26,11 @@ pipeline {
     LABEL_CREATED = sh(script: "date '+%Y-%m-%dT%H:%M:%S%:z'", returnStdout: true).toString().trim()
     CACHE_FROM = "${REGISTRY}/${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}"
     REVISION = GIT_COMMIT.take(7)
+
+    ANSIBLE_IMAGE = "${REGISTRY}/${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}"
+    ANSIBLE_PLAYBOOK = 'main.yml'
+    ANSIBLE_CREDS_ID = 'jenkins-ssh-key'
+    ANSIBLE_VAULT_CREDS_ID = 'ansible-homelab-vault-password'
   }
 
   stages {
@@ -45,7 +52,7 @@ pipeline {
       }
       steps {
         script {
-          docker.withRegistry("https://${REGISTRY}", "${REGISTRY_CREDS_ID}") {
+          docker.withRegistry("${REGISTRY_URL}", "${REGISTRY_CREDS_ID}") {
             def myImage = docker.build(
               "${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}",
               "--label \"org.opencontainers.image.created=${LABEL_CREATED}\" \
@@ -77,7 +84,7 @@ pipeline {
       }
       steps {
         script {
-          docker.withRegistry("https://${REGISTRY}", "${REGISTRY_CREDS_ID}") {
+          docker.withRegistry("${REGISTRY_URL}", "${REGISTRY_CREDS_ID}") {
             def myImage = docker.build(
               "${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}",
               "--label \"org.opencontainers.image.created=${LABEL_CREATED}\" \
@@ -98,6 +105,34 @@ pipeline {
             sh "docker rmi -f \$(docker inspect -f '{{ .Id }}' ${myImage.id})"
           }
         }
+      }
+    }
+
+    stage('Run playbook') {
+      when {
+        not {
+          triggeredBy 'TimerTrigger'
+        }
+      }
+      agent {
+        docker {
+          image env.ANSIBLE_IMAGE
+          registryUrl env.REGISTRY_URL
+          registryCredentialsId env.REGISTRY_CREDS_ID
+          alwaysPull true
+          reuseNode true
+        }
+      }
+      steps {
+        sh 'ansible --version'
+        withCredentials([string(credentialsId: "${ANSIBLE_VAULT_CREDS_ID}", variable: 'ANSIBLE_VAULT_PASS')]) {
+          sh 'echo $ANSIBLE_VAULT_PASS > .vault_password'
+        }
+        ansiblePlaybook(
+          colorized: true,
+          playbook: "${ANSIBLE_PLAYBOOK}",
+          credentialsId: "${ANSIBLE_CREDS_ID}"
+        )
       }
     }
   }
