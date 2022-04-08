@@ -67,6 +67,11 @@ credentials:
               privateKey: |
                 {{ jenkins_ssh_key | string | indent(width=16) }}
       - string:
+          description: "ansible-homelab-vault-password"
+          id: "ansible-homelab-vault-password"
+          scope: GLOBAL
+          secret: "{{ jenkins_ansible_homelab_vault_password }}"
+      - string:
           description: "ansible-vault-password"
           id: "ansible-vault-password"
           scope: GLOBAL
