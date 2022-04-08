@@ -10,6 +10,7 @@ FROM python:3.10-slim-bullseye AS prod
 COPY --from=build /tmp/*.whl /tmp/
 
 RUN apt-get update -y \
+    && apt-get upgrade -y \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-suggests --no-install-recommends \
         git \
         libldap-2.4-2 \
@@ -18,7 +19,8 @@ RUN apt-get update -y \
 
 COPY requirements.* /
 
-RUN pip install /tmp/*.whl \
+RUN pip install --no-cache-dir -U pip wheel \
+    && pip install /tmp/*.whl \
     && pip install --no-cache-dir -r /requirements.txt
 
 RUN ansible-galaxy role install -r /requirements.yml -p /usr/share/ansible/roles \
