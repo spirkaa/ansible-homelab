@@ -1,7 +1,7 @@
 ---
-- name: vault
-  include_tasks: vault.yml
-  tags: vault
+# - name: vault
+#   include_tasks: vault.yml
+#   tags: vault
 
 - name: vaultwarden
   include_tasks: vaultwarden.yml
