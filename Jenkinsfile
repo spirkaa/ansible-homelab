@@ -8,7 +8,7 @@ pipeline {
   }
 
     triggers {
-      cron('0 8 * * 5')
+      cron('0 10 * * 6')
     }
 
   environment {
@@ -18,21 +18,22 @@ pipeline {
     IMAGE_OWNER = 'cr'
     IMAGE_NAME = 'ansible'
     IMAGE_TAG = 'latest'
+    IMAGE_FULLNAME = "${REGISTRY}/${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}"
     DOCKERFILE = '.docker/Dockerfile'
     LABEL_AUTHORS = 'Ilya Pavlov <piv@devmem.ru>'
     LABEL_TITLE = 'Ansible'
     LABEL_DESCRIPTION = 'Ansible for CI/CD pipelines'
     LABEL_URL = 'https://www.ansible.com'
     LABEL_CREATED = sh(script: "date '+%Y-%m-%dT%H:%M:%S%:z'", returnStdout: true).toString().trim()
-    CACHE_FROM = "${REGISTRY}/${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}"
     REVISION = GIT_COMMIT.take(7)
 
-    ANSIBLE_IMAGE = "${REGISTRY}/${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}"
+    ANSIBLE_IMAGE = "${IMAGE_FULLNAME}"
     ANSIBLE_CREDS_ID = 'jenkins-ssh-key'
     ANSIBLE_VAULT_CREDS_ID = 'ansible-homelab-vault-password'
   }
 
   parameters {
+    booleanParam(name: 'BUILD_IMAGE_NO_CACHE', defaultValue: false, description: 'Build image without cache?')
     string(name: 'ANSIBLE_PLAYBOOK', defaultValue: 'main.yml', description: 'Playbook name')
     string(name: 'ANSIBLE_EXTRAS', defaultValue: '--skip-tags create,dyn_inventory,portainer_api,cadvisor', description: 'ansible-playbook extra params')
   }
@@ -68,7 +69,7 @@ pipeline {
               --label \"org.opencontainers.image.title=${LABEL_TITLE}\" \
               --label \"org.opencontainers.image.description=${LABEL_DESCRIPTION}\" \
               --progress=plain \
-              --cache-from ${CACHE_FROM} \
+              --cache-from ${IMAGE_FULLNAME} \
               -f ${DOCKERFILE} ."
             )
             myImage.push()
@@ -83,7 +84,7 @@ pipeline {
       when {
         anyOf {
           triggeredBy 'TimerTrigger'
-          triggeredBy cause: 'UserIdCause'
+          expression { params.BUILD_IMAGE_NO_CACHE }
         }
       }
       steps {
