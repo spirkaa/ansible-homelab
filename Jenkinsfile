@@ -28,9 +28,13 @@ pipeline {
     REVISION = GIT_COMMIT.take(7)
 
     ANSIBLE_IMAGE = "${REGISTRY}/${IMAGE_OWNER}/${IMAGE_NAME}:${IMAGE_TAG}"
-    ANSIBLE_PLAYBOOK = 'main.yml'
     ANSIBLE_CREDS_ID = 'jenkins-ssh-key'
     ANSIBLE_VAULT_CREDS_ID = 'ansible-homelab-vault-password'
+  }
+
+  parameters {
+    string(name: 'ANSIBLE_PLAYBOOK', defaultValue: 'main.yml', description: 'Playbook name')
+    string(name: 'ANSIBLE_EXTRAS', defaultValue: '--skip-tags create,dyn_inventory,portainer_api,cadvisor', description: 'ansible-playbook extra params')
   }
 
   stages {
@@ -130,8 +134,9 @@ pipeline {
         }
         ansiblePlaybook(
           colorized: true,
-          playbook: "${ANSIBLE_PLAYBOOK}",
-          credentialsId: "${ANSIBLE_CREDS_ID}"
+          credentialsId: "${ANSIBLE_CREDS_ID}",
+          playbook: "${params.ANSIBLE_PLAYBOOK}",
+          extras: "${params.ANSIBLE_EXTRAS}"
         )
       }
     }
