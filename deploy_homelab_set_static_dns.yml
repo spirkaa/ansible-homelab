@@ -15,6 +15,7 @@
     ip_pihole: 192.168.16.2
     ip_projects: 192.168.12.251
     ip_ha: 192.168.20.176
+    ip_gw_wg: 192.168.13.2
     dns_entries:
       - { alias: "plex", inet: "{{ ip_plex }}" }
       - { alias: "traefik-plex", inet: "{{ ip_plex }}" }
@@ -73,6 +74,8 @@
       - { alias: "traefik-ha", inet: "{{ ip_ha }}" }
       - { alias: "esp", inet: "{{ ip_ha }}" }
       - { alias: "grocy", inet: "{{ ip_ha }}" }
+
+      - { alias: "gw-wg", inet: "{{ ip_gw_wg }}" }
 
   tasks:
     - name: Set static DNS mapping
