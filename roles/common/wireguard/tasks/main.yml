@@ -8,8 +8,8 @@
 
 - name: Install packages
   package:
-    state: present
     update_cache: yes
+    state: present
     name:
       - wireguard
 

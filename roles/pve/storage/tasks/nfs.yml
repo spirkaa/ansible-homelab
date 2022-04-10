@@ -1,10 +1,10 @@
 ---
 - name: nfs - install packages
   package:
+    state: present
     name:
       - nfs-common
       - nfs-kernel-server
-    state: present
 
 - name: nfs - ensure directories to export exist
   file:
