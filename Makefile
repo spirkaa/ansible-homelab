@@ -9,6 +9,7 @@ build:
 
 run:
 	@docker run \
+		--pull always \
 		--rm \
 		--interactive \
 		--tty \
