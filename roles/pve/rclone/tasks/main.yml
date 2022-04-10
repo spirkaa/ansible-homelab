@@ -52,7 +52,7 @@
     - name: Setup cron jobs
       cron:
         user: "{{ item.user | default('root') }}"
-        job: "/opt/rclone-sync/{{ item.name }} > /dev/null 2>&1 && curl -fsS --retry 3 https://hc-ping.com/{{ inventory__healthchecksio_slug }}/{{ item.name }} > /dev/null 2>&1"
+        job: "/opt/rclone-sync/{{ item.name }} > /dev/null 2>&1 && curl -fsS --retry 3 {{ inventory__healthchecksio_url }}/{{ item.name }} > /dev/null 2>&1"
         name: "{{ item.name }}"
         weekday: "{{ item.weekday | default('*') }}"
         minute: "{{ item.minute | default('00') }}"
