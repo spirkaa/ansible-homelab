@@ -23,6 +23,8 @@
   gather_facts: yes
 
   vars:
+    sshd_permit_root_login: "no"
+    sshd_authorized_keys_user: ubuntu
     wg_pia_name: wg-pia
     wg_pia_image: thrnz/docker-wireguard-pia:latest
     wg_pia_user: "{{ inventory__piavpn_user }}"
@@ -41,8 +43,9 @@
     - { role: common/packages, become: true }
     - { role: spirkaa.zsh_prezto }
     - { role: spirkaa.nano }
+    - { role: common/sshd, become: true }
     - { role: common/wireguard, become: true }
-    - { role: common/docker, become: true }
+    # - { role: common/docker, become: true }
 
   tasks:
     - name: Flush handlers
