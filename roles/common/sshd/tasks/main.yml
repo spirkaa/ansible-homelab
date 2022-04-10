@@ -5,10 +5,10 @@
 
 - name: Set authorized keys
   authorized_key:
-    user: root
+    user: "{{ sshd_authorized_keys_user }}"
     state: present
     key: "{{ item }}"
-  loop: "{{ authorized_keys }}"
+  loop: "{{ sshd_authorized_keys }}"
   no_log: true
   notify: restart sshd
 

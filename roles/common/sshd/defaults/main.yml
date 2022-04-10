@@ -1,5 +1,6 @@
 ---
 sshd_port: 22
-sshd_permit_root_login: 'yes'
-sshd_password_authentication: 'yes'
+sshd_permit_root_login: "yes"
+sshd_password_authentication: "yes"
 sshd_authentication_methods: any
+sshd_authorized_keys_user: root
