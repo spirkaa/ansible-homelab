@@ -7,11 +7,12 @@
     net_ip: 192.168.20.176
     snmp_syslocation: cml
 
-  roles:
-    - { role: common/packages, tags: [ha, packages] }
+  #  roles:
+  #  - { role: common/packages, tags: [ha, packages] }
   #  - { role: spirkaa.zsh_prezto, tags: [ha, zsh] }
   #  - { role: spirkaa.nano, tags: [ha, nano] }
   #  - { role: common/motd, tags: [ha, motd] }
+  #  - { role: common/sshd, tags: [ha, sshd] }
   #  - { role: common/snmp, tags: [ha, snmp] }
   #  - { role: common/docker, tags: [ha, docker] }
   #  - { role: portainer_api, tags: [ha, portainer_api] }
