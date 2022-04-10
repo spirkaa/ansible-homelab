@@ -33,6 +33,7 @@
     wg_pia_local_network: 192.168.0.0/16
     wg_pia_firewall: "1"
     wg_pia_fwd_iface: eth0
+    wg_pia_healthcheck_io: "{{ inventory__healthchecksio_url }}/wg-pia"
 
   pre_tasks:
     - name: Wait for cloud-init to finish
@@ -79,7 +80,7 @@
           - net_admin
         network_mode: host
         healthcheck:
-          test: ["CMD-SHELL", "ping -c 1 www.google.com || exit 1"]
+          test: ["CMD-SHELL", "curl -s -m 1 --retry 3 --fail {{ wg_pia_healthcheck_io }} || exit 1"]
           interval: 30s
           timeout: 10s
           retries: 3
