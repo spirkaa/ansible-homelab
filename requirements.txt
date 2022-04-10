@@ -4,6 +4,7 @@ ansible-lint
 docker
 jmespath
 mitogen
+paramiko
 python-ldap
 yamllint
 
