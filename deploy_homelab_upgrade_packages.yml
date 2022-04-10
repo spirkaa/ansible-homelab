@@ -1,8 +1,12 @@
 ---
-- hosts: ct
+- hosts: linux
   gather_facts: no
 
   tasks:
     - name: Upgrade packages
-      package: name='*' state=latest
-  tags: upgrade_packages
+      package:
+        update_cache: yes
+        state: latest
+        name: "*"
+      become: true
+      tags: upgrade_packages
