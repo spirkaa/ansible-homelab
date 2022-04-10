@@ -1,13 +1,20 @@
+[cml]
+ha ansible_user=root ansible_python_interpreter=/usr/bin/python3
+
 [vps]
-vps-sd-msk.devmem.ru
+vps-sd-msk.devmem.ru ansible_user=root ansible_port=51858
+
+[routers]
+ubnt-erx-krs
+ubnt-erx-cml
 
 [proxmox]
 spsrv
 spmaxi
 spmini
 
-[ha]
-192.168.20.176
+[proxmox:vars]
+ansible_user=root
 
 [ct]
 plex
@@ -20,26 +27,19 @@ mail
 pihole
 projects
 
-[vm]
-
-[routers]
-ubnt-erx-krs
-ubnt-erx-cml
-
 [ct:vars]
 ansible_user=root
+
+[vm]
+gw-wg
 
 [vm:vars]
 ansible_user=ubuntu
 ansible_python_interpreter=/usr/bin/python3
 
-[proxmox:vars]
-ansible_user=root
-
-[ha:vars]
-ansible_user=root
-ansible_python_interpreter=/usr/bin/python3
-
-[vps:vars]
-ansible_user=root
-ansible_port=51858
+[linux:children]
+cml
+vps
+proxmox
+ct
+vm
