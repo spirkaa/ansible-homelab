@@ -4,9 +4,6 @@ TAG=git.devmem.ru/cr/ansible
 
 default: run
 
-build:
-	@DOCKER_BUILDKIT=1 docker build --tag ${TAG} -f .docker/Dockerfile .
-
 run:
 	@docker run \
 		--pull always \
