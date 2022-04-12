@@ -4,6 +4,7 @@ name: build images
 
 trigger:
   event:
+    - custom
     - cron
 
 steps:
