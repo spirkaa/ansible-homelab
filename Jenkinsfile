@@ -18,7 +18,7 @@ pipeline {
 
   parameters {
     string(name: 'ANSIBLE_PLAYBOOK', defaultValue: 'main.yml', description: 'Playbook name')
-    string(name: 'ANSIBLE_EXTRAS', defaultValue: '--skip-tags create,dyn_inventory,portainer_api,cadvisor', description: 'ansible-playbook extra params')
+    string(name: 'ANSIBLE_EXTRAS', defaultValue: '--skip-tags create,dyn_inventory,portainer_api,cadvisor,jenkins', description: 'ansible-playbook extra params')
   }
 
   stages {
