@@ -13,7 +13,7 @@ pipeline {
     REGISTRY_CREDS_ID = 'gitea-user'
     ANSIBLE_CREDS_ID = 'jenkins-ssh-key'
     ANSIBLE_VAULT_CREDS_ID = 'ansible-homelab-vault-password'
-    ANSIBLE_IMAGE = "${REGISTRY}/cr/ansible:latest"
+    ANSIBLE_IMAGE = "${REGISTRY}/cr/ansible:base"
   }
 
   parameters {

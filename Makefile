@@ -1,6 +1,6 @@
 .POSIX:
 
-TAG=git.devmem.ru/cr/ansible
+TAG=git.devmem.ru/cr/ansible:base
 
 default: run
 
