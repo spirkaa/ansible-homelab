@@ -76,12 +76,31 @@ credentials:
           id: "ansible-vault-password"
           scope: GLOBAL
           secret: "{{ jenkins_ansible_vault_password }}"
+      {% for key in inventory__sshd_authorized_keys -%}
+      - string:
+          description: "ssh-pub-key-{{ key.split(' ')[-1] | replace('@','-') }}"
+          id: "ssh-pub-key-{{ key.split(' ')[-1] | replace('@','-') }}"
+          scope: GLOBAL
+          secret: "{{ key }}"
+      {% endfor -%}
       - usernamePassword:
           description: "gitea-user"
           id: "gitea-user"
           scope: GLOBAL
           username: "{{ jenkins_gitea_user }}"
           password: "{{ jenkins_gitea_user_password }}"
+      - usernamePassword:
+          description: "terraform-backend"
+          id: "terraform-backend"
+          scope: GLOBAL
+          username: "{{ jenkins_terraform_backend_user }}"
+          password: "{{ jenkins_terraform_backend_password }}"
+      - usernamePassword:
+          description: "proxmox-api-hashi"
+          id: "proxmox-api-hashi"
+          scope: GLOBAL
+          username: "{{ jenkins_proxmox_api_user }}"
+          password: "{{ jenkins_proxmox_api_token }}"
 jobs:
 # https://jenkinsci.github.io/job-dsl-plugin/#path/organizationFolder
 # https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/integrations/src/test/resources/io/jenkins/plugins/casc/SeedJobTest_withGiteaOrganisation.yml
