@@ -1,8 +1,4 @@
 ---
-- name: Load authorized keys
-  include_vars: vars/keys.vault.yml
-  no_log: true
-
 - name: Set authorized keys
   authorized_key:
     user: "{{ sshd_authorized_keys_user }}"

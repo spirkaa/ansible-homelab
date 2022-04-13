@@ -41,6 +41,8 @@ inventory__piavpn_pass: !vault |
           6166333630663264330a386538643664376539323233363961613766313730373036626533356163
           33643961393832303662393766653935303963333066363666326433343535646534
 
+inventory__sshd_authorized_keys: "{{ vault_inventory__sshd_authorized_keys }}"
+
 zsh_prezto_repo: https://github.com/spirkaa/prezto.git
 zsh_prezto_repo_version: 12f6ac6
 
