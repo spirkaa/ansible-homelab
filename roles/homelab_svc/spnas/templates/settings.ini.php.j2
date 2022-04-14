@@ -6,7 +6,7 @@ theme = "modern"
 color = "#31ac63"
 mobileoverride = "true"
 tabcolor = "true"
-rssUrl = "https://www.wired.com/feed/"
+rssUrl = ""
 userNameInput = "admin"
 password = "muximux"
 
@@ -25,7 +25,7 @@ name = "Plex"
 url = "https://plex.{{ inventory__site }}/web/index.html"
 scale = 1
 icon = "muximux-plex"
-color = "#cc7b19"
+color = "#e4a00d"
 enabled = "true"
 landingpage = "true"
 default = "true"
@@ -42,8 +42,8 @@ enabled = "true"
 name = "Ombi"
 url = "https://ombi.{{ inventory__site }}"
 scale = 1
-icon = "muximux-search"
-color = "#df691a"
+icon = "muximux-bolt"
+color = "#62d2fa"
 enabled = "true"
 
 [Deluge]
@@ -70,13 +70,31 @@ icon = "muximux-radarr"
 color = "#ffc230"
 enabled = "true"
 
+[Prowlarr]
+name = "Prowlarr"
+url = "https://prowlarr.{{ inventory__homelab_domain }}"
+scale = 1
+icon = "muximux-search2"
+color = "#e66000"
+enabled = "true"
+
 [Jackett]
 name = "Jackett"
 url = "https://jackett.{{ inventory__homelab_domain }}"
 scale = 1
 icon = "muximux-jackett"
-color = "#333333"
+color = "#cccccc"
 enabled = "true"
+dd = "true"
+
+[Jellyfin]
+name = "Jellyfin"
+url = "https://j.{{ inventory__site }}/web/index.html"
+scale = 1
+icon = "muximux-jellyfin"
+color = "#9c5ec1"
+enabled = "true"
+dd = "true"
 
 [Lidarr]
 name = "Lidarr"
@@ -92,7 +110,7 @@ name = "Bazarr"
 url = "https://bazarr.{{ inventory__homelab_domain }}"
 scale = 1
 icon = "muximux-bazarr"
-color = "#cccccc"
+color = "#911f93"
 enabled = "true"
 dd = "true"
 
