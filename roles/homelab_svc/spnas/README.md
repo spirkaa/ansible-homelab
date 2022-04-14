@@ -10,6 +10,7 @@
 * [linuxserver/lidarr](https://hub.docker.com/r/linuxserver/lidarr/tags)
 * [linuxserver/bazarr](https://hub.docker.com/r/linuxserver/bazarr/tags)
 * [linuxserver/muximux](https://hub.docker.com/r/linuxserver/muximux/tags)
+* [flaresolverr/flaresolverr](https://hub.docker.com/r/flaresolverr/flaresolverr/tags)
 * [werwolfby/alpine-monitorrent](https://hub.docker.com/r/werwolfby/alpine-monitorrent/tags)
 * [mbentley/timemachine](https://hub.docker.com/r/mbentley/timemachine/tags)
 * [wonderfall/nextcloud](https://github.com/users/Wonderfall/packages/container/package/nextcloud) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb/tags)

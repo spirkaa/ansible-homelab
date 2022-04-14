@@ -11,6 +11,7 @@ lidarr_image: linuxserver/lidarr:nightly-1.0.0.2515-ls128
 radarr_image: linuxserver/radarr:nightly-4.1.0.6164-ls278
 sonarr_image: linuxserver/sonarr:develop-3.0.7.1494-ls270
 prowlarr_image: linuxserver/prowlarr:nightly-0.3.0.1687-ls316
+flaresolverr_image: flaresolverr/flaresolverr:v2.2.2
 muximux_image: linuxserver/muximux:version-057352e8
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 nextcloud_db_image: yobasystems/alpine-mariadb:10.6.4

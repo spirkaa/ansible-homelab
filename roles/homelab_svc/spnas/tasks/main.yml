@@ -31,6 +31,10 @@
   include_tasks: bazarr.yml
   tags: bazarr
 
+- name: flaresolverr
+  include_tasks: flaresolverr.yml
+  tags: flaresolverr
+
 - name: monitorrent
   include_tasks: monitorrent.yml
   tags: monitorrent

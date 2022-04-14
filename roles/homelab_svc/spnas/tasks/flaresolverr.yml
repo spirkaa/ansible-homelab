@@ -1,0 +1,23 @@
+---
+- name: flaresolverr - start
+  docker_container:
+    name: flaresolverr
+    image: "{{ flaresolverr_image }}"
+    pull: yes
+    env:
+      TZ: "{{ tz }}"
+      LOG_LEVEL: "info"
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: "none"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.flaresolverr.rule: "HostRegexp(`flaresolverr{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.services.flaresolverr.loadbalancer.server.port: "8191"
+      traefik.http.routers.flaresolverr.entrypoints: "websecure"
+      traefik.http.routers.flaresolverr.tls: "true"
+    restart_policy: unless-stopped
+    state: started
+  tags: flaresolverr
