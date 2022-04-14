@@ -32,6 +32,7 @@
       - { alias: "lidarr", inet: "{{ ip_spnas }}" }
       - { alias: "bazarr", inet: "{{ ip_spnas }}" }
       - { alias: "cloud", inet: "{{ ip_spnas }}" }
+      - { alias: "prowlarr", inet: "{{ ip_spnas }}" }
 
       - { alias: "dev", inet: "{{ ip_dev }}" }
       - { alias: "traefik-dev", inet: "{{ ip_dev }}" }

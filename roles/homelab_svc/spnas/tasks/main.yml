@@ -11,9 +11,9 @@
   include_tasks: jackett.yml
   tags: jackett
 
-- name: monitorrent
-  include_tasks: monitorrent.yml
-  tags: monitorrent
+- name: prowlarr
+  include_tasks: prowlarr.yml
+  tags: prowlarr
 
 - name: sonarr
   include_tasks: sonarr.yml
@@ -30,6 +30,10 @@
 - name: bazarr
   include_tasks: bazarr.yml
   tags: bazarr
+
+- name: monitorrent
+  include_tasks: monitorrent.yml
+  tags: monitorrent
 
 - name: samba
   include_tasks: samba.yml

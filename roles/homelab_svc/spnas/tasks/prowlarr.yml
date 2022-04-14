@@ -1,0 +1,24 @@
+---
+- name: prowlarr - start
+  docker_container:
+    name: prowlarr
+    image: "{{ prowlarr_image }}"
+    pull: yes
+    env:
+      PUID: "{{ puid }}"
+      PGID: "{{ pgid }}"
+      TZ: "{{ tz }}"
+    volumes:
+      - "{{ app_path }}/prowlarr/config:/config"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.prowlarr.rule: "HostRegexp(`prowlarr{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.services.prowlarr.loadbalancer.server.port: "9696"
+      traefik.http.routers.prowlarr.entrypoints: "websecure"
+      traefik.http.routers.prowlarr.tls: "true"
+    restart_policy: unless-stopped
+    state: started
+  tags: prowlarr
