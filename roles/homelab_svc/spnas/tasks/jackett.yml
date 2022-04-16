@@ -30,9 +30,7 @@
     volumes:
       - "{{ app_path }}/jackett/config:/config"
       - "{{ app_path }}/data/downloads:/downloads"
-      - "{{ app_path }}/jackett/Definitions/bitru.yml:/app/Jackett/Definitions/bitru.yml:ro"
       - "{{ app_path }}/jackett/Definitions/eniahd.yml:/app/Jackett/Definitions/eniahd.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/kinozal.yml:/app/Jackett/Definitions/kinozal.yml:ro"
       - "{{ app_path }}/jackett/Definitions/nntt.yml:/app/Jackett/Definitions/nntt.yml:ro"
       - "{{ app_path }}/jackett/Definitions/piratbitl.yml:/app/Jackett/Definitions/piratbitl.yml:ro"
       - "{{ app_path }}/jackett/Definitions/riperam.yml:/app/Jackett/Definitions/riperam.yml:ro"

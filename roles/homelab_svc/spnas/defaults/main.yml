@@ -5,19 +5,19 @@ pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
 delugevpn_image: binhex/arch-delugevpn:2.0.5-1-04
-bazarr_image: linuxserver/bazarr:development-v1.0.4-beta.21-ls309
-jackett_image: linuxserver/jackett:development-v0.20.818-ls414
-lidarr_image: linuxserver/lidarr:nightly-1.0.0.2515-ls128
-radarr_image: linuxserver/radarr:nightly-4.1.0.6164-ls278
-sonarr_image: linuxserver/sonarr:develop-3.0.7.1494-ls270
-prowlarr_image: linuxserver/prowlarr:nightly-0.3.0.1687-ls316
-flaresolverr_image: flaresolverr/flaresolverr:v2.2.2
+jackett_image: linuxserver/jackett:amd64-development-v0.20.876-ls421
+prowlarr_image: linuxserver/prowlarr:nightly-0.3.0.1689-ls317
+sonarr_image: linuxserver/sonarr:develop-3.0.7.1503-ls274
+radarr_image: linuxserver/radarr:nightly-4.2.0.6206-ls287
+lidarr_image: linuxserver/lidarr:nightly-1.0.0.2551-ls130
+bazarr_image: linuxserver/bazarr:development-v1.0.4-beta.22-ls311
 muximux_image: linuxserver/muximux:version-057352e8
+flaresolverr_image: flaresolverr/flaresolverr:v2.2.2
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 nextcloud_db_image: yobasystems/alpine-mariadb:10.6.4
 nextcloud_image: ghcr.io/wonderfall/nextcloud:23
 samba_image: mbentley/timemachine:smb
-minio_image: minio/minio:RELEASE.2022-04-08T19-44-35Z
+minio_image: minio/minio:RELEASE.2022-04-16T04-26-02Z
 
 app_network_name: "{{ inventory__docker_network }}"
 
