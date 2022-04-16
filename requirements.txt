@@ -10,6 +10,7 @@ yamllint
 
 # Python
 pexpect
+python-dateutil
 python-dotenv
 requests
 
