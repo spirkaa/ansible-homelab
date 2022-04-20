@@ -5,14 +5,14 @@ pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
 delugevpn_image: binhex/arch-delugevpn:2.0.5-1-04
-jackett_image: linuxserver/jackett:amd64-development-v0.20.876-ls421
-prowlarr_image: linuxserver/prowlarr:nightly-0.3.0.1689-ls317
-sonarr_image: linuxserver/sonarr:develop-3.0.7.1503-ls274
-radarr_image: linuxserver/radarr:nightly-4.2.0.6206-ls287
+jackett_image: linuxserver/jackett:development-v0.20.929-ls425
+prowlarr_image: linuxserver/prowlarr:nightly-0.3.0.1710-ls322
+sonarr_image: linuxserver/sonarr:develop-3.0.7.1505-ls275
+radarr_image: linuxserver/radarr:nightly-4.2.0.6209-ls288
 lidarr_image: linuxserver/lidarr:nightly-1.0.0.2551-ls130
-bazarr_image: linuxserver/bazarr:development-v1.0.4-beta.22-ls311
+bazarr_image: linuxserver/bazarr:development-v1.0.4-beta.25-ls314
 muximux_image: linuxserver/muximux:version-057352e8
-flaresolverr_image: flaresolverr/flaresolverr:v2.2.2
+flaresolverr_image: flaresolverr/flaresolverr:v2.2.4
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
 nextcloud_db_image: yobasystems/alpine-mariadb:10.6.4
 nextcloud_image: ghcr.io/wonderfall/nextcloud:23
