@@ -1,22 +1,21 @@
 ---
-- name: jackett - create dir
-  file:
-    path: "{{ app_path }}/jackett"
-    state: directory
-    recurse: yes
-  tags: jackett
+# - name: jackett - create dir
+#   file:
+#     path: "{{ app_path }}/jackett"
+#     state: directory
+#     recurse: yes
+#   tags: jackett
 
-- name: jackett - copy files
-  copy:
-    src: "files/{{ item }}"
-    dest: "{{ app_path }}/jackett"
-    mode: 0644
-    directory_mode: 0755
-  loop:
-    - Definitions
-    - openssl.cnf
-  notify: jackett - restart
-  tags: jackett
+# - name: jackett - copy files
+#   copy:
+#     src: "files/{{ item }}"
+#     dest: "{{ app_path }}/jackett"
+#     mode: 0644
+#     directory_mode: 0755
+#   loop:
+#     - Definitions
+#   notify: jackett - restart
+#   tags: jackett
 
 - name: jackett - start
   docker_container:
@@ -30,13 +29,7 @@
     volumes:
       - "{{ app_path }}/jackett/config:/config"
       - "{{ app_path }}/data/downloads:/downloads"
-      - "{{ app_path }}/jackett/Definitions/eniahd.yml:/app/Jackett/Definitions/eniahd.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/nntt.yml:/app/Jackett/Definitions/nntt.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/piratbitl.yml:/app/Jackett/Definitions/piratbitl.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/riperam.yml:/app/Jackett/Definitions/riperam.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/rus-media.yml:/app/Jackett/Definitions/rus-media.yml:ro"
-      - "{{ app_path }}/jackett/Definitions/selezen.yml:/app/Jackett/Definitions/selezen.yml:ro"
-      - "{{ app_path }}/jackett/openssl.cnf:/etc/ssl/openssl.cnf:ro"
+      # - "{{ app_path }}/jackett/Definitions/eniahd.yml:/app/Jackett/Definitions/eniahd.yml:ro"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: yes
