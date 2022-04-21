@@ -4,8 +4,9 @@ ant:latest
 antisamy-markup-formatter:latest
 blueocean:latest
 build-timeout:latest
-cloudbees-folder:latest
+cobertura:latest
 configuration-as-code:latest
+cloudbees-folder:latest
 credentials-binding:latest
 docker-plugin:latest
 docker-workflow:latest
