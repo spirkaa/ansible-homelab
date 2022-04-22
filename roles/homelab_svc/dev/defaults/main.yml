@@ -125,7 +125,8 @@ drone_proto: https
 drone_admin_user: piv
 
 jenkins_home: jenkins/jenkins_home
-jenkins_url: https://jenkins.{{ inventory__site }}/
+jenkins_host: jenkins.{{ inventory__site }}
+jenkins_url: https://{{ jenkins_host }}/
 jenkins_ldap_bind_dn: uid=jenkinssvc,{{ inventory__ldap_sysaccounts_dn }}
 jenkins_ldap_bind_pw: !vault |
           $ANSIBLE_VAULT;1.1;AES256

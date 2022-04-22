@@ -37,7 +37,7 @@ jenkins:
         removeVolumes: true
 unclassified:
   location:
-    adminAddress: "{{ inventory__admin_mail }}"
+    adminAddress: "{{ inventory__smtp_username }}"
     url: "{{ jenkins_url }}"
   giteaServers:
     servers:
@@ -48,6 +48,28 @@ unclassified:
     globalColorMapName: "xterm"
   timestamper:
     allPipelines: true
+  email-ext:
+    adminRequiredForTemplateTesting: false
+    allowUnregisteredEnabled: true
+    charset: "UTF-8"
+    debugMode: false
+    defaultBody: "^${JELLY_SCRIPT,template=\"html-with-health-and-console\"}"
+    defaultContentType: "text/html"
+    defaultRecipients: "jenkins@{{ inventory__site }}"
+    defaultSubject: "[ci] $PROJECT_NAME - build #$BUILD_NUMBER - $BUILD_STATUS"
+    defaultTriggerIds:
+    - "hudson.plugins.emailext.plugins.trigger.AlwaysTrigger"
+    - "hudson.plugins.emailext.plugins.trigger.FailureTrigger"
+    listId: "<{{ jenkins_host }}>"
+    mailAccount:
+      credentialsId: "common-smtp-noreply"
+      smtpHost: "{{ inventory__smtp_host }}"
+      smtpPort: "{{ inventory__smtp_port }}"
+      useTls: true
+    maxAttachmentSize: 20971520
+    maxAttachmentSizeMb: 20
+    precedenceBulk: true
+    watchingEnabled: false
 credentials:
   system:
     domainCredentials:
@@ -101,6 +123,12 @@ credentials:
           scope: GLOBAL
           username: "{{ jenkins_proxmox_api_user }}"
           password: "{{ jenkins_proxmox_api_token }}"
+      - usernamePassword:
+          description: "common-smtp-noreply"
+          id: "common-smtp-noreply"
+          scope: GLOBAL
+          username: "{{ inventory__smtp_username }}"
+          password: "{{ inventory__smtp_password }}"
 jobs:
 # https://jenkinsci.github.io/job-dsl-plugin/#path/organizationFolder
 # https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/integrations/src/test/resources/io/jenkins/plugins/casc/SeedJobTest_withGiteaOrganisation.yml
