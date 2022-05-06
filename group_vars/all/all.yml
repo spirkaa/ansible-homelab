@@ -8,6 +8,9 @@ inventory__docker_puid: 1000
 inventory__docker_pgid: 1000
 inventory__docker_tz: Europe/Moscow
 
+inventory__ssl_certificate: "{{ vault_inventory__ssl_certificate }}"
+inventory__ssl_private_key: "{{ vault_inventory__ssl_private_key }}"
+
 inventory__smtp_host: smtp.devmem.ru
 inventory__smtp_port: 587
 inventory__smtp_username: noreply@{{ inventory__site }}

@@ -4,11 +4,6 @@
     name: "{{ traefik_network_name }}"
   tags: traefik
 
-- name: traefik - load certificate vars
-  include_vars: vars/cert.vault.yml
-  no_log: true
-  tags: traefik
-
 - name: traefik - create dir
   file:
     path: "{{ traefik_cert_path_host }}"
@@ -18,7 +13,7 @@
 
 - name: traefik - copy certificate
   copy:
-    content: "{{ ssl_certificate }}"
+    content: "{{ inventory__ssl_certificate }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.crt"
     mode: 0644
   notify: traefik - restart
@@ -26,7 +21,7 @@
 
 - name: traefik - copy certificate private key
   copy:
-    content: "{{ ssl_private_key }}"
+    content: "{{ inventory__ssl_private_key }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.key"
     mode: 0644
   notify: traefik - restart
