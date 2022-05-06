@@ -53,6 +53,9 @@
           31633338356331653265333038373434333632616237373430643633386466313230306430356339
           6461643865376261653939626430643936366236323831363436
 
+    squid_name: squid
+    squid_image: b4tman/squid:latest
+
   pre_tasks:
     - name: Wait for cloud-init to finish
       wait_for:
@@ -132,4 +135,18 @@
         restart_policy: unless-stopped
         state: started
       no_log: true
+      become: true
+
+    - name: Start {{ squid_name }} container
+      docker_container:
+        name: "{{ squid_name }}"
+        image: "{{ squid_image }}"
+        pull: yes
+        volumes:
+          - "squid-var-cache:/var/cache/squid"
+        dns_servers:
+          - 1.1.1.1
+        network_mode: host
+        restart_policy: unless-stopped
+        state: started
       become: true

@@ -10,6 +10,9 @@
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
       TZ: "{{ tz }}"
+      HTTP_PROXY: "{{ inventory__http_proxy }}"
+      HTTPS_PROXY: "{{ inventory__http_proxy }}"
+      NO_PROXY: ".home.devmem.ru,plex,{{ inventory__http_proxy_no }}"
     volumes:
       - "{{ app_path }}/ombi/config:/config"
     restart_policy: unless-stopped
