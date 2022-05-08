@@ -1,9 +1,31 @@
 ---
-- name: Install packages
+- name: Install package (Debian 10)
   package:
     state: present
     name:
       - rsnapshot
+  when: ansible_distribution == "Debian" and ansible_distribution_version == "10"
+
+- block:
+    - name: Check whether rsnapshot is installed
+      command: dpkg-query -W rsnapshot
+      ignore_errors: True
+      register: rsnapshot_is_installed
+      changed_when: rsnapshot_is_installed.rc != 0
+
+    - block:
+        - name: Download package
+          get_url:
+            url: "{{ rsnapshot_package_url }}"
+            dest: /tmp/{{ rsnapshot_package_url | basename }}
+            checksum: "{{ rsnapshot_checksum }}"
+
+        - name: Install package (Debian 11)
+          apt:
+            deb: /tmp/{{ rsnapshot_package_url | basename }}
+            state: present
+      when: rsnapshot_version not in rsnapshot_is_installed.stdout
+  when: ansible_distribution == "Debian" and ansible_distribution_version == "11"
 
 - name: Copy configuration
   template:

@@ -32,4 +32,5 @@
     path: /lib/systemd/system/pvesr.timer
     regexp: "^OnCalendar=minutely"
     line: "OnCalendar=hourly"
+  when: ansible_distribution == "Debian" and ansible_distribution_version == "10"
   notify: reload pvesr

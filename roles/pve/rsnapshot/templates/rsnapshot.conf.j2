@@ -24,23 +24,17 @@ snapshot_root	{{ snapshot_root }}/{{ inventory_hostname }}
 # EXTERNAL PROGRAM DEPENDENCIES #
 #################################
 
-cmd_cp		/bin/cp
-
-cmd_rm		/bin/rm
-
-cmd_rsync	/usr/bin/rsync
-
-cmd_ssh		/usr/bin/ssh
-
-cmd_logger	/usr/bin/logger
-
-cmd_du		/usr/bin/du
-
+cmd_cp				/bin/cp
+cmd_rm				/bin/rm
+cmd_rsync			/usr/bin/rsync
+cmd_ssh				/usr/bin/ssh
+cmd_logger			/usr/bin/logger
+cmd_du				/usr/bin/du
 cmd_rsnapshot_diff	/usr/bin/rsnapshot-diff
 
 linux_lvm_cmd_lvcreate	/sbin/lvcreate
 linux_lvm_cmd_lvremove	/sbin/lvremove
-linux_lvm_cmd_mount	/bin/mount
+linux_lvm_cmd_mount		/bin/mount
 linux_lvm_cmd_umount	/bin/umount
 
 #########################################
@@ -60,11 +54,8 @@ retain	monthly	12
 ############################################
 
 verbose		2
-
 loglevel	3
-
-logfile	/var/log/rsnapshot.log
-
+logfile		/var/log/rsnapshot.log
 lockfile	/var/run/rsnapshot.pid
 
 ###############################
@@ -72,14 +63,14 @@ lockfile	/var/run/rsnapshot.pid
 ###############################
 
 # PROXMOX
-backup	/etc			localhost/
-backup	/etc/pve		localhost/
-backup	/usr/local/bin		localhost/
-backup	/usr/local/sbin		localhost/
-backup	/var/lib/lxc		localhost/
+backup	/etc					localhost/
+backup	/etc/pve				localhost/
+backup	/usr/local/bin			localhost/
+backup	/usr/local/sbin			localhost/
+backup	/var/lib/lxc			localhost/
 backup	/var/lib/pve-cluster	localhost/
 backup	/var/lib/pve-firewall	localhost/
 backup	/var/lib/pve-manager	localhost/
-backup	/var/spool/cron		localhost/
-backup	/root			localhost/
-backup	/boot			localhost/
+backup	/var/spool/cron			localhost/
+backup	/root					localhost/
+backup	/boot					localhost/
