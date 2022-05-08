@@ -7,23 +7,13 @@
     net_ip: 192.168.20.176
     snmp_syslocation: cml
 
-  #  roles:
-  #  - { role: common/packages, tags: [ha, packages] }
-  #  - { role: spirkaa.zsh_prezto, tags: [ha, zsh] }
-  #  - { role: spirkaa.nano, tags: [ha, nano] }
-  #  - { role: common/motd, tags: [ha, motd] }
-  #  - { role: common/sshd, tags: [ha, sshd] }
-  #  - { role: common/snmp, tags: [ha, snmp] }
-  #  - { role: common/docker, tags: [ha, docker] }
-  #  - { role: portainer_api, tags: [ha, portainer_api] }
-  #  - { role: homelab_svc/traefik, tags: [ha, traefik] }
-
-  tasks:
-    - name: include vars
-      include_vars: roles/homelab_svc/stats/defaults/main.yml
-      no_log: true
-      tags: [ha, homeassistant]
-
-    - name: install homeassistant
-      include_tasks: roles/homelab_svc/stats/tasks/homeassistant.yml
-      tags: [ha, homeassistant]
+  roles:
+    # - { role: common/packages, tags: [ha, packages] }
+    # - { role: spirkaa.zsh_prezto, tags: [ha, zsh] }
+    # - { role: spirkaa.nano, tags: [ha, nano] }
+    # - { role: common/motd, tags: [ha, motd] }
+    # - { role: common/sshd, tags: [ha, sshd] }
+    # - { role: common/snmp, tags: [ha, snmp] }
+    # - { role: common/docker, tags: [ha, docker] }
+    # - { role: portainer_api, tags: [ha, portainer_api] }
+    - { role: homelab_svc/ha, tags: [ha, svc] }

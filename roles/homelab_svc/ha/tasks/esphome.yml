@@ -1,0 +1,13 @@
+---
+- name: esphome - start
+  docker_container:
+    name: esphome
+    image: "{{ esphome_image }}"
+    pull: yes
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ app_path }}/esphome/config:/config"
+    network_mode: host
+    restart_policy: unless-stopped
+    state: started
+  tags: esphome

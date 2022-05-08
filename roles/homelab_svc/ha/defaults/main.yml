@@ -1,0 +1,10 @@
+---
+app_path: /docker/ha
+puid: "{{ inventory__docker_puid }}"
+pgid: "{{ inventory__docker_pgid }}"
+tz: "{{ inventory__docker_tz }}"
+
+esphome_image: esphome/esphome:latest
+barcodebuddy_image: f0rc3/barcodebuddy-docker:latest
+grocy_image: linuxserver/grocy:latest
+homeassistant_image: homeassistant/home-assistant:latest

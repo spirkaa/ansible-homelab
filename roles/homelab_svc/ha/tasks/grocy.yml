@@ -1,30 +1,4 @@
 ---
-- name: esphome - start
-  docker_container:
-    name: esphome
-    image: "{{ esphome_image }}"
-    pull: yes
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "{{ app_path }}/esphome/config:/config"
-    network_mode: host
-    restart_policy: unless-stopped
-    state: started
-  tags: homeassistant
-
-- name: homeassistant - start
-  docker_container:
-    name: homeassistant
-    image: "{{ homeassistant_image }}"
-    pull: yes
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "{{ app_path }}/homeassistant/config:/config"
-    network_mode: host
-    restart_policy: unless-stopped
-    state: started
-  tags: homeassistant
-
 - name: grocy - start
   docker_container:
     name: grocy
@@ -57,4 +31,4 @@
       - "{{ app_path }}/barcodebuddy/config:/config"
     restart_policy: unless-stopped
     state: started
-  tags: barcodebuddy
+  tags: grocy
