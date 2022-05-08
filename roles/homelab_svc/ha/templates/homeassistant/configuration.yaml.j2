@@ -1,0 +1,118 @@
+default_config:
+wake_on_lan:
+media_player:
+yandex_smart_home:
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+yeelight: !include yeelight.yaml
+light: !include lights.yaml
+
+recorder:
+  commit_interval: 30
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 192.168.12.254
+
+discovery:
+  ignore:
+    - yeelight
+    - homekit
+
+influxdb:
+  api_version: 1
+  host: 192.168.12.98
+  port: 8086
+  database: ha_vlublino
+  max_retries: 3
+  default_measurement: state
+  exclude:
+    domains:
+      - automation
+      - device_tracker
+
+telegram_bot:
+  - platform: broadcast
+    api_key: !secret telegram_bot_api_key
+    allowed_chat_ids:
+      - !secret telegram_bot_chat_id
+
+notify:
+  - platform: telegram
+    name: telegram_ilya
+    chat_id: !secret telegram_bot_chat_id
+
+camera:
+  - platform: xiaomi_cloud_map_extractor
+    host: 192.168.20.47
+    token: !secret xiaomi_vacuum_token
+    username: !secret xiaomi_cloud_username
+    password: !secret xiaomi_cloud_password
+    draw: ['all']
+    colors:
+      color_map_outside: [255, 255, 255, 0]
+      color_path: [255, 255, 255]
+    map_transformation:
+      scale: 2
+      trim:
+        top: 28
+        bottom: 22
+        left: 20
+        right: 20
+    sizes:
+      charger_radius: 4
+      vacuum_radius: 6.5
+    attributes:
+      - calibration_points
+      - charger
+      - goto
+      - goto_path
+      - goto_predicted_path
+      - image
+      - is_empty
+      - map_name
+      - no_go_areas
+      - no_mopping_areas
+      - obstacles
+      - path
+      - room_numbers
+      - rooms
+      - vacuum_position
+      - vacuum_room
+      - walls
+      - zones
+    scan_interval:
+      seconds: 10
+    auto_update: true
+
+binary_sensor:
+  - platform: template
+    sensors:
+      bathroom_motion_sensors:
+        friendly_name: Ванная Датчики движения
+        device_class: motion
+        value_template: >-
+          {% raw %}{{ is_state('binary_sensor.lumi_lumi_sensor_motion_3bf39503_ias_zone', 'on')
+          or is_state('binary_sensor.lumi_lumi_sensor_motion_ias_zone', 'on') }}{% endraw %}
+
+weather:
+  - platform: gismeteo
+
+sensor:
+  - platform: gismeteo
+    monitored_conditions:
+      - weather
+      - temperature
+      - wind_speed
+      - wind_bearing
+      - humidity
+      - pressure
+      - clouds
+      - rain
+      - snow
+      - storm
+      - geomagnetic

@@ -1,4 +1,25 @@
 ---
+- name: homeassistant - create dir
+  file:
+    path: "{{ homeassistant_config_path }}"
+    state: directory
+    recurse: yes
+  tags: homeassistant
+
+- name: homeassistant - copy files
+  template:
+    src: templates/homeassistant/{{ item.src }}
+    dest: "{{ homeassistant_config_path }}/{{ item.dest }}"
+    mode: 0644
+  loop:
+    - { src: configuration.yaml.j2, dest: configuration.yaml }
+    - { src: groups.yaml.j2, dest: groups.yaml }
+    - { src: lights.yaml.j2, dest: lights.yaml }
+    - { src: secrets.yaml.j2, dest: secrets.yaml }
+    - { src: yeelight.yaml.j2, dest: yeelight.yaml }
+  notify: homeassistant - restart
+  tags: homeassistant
+
 - name: homeassistant - start
   docker_container:
     name: homeassistant
@@ -6,8 +27,9 @@
     pull: yes
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "{{ app_path }}/homeassistant/config:/config"
+      - "{{ homeassistant_config_path }}:/config"
     network_mode: host
     restart_policy: unless-stopped
     state: started
+  register: homeassistant_start
   tags: homeassistant

@@ -1,0 +1,32 @@
+- platform: group
+  name: Весь свет
+  entities:
+    - light.gostinaia
+    - light.gostinaia_nightlight
+    - light.kukhnia
+    - light.kukhnia_nightlight
+    - light.spalnia
+    - light.spalnia_nightlight
+    - light.prikhozhaia
+    - light.tualet
+    - light.vannaia
+    - light.zerkalo
+    - light.torsher
+    - light.nastolnaia_lampa
+    - light.svetilnik
+    - light.mi_control_hub_light
+- platform: group
+  name: Прихожая
+  entities:
+    - light.prikhozhaia_1
+    - light.prikhozhaia_2
+    - light.prikhozhaia_3
+- platform: group
+  name: Светильник
+  entities:
+    - light.lampochka_1
+    - light.lampochka_2
+    - light.lampochka_3
+- platform: switch
+  name: Зеркало
+  entity_id: switch.sw1_5448e64fa04f
