@@ -31,6 +31,7 @@ scrape_configs:
       - targets: ['rp.{{ inventory__homelab_domain }}']
       - targets: ['spnas.{{ inventory__homelab_domain }}']
       - targets: ['stats.{{ inventory__homelab_domain }}']
+      - targets: ['ha.{{ inventory__homelab_domain }}']
 
   - job_name: 'traefik'
     scheme: https
@@ -43,6 +44,7 @@ scrape_configs:
       - targets: ['traefik-projects.{{ inventory__homelab_domain }}']
       - targets: ['traefik-spnas.{{ inventory__homelab_domain }}']
       - targets: ['traefik-stats.{{ inventory__homelab_domain }}']
+      - targets: ['traefik-ha.{{ inventory__homelab_domain }}']
 
   - job_name: 'drone'
     scheme: https
