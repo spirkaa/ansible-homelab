@@ -5,6 +5,11 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '60'))
     parallelsAlwaysFailFast()
     disableConcurrentBuilds()
+    skipDefaultCheckout true
+  }
+
+  triggers {
+    cron('H 9 * * 6')
   }
 
   environment {
@@ -22,7 +27,27 @@ pipeline {
   }
 
   stages {
+    stage('Checkout') {
+      when {
+        beforeAgent true
+        anyOf {
+          triggeredBy cause: 'UserIdCause'
+          triggeredBy 'TimerTrigger'
+        }
+      }
+      steps {
+        checkout scm
+      }
+    }
+
     stage('Run playbook') {
+      when {
+        beforeAgent true
+        anyOf {
+          triggeredBy cause: 'UserIdCause'
+          triggeredBy 'TimerTrigger'
+        }
+      }
       agent {
         docker {
           image env.ANSIBLE_IMAGE
@@ -44,16 +69,15 @@ pipeline {
           extras: "${params.ANSIBLE_EXTRAS}"
         )
       }
-    }
-  }
-
-  post {
-    always {
-      emailext(
-        to: '$DEFAULT_RECIPIENTS',
-        subject: '$DEFAULT_SUBJECT',
-        body: '$DEFAULT_CONTENT'
-      )
+      post {
+        always {
+          emailext(
+            to: '$DEFAULT_RECIPIENTS',
+            subject: '$DEFAULT_SUBJECT',
+            body: '$DEFAULT_CONTENT'
+          )
+        }
+      }
     }
   }
 }
