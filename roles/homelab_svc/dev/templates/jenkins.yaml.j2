@@ -74,11 +74,13 @@ credentials:
   system:
     domainCredentials:
     - credentials:
+      {% for org in jenkins_gitea_orgs -%}
       - giteaAccessToken:
-          description: "gitea-piv-token"
-          id: "gitea-piv-token"
+          description: "{{ org.creds_id }}"
+          id: "{{ org.creds_id }}"
           scope: GLOBAL
-          token: "{{ jenkins_gitea_token }}"
+          token: "{{ org.token }}"
+      {% endfor -%}
       - basicSSHUserPrivateKey:
           description: "jenkins-ssh-key"
           id: "jenkins-ssh-key"
@@ -132,15 +134,15 @@ credentials:
 jobs:
 # https://jenkinsci.github.io/job-dsl-plugin/#path/organizationFolder
 # https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/integrations/src/test/resources/io/jenkins/plugins/casc/SeedJobTest_withGiteaOrganisation.yml
+  {% for org in jenkins_gitea_orgs -%}
   - script: >
-      organizationFolder('piv') {
-        description('Personal Gitea Repos')
+      organizationFolder("{{ org.name }}") {
+        description("{{ org.desc }}")
         organizations {
           gitea {
             serverUrl("{{ gitea_root_url }}")
-            repoOwner("piv")
-            credentialsId("gitea-piv-token")
-
+            repoOwner("{{ org.name }}")
+            credentialsId("{{ org.creds_id }}")
             traits {
               giteaExcludeArchivedRepositories {}
               giteaTagDiscovery {}
@@ -157,15 +159,16 @@ jobs:
                 }
               }
               giteaWebhookRegistration {
-                mode('ITEM')
+                mode("ITEM")
               }
             }
           }
         }
         configure { node ->
-            node / triggers / 'com.cloudbees.hudson.plugins.folder.computed.PeriodicFolderTrigger' {
-              spec('H H/4 * * *')
-              interval(86400000)
-            }
+          node / triggers / "com.cloudbees.hudson.plugins.folder.computed.PeriodicFolderTrigger" {
+            spec("H H/4 * * *")
+            interval(86400000)
           }
+        }
       }
+  {% endfor -%}
