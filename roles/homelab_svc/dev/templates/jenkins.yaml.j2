@@ -44,6 +44,28 @@ unclassified:
     - displayName: "Gitea"
       manageHooks: false
       serverUrl: "{{ gitea_root_url }}"
+  globalLibraries:
+    libraries:
+    - defaultVersion: "main"
+      implicit: true
+      name: "jenkins-tools"
+      retriever:
+        modernSCM:
+          scm:
+            gitea:
+              credentialsId: "gitea-user"
+              id: "jenkins-tools"
+              repoOwner: "projects"
+              repository: "jenkins-tools"
+              serverUrl: "{{ gitea_root_url }}"
+              traits:
+              - giteaBranchDiscovery:
+                  strategyId: 1
+              - giteaPullRequestDiscovery:
+                  strategyId: 1
+              - giteaForkDiscovery:
+                  strategyId: 1
+                  trust: "giteaTrustContributors"
   ansiColorBuildWrapper:
     globalColorMapName: "xterm"
   timestamper:
