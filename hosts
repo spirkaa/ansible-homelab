@@ -12,6 +12,7 @@ ubnt-erx-cml
 spsrv
 spmaxi
 spmini
+sppve
 
 [proxmox:vars]
 ansible_user=root
