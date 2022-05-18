@@ -1,0 +1,7 @@
+---
+snmp_extend_scripts_path: /etc/snmp/extend
+snmp_extend_scripts:
+  - https://raw.githubusercontent.com/librenms/librenms-agent/master/agent-local/proxmox
+  - https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro
+  - https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/smart
+  - https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/ups-nut.sh

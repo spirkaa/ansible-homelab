@@ -1,0 +1,3 @@
+Cmnd_Alias         C_SNMP=/etc/snmp/extend/proxmox, /bin/cat /sys/devices/virtual/dmi/id/product_serial
+Defaults!C_SNMP    !syslog, !pam_session
+ALL                ALL=(root) NOPASSWD: C_SNMP

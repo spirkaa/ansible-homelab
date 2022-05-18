@@ -1,3 +1,0 @@
-Cmnd_Alias         C_SNMP=/etc/snmp/extend/proxmox
-Defaults!C_SNMP    !syslog, !pam_session
-ALL                ALL=(root) NOPASSWD: C_SNMP

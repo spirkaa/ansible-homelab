@@ -19,7 +19,7 @@
     - { role: pve/rsnapshot, tags: [pve, pve_rsnapshot] }
     - { role: pve/telegraf, tags: [pve, pve_telegraf] }
     - { role: common/snmp, tags: [pve, pve_snmp] }
-    - { role: pve/snmp, tags: [pve, pve_snmp] }
+    - { role: pve/snmp_extend, tags: [pve, pve_snmp] }
     - { role: pve/smartd, tags: [pve, pve_smartd] }
     - { role: pve/storage, tags: [pve, pve_storage] }
     - { role: common/wireguard, tags: [pve, pve_wireguard] }
