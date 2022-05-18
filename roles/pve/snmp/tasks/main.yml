@@ -42,6 +42,6 @@
       extend proxmox /usr/bin/sudo /etc/snmp/extend/proxmox
       extend smart /etc/snmp/extend/smart
       {% if inventory_hostname == "spsrv" %}
-      extend ups-nut /etc/snmp/extend/ups-nut.sh
+      extend ups-nut /etc/snmp/extend/ups-nut.sh homelabups
       {% endif %}
   notify: restart snmpd

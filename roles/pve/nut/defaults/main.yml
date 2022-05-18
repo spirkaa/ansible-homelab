@@ -1,0 +1,6 @@
+---
+nut_config_path: /etc/nut
+nut_services:
+  - nut-driver
+  - nut-server
+  - nut-monitor
