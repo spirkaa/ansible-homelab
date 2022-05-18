@@ -24,14 +24,14 @@
 
     - name: Create config dir
       file:
-        path: '{{ rclone_config_location | dirname }}'
+        path: "{{ rclone_config_location | dirname }}"
         state: directory
         mode: 0700
 
     - name: Copy config
       template:
         src: rclone.conf.j2
-        dest: '{{ rclone_config_location }}'
+        dest: "{{ rclone_config_location }}"
         mode: 0600
         force: no
       no_log: true
