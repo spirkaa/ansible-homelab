@@ -38,11 +38,17 @@
   hosts: ct-template
   gather_facts: yes
 
+  pre_tasks:
+    - name: set timezone
+      community.general.timezone:
+        name: Europe/Moscow
+
   roles:
     - { role: common/packages }
     - { role: spirkaa.zsh_prezto }
     - { role: spirkaa.nano }
     - { role: common/motd }
+    - { role: common/sshd }
     - { role: common/docker }
 
   tasks:
@@ -57,7 +63,7 @@
 
     - name: cleanup packages
       ansible.builtin.shell: >
-        && apt-get clean -y \
+        apt-get clean -y \
         && rm -rf /var/lib/apt/lists/*
       changed_when: true
 
