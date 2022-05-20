@@ -1,13 +1,13 @@
 ---
 - name: jenkins - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/{{ jenkins_home }}/casc_configs"
     state: directory
     recurse: yes
   tags: jenkins
 
 - name: jenkins - copy files
-  template:
+  ansible.builtin.template:
     src: templates/{{ item.src }}
     dest: "{{ app_path }}/{{ item.dest }}"
     mode: 0644
@@ -17,8 +17,15 @@
   no_log: true
   tags: jenkins
 
+- name: jenkins - log into registry
+  community.docker.docker_login:
+    registry_url: "{{ gitea_domain }}"
+    username: "{{ jenkins_gitea_user }}"
+    password: "{{ jenkins_gitea_user_password }}"
+    reauthorize: yes
+
 - name: jenkins - start
-  docker_container:
+  community.docker.docker_container:
     name: jenkins
     image: "{{ jenkins_image }}"
     pull: yes
