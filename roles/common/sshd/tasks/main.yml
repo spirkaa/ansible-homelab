@@ -1,15 +1,16 @@
 ---
-- name: Set authorized keys
-  authorized_key:
+- name: Add authorized keys
+  ansible.posix.authorized_key:
     user: "{{ sshd_authorized_keys_user }}"
     state: present
     key: "{{ item }}"
   loop: "{{ sshd_authorized_keys }}"
   no_log: true
   notify: restart sshd
+  when: sshd_authorized_keys_add
 
 - name: Set sshd_config params
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
