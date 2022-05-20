@@ -1,6 +1,0 @@
----
-- name: Get resource pools list from Proxmox
-  command: >
-    pvesh get /pools  --output-format yaml
-  register: pool_list
-  changed_when: false

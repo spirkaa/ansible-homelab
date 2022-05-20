@@ -1,0 +1,111 @@
+---
+- name: bootstrap ct
+  hosts: sppve
+  gather_facts: no
+
+  vars:
+    template_storage_name: spsrv-proxmox
+    template_name: ubuntu-22.04-standard_22.04-1_amd64.tar.zst
+    template_storage_path: /mnt/pve/{{ template_storage_name }}/template/cache/
+    template_name_custom: ubuntu-22.04-docker.tar.zst
+
+    resource_type: ct
+    ct_template: "{{ template_storage_name }}:vztmpl/{{ template_name }}"
+    vmid: 5551
+    hostname: ct-template
+    net_ip: 192.168.13.55
+
+  pre_tasks:
+    - name: download template
+      ansible.builtin.command: >
+        pveam download {{ template_storage_name }} {{ template_name }}
+      register: _template_download_result
+      changed_when: "'finished' and not 'no need to download' in _template_download_result.stdout"
+
+  roles:
+    - pve_manager
+
+  tasks:
+    - name: set facts
+      ansible.builtin.set_fact:
+        vmid: "{{ vmid }}"
+        hostname: "{{ hostname }}"
+        template_storage_path: "{{ template_storage_path }}"
+        template_name_custom: "{{ template_name_custom }}"
+
+
+- name: provision ct
+  hosts: ct-template
+  gather_facts: yes
+
+  roles:
+    - { role: common/packages }
+    - { role: spirkaa.zsh_prezto }
+    - { role: spirkaa.nano }
+    - { role: common/motd }
+    - { role: common/docker }
+
+  tasks:
+    - name: flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: upgrade packages
+      ansible.builtin.package:
+        update_cache: yes
+        state: latest
+        name: "*"
+
+    - name: cleanup packages
+      ansible.builtin.shell: >
+        && apt-get clean -y \
+        && rm -rf /var/lib/apt/lists/*
+      changed_when: true
+
+    - name: reboot
+      ansible.builtin.reboot:
+
+
+- name: create template from ct
+  hosts: sppve
+  gather_facts: no
+
+  tasks:
+    - name: "{{ hostname }} - shutdown"
+      ansible.builtin.command: >
+        pct shutdown {{ vmid }}
+      changed_when: true
+
+    - name: "{{ hostname }} - delete net0"
+      ansible.builtin.command: >
+        pct set {{ vmid }} --delete net0
+      changed_when: true
+
+    - name: "{{ hostname }} - create backup"
+      ansible.builtin.command: >
+        vzdump {{ vmid }} --mode stop --compress zstd --dumpdir {{ template_storage_path }}
+      changed_when: true
+
+    - name: "{{ hostname }} - destroy ct"
+      ansible.builtin.command: >
+        pct destroy {{ vmid }}
+      changed_when: true
+
+    - name: "{{ hostname }} - get backup files"
+      ansible.builtin.shell: >
+        ls {{ template_storage_path }} | grep {{ vmid }}
+      args:
+        warn: no
+      register: _backup_files
+      failed_when: _backup_files.rc == 2
+      changed_when: false
+
+    - name: "{{ hostname }} - rename backup archive"
+      ansible.builtin.command: >
+        mv {{ template_storage_path }}{{ _backup_files.stdout_lines[-1] }} {{ template_storage_path }}{{ template_name_custom }}
+      register: _backup
+      changed_when: true
+
+    - name: "{{ hostname }} - remove backup log"
+      ansible.builtin.file:
+        path: "{{ template_storage_path }}{{ _backup_files.stdout_lines[-2] }}"
+        state: absent

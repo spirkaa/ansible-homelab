@@ -1,15 +1,20 @@
 ---
-- include_tasks: util_pool_list.yml
+- name: include util_resource_facts.yml
+  ansible.builtin.include_tasks: util_resources_facts.yml
 
 - name: Create resource pool
-  command: >
-    pvesh create /pools -poolid "{{ resourse_pool }}" --comment "{{ resourse_pool_comment }}"
-  when: resourse_pool not in pool_list.stdout
+  ansible.builtin.command: >
+    pvesh create /pools -poolid "{{ resourse_pool }}"
+      --comment "{{ resourse_pool_comment }}"
+  when: not pve_pool_exists
 
-- include_tasks: create_vm.yml
+- name: include create_vm.yml
+  ansible.builtin.include_tasks: create_vm.yml
   when: resource_type == "vm"
 
-- include_tasks: create_ct.yml
+- name: include create_ct.yml
+  ansible.builtin.include_tasks: create_ct.yml
   when: resource_type == "ct"
 
-- include_tasks: state_start.yml
+- name: include state_start.yml
+  ansible.builtin.include_tasks: state_start.yml

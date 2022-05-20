@@ -4,29 +4,28 @@
 
   vars:
     template_image_url:
-      - https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img
+      - https://cloud-images.ubuntu.com/releases/jammy/release/ubuntu-22.04-server-cloudimg-amd64.img
       - https://cdimage.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2
-      - https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2111.qcow2
     template_image_path: /mnt/pve/spsrv-proxmox/template/qcow2
 
   tasks:
     - block:
         - name: template image - download
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ item }}"
             dest: "{{ template_image_path }}/{{ item | basename }}"
             force: yes
           loop: "{{ template_image_url }}"
 
         - name: template image - install qemu-guest-agent
-          command: >
+          ansible.builtin.command: >
             virt-customize -a {{ template_image_path }}/{{ item | basename }}
               --install qemu-guest-agent
           changed_when: true
           loop: "{{ template_image_url }}"
 
         - name: template image - reset machine-id
-          command: >
+          ansible.builtin.command: >
             virt-customize -a {{ template_image_path }}/{{ item | basename }}
               --run-command "echo -n > /etc/machine-id"
           changed_when: true

@@ -1,23 +1,25 @@
 ---
-- include_tasks: util_vm_status.yml
+- name: include util_resource_facts.yml
+  ansible.builtin.include_tasks: util_resources_facts.yml
 
-- block:
-  - name: "{{ hostname }} - Start"
-    command: >
-      qm start {{ vmid }}
-    when: >
-      resource_type == 'vm' and
-      'running' not in vm_status.stdout
+- name: start
+  block:
+    - name: "{{ hostname }} - Start"
+      ansible.builtin.command: >
+        qm start {{ vmid }}
+      changed_when: true
+      when: resource_type == 'vm'
 
-  - name: "{{ hostname }} - Start"
-    command: >
-      pct start {{ vmid }}
-    when: >
-      resource_type == 'ct' and
-      'running' not in ct_status.stdout
+    - name: "{{ hostname }} - Start"
+      ansible.builtin.command: >
+        pct start {{ vmid }}
+      changed_when: true
+      when: resource_type == 'ct'
 
-  - name: "{{ hostname }} - Wait for SSH port become available"
-    wait_for:
-      host: "{{ net_ip }}"
-      port: 22
-  when: vmid_string in vm_list.stdout
+    - name: "{{ hostname }} - Wait for SSH port become available"
+      ansible.builtin.wait_for:
+        host: "{{ net_ip }}"
+        port: 22
+  when: >
+    pve_resource_exists and
+    pve_resource_exists[0].status != 'running'

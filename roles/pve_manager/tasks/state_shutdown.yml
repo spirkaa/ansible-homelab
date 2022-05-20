@@ -1,18 +1,20 @@
 ---
-- include_tasks: util_vm_status.yml
+- name: include util_resource_facts.yml
+  ansible.builtin.include_tasks: util_resources_facts.yml
 
-- block:
-  - name: "{{ hostname }} - Shutdown"
-    shell: >
-      qm shutdown {{ vmid }} && qm wait {{ vmid }} -timeout 60
-    when: >
-      resource_type == 'vm' and
-      'stopped' not in vm_status.stdout
+- name: shutdown
+  block:
+    - name: "{{ hostname }} - Shutdown"
+      ansible.builtin.shell: >
+        qm shutdown {{ vmid }} && qm wait {{ vmid }} -timeout 60
+      changed_when: true
+      when: resource_type == 'vm'
 
-  - name: "{{ hostname }} - Shutdown"
-    shell: >
-      pct shutdown {{ vmid }}
-    when: >
-      resource_type == 'ct' and
-      'stopped' not in ct_status.stdout
-  when: vmid_string in vm_list.stdout
+    - name: "{{ hostname }} - Shutdown"
+      ansible.builtin.shell: >
+        pct shutdown {{ vmid }}
+      changed_when: true
+      when: resource_type == 'ct'
+  when: >
+    pve_resource_exists and
+    pve_resource_exists[0].status != 'stopped'

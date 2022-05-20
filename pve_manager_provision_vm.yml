@@ -12,3 +12,17 @@
 
   roles:
     - pve_manager
+
+
+- hosts: test-vm
+  gather_facts: yes
+
+  pre_tasks:
+    - name: Wait for cloud-init to finish
+      ansible.builtin.wait_for:
+        path: /var/lib/cloud/instance/boot-finished
+
+  tasks:
+    - name: print facts
+      ansible.builtin.debug:
+        var: ansible_facts

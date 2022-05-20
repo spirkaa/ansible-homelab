@@ -3,15 +3,13 @@
 resource_type: vm
 
 vmid: 5500
-vmid_string: "vmid: {{ vmid }}"
 hostname: tpl
 net_ip: 192.168.13.55
 
-vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-20.04-server-cloudimg-amd64.img
+vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-22.04-server-cloudimg-amd64.img
 vm_ostype: l26
 
-ct_image: spsrv-proxmox:vztmpl/centos-7.7-docker-20200425.tar.gz
-ct_ostype: centos
+ct_template: spsrv-proxmox:vztmpl/ubuntu-22.04-docker.tar.zst
 
 resourse_pool: ansible
 resourse_pool_comment: Created with a little help of Ansible
@@ -31,9 +29,6 @@ net_domain: "{{ inventory__homelab_domain }}"
 
 # Файл с ключами должен находиться на сервере Proxmox
 ssh_keys: ~/.ssh/authorized_keys
-
-# Значение зашифровано с помощью команды:
-# ansible-vault encrypt_string --vault-password-file ~/.passwd 'P@SsW0rD' --name 'vm_user_pass'
 user_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           34643634393431303738356139303236326233363239383033663765303963373665373531363164

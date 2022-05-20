@@ -1,17 +1,28 @@
 ---
-- hosts: spsrv
+- hosts: sppve
   gather_facts: no
 
   vars:
     resource_type: ct
+    resourse_pool: test
+    resourse_pool_comment: test
     vmid: 5501
     hostname: test-ct
     net_ip: 192.168.13.50
     ct_other_options: >
       --swap 0
     lxc_options:
-      - "lxc.cgroup.devices.allow: c 226:* rwm"
+      - "lxc.cgroup2.devices.allow: c 226:* rwm"
       - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
 
   roles:
     - pve_manager
+
+
+- hosts: test-ct
+  gather_facts: yes
+
+  tasks:
+    - name: print facts
+      ansible.builtin.debug:
+        var: ansible_facts

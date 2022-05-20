@@ -1,44 +1,55 @@
 ---
-- include_tasks: util_vm_list.yml
+- name: "{{ hostname }} - Create ct"
+  block:
+    - name: "{{ hostname }} - Create"
+      ansible.builtin.command: >
+        pct create {{ vmid }} {{ ct_template }}
+          --pool {{ resourse_pool }}
+          --hostname {{ hostname }}
+          --description "{{ comment }}"
+          --cores {{ cores }}
+          --memory {{ mem }}
+          --nameserver {{ net_dns }}
+          --net0 name=eth0,bridge={{ net_br }},gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }},tag={{ net_vlan }},firewall=0
+          --rootfs {{ disk_storage }}:{{ disk_size }}
+          --password {{ user_pass }}
+          --searchdomain {{ net_domain }}
+          --ssh-public-keys {{ ssh_keys }}
+          {{ ct_other_options | default('', true) }}
+      changed_when: true
+      no_log: true
 
-- block:
-  - name: "{{ hostname }} - Create"
-    command: >
-      pct create {{ vmid }} {{ ct_image }}
-        --pool {{ resourse_pool }}
-        --hostname {{ hostname }}
-        --description "{{ comment }}"
-        --cores {{ cores }}
-        --memory {{ mem }}
-        --nameserver {{ net_dns }}
-        --net0 name=eth0,bridge={{ net_br }},gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }},tag={{ net_vlan }}
-        --ostype {{ ct_ostype }}
-        --password {{ user_pass }}
-        --rootfs {{ disk_storage }}:{{ disk_size }}
-        --searchdomain {{ net_domain }}
-        --ssh-public-keys {{ ssh_keys }}
-        {{ ct_other_options | default('', true) }}
-    no_log: true
+    - name: "{{ hostname }} - Allow Docker"
+      ansible.builtin.shell: >
+        echo "lxc.apparmor.profile: unconfined\nlxc.cap.drop: \nlxc.cgroup2.devices.allow: a" >> /etc/pve/lxc/{{ vmid }}.conf
+      changed_when: true
 
-  - name: "{{ hostname }} - Allow Docker"
-    shell: >
-      echo "lxc.apparmor.profile: unconfined\nlxc.cap.drop: \nlxc.cgroup.devices.allow: a" >> /etc/pve/lxc/{{ vmid }}.conf
+    - name: "{{ hostname }} - lxc options"
+      block:
+        - name: "{{ hostname }} - Copy config to tmp"
+          ansible.builtin.copy:
+            src: /etc/pve/lxc/{{ vmid }}.conf
+            dest: /tmp/{{ vmid }}.conf
+            remote_src: yes
+            owner: root
+            group: www-data
+            mode: preserve
 
-  - block:
-    - name: "{{ hostname }} - Copy config to tmp"
-      command: >
-        cp /etc/pve/lxc/{{ vmid }}.conf /tmp/{{ vmid }}.conf
+        - name: "{{ hostname }} - Add lxc options"
+          ansible.builtin.lineinfile:
+            path: "/tmp/{{ vmid }}.conf"
+            line: "{{ lxc_options_item }}"
+          loop_control:
+            loop_var: lxc_options_item
+          loop: "{{ lxc_options }}"
 
-    - name: "{{ hostname }} - Add lxc options"
-      lineinfile:
-        path: "/tmp/{{ vmid }}.conf"
-        line: "{{ lxc_options_item }}"
-      loop_control:
-        loop_var: lxc_options_item
-      loop: "{{ lxc_options }}"
-
-    - name: "{{ hostname }} - Copy config back"
-      command: >
-        cp /tmp/{{ vmid }}.conf /etc/pve/lxc/{{ vmid }}.conf
-    when: lxc_options is defined
-  when: vmid_string not in vm_list.stdout
+        - name: "{{ hostname }} - Copy config back"
+          ansible.builtin.copy:
+            src: /tmp/{{ vmid }}.conf
+            dest: /etc/pve/lxc/{{ vmid }}.conf
+            remote_src: yes
+            owner: root
+            group: www-data
+            mode: preserve
+      when: lxc_options is defined
+  when: not pve_resource_exists

@@ -1,9 +1,8 @@
 ---
-- include_tasks: util_vm_list.yml
-
-- block:
+- name: "{{ hostname }} - Create vm"
+  block:
     - name: "{{ hostname }} - Create"
-      command: >
+      ansible.builtin.command: >
         qm create {{ vmid }}
           --pool {{ resourse_pool }}
           --ostype {{ vm_ostype }}
@@ -18,19 +17,22 @@
           --searchdomain {{ net_domain }}
           --sshkeys "{{ ssh_keys }}"
           {{ vm_other_options | default('', true) }}
+      changed_when: true
 
     - name: "{{ hostname }} - Set default user password"
-      command: >
+      ansible.builtin.command: >
         qm set {{ vmid }}
           --cipassword {{ user_pass }}
+      changed_when: true
       no_log: true
 
     - name: "{{ hostname }} - Import qcow2 image"
-      command: >
+      ansible.builtin.command: >
         qm importdisk {{ vmid }} {{ vm_image }} {{ disk_storage }}
+      changed_when: true
 
     - name: "{{ hostname }} - Confige hardware"
-      command: >
+      ansible.builtin.command: >
         qm set {{ vmid }}
           --scsihw virtio-scsi-pci
           --scsi0 {{ disk_storage }}:vm-{{ vmid }}-disk-0,discard=on
@@ -39,8 +41,10 @@
           --boot c
           --serial0 socket
           --vga serial0
+      changed_when: true
 
     - name: "{{ hostname }} - Resize disk"
-      command: >
+      ansible.builtin.command: >
         qm resize {{ vmid }} scsi0 {{ disk_size }}G
-  when: vmid_string not in vm_list.stdout
+      changed_when: true
+  when: not pve_resource_exists

@@ -1,0 +1,19 @@
+---
+- name: Get resources
+  ansible.builtin.command: >
+    pvesh get /cluster/resources --type vm --output-format yaml
+  register: _resources
+  changed_when: false
+
+- name: Get pools
+  ansible.builtin.command: >
+    pvesh get /pools --output-format yaml
+  register: _pools
+  changed_when: false
+
+- name: Set facts (resources and pools)
+  ansible.builtin.set_fact:
+    pve_resource_exists: "{{ _resources.stdout | from_yaml | selectattr('vmid', 'equalto', vmid|int) | list }}"
+    pve_resources_list: "{{ _resources.stdout | from_yaml }}"
+    pve_pool_exists: "{{ _pools.stdout | from_yaml | selectattr('poolid', 'equalto', resourse_pool) | list }}"
+    pve_pools_list: "{{ _pools.stdout | from_yaml }}"
