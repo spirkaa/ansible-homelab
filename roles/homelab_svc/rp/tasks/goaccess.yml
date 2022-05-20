@@ -14,5 +14,5 @@
     volumes:
       - "{{ app_path }}/npm/app/data/logs:/opt/log"
     restart_policy: unless-stopped
-    state: absent
+    state: started
   tags: goaccess

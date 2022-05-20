@@ -3,6 +3,6 @@
   include_tasks: npm.yml
   tags: npm
 
-- name: goaccess
-  include_tasks: goaccess.yml
-  tags: goaccess
+# - name: goaccess
+#   include_tasks: goaccess.yml
+#   tags: goaccess

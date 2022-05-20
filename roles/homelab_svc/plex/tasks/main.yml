@@ -15,6 +15,6 @@
   include_tasks: ombi.yml
   tags: ombi
 
-- name: airvideohd
-  include_tasks: airvideohd.yml
-  tags: airvideohd
+# - name: airvideohd
+#   include_tasks: airvideohd.yml
+#   tags: airvideohd

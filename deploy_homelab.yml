@@ -5,7 +5,7 @@
 - import_playbook: deploy_homelab_set_static_dns.yml
 - import_playbook: deploy_homelab_svc_mgmt.yml
 - import_playbook: deploy_homelab_manage_users.yml
-- import_playbook: deploy_homelab_svc_pihole.yml
+# - import_playbook: deploy_homelab_svc_pihole.yml
 - import_playbook: deploy_homelab_svc_rp.yml
 - import_playbook: deploy_homelab_svc_mail.yml
 - import_playbook: deploy_homelab_svc_stats.yml

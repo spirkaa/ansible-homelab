@@ -1,23 +1,23 @@
 ---
-- name: code
-  include_tasks: code.yml
-  tags: code
-
 - name: gitea
   include_tasks: gitea.yml
   tags: gitea
-
-- name: drone
-  include_tasks: drone.yml
-  tags: drone
 
 - name: jenkins
   include_tasks: jenkins.yml
   tags: jenkins
 
-- name: registry
-  include_tasks: registry.yml
-  tags: registry
+# - name: drone
+#   include_tasks: drone.yml
+#   tags: drone
+
+# - name: registry
+#   include_tasks: registry.yml
+#   tags: registry
+
+# - name: code
+#   include_tasks: code.yml
+#   tags: code
 
 - name: gitea - configure freeipa
   include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
