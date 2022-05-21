@@ -1,25 +1,25 @@
 ---
 - name: snapraid - check if installed
-  command: dpkg-query -W snapraid
+  ansible.builtin.command: dpkg-query -W snapraid
   ignore_errors: True
   register: snapraid_is_installed
   changed_when: snapraid_is_installed.rc != 0
 
 - block:
     - name: snapraid - copy package
-      copy:
+      ansible.builtin.copy:
         src: files/{{ snapraid_package_name }}
         dest: /tmp
         mode: 0644
 
     - name: snapraid - install package
-      apt:
+      ansible.builtin.apt:
         deb: /tmp/{{ snapraid_package_name }}
         state: present
   when: snapraid_version not in snapraid_is_installed.stdout
 
 - name: snapraid - copy configuration
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: 0664
@@ -27,13 +27,13 @@
     - { src: snapraid.conf.j2, dest: /etc/snapraid.conf }
 
 - name: snapraid-runner - clone repo
-  git:
+  ansible.builtin.git:
     repo: "{{ snapraid_run_repo }}"
     dest: "{{ snapraid_run_dest }}"
     version: "{{ snapraid_run_version }}"
 
 - name: snapraid-runner - copy configuration
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: 0664
@@ -41,7 +41,7 @@
     - { src: snapraid-runner.conf.j2, dest: "{{ snapraid_run_conf }}" }
 
 - name: snapraid-runner - setup cron job
-  cron:
+  ansible.builtin.cron:
     user: "{{ item.user | default('root') }}"
     job: "{{ item.job }}"
     name: "{{ item.name }}"

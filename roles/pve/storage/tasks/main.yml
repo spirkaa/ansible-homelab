@@ -1,14 +1,15 @@
 ---
-- block:
-    - name: Mount point tasks
-      include_tasks: mount.yml
+- name: storage tasks
+  block:
+    - name: mount
+      ansible.builtin.include_tasks: mount.yml
 
-    - name: MergerFS tasks
-      include_tasks: mergerfs.yml
+    - name: mergerfs
+      ansible.builtin.include_tasks: mergerfs.yml
 
-    - name: Snapraid tasks
-      include_tasks: snapraid.yml
+    - name: snapraid
+      ansible.builtin.include_tasks: snapraid.yml
 
-    - name: NFS tasks
-      include_tasks: nfs.yml
+    - name: nfs
+      ansible.builtin.include_tasks: nfs.yml
   when: inventory_hostname == "spsrv"

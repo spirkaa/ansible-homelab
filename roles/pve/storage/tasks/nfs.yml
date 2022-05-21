@@ -1,20 +1,20 @@
 ---
 - name: nfs - install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - nfs-common
       - nfs-kernel-server
 
 - name: nfs - ensure directories to export exist
-  file:
+  ansible.builtin.file:
     path: "{{ item.strip().split()[0] }}"
     state: directory
-    mode: 0755
+    mode: 0777
   with_items: "{{ nfs_exports }}"
 
-- name: nfs - copy configuration
-  template:
+- name: nfs - copy config
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: 0644
@@ -23,7 +23,7 @@
   notify: nfs - re-export
 
 - name: nfs - ensure service is running
-  service:
+  ansible.builtin.service:
     name: nfs-kernel-server
     state: started
     enabled: true

@@ -1,28 +1,28 @@
 ---
 - name: mergerfs - check if installed
-  command: dpkg-query -W mergerfs
+  ansible.builtin.command: dpkg-query -W mergerfs
   ignore_errors: True
   register: mergerfs_is_installed
   changed_when: mergerfs_is_installed.rc != 0
 
 - block:
     - name: mergerfs - download package
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ mergerfs_package_url }}"
         dest: /tmp/{{ mergerfs_package_name }}
 
     - name: mergerfs - install package
-      apt:
+      ansible.builtin.apt:
         deb: /tmp/{{ mergerfs_package_name }}
         state: present
   when: mergerfs_version not in mergerfs_is_installed.stdout
 
 - name: mergerfs - mount array
-  mount:
-    name: "{{ item.mountpoint }}"
-    src: "{{ item.source }}"
-    opts: "{{ item.opts }}"
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
     fstype: "{{ item.fs }}"
+    opts: "{{ item.opts }}"
     state: present
   with_items:
     - "{{ fstab_mergerfs }}"

@@ -1,38 +1,42 @@
 ---
 main_storage_path: /mnt/storage
+nfs_export_path: /srv/nfs
 
 parity_disks:
-  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGNMJ4Z-part1, path: /mnt/parity/parity01, fs: ext4, opts: defaults, content: false }
-  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGSUYPZ-part1, path: /mnt/parity/parity02, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGNMJ4Z-part1, path: /mnt/parity/parity01, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGSUYPZ-part1, path: /mnt/parity/parity02, fs: ext4, opts: defaults, content: false }
 
 data_disks:
-  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_2SGEZJ8N-part1, path: /mnt/data/disk01, fs: ext4, opts: defaults, content: true }
-  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHUH8NZ-part1, path: /mnt/data/disk02, fs: ext4, opts: defaults, content: true }
-  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGRYMDZ-part1, path: /mnt/data/disk03, fs: ext4, opts: defaults, content: false }
-  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGAJ19Z-part1, path: /mnt/data/disk04, fs: ext4, opts: defaults, content: false }
-  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGN507Z-part1, path: /mnt/data/disk05, fs: ext4, opts: defaults, content: false }
-  - { diskbyid: /dev/disk/by-id/ata-HGST_HUH721008ALE604_7JKK8PRC-part1, path: /mnt/data/disk06, fs: ext4, opts: defaults, content: false }
-  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHVUJKZ-part1, path: /mnt/data/disk07, fs: ext4, opts: defaults, content: false }
-  - { diskbyid: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_7HK0X5ZN-part1, path: /mnt/data/disk08, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_2SGEZJ8N-part1, path: /mnt/data/disk01, fs: ext4, opts: defaults, content: true }
+  - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHUH8NZ-part1, path: /mnt/data/disk02, fs: ext4, opts: defaults, content: true }
+  - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGRYMDZ-part1, path: /mnt/data/disk03, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGAJ19Z-part1, path: /mnt/data/disk04, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGN507Z-part1, path: /mnt/data/disk05, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_7JKK8PRC-part1, path: /mnt/data/disk06, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHVUJKZ-part1, path: /mnt/data/disk07, fs: ext4, opts: defaults, content: false }
+  - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_7HK0X5ZN-part1, path: /mnt/data/disk08, fs: ext4, opts: defaults, content: false }
 
 extra_mountpoints:
   - { path: "{{ main_storage_path }}" }
+  - { src: "{{ main_storage_path }}/downloads", path: "{{ nfs_export_path }}/downloads", fs: none, opts: "bind,_netdev,x-systemd.requires=/mnt/storage", state: mounted }
+  - { src: /mnt/tank0/ds0/proxmox, path: "{{ nfs_export_path }}/proxmox", fs: none, opts: "bind,_netdev,x-systemd.requires=zfs-mount.service", state: mounted }
 
 zfs_disks:
 #  - ata-WDC_WD120EMFZ-11A6JA0_Z2KAEX5T
 #  - ata-WDC_WD120EMFZ-11A6JA0_Z2KJR39T
 
 fstab_mergerfs:
-  - source: /mnt/data/*
-    mountpoint: "{{ main_storage_path }}"
+  - src: /mnt/data/*
+    path: "{{ main_storage_path }}"
     fs: fuse.mergerfs
-    opts: defaults,nonempty,allow_other,use_ino,cache.files=off,moveonenospc=true,category.create=mfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs
+    opts: defaults,nonempty,allow_other,use_ino,noforget,inodecalc=path-hash,cache.files=off,moveonenospc=true,category.create=mfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs
 
 nfs_exports:
-  - /mnt/tank0/ds0/proxmox 10.10.20.0/24(rw,no_root_squash,no_subtree_check,fsid=0)
-  - "{{ main_storage_path }}/downloads 10.10.20.0/24(rw,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000,fsid=1)"
+  - "{{ nfs_export_path }} 10.10.20.0/24(ro,fsid=0,no_subtree_check)"
+  - "{{ nfs_export_path }}/proxmox 10.10.20.0/24(rw,fsid=1,no_root_squash,no_subtree_check)"
+  - "{{ nfs_export_path }}/downloads 10.10.20.0/24(rw,fsid=2,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
 
-mergerfs_version: 2.33.4
+mergerfs_version: 2.33.5
 mergerfs_package_name: mergerfs_{{ mergerfs_version }}.debian-buster_amd64.deb
 mergerfs_package_url: https://github.com/trapexit/mergerfs/releases/download/{{ mergerfs_version }}/{{ mergerfs_package_name }}
 
