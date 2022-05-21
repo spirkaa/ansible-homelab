@@ -43,6 +43,17 @@
       community.general.timezone:
         name: Europe/Moscow
 
+    - name: set locale
+      ansible.builtin.command: >
+        localectl set-locale LANG=en_US.UTF-8
+      changed_when: true
+
+    - name: upgrade packages
+      ansible.builtin.package:
+        update_cache: yes
+        state: latest
+        name: "*"
+
   roles:
     - { role: common/packages }
     - { role: spirkaa.zsh_prezto }
@@ -54,12 +65,6 @@
   tasks:
     - name: flush handlers
       ansible.builtin.meta: flush_handlers
-
-    - name: upgrade packages
-      ansible.builtin.package:
-        update_cache: yes
-        state: latest
-        name: "*"
 
     - name: cleanup packages
       ansible.builtin.shell: >
