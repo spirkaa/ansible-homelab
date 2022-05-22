@@ -29,6 +29,7 @@ pipeline {
   stages {
     stage('Checkout') {
       when {
+        branch 'main'
         beforeAgent true
         anyOf {
           triggeredBy cause: 'UserIdCause'
@@ -42,6 +43,7 @@ pipeline {
 
     stage('Run playbook') {
       when {
+        branch 'main'
         beforeAgent true
         anyOf {
           triggeredBy cause: 'UserIdCause'
