@@ -2,9 +2,9 @@
 
 TAG=git.devmem.ru/projects/ansible:base
 
-default: run
+default: tools
 
-run:
+tools:
 	@docker run \
 		--pull always \
 		--rm \
@@ -19,3 +19,7 @@ run:
 		--user "$(shell id -u ${USER}):$(shell id -g ${USER})" \
 		--workdir "$(shell pwd)" \
 		${TAG}
+
+run:
+	@ansible-playbook main.yml \
+		--skip-tags create,dyn_inventory,portainer_api,cadvisor
