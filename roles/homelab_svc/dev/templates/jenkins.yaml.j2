@@ -18,7 +18,8 @@ jenkins:
       userIdStrategy: "caseInsensitive"
   clouds:
   - docker:
-      name: "docker"
+      name: "docker-local"
+      containerCap: 1
       dockerApi:
         dockerHost:
           uri: "unix:///var/run/docker.sock"
@@ -30,7 +31,7 @@ jenkins:
           mounts:
           - "type=bind,source=/usr/bin/docker,destination=/usr/bin/docker"
           - "type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock"
-        instanceCapStr: "99"
+        instanceCapStr: "1"
         labelString: "worker"
         name: "worker"
         remoteFs: "/home/jenkins/agent"
