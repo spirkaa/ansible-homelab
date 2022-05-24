@@ -21,7 +21,7 @@ $config['auth_ldap_cache_ttl'] = 300;
 
 $config['auth_ldap_server'] = '{{ inventory__ldap_domain }}';
 $config['auth_ldap_port'] = {{ inventory__ldap_port }};
-$config['auth_ldap_starttls'] = true;
+$config['auth_ldap_starttls'] = 'required';
 $config['auth_ldap_binduser'] = '';
 $config['auth_ldap_binddn'] = '{{ librenms_ldap_bind_dn }}';
 $config['auth_ldap_bindpassword'] = '{{ librenms_ldap_bind_pw }}';
@@ -36,6 +36,7 @@ $config['auth_ldap_groupbase'] = '{{ inventory__ldap_groups_dn }}';
 $config['auth_ldap_groups']['{{ librenms_ldap_admins }}']['level'] = 10;
 $config['auth_ldap_groups']['{{ librenms_ldap_admins_ro }}']['level'] = 5;
 $config['auth_ldap_groups']['{{ librenms_ldap_users }}']['level'] = 1;
+$config['auth_ldap_require_groupmembership'] = true;
 $config['auth_ldap_groupmemberattr'] = 'member';
 $config['auth_ldap_groupmembertype'] = 'fulldn';
 $config['auth_ldap_userdn'] = true;

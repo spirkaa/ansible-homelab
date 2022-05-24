@@ -19,6 +19,7 @@
     command:
       --sql-mode=""
       --lower_case_table_names=0
+      --default-time-zone="+03:00"
     restart_policy: unless-stopped
     state: started
   no_log: true
