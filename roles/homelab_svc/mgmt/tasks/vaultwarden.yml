@@ -14,7 +14,7 @@
       SMTP_FROM: "{{ smtp_user }}"
       SMTP_USERNAME: "{{ smtp_user }}"
       SMTP_PASSWORD: "{{ smtp_pass }}"
-      SMTP_SSL: "true"
+      SMTP_SECURITY: "starttls"
       SMTP_FROM_NAME: "{{ vaultwarden_domain }}"
       SIGNUPS_ALLOWED: "false"
       WEBSOCKET_ENABLED: "true"
