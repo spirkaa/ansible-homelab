@@ -26,7 +26,8 @@ jenkins:
       templates:
       - connector: "attach"
         dockerTemplateBase:
-          image: "jenkins/agent:latest"
+          image: "git.devmem.ru/projects/jenkins-agent:latest"
+          pullCredentialsId: "gitea-user"
           user: "root"
           mounts:
           - "type=bind,source=/usr/bin/docker,destination=/usr/bin/docker"
