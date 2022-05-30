@@ -114,6 +114,12 @@ credentials:
             directEntry:
               privateKey: |
                 {{ jenkins_ssh_key | string | indent(width=16) }}
+      - file:
+          description: "jenkins-gpg-key"
+          fileName: "jenkins-gpg.key"
+          id: "jenkins-gpg-key"
+          scope: GLOBAL
+          secretBytes: "{{ jenkins_gpg_key | string | b64encode }}"
       - string:
           description: "ansible-homelab-vault-password"
           id: "ansible-homelab-vault-password"
