@@ -109,8 +109,8 @@ inventory__ldap_users:
     groups:
       - mail_users
   ansible:
-    givenname: ansible
-    sn: ansible
+    givenname: Ansible
+    sn: Automation
     password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           62346131386537646134383531346462646539346331323232343630323432366136316333393366
@@ -121,8 +121,8 @@ inventory__ldap_users:
     groups:
       - portainer_users
   argocd:
-    givenname: argocd
-    sn: argocd
+    givenname: Argo
+    sn: CD
     password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35356130343133613637303634336564366131356265626164303032613137636137326634636237
@@ -133,8 +133,8 @@ inventory__ldap_users:
     groups:
       - gitea_users
   jenkins:
-    givenname: jenkins
-    sn: jenkins
+    givenname: Jenkins
+    sn: CI
     password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           65616465386161653435633334666337616231346230333463316532373439663236636639653364
@@ -144,9 +144,10 @@ inventory__ldap_users:
           63336430323964316566633738653031653833323262623834613936653363663661
     groups:
       - gitea_users
+      - jenkins_users
   renovate:
-    givenname: renovate
-    sn: renovate
+    givenname: Renovate
+    sn: Bot
     password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           34356533646237373134316461323735396431636434353431636137366566386261316164333930
