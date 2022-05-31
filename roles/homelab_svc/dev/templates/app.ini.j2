@@ -1,39 +1,20 @@
 APP_NAME = Gitea
-RUN_MODE = prod
 RUN_USER = git
-
-[repository]
-ROOT = /data/git/repositories
-
-[repository.local]
-LOCAL_COPY_PATH = /data/gitea/tmp/local-repo
-
-[repository.upload]
-TEMP_PATH = /data/gitea/uploads
-
-[repository.signing]
-SIGNING_KEY    = default
-INITIAL_COMMIT = always
-WIKI           = never
-CRUD_ACTIONS   = pubkey, twofa, parentsigned
-MERGES         = pubkey, twofa, basesigned, commitssigned
-
-[packages]
-ENABLED = true
+RUN_MODE = prod
 
 [server]
-APP_DATA_PATH    = /data/gitea
-LANDING_PAGE     = login
 DOMAIN           = {{ gitea_domain }}
-HTTP_PORT        = 3000
 ROOT_URL         = {{ gitea_root_url }}/
+HTTP_PORT        = 3000
 DISABLE_SSH      = false
 SSH_DOMAIN       = {{ gitea_domain }}
 SSH_PORT         = 22
 SSH_LISTEN_PORT  = 22
+OFFLINE_MODE     = true
+APP_DATA_PATH    = /data/gitea
+LANDING_PAGE     = login
 LFS_START_SERVER = true
 LFS_JWT_SECRET   = {{ gitea_lfs_jwt_secret }}
-OFFLINE_MODE     = true
 
 [database]
 DB_TYPE  = mysql
@@ -45,13 +26,80 @@ SSL_MODE = disable
 CHARSET  = utf8mb4
 LOG_SQL  = false
 
-[lfs]
-PATH = /data/git/lfs
+[security]
+INSTALL_LOCK                  = true
+SECRET_KEY                    = {{ gitea_secret_key }}
+INTERNAL_TOKEN                = {{ gitea_internal_token }}
+LOGIN_REMEMBER_DAYS           = 30
+REVERSE_PROXY_LIMIT           = 1
+REVERSE_PROXY_TRUSTED_PROXIES = 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+
+[oauth2]
+ENABLE     = true
+JWT_SECRET = {{ gitea_jwt_secret }}
+
+[log]
+ROOT_PATH          = /data/gitea/log
+MODE               = file
+LEVEL              = info
+DISABLE_ROUTER_LOG = true
+
+[service]
+REGISTER_EMAIL_CONFIRM            = false
+DISABLE_REGISTRATION              = true
+ALLOW_ONLY_EXTERNAL_REGISTRATION  = false
+REQUIRE_SIGNIN_VIEW               = true
+ENABLE_NOTIFY_MAIL                = true
+ENABLE_CAPTCHA                    = false
+DEFAULT_KEEP_EMAIL_PRIVATE        = false
+DEFAULT_ALLOW_CREATE_ORGANIZATION = true
+DEFAULT_ENABLE_TIMETRACKING       = true
+NO_REPLY_ADDRESS                  = {{ gitea_domain }}
+AUTO_WATCH_NEW_REPOS              = false
+
+[repository]
+ROOT = /data/git/repositories
+
+[repository.local]
+LOCAL_COPY_PATH = /data/gitea/tmp/local-repo
+
+[repository.upload]
+TEMP_PATH     = /data/gitea/uploads
+FILE_MAX_SIZE = 10
+
+[repository.signing]
+SIGNING_KEY    = default
+INITIAL_COMMIT = always
+CRUD_ACTIONS   = pubkey, twofa, parentsigned
+WIKI           = never
+MERGES         = pubkey, twofa, basesigned, commitssigned
+
+[ui]
+FEED_MAX_COMMIT_NUM  = 10
+GRAPH_MAX_COMMIT_NUM = 200
+
+[ui.admin]
+NOTICE_PAGING_NUM = 50
 
 [indexer]
 ISSUE_INDEXER_PATH   = /data/gitea/indexers/issues.bleve
 REPO_INDEXER_ENABLED = true
 REPO_INDEXER_PATH    = /data/gitea/indexers/repos.bleve
+
+[openid]
+ENABLE_OPENID_SIGNIN = false
+ENABLE_OPENID_SIGNUP = false
+
+[webhook]
+ALLOWED_HOST_LIST = *
+
+[mailer]
+ENABLED = true
+SUBJECT_PREFIX = [git]
+HOST           = {{ smtp_host }}:{{ smtp_port }}
+FROM           = Gitea <{{ smtp_user }}>
+USER           = {{ smtp_user }}
+PASSWD         = {{ smtp_pass }}
 
 [session]
 PROVIDER_CONFIG = /data/gitea/sessions
@@ -64,51 +112,19 @@ DISABLE_GRAVATAR              = true
 ENABLE_FEDERATED_AVATAR       = false
 
 [attachment]
-PATH = /data/gitea/attachments
-
-[log]
-ROOT_PATH          = /data/gitea/log
-MODE               = file
-LEVEL              = info
-DISABLE_ROUTER_LOG = true
-
-[security]
-INSTALL_LOCK                  = true
-SECRET_KEY                    = {{ gitea_secret_key }}
-INTERNAL_TOKEN                = {{ gitea_internal_token }}
-LOGIN_REMEMBER_DAYS           = 30
-REVERSE_PROXY_LIMIT           = 1
-REVERSE_PROXY_TRUSTED_PROXIES = 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-
-[service]
-DISABLE_REGISTRATION              = true
-REQUIRE_SIGNIN_VIEW               = true
-REGISTER_EMAIL_CONFIRM            = false
-ENABLE_NOTIFY_MAIL                = true
-ALLOW_ONLY_EXTERNAL_REGISTRATION  = false
-ENABLE_CAPTCHA                    = false
-DEFAULT_KEEP_EMAIL_PRIVATE        = false
-DEFAULT_ALLOW_CREATE_ORGANIZATION = true
-DEFAULT_ENABLE_TIMETRACKING       = true
-NO_REPLY_ADDRESS                  = {{ gitea_domain }}
-
-[oauth2]
-JWT_SECRET = {{ gitea_jwt_secret }}
-
-[mailer]
-ENABLED = true
-HOST    = {{ smtp_host }}:{{ smtp_port }}
-FROM    = {{ gitea_domain }} <{{ smtp_user }}>
-USER    = {{ smtp_user }}
-PASSWD  = {{ smtp_pass }}
-
-[openid]
-ENABLE_OPENID_SIGNIN = false
-ENABLE_OPENID_SIGNUP = false
+ENABLED  = true
+MAX_SIZE = 10
+PATH     = /data/gitea/attachments
 
 [metrics]
 ENABLED = true
 TOKEN   = {{ gitea_metrics_token }}
 
-[webhook]
-ALLOWED_HOST_LIST = *
+[migrations]
+ALLOW_LOCALNETWORKS = true
+
+[packages]
+ENABLED = true
+
+[lfs]
+PATH = /data/git/lfs
