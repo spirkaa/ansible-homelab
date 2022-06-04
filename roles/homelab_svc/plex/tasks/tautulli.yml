@@ -7,9 +7,9 @@
   tags: tautulli
 
 - name: tautulli - copy files
-  copy:
-    src: files/recently_added.html
-    dest: "{{ app_path }}/tautulli/config/newsletter_template"
+  template:
+    src: recently_added.html.j2
+    dest: "{{ app_path }}/tautulli/config/newsletter_template/recently_added.html"
     owner: "{{ puid }}"
     group: "{{ pgid }}"
     mode: 0644
