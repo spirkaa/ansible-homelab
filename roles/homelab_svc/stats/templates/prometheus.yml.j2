@@ -25,9 +25,9 @@ scrape_configs:
       - targets: ['dev.{{ inventory__homelab_domain }}']
       - targets: ['mail.{{ inventory__homelab_domain }}']
       - targets: ['mgmt.{{ inventory__homelab_domain }}']
-      - targets: ['pihole.{{ inventory__homelab_domain }}']
+      # - targets: ['pihole.{{ inventory__homelab_domain }}']
       - targets: ['plex.{{ inventory__homelab_domain }}']
-      - targets: ['projects.{{ inventory__homelab_domain }}']
+      # - targets: ['projects.{{ inventory__homelab_domain }}']
       - targets: ['rp.{{ inventory__homelab_domain }}']
       - targets: ['spnas.{{ inventory__homelab_domain }}']
       - targets: ['stats.{{ inventory__homelab_domain }}']
@@ -39,18 +39,18 @@ scrape_configs:
       - targets: ['traefik-dev.{{ inventory__homelab_domain }}']
       - targets: ['traefik-mail.{{ inventory__homelab_domain }}']
       - targets: ['traefik-mgmt.{{ inventory__homelab_domain }}']
-      - targets: ['traefik-pihole.{{ inventory__homelab_domain }}']
+      # - targets: ['traefik-pihole.{{ inventory__homelab_domain }}']
       - targets: ['traefik-plex.{{ inventory__homelab_domain }}']
-      - targets: ['traefik-projects.{{ inventory__homelab_domain }}']
+      # - targets: ['traefik-projects.{{ inventory__homelab_domain }}']
       - targets: ['traefik-spnas.{{ inventory__homelab_domain }}']
       - targets: ['traefik-stats.{{ inventory__homelab_domain }}']
       - targets: ['traefik-ha.{{ inventory__homelab_domain }}']
 
-  - job_name: 'drone'
-    scheme: https
-    bearer_token: "{{ prometheus_drone_bearer_token }}"
-    static_configs:
-    - targets: ['drone.{{ inventory__site }}']
+  # - job_name: 'drone'
+  #   scheme: https
+  #   bearer_token: "{{ prometheus_drone_bearer_token }}"
+  #   static_configs:
+  #   - targets: ['drone.{{ inventory__site }}']
 
   - job_name: 'gitea'
     scheme: https
@@ -58,10 +58,10 @@ scrape_configs:
     static_configs:
     - targets: ['git.{{ inventory__site }}']
 
-  - job_name: 'gia-api'
-    scheme: https
-    static_configs:
-      - targets: ['gia-api.{{ inventory__site }}']
+  # - job_name: 'gia-api'
+  #   scheme: https
+  #   static_configs:
+  #     - targets: ['gia-api.{{ inventory__site }}']
 
   # - job_name: 'node-exporter'
   #   static_configs:
