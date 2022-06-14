@@ -11,7 +11,7 @@ SSH_DOMAIN       = {{ gitea_domain }}
 SSH_PORT         = 22
 SSH_LISTEN_PORT  = 22
 OFFLINE_MODE     = true
-APP_DATA_PATH    = /data/gitea
+APP_DATA_PATH    = {{ gitea_app_data_path }}
 LANDING_PAGE     = login
 LFS_START_SERVER = true
 LFS_JWT_SECRET   = {{ gitea_lfs_jwt_secret }}
@@ -39,7 +39,7 @@ ENABLE     = true
 JWT_SECRET = {{ gitea_jwt_secret }}
 
 [log]
-ROOT_PATH          = /data/gitea/log
+ROOT_PATH          = {{ gitea_app_data_path }}/log
 MODE               = file
 LEVEL              = info
 DISABLE_ROUTER_LOG = true
@@ -58,13 +58,9 @@ NO_REPLY_ADDRESS                  = {{ gitea_domain }}
 AUTO_WATCH_NEW_REPOS              = false
 
 [repository]
-ROOT = /data/git/repositories
-
-[repository.local]
-LOCAL_COPY_PATH = /data/gitea/tmp/local-repo
+ROOT = {{ gitea_repository_root }}
 
 [repository.upload]
-TEMP_PATH     = /data/gitea/uploads
 FILE_MAX_SIZE = 10
 
 [repository.signing]
@@ -82,9 +78,7 @@ GRAPH_MAX_COMMIT_NUM = 200
 NOTICE_PAGING_NUM = 50
 
 [indexer]
-ISSUE_INDEXER_PATH   = /data/gitea/indexers/issues.bleve
 REPO_INDEXER_ENABLED = true
-REPO_INDEXER_PATH    = /data/gitea/indexers/repos.bleve
 
 [openid]
 ENABLE_OPENID_SIGNIN = false
@@ -102,19 +96,15 @@ USER           = {{ smtp_user }}
 PASSWD         = {{ smtp_pass }}
 
 [session]
-PROVIDER_CONFIG = /data/gitea/sessions
-PROVIDER        = file
+PROVIDER = db
 
 [picture]
-AVATAR_UPLOAD_PATH            = /data/gitea/avatars
-REPOSITORY_AVATAR_UPLOAD_PATH = /data/gitea/repo-avatars
-DISABLE_GRAVATAR              = true
-ENABLE_FEDERATED_AVATAR       = false
+DISABLE_GRAVATAR        = true
+ENABLE_FEDERATED_AVATAR = false
 
 [attachment]
 ENABLED  = true
 MAX_SIZE = 10
-PATH     = /data/gitea/attachments
 
 [metrics]
 ENABLED = true
@@ -125,6 +115,3 @@ ALLOW_LOCALNETWORKS = true
 
 [packages]
 ENABLED = true
-
-[lfs]
-PATH = /data/git/lfs

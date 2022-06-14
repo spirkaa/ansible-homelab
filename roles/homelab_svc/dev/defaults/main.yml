@@ -40,6 +40,10 @@ gitea_db_host: gitea-db:3306
 gitea_domain: git.{{ inventory__site }}
 gitea_root_url: "https://{{ gitea_domain }}"
 gitea_ssh_user: git
+gitea_app_data_path: /data/gitea
+gitea_app_data_path_host: "{{ app_path }}/gitea{{ gitea_app_data_path }}"
+gitea_repository_root: "{{ gitea_app_data_path }}/repositories"
+gitea_repository_root_host: "{{ gitea_app_data_path_host }}/repositories"
 gitea_lfs_jwt_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           63613031656439373436613835653131613064343235643034366637366538323965326636333231

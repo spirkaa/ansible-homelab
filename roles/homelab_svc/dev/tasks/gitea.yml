@@ -17,7 +17,8 @@
   tags: gitea
 
 - name: gitea - ssh passthrough - get pub key of created user
-  command: cat /home/git/.ssh/id_rsa.pub
+  command: >
+    cat /home/git/.ssh/id_rsa.pub
   register: git_key
   changed_when: false
   tags: gitea
@@ -42,20 +43,20 @@
 
 - name: gitea - create dir
   file:
-    path: "{{ app_path }}/gitea/data/gitea/conf"
+    path: "{{ gitea_app_data_path_host }}/conf"
     state: directory
     recurse: yes
   tags: gitea
 
 - name: gitea - copy files
   template:
-    src: templates/{{ item.src }}
-    dest: "{{ app_path }}/{{ item.dest }}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: "{{ puid }}"
     group: "{{ pgid }}"
     mode: 0600
   loop:
-    - { src: app.ini.j2, dest: gitea/data/gitea/conf/app.ini }
+    - { src: app.ini.j2, dest: "{{ gitea_app_data_path_host }}/conf/app.ini" }
   notify: gitea - restart
   tags: gitea
 
@@ -89,19 +90,7 @@
     env:
       USER_UID: "{{ puid }}"
       USER_GID: "{{ pgid }}"
-      DB_TYPE: "mysql"
-      DB_HOST: "{{ gitea_db_host }}"
-      DB_NAME: "{{ gitea_db_user }}"
-      DB_USER: "{{ gitea_db_user }}"
-      DB_PASSWD: "{{ gitea_db_pass }}"
-      APP_NAME: "Gitea"
-      RUN_MODE: "prod"
-      DOMAIN: "{{ gitea_domain }}"
-      SSH_DOMAIN: "{{ gitea_domain }}"
-      ROOT_URL: "{{ gitea_root_url }}/"
-      LFS_START_SERVER: "true"
-      DISABLE_REGISTRATION: "true"
-      REQUIRE_SIGNIN_VIEW: "true"
+      GNUPGHOME: "{{ gitea_repository_root }}/.gnupg"
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
@@ -116,7 +105,9 @@
   tags: gitea
 
 - name: gitea - gpg - check if key already exists
-  command: docker exec -u git gitea sh -c 'gpg --list-secret-keys | grep "gitea"'
+  command: >
+    docker exec -u git gitea sh -c \
+      'gpg --list-secret-keys | grep "gitea"'
   register: gpg_key
   changed_when: false
   failed_when: gpg_key.rc == 2
@@ -126,33 +117,39 @@
     - name: gitea - gpg - copy key template
       copy:
         src: files/gen-key-script
-        dest: "{{ app_path }}/gitea/data/git/.gnupg/gen-key-script"
+        dest: "{{ gitea_repository_root_host }}/.gnupg/gen-key-script"
         owner: "{{ gitea_ssh_user }}"
         group: "{{ gitea_ssh_user }}"
         mode: 0600
       tags: gitea
 
     - name: gitea - gpg - generate key
-      command: docker exec -u git gitea sh -c 'gpg --batch --gen-key /data/git/.gnupg/gen-key-script'
+      command: >
+        docker exec -u git gitea sh -c \
+          'gpg --batch --gen-key {{ gitea_repository_root }}/.gnupg/gen-key-script'
       tags: gitea
 
     - name: gitea - gpg - delete key template
       file:
-        path: "{{ app_path }}/gitea/data/git/.gnupg/gen-key-script"
+        path: "{{ gitea_repository_root_host }}/.gnupg/gen-key-script"
         state: absent
       tags: gitea
 
     - name: gitea - gpg - get key id
-      command: docker exec -u git gitea sh -c 'gpg -k --keyid-format SHORT | grep "pub" | awk "{printf \$2}" | awk -F/ "{printf \$2}"'
+      command: >
+        docker exec -u git gitea sh -c \
+          'gpg -k --keyid-format SHORT | grep "pub" | awk "{printf \$2}" | awk -F/ "{printf \$2}"'
       register: gpg_key_id
       changed_when: false
       tags: gitea
 
     - name: gitea - gpg - configure git signing
-      command: docker exec -u git gitea sh -c '{{ item }}'
+      command: >
+        docker exec -u git gitea sh -c \
+          '{{ item }}'
       loop:
-        - git config --global user.signingkey {{ gpg_key_id.stdout }}
-        - git config --global commit.gpgsign true
+        - git config --file {{ gitea_repository_root }}/.gitconfig user.signingkey {{ gpg_key_id.stdout }}
+        - git config --file {{ gitea_repository_root }}/.gitconfig commit.gpgsign true
       notify: gitea - restart
       tags: gitea
   when: gpg_key is defined and not gpg_key.stdout
