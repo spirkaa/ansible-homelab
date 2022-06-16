@@ -23,6 +23,10 @@
   include_tasks: authentik.yml
   tags: authentik
 
+- name: dex
+  include_tasks: dex.yml
+  tags: dex
+
 # - name: vault
 #   include_tasks: vault.yml
 #   tags: vault
