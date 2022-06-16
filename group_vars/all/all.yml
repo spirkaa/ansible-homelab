@@ -70,7 +70,7 @@ inventory__ldap_users:
         value: "@{{ inventory__site }}"
     groups:
       - authentik_users
-      - gitea_users
+      - gitea_admins
       - grafana_admins
       - jenkins_users
       - librenms_admins

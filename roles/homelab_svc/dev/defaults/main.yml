@@ -98,6 +98,9 @@ gitea_ldap_bind_pw: !vault |
           6232623339353363330a346435343039393565333731376261386662323435333561313635336566
           3230
 gitea_ldap_access_group: gitea_users
+gitea_ldap_admins: gitea_admins
+gitea_ldap_user_filter: (&(objectclass=inetorgperson)(memberof=cn={{ gitea_ldap_access_group }},{{ inventory__ldap_groups_dn }})(uid=%s))
+gitea_ldap_admin_filter: (memberof=cn={{ gitea_ldap_admins }},{{ inventory__ldap_groups_dn }})
 
 code_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256

@@ -1,12 +1,12 @@
 ---
 - name: gitea - ssh passthrough - create group
-  group:
+  ansible.builtin.group:
     name: "{{ gitea_ssh_user }}"
     gid: "{{ pgid }}"
   tags: gitea
 
 - name: gitea - ssh passthrough - create user
-  user:
+  ansible.builtin.user:
     name: "{{ gitea_ssh_user }}"
     uid: "{{ puid }}"
     group: "{{ gitea_ssh_user }}"
@@ -17,14 +17,14 @@
   tags: gitea
 
 - name: gitea - ssh passthrough - get pub key of created user
-  command: >
+  ansible.builtin.command: >
     cat /home/git/.ssh/id_rsa.pub
   register: git_key
   changed_when: false
   tags: gitea
 
 - name: gitea - ssh passthrough - add pub key to authorized_keys
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /home/git/.ssh/authorized_keys
     line: no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ git_key.stdout }}
     owner: "{{ gitea_ssh_user }}"
@@ -35,21 +35,21 @@
   tags: gitea
 
 - name: gitea - ssh passthrough - copy files (fake host gitea command)
-  copy:
+  ansible.builtin.copy:
     src: files/gitea
     dest: /usr/local/bin/gitea
     mode: 0755
   tags: gitea
 
 - name: gitea - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ gitea_app_data_path_host }}/conf"
     state: directory
     recurse: yes
   tags: gitea
 
 - name: gitea - copy files
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ puid }}"
@@ -61,7 +61,7 @@
   tags: gitea
 
 - name: gitea - db - start
-  docker_container:
+  community.docker.docker_container:
     name: gitea-db
     image: "{{ gitea_db_image }}"
     pull: yes
@@ -80,7 +80,7 @@
   tags: gitea
 
 - name: gitea - start
-  docker_container:
+  community.docker.docker_container:
     name: gitea
     image: "{{ gitea_image }}"
     pull: yes
@@ -104,8 +104,39 @@
   no_log: true
   tags: gitea
 
+- name: gitea - add auth source (ldap)
+  ansible.builtin.command: >
+    docker exec -u git gitea sh -c \
+      'gitea admin auth add-ldap \
+        --name freeipa \
+        --security-protocol starttls \
+        --host {{ inventory__ldap_domain }} \
+        --port {{ inventory__ldap_port }} \
+        --skip-tls-verify \
+        --bind-dn "{{ gitea_ldap_bind_dn }}" \
+        --bind-password "{{ gitea_ldap_bind_pw }}" \
+        --user-search-base "{{ inventory__ldap_users_dn }}" \
+        --user-filter "{{ gitea_ldap_user_filter }}" \
+        --admin-filter "{{ gitea_ldap_admin_filter }}" \
+        --username-attribute uid \
+        --firstname-attribute givenname \
+        --surname-attribute sn \
+        --email-attribute mail \
+        --public-ssh-key-attribute ipaSshPubKey \
+        --synchronize-users'
+  register: _auth_source_result
+  retries: 12
+  delay: 5
+  until: _auth_source_result is not failed
+  changed_when: _auth_source_result.rc == 0
+  failed_when: >
+    _auth_source_result.rc >= 1 and
+    "login source already exists" not in _auth_source_result.stdout
+  no_log: true
+  tags: gitea
+
 - name: gitea - gpg - check if key already exists
-  command: >
+  ansible.builtin.command: >
     docker exec -u git gitea sh -c \
       'gpg --list-secret-keys | grep "gitea"'
   register: gpg_key
@@ -115,7 +146,7 @@
 
 - block:
     - name: gitea - gpg - copy key template
-      copy:
+      ansible.builtin.copy:
         src: files/gen-key-script
         dest: "{{ gitea_repository_root_host }}/.gnupg/gen-key-script"
         owner: "{{ gitea_ssh_user }}"
@@ -124,19 +155,21 @@
       tags: gitea
 
     - name: gitea - gpg - generate key
-      command: >
+      ansible.builtin.command: >
         docker exec -u git gitea sh -c \
           'gpg --batch --gen-key {{ gitea_repository_root }}/.gnupg/gen-key-script'
+      args:
+        creates: "{{ gitea_repository_root_host }}/.gnupg/private-keys-v1.d"
       tags: gitea
 
     - name: gitea - gpg - delete key template
-      file:
+      ansible.builtin.file:
         path: "{{ gitea_repository_root_host }}/.gnupg/gen-key-script"
         state: absent
       tags: gitea
 
     - name: gitea - gpg - get key id
-      command: >
+      ansible.builtin.command: >
         docker exec -u git gitea sh -c \
           'gpg -k --keyid-format SHORT | grep "pub" | awk "{printf \$2}" | awk -F/ "{printf \$2}"'
       register: gpg_key_id
@@ -144,12 +177,13 @@
       tags: gitea
 
     - name: gitea - gpg - configure git signing
-      command: >
+      ansible.builtin.command: >
         docker exec -u git gitea sh -c \
           '{{ item }}'
       loop:
         - git config --file {{ gitea_repository_root }}/.gitconfig user.signingkey {{ gpg_key_id.stdout }}
         - git config --file {{ gitea_repository_root }}/.gitconfig commit.gpgsign true
+      changed_when: true
       notify: gitea - restart
       tags: gitea
   when: gpg_key is defined and not gpg_key.stdout

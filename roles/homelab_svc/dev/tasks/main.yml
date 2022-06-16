@@ -1,37 +1,40 @@
 ---
 - name: gitea
-  include_tasks: gitea.yml
+  ansible.builtin.include_tasks: gitea.yml
   tags: gitea
 
 - name: jenkins
-  include_tasks: jenkins.yml
+  ansible.builtin.include_tasks: jenkins.yml
   tags: jenkins
 
 # - name: drone
-#   include_tasks: drone.yml
+#   ansible.builtin.include_tasks: drone.yml
 #   tags: drone
 
 # - name: registry
-#   include_tasks: registry.yml
+#   ansible.builtin.include_tasks: registry.yml
 #   tags: registry
 
 # - name: code
-#   include_tasks: code.yml
+#   ansible.builtin.include_tasks: code.yml
 #   tags: code
 
 - name: gitea - configure freeipa
-  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ gitea_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ gitea_ldap_bind_pw }}"
-    freeipa_service_bind_group_name: "{{ gitea_ldap_access_group }}"
+    freeipa_service_bind_group_name: "{{ item }}"
   args:
     apply:
       tags: gitea
+  loop:
+    - "{{ gitea_ldap_access_group }}"
+    - "{{ gitea_ldap_admins }}"
   tags: gitea
 
 - name: jenkins - configure freeipa
-  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ jenkins_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ jenkins_ldap_bind_pw }}"
