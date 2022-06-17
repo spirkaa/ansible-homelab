@@ -38,31 +38,31 @@
     comment: "masquerade for {{ vps_wan_interface }}"
   notify: save iptables
 
-- name: wireguard - configure iptables - forward ports
-  iptables:
-    table: nat
-    chain: PREROUTING
-    in_interface: "{{ vps_wan_interface }}"
-    protocol: "{{ item.proto }}"
-    destination_port: "{{ item.port }}"
-    to_destination: "{{ item.to_dest }}:{{ item.to_port }}"
-    jump: DNAT
-    action: insert
-    comment: "{{ item.comment }}"
-  loop: "{{ vps_iptables_forward_ports }}"
-  notify: save iptables
+# - name: wireguard - configure iptables - forward ports
+#   iptables:
+#     table: nat
+#     chain: PREROUTING
+#     in_interface: "{{ vps_wan_interface }}"
+#     protocol: "{{ item.proto }}"
+#     destination_port: "{{ item.port }}"
+#     to_destination: "{{ item.to_dest }}:{{ item.to_port }}"
+#     jump: DNAT
+#     action: insert
+#     comment: "{{ item.comment }}"
+#   loop: "{{ vps_iptables_forward_ports }}"
+#   notify: save iptables
 
-- name: wireguard - configure iptables - SNAT
-  iptables:
-    table: nat
-    chain: POSTROUTING
-    source: "{{ vps_wg_peers[0].public_ip }}"
-    protocol: "{{ item.proto }}"
-    destination_port: "{{ item.to_port }}"
-    to_source: "{{ vps_wg_private_ip }}"
-    out_interface: "{{ vps_wg_interface }}"
-    jump: SNAT
-    action: insert
-    comment: "{{ item.comment }}"
-  loop: "{{ vps_iptables_forward_ports }}"
-  notify: save iptables
+# - name: wireguard - configure iptables - SNAT
+#   iptables:
+#     table: nat
+#     chain: POSTROUTING
+#     source: "{{ vps_wg_peers[0].public_ip }}"
+#     protocol: "{{ item.proto }}"
+#     destination_port: "{{ item.to_port }}"
+#     to_source: "{{ vps_wg_private_ip }}"
+#     out_interface: "{{ vps_wg_interface }}"
+#     jump: SNAT
+#     action: insert
+#     comment: "{{ item.comment }}"
+#   loop: "{{ vps_iptables_forward_ports }}"
+#   notify: save iptables

@@ -1,0 +1,42 @@
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    daemon
+
+defaults
+    log global
+    option httplog
+    option dontlognull
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000
+
+frontend tcp80
+    bind *:80
+    mode tcp
+    option tcplog
+    default_backend ingress-http
+
+frontend tcp443
+    bind *:443
+    mode tcp
+    option tcplog
+    tcp-request inspect-delay 5s
+    tcp-request content accept if { req.ssl_hello_type 1 }
+    acl teleport_sni req.ssl_sni -i tele.{{ inventory__site }}
+    acl teleport_sni req.ssl_sni -i -m end .tele.{{ inventory__site }}
+    acl teleport_sni req.ssl_sni -i -m reg ^[0-9a-f]+\.teleport\.cluster\.local$
+    use_backend teleport if teleport_sni
+    default_backend ingress-https
+
+backend ingress-http
+    mode tcp
+    server ingress-http {{ vps_wg_peers[0].private_ip }}:8080 send-proxy
+
+backend ingress-https
+    mode tcp
+    server ingress-https {{ vps_wg_peers[0].private_ip }}:8443 send-proxy
+
+backend teleport
+    mode tcp
+    server teleport {{ vps_wg_peers[0].private_ip }}:10443 send-proxy

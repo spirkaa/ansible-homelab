@@ -1,0 +1,13 @@
+---
+- name: haproxy - install packages
+  ansible.builtin.package:
+    state: present
+    name:
+      - haproxy
+
+- name: haproxy - copy configuration
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+  notify: restart haproxy

@@ -34,6 +34,6 @@ vps_wg_peers:
 vps_antifilter_path: /opt/antifilter/antifilter.sh
 vps_bird_config_path: /etc/bird
 
-vps_iptables_forward_ports:
-  - { port: "80", proto: "tcp", comment: "http", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8080 }
-  - { port: "443", proto: "tcp", comment: "https", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8443 }
+# vps_iptables_forward_ports:
+#   - { port: "80", proto: "tcp", comment: "http", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8080 }
+#   - { port: "443", proto: "tcp", comment: "https", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8443 }

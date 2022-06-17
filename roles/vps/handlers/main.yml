@@ -1,24 +1,29 @@
 ---
 - name: restart wireguard
-  service:
+  ansible.builtin.service:
     name: wg-quick@{{ vps_wg_interface }}
     enabled: yes
     state: restarted
 
 - name: save iptables
-  command: /usr/sbin/netfilter-persistent save
+  ansible.builtin.command: /usr/sbin/netfilter-persistent save
 
 - name: restart iptables
-  service:
+  ansible.builtin.service:
     name: netfilter-persistent
     state: restarted
   listen: save iptables
 
 - name: execute antifilter
-  command: "{{ vps_antifilter_path }}"
+  ansible.builtin.command: "{{ vps_antifilter_path }}"
   listen: restart bird
 
 - name: restart bird
-  service:
+  ansible.builtin.service:
     name: bird
+    state: restarted
+
+- name: restart haproxy
+  ansible.builtin.service:
+    name: haproxy
     state: restarted

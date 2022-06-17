@@ -1,9 +1,12 @@
 ---
 - name: wireguard tasks
-  include_tasks: wireguard.yml
+  ansible.builtin.include_tasks: wireguard.yml
 
 - name: antifilter tasks
-  include_tasks: antifilter.yml
+  ansible.builtin.include_tasks: antifilter.yml
 
 - name: bird tasks
-  include_tasks: bird.yml
+  ansible.builtin.include_tasks: bird.yml
+
+- name: haproxy tasks
+  ansible.builtin.include_tasks: haproxy.yml
