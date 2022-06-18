@@ -1,6 +1,6 @@
 ---
 - name: librenms-db - start
-  docker_container:
+  community.docker.docker_container:
     name: librenms-db
     image: "{{ librenms_db_image }}"
     pull: yes
@@ -26,15 +26,15 @@
   tags: librenms
 
 - name: librenms - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/librenms"
     state: directory
     recurse: yes
   tags: librenms
 
 - name: librenms - copy files
-  template:
-    src: templates/config.custom.php.j2
+  ansible.builtin.template:
+    src: config.custom.php.j2
     dest: "{{ app_path }}/librenms/config.custom.php"
     owner: "999"
     group: "999"
@@ -43,7 +43,7 @@
   tags: librenms
 
 - name: librenms - start
-  docker_container:
+  community.docker.docker_container:
     name: librenms
     image: "{{ librenms_image }}"
     pull: yes
@@ -80,7 +80,8 @@
   tags: librenms
 
 - name: librenms - customize
-  command: docker exec librenms sh -c '{{ item }}'
+  ansible.builtin.command: >
+    docker exec librenms sh -c '{{ item }}'
   changed_when: true
   when: librenms_start.changed
   notify: librenms - restart

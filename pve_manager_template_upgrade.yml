@@ -17,7 +17,7 @@
 
   tasks:
     - name: Set facts
-      set_fact:
+      ansible.builtin.set_fact:
         vmid: "{{ vmid }}"
         storage_path: "{{ storage_path }}"
         updated_image_name: "{{ updated_image_name }}"
@@ -28,20 +28,21 @@
 
   handlers:
     - name: run script
-      command: /tmp/sys_prep_cloud.sh
+      ansible.builtin.command: >
+        /tmp/sys_prep_cloud.sh
       async: 1
       poll: 0
       become: yes
 
   tasks:
     - name: Wait for yum process to exit (cloud-init updates)
-      wait_for:
+      ansible.builtin.wait_for:
         path: /var/run/yum.pid
         state: absent
         timeout: 600
 
     - name: Copy script
-      copy:
+      ansible.builtin.copy:
         src: files/sys_prep_cloud.sh
         dest: /tmp
         mode: 0755
@@ -53,7 +54,7 @@
 
   tasks:
     - name: Check that VM is stopped
-      command: >
+      ansible.builtin.command: >
         qm status {{ vmid }}
       register: vm_status
       retries: 5
@@ -61,26 +62,27 @@
       until: "'stopped' in vm_status.stdout"
       changed_when: false
 
-    - block:
+    - name: Convert qcow2
+      block:
         - name: Convert disk to qcow2 (full-size)
-          command: >
+          ansible.builtin.command: >
             qm move_disk {{ vmid }} scsi0 local-spsrv-proxmox --format qcow2 --delete
           changed_when: true
 
         - name: Delete old template
-          file:
+          ansible.builtin.file:
             path: "{{ updated_image_name }}"
             state: absent
 
         - name: Convert qcow2 to template (shrinked)
-          command: >
+          ansible.builtin.command: >
             qemu-img convert -O qcow2 -c
             {{ storage_path }}/images/{{ vmid }}/vm-{{ vmid }}-disk-0.qcow2
             {{ updated_image_name }}
           changed_when: true
 
         - name: Destroy VM
-          command: >
+          ansible.builtin.command: >
             qm destroy {{ vmid }}
           changed_when: true
       when: "'stopped' in vm_status.stdout"

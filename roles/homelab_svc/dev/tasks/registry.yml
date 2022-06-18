@@ -1,14 +1,14 @@
 ---
 - name: registry - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/registry/config"
     state: directory
     recurse: yes
   tags: registry
 
 - name: registry - copy files
-  template:
-    src: templates/{{ item.src }}
+  ansible.builtin.template:
+    src: "{{ item.src }}"
     dest: "{{ app_path }}/{{ item.dest }}"
     mode: 0644
   loop:
@@ -17,7 +17,7 @@
   tags: registry
 
 - name: registry - start
-  docker_container:
+  community.docker.docker_container:
     name: registry
     image: "{{ registry_image }}"
     pull: yes
@@ -35,7 +35,7 @@
   tags: registry
 
 - name: registry-ui - start
-  docker_container:
+  community.docker.docker_container:
     name: registry-ui
     image: "{{ registry_ui_image }}"
     pull: yes

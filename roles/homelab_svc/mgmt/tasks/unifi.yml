@@ -1,6 +1,6 @@
 ---
 - name: unifi - start
-  docker_container:
+  community.docker.docker_container:
     name: unifi
     image: "{{ unifi_image }}"
     pull: yes

@@ -1,6 +1,6 @@
 ---
 - name: vault - start
-  docker_container:
+  community.docker.docker_container:
     name: vault
     image: "{{ vault_image }}"
     pull: yes
@@ -28,7 +28,8 @@
   tags: vault
 
 - name: vault - status
-  command: docker exec vault sh -c 'vault status -format=json'
+  ansible.builtin.command: >
+    docker exec vault sh -c 'vault status -format=json'
   register: _vault_status
   until: '"initialized" in _vault_status.stdout'
   retries: 10
@@ -38,33 +39,37 @@
   tags: vault
 
 - name: vault - status - set_fact
-  set_fact:
+  ansible.builtin.set_fact:
     vault_status: "{{ _vault_status.stdout | from_json }}"
   tags: vault
 
-- block:
+- name: vault - init
+  block:
     - name: vault - init
-      command: docker exec vault sh -c 'vault operator init -key-shares 1 -key-threshold 1 -format=json'
+      ansible.builtin.command: >
+        docker exec vault sh -c 'vault operator init -key-shares 1 -key-threshold 1 -format=json'
       register: _vault_init_result
+      changed_when: true
       no_log: true
       tags: vault
 
     - name: vault - init - set_fact
-      set_fact:
+      ansible.builtin.set_fact:
         vault_unseal_key: "{{ _vault_init_result.stdout | from_json | json_query('unseal_keys_b64[0]') }}"
         vault_token: "{{ _vault_init_result.stdout | from_json | json_query('root_token') }}"
       no_log: true
       tags: vault
 
     - name: vault - init - print creds
-      debug:
+      ansible.builtin.debug:
         msg: "export VAULT_UNSEAL_KEY={{ vault_unseal_key }}; export VAULT_TOKEN={{ vault_token }}"
       tags: vault
   when: not vault_status.initialized
 
-- block:
+- name: vault - unseal key
+  block:
     - name: vault - unseal - prompt for key
-      pause:
+      ansible.builtin.pause:
         prompt: "Enter Unseal Key"
       register: prompt
       failed_when: prompt.user_input | length == 0
@@ -72,7 +77,7 @@
       tags: vault
 
     - name: Set  - unseal - set_fact
-      set_fact:
+      ansible.builtin.set_fact:
         vault_unseal_key: "{{ prompt.user_input }}"
       tags: vault
   no_log: true
@@ -82,15 +87,18 @@
     vault_unseal_key | length
 
 - name: vault - unseal
-  command: docker exec vault sh -c 'vault operator unseal -format=json {{ vault_unseal_key }}'
+  ansible.builtin.command: >
+    docker exec vault sh -c 'vault operator unseal -format=json {{ vault_unseal_key }}'
   register: _vault_unseal_result
   no_log: true
+  changed_when: true
   when: vault_status.sealed
   tags: vault
 
-- block:
+- name: vault - configure
+  block:
     - name: vault - audit enable
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault audit enable file file_path=/vault/logs/audit.log'
       register: _vault_audit_enable_result
       failed_when: _vault_audit_enable_result.rc == 2 and "already in use" not in _vault_audit_enable_result.stderr
@@ -98,7 +106,7 @@
       tags: vault
 
     - name: vault - auth enable
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault auth enable {{ item }}'
       loop: "{{ vault_auth_methods }}"
       register: _vault_auth_enable_result
@@ -107,7 +115,7 @@
       tags: vault
 
     - name: vault - secrets enable
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault secrets enable -path={{ item.path | default(item.name) }} {{ item.name }}'
       loop: "{{ vault_secrets_engines }}"
       register: _vault_secrets_enable_result
@@ -116,47 +124,52 @@
       tags: vault
 
     - name: vault - write ldap config
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault write auth/ldap/config {{ vault_ldap_config }}'
+      changed_when: true
       tags: vault
 
     - name: vault - write policies
-      command: |
+      ansible.builtin.command: |
         {{ vault_docker_exec }} 'vault policy write {{ item.name }} - << EOF
         {{ item.policy }}
         EOF'
+      changed_when: true
       loop: "{{ vault_policies }}"
       tags: vault
 
     - name: vault - apply policies to ldap groups
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault write auth/ldap/groups/{{ item.group }} policies={{ item.name }}'
+      changed_when: true
       loop: "{{ vault_policies }}"
       tags: vault
 
     - name: vault - ansible approle - create
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault write auth/approle/role/ansible \
         token_policies="ansible" \
         token_ttl=1h \
         token_max_ttl=4h'
+      changed_when: true
       tags: vault
 
     - name: vault - ansible approle - get role-id
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault read -field=role_id auth/approle/role/ansible/role-id'
       register: _vault_role_id_result
       changed_when: false
       tags: vault
 
     - name: vault - ansible approle - get secret-id
-      command: |
+      ansible.builtin.command: >
         {{ vault_docker_exec }} 'vault write -f -field=secret_id auth/approle/role/ansible/secret-id'
       register: _vault_secret_id_result
+      changed_when: false
       tags: vault
 
     - name: vault - ansible approle - print creds
-      debug:
+      ansible.builtin.debug:
         msg: "export VAULT_ROLE_ID={{ _vault_role_id_result.stdout }}; export VAULT_SECRET_ID={{ _vault_secret_id_result.stdout }}"
       no_log: false
       tags: vault
@@ -164,7 +177,7 @@
   when: vault_token | length
 
 - name: vault - configure freeipa
-  include_tasks: freeipa_service_bind.yml
+  ansible.builtin.include_tasks: freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ vault_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ vault_ldap_bind_pw }}"

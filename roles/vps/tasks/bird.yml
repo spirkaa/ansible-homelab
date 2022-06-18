@@ -1,12 +1,12 @@
 ---
 - name: bird - install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - bird
 
 - name: bird - create files
-  file:
+  ansible.builtin.file:
     path: "{{ vps_bird_config_path }}/{{ item }}"
     state: touch
     access_time: preserve
@@ -16,7 +16,7 @@
     - allyouneed.txt
 
 - name: bird - copy configuration
-  template:
+  ansible.builtin.template:
     src: bird.conf.j2
     dest: "{{ vps_bird_config_path }}/bird.conf"
     owner: bird

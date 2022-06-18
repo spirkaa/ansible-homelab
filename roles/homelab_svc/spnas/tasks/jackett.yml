@@ -1,13 +1,13 @@
 ---
 # - name: jackett - create dir
-#   file:
+#   ansible.builtin.file:
 #     path: "{{ app_path }}/jackett"
 #     state: directory
 #     recurse: yes
 #   tags: jackett
 
 # - name: jackett - copy files
-#   copy:
+#   ansible.builtin.copy:
 #     src: "files/{{ item }}"
 #     dest: "{{ app_path }}/jackett"
 #     mode: 0644
@@ -18,7 +18,7 @@
 #   tags: jackett
 
 - name: jackett - start
-  docker_container:
+  community.docker.docker_container:
     name: jackett
     image: "{{ jackett_image }}"
     pull: yes

@@ -81,7 +81,7 @@
 
   tasks:
     - name: Set static DNS mapping
-      edgeos_config:
+      community.network.edgeos_config:
         lines:
           - set system static-host-mapping host-name {{ dns_entry.alias }}.{{ dn }} inet {{ dns_entry.inet }}
           - set system static-host-mapping host-name {{ dns_entry.alias }}.{{ dn }} alias {{ dns_entry.alias }}
@@ -91,7 +91,7 @@
       tags: [never, dns]
 
 # - name: Delete static DNS mapping
-#   edgeos_config:
+#   community.network.edgeos_config:
 #     lines:
 #       - delete system static-host-mapping host-name {{ dns_entry.alias }}.{{ dn }}
 #   loop_control:

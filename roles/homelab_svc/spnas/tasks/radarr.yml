@@ -1,6 +1,6 @@
 ---
 - name: radarr - start
-  docker_container:
+  community.docker.docker_container:
     name: radarr
     image: "{{ radarr_image }}"
     pull: yes

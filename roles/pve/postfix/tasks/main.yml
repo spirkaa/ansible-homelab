@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - postfix
@@ -8,7 +8,7 @@
       - libsasl2-modules
 
 - name: Copy files
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: /etc/postfix/{{ item.dest }}
     mode: "{{ item.mode }}"

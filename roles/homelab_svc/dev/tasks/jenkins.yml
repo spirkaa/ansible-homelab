@@ -8,7 +8,7 @@
 
 - name: jenkins - copy files
   ansible.builtin.template:
-    src: templates/{{ item.src }}
+    src: "{{ item.src }}"
     dest: "{{ app_path }}/{{ item.dest }}"
     mode: 0644
   loop:

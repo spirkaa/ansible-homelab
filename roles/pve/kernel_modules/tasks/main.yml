@@ -1,23 +1,16 @@
 ---
-- name: Copy /etc/modprobe.d files
-  copy:
-    src: files/{{ item }}
-    dest: /etc/modprobe.d
+- name: Copy files
+  ansible.builtin.copy:
+    src: files/{{ item.src }}
+    dest: "{{ item.dest }}"
     mode: 0644
-  notify: show reboot msg
   loop:
-    - kvm.conf
-    - kvm-intel.conf
-
-- name: Copy /etc/modules
-  copy:
-    src: files/modules
-    dest: /etc
-    mode: 0644
-  notify: show reboot msg
+    - { src: kvm.conf, dest: /etc/modprobe.d }
+    - { src: kvm-intel.conf, dest: /etc/modprobe.d }
+    - { src: modules, dest: /etc }
 
 - name: Edit grub config
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"'

@@ -1,13 +1,14 @@
 ---
-- block:
+- name: Tasks for specific hosts
+  block:
     - name: Install packages
-      package:
+      ansible.builtin.package:
         state: present
         name:
           - nut
 
     - name: Copy config files
-      template:
+      ansible.builtin.template:
         src: "{{ item }}.j2"
         dest: "{{ nut_config_path }}/{{ item }}"
         owner: root

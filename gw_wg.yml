@@ -58,7 +58,7 @@
 
   pre_tasks:
     - name: Wait for cloud-init to finish
-      wait_for:
+      ansible.builtin.wait_for:
         path: /var/lib/cloud/instance/boot-finished
 
   roles:
@@ -71,10 +71,10 @@
 
   tasks:
     - name: Flush handlers
-      meta: flush_handlers
+      ansible.builtin.meta: flush_handlers
 
     - name: Set sysctl entry
-      sysctl:
+      ansible.posix.sysctl:
         name: net.ipv4.conf.all.src_valid_mark
         value: "1"
         sysctl_set: yes
@@ -83,7 +83,7 @@
       become: true
 
     - name: Start {{ wg_pia_name }} container
-      docker_container:
+      community.docker.docker_container:
         name: "{{ wg_pia_name }}"
         image: "{{ wg_pia_image }}"
         pull: yes
@@ -111,7 +111,7 @@
       become: true
 
     - name: Start {{ wg_access_name }} container
-      docker_container:
+      community.docker.docker_container:
         name: "{{ wg_access_name }}"
         image: "{{ wg_access_image }}"
         pull: yes
@@ -138,7 +138,7 @@
       become: true
 
     - name: Start {{ squid_name }} container
-      docker_container:
+      community.docker.docker_container:
         name: "{{ squid_name }}"
         image: "{{ squid_image }}"
         pull: yes

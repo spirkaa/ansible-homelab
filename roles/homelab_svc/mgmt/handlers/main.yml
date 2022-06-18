@@ -1,13 +1,13 @@
 ---
 - name: freeipa - restart
-  docker_container:
+  community.docker.docker_container:
     name: freeipa
     state: started
     restart: yes
   no_log: true
 
 - name: vaultwarden_ldap - restart
-  docker_container:
+  community.docker.docker_container:
     name: vaultwarden_ldap
     state: started
     restart: yes

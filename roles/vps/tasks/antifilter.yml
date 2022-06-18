@@ -1,18 +1,18 @@
 ---
 - name: antifilter - create directory
-  file:
+  ansible.builtin.file:
     path: /opt/antifilter
     state: directory
     mode: 0700
 
 - name: antifilter - copy files
-  copy:
+  ansible.builtin.copy:
     src: files/antifilter.sh
     dest: "{{ vps_antifilter_path }}"
     mode: 0700
 
 - name: antifilter - create a cron job
-  cron:
+  ansible.builtin.cron:
     name: antifilter
     minute: "*/30"
     user: root

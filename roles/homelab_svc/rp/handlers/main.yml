@@ -1,6 +1,6 @@
 ---
 - name: npm - restart
-  docker_container:
+  community.docker.docker_container:
     name: npm
     state: started
     restart: yes

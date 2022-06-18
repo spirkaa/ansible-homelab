@@ -1,6 +1,6 @@
 ---
 - name: lidarr - start
-  docker_container:
+  community.docker.docker_container:
     name: lidarr
     image: "{{ lidarr_image }}"
     pull: yes

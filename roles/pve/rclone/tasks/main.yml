@@ -1,35 +1,39 @@
 ---
 - name: Load rclone configs
-  include_vars: vars/rclone_configs.vault.yml
+  ansible.builtin.include_vars: vars/rclone_configs.vault.yml
   no_log: true
 
-- block:
+- name: Tasks for specific hosts
+  block:
     - name: Check whether rclone is installed
-      command: dpkg-query -W rclone
+      ansible.builtin.command: >
+        dpkg-query -W rclone
       ignore_errors: True
       register: rclone_is_installed
       changed_when: rclone_is_installed.rc != 0
 
-    - block:
+    - name: Download and install package
+      block:
         - name: Download rclone package
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ rclone_url }}"
             dest: /tmp/{{ rclone_url | basename }}
+            mode: 0644
 
         - name: Install rclone package
-          apt:
+          ansible.builtin.apt:
             deb: /tmp/{{ rclone_url | basename }}
             state: present
       when: rclone_version not in rclone_is_installed.stdout
 
     - name: Create config dir
-      file:
+      ansible.builtin.file:
         path: "{{ rclone_config_location | dirname }}"
         state: directory
         mode: 0700
 
     - name: Copy config
-      template:
+      ansible.builtin.template:
         src: rclone.conf.j2
         dest: "{{ rclone_config_location }}"
         mode: 0600
@@ -37,20 +41,20 @@
       no_log: true
 
     - name: Create scripts dir
-      file:
+      ansible.builtin.file:
         path: "{{ rclone_sync_path }}"
         state: directory
         recurse: yes
 
     - name: Copy scripts
-      template:
+      ansible.builtin.template:
         src: rclone-sync.j2
         dest: "{{ rclone_sync_path }}/{{ item.name }}"
         mode: 0755
       loop: "{{ rclone_sync_config }}"
 
     - name: Setup cron jobs
-      cron:
+      ansible.builtin.cron:
         user: "{{ item.user | default('root') }}"
         job: "/opt/rclone-sync/{{ item.name }} > /dev/null 2>&1 && curl -fsS --retry 3 {{ inventory__healthchecksio_url }}/{{ item.name }} > /dev/null 2>&1"
         name: "{{ item.name }}"

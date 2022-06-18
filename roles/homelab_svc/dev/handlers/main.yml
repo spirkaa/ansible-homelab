@@ -1,20 +1,20 @@
 ---
 - name: gitea - restart
-  docker_container:
+  community.docker.docker_container:
     name: gitea
     state: started
     restart: yes
   when: not gitea_start.changed
 
 - name: registry - restart
-  docker_container:
+  community.docker.docker_container:
     name: registry
     state: started
     restart: yes
   when: not registry_start.changed
 
 - name: jenkins - restart
-  docker_container:
+  community.docker.docker_container:
     name: jenkins
     state: started
     restart: yes

@@ -1,6 +1,6 @@
 ---
 - name: Configure smartd
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/smartd.conf
     regexp: "^DEVICESCAN -d removable"
     line: "DEVICESCAN -a -o on -S on -m root -M diminishing -R 5 -W 4,40,55 -I 194 -s (S/../../(1|2|3|4|5|6)/02|L/../../7/02)"

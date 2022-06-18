@@ -1,6 +1,6 @@
 ---
 - name: delugevpn - start
-  docker_container:
+  community.docker.docker_container:
     name: delugevpn
     image: "{{ delugevpn_image }}"
     pull: yes

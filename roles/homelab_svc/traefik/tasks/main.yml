@@ -1,18 +1,18 @@
 ---
 - name: traefik - create network
-  docker_network:
+  community.docker.docker_network:
     name: "{{ traefik_network_name }}"
   tags: traefik
 
 - name: traefik - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ traefik_cert_path_host }}"
     state: directory
     recurse: yes
   tags: traefik
 
 - name: traefik - copy certificate
-  copy:
+  ansible.builtin.copy:
     content: "{{ inventory__ssl_certificate }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.crt"
     mode: 0644
@@ -20,7 +20,7 @@
   tags: traefik
 
 - name: traefik - copy certificate private key
-  copy:
+  ansible.builtin.copy:
     content: "{{ inventory__ssl_private_key }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.key"
     mode: 0644
@@ -29,15 +29,15 @@
   tags: traefik
 
 - name: traefik - copy config
-  template:
-    src: templates/dyn.toml.j2
+  ansible.builtin.template:
+    src: dyn.toml.j2
     dest: "{{ traefik_config_file_host }}"
     mode: 0644
   notify: traefik - restart
   tags: traefik
 
 - name: traefik - start
-  docker_container:
+  community.docker.docker_container:
     name: traefik
     image: "{{ traefik_image }}"
     pull: yes
@@ -51,7 +51,7 @@
     networks:
       - name: "{{ traefik_network_name }}"
     networks_cli_compatible: yes
-    command: >
+    command:
       --log.level={{ traefik_log_level }}
       --api=true
       --metrics.prometheus=true

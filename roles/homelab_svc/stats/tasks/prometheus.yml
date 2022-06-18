@@ -1,6 +1,6 @@
 ---
 - name: prometheus - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/prometheus/{{ item }}"
     state: directory
     recurse: yes
@@ -10,28 +10,29 @@
   tags: [prometheus, grafana]
 
 - name: prometheus - copy files
-  template:
-    src: templates/prometheus.yml.j2
+  ansible.builtin.template:
+    src: prometheus.yml.j2
     dest: "{{ app_path }}/prometheus/config/prometheus.yml"
     mode: 0644
   notify: prometheus - restart
   tags: [prometheus, grafana]
 
 - name: prometheus - get data dir ownership
-  stat:
+  ansible.builtin.stat:
     path: "{{ app_path }}/prometheus/data"
   register: prometheus_data
   tags: [prometheus, grafana]
 
 - name: prometheus - set data dir ownership
-  command: chown -R 65534:65534 {{ app_path }}/prometheus/data
+  ansible.builtin.command: >
+    chown -R 65534:65534 {{ app_path }}/prometheus/data
   when: prometheus_data.stat.uid != 65534 or prometheus_data.stat.gid != 65534
   args:
     warn: no
   tags: [prometheus, grafana]
 
 - name: prometheus - start
-  docker_container:
+  community.docker.docker_container:
     name: prometheus
     image: "{{ prometheus_image }}"
     pull: yes

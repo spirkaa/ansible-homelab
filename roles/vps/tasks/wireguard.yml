@@ -1,18 +1,18 @@
 ---
 - name: wireguard - install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - iptables-persistent
 
 - name: wireguard - create directories
-  file:
+  ansible.builtin.file:
     path: "{{ vps_wg_config_path }}"
     state: directory
     mode: 0700
 
 - name: wireguard - copy configuration
-  template:
+  ansible.builtin.template:
     src: wireguard.conf.j2
     dest: "{{ vps_wg_config_path }}/{{ vps_wg_interface }}.conf"
     mode: 0600
@@ -20,7 +20,7 @@
   notify: restart wireguard
 
 - name: wireguard - configure iptables - forwarding
-  iptables:
+  ansible.builtin.iptables:
     chain: FORWARD
     in_interface: "{{ vps_wg_interface }}"
     jump: ACCEPT
@@ -29,7 +29,7 @@
   notify: save iptables
 
 - name: wireguard - configure iptables - masquerade
-  iptables:
+  ansible.builtin.iptables:
     table: nat
     chain: POSTROUTING
     out_interface: "{{ vps_wan_interface }}"
@@ -39,7 +39,7 @@
   notify: save iptables
 
 # - name: wireguard - configure iptables - forward ports
-#   iptables:
+#   ansible.builtin.iptables:
 #     table: nat
 #     chain: PREROUTING
 #     in_interface: "{{ vps_wan_interface }}"
@@ -53,7 +53,7 @@
 #   notify: save iptables
 
 # - name: wireguard - configure iptables - SNAT
-#   iptables:
+#   ansible.builtin.iptables:
 #     table: nat
 #     chain: POSTROUTING
 #     source: "{{ vps_wg_peers[0].public_ip }}"

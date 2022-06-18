@@ -1,6 +1,6 @@
 ---
 - name: bazarr - start
-  docker_container:
+  community.docker.docker_container:
     name: bazarr
     image: "{{ bazarr_image }}"
     pull: yes

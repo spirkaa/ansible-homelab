@@ -1,6 +1,6 @@
 ---
 - name: plex - start
-  docker_container:
+  community.docker.docker_container:
     name: plex
     image: "{{ plex_image }}"
     pull: yes

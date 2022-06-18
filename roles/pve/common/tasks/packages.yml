@@ -1,6 +1,6 @@
 ---
 - name: Configure APT sources
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: 0644
@@ -9,18 +9,18 @@
     - { src: pve-no-subscription.list.j2, dest: /etc/apt/sources.list.d/pve-no-subscription.list }
 
 - name: Remove PVE Enterprise repo
-  file:
+  ansible.builtin.file:
     path: /etc/apt/sources.list.d/pve-enterprise.list
     state: absent
 
 - name: Upgrade packages
-  package:
+  ansible.builtin.package:
     update_cache: yes
     state: latest
     name: '*'
 
 - name: Install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - openvswitch-switch

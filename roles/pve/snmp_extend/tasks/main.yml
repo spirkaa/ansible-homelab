@@ -1,40 +1,41 @@
 ---
 - name: Install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - libpve-apiclient-perl
       - sudo
 
 - name: Create dir
-  file:
+  ansible.builtin.file:
     path: "{{ snmp_extend_scripts_path }}"
     state: directory
     mode: 0755
 
 - name: Download scripts
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ item }}"
     dest: "{{ snmp_extend_scripts_path }}/{{ item | basename }}"
+    mode: 0755
     force: yes
   loop: "{{ snmp_extend_scripts }}"
   notify: restart snmpd
 
 - name: Copy smart.config
-  template:
-    src: templates/smart.config.j2
+  ansible.builtin.template:
+    src: smart.config.j2
     dest: /etc/snmp/extend/smart.config
     mode: 0644
   notify: restart snmpd
 
 - name: Copy sudoers.d file
-  copy:
+  ansible.builtin.copy:
     src: files/snmp_sudo
     dest: /etc/sudoers.d
     mode: 0440
 
 - name: Create a cron job
-  cron:
+  ansible.builtin.cron:
     name: snmp_smart
     minute: "*/5"
     user: root
@@ -42,7 +43,7 @@
     cron_file: snmp_smart
 
 - name: Update snmpd.conf
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/snmp/snmpd.conf
     block: |
       extend hardware '/bin/cat /sys/devices/virtual/dmi/id/product_name'

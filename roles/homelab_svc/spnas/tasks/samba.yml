@@ -1,21 +1,21 @@
 ---
 - name: samba - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/samba/config"
     state: directory
     recurse: yes
   tags: samba
 
 - name: samba - copy files
-  template:
-    src: templates/smb.conf.j2
+  ansible.builtin.template:
+    src: smb.conf.j2
     dest: "{{ app_path }}/samba/config/smb.conf"
     mode: 0644
   notify: samba - restart
   tags: samba
 
 - name: samba - start
-  docker_container:
+  community.docker.docker_container:
     name: samba
     image: "{{ samba_image }}"
     pull: yes

@@ -5,7 +5,7 @@
 
   tasks:
     - name: manage users
-      include_tasks: roles/homelab_svc/mgmt/tasks/freeipa_user.yml
+      ansible.builtin.include_tasks: roles/homelab_svc/mgmt/tasks/freeipa_user.yml
       loop_control:
         loop_var: user
       loop: "{{ lookup('dict', inventory__ldap_users) }}"

@@ -1,6 +1,6 @@
 ---
 - name: npm-db - start
-  docker_container:
+  community.docker.docker_container:
     name: npm-db
     image: "{{ npm_db_image }}"
     pull: yes
@@ -19,14 +19,14 @@
   tags: npm
 
 - name: npm - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/npm/app/data/nginx"
     state: directory
     recurse: yes
   tags: npm
 
 - name: npm - copy files
-  copy:
+  ansible.builtin.copy:
     src: files/custom
     dest: "{{ app_path }}/npm/app/data/nginx"
     mode: 0644
@@ -35,7 +35,7 @@
   tags: npm
 
 - name: npm - start
-  docker_container:
+  community.docker.docker_container:
     name: npm
     image: "{{ npm_image }}"
     pull: yes

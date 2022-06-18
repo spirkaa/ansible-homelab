@@ -1,12 +1,12 @@
 ---
 - name: homeassistant
-  include_tasks: homeassistant.yml
+  ansible.builtin.include_tasks: homeassistant.yml
   tags: homeassistant
 
 - name: esphome
-  include_tasks: esphome.yml
+  ansible.builtin.include_tasks: esphome.yml
   tags: esphome
 
 - name: grocy
-  include_tasks: grocy.yml
+  ansible.builtin.include_tasks: grocy.yml
   tags: grocy

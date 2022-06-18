@@ -1,7 +1,6 @@
 ---
 - name: freeipa - include_vars
-  include_vars:
-    file: ../defaults/main.yml
+  ansible.builtin.include_vars: ../defaults/main.yml
   no_log: true
 
 - name: freeipa - manage user '{{ user.key }}'

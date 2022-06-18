@@ -1,6 +1,6 @@
 ---
 - name: mail - restart
-  docker_container:
+  community.docker.docker_container:
     name: mail
     state: started
     restart: yes

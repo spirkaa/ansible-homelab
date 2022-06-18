@@ -1,6 +1,6 @@
 ---
 - name: grocy - start
-  docker_container:
+  community.docker.docker_container:
     name: grocy
     image: "{{ grocy_image }}"
     pull: yes
@@ -17,7 +17,7 @@
   tags: grocy
 
 - name: barcodebuddy - start
-  docker_container:
+  community.docker.docker_container:
     name: barcodebuddy
     image: "{{ barcodebuddy_image }}"
     pull: yes

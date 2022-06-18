@@ -9,7 +9,8 @@
     template_image_path: /mnt/pve/spsrv-proxmox/template/qcow2
 
   tasks:
-    - block:
+    - name: template image
+      block:
         - name: template image - download
           ansible.builtin.get_url:
             url: "{{ item }}"

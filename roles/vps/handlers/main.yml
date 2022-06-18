@@ -6,7 +6,8 @@
     state: restarted
 
 - name: save iptables
-  ansible.builtin.command: /usr/sbin/netfilter-persistent save
+  ansible.builtin.command: >
+    /usr/sbin/netfilter-persistent save
 
 - name: restart iptables
   ansible.builtin.service:
@@ -15,7 +16,8 @@
   listen: save iptables
 
 - name: execute antifilter
-  ansible.builtin.command: "{{ vps_antifilter_path }}"
+  ansible.builtin.command: >
+    "{{ vps_antifilter_path }}"
   listen: restart bird
 
 - name: restart bird

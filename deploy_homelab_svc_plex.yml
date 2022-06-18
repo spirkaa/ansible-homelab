@@ -1,15 +1,15 @@
 ---
-- hosts: spmini
+- hosts: sppve
   gather_facts: no
 
   vars:
     resource_type: ct
-    vmid: 200
+    vmid: 500
     hostname: plex
     comment: Plex
     cores: 4
     mem: 8192
-    disk_size: 220
+    disk_size: 200
     net_ip: 192.168.10.10
     net_vlan: 10
     net_gw: 192.168.10.1

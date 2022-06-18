@@ -1,13 +1,13 @@
 ---
 - name: influxdb - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/influxdb/config"
     state: directory
     recurse: yes
   tags: [influxdb, grafana]
 
 - name: influxdb - copy files
-  copy:
+  ansible.builtin.copy:
     src: files/influxdb.conf
     dest: "{{ app_path }}/influxdb/config"
     mode: 0644
@@ -15,7 +15,7 @@
   tags: [influxdb, grafana]
 
 - name: influxdb - start
-  docker_container:
+  community.docker.docker_container:
     name: influxdb
     image: "{{ influxdb_image }}"
     pull: yes

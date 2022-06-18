@@ -1,6 +1,6 @@
 ---
 - name: homeassistant - restart
-  docker_container:
+  community.docker.docker_container:
     name: homeassistant
     state: started
     restart: yes

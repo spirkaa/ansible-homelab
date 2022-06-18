@@ -1,8 +1,8 @@
 ---
 - name: npm
-  include_tasks: npm.yml
+  ansible.builtin.include_tasks: npm.yml
   tags: npm
 
 # - name: goaccess
-#   include_tasks: goaccess.yml
+#   ansible.builtin.include_tasks: goaccess.yml
 #   tags: goaccess

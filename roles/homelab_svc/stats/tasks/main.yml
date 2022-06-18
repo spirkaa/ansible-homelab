@@ -1,30 +1,30 @@
 ---
 - name: loki
-  include_tasks: loki.yml
+  ansible.builtin.include_tasks: loki.yml
   tags: [loki, grafana]
 
 - name: prometheus
-  include_tasks: prometheus.yml
+  ansible.builtin.include_tasks: prometheus.yml
   tags: [prometheus, grafana]
 
 - name: influxdb
-  include_tasks: influxdb.yml
+  ansible.builtin.include_tasks: influxdb.yml
   tags: [influxdb, grafana]
 
 - name: grafana
-  include_tasks: grafana.yml
+  ansible.builtin.include_tasks: grafana.yml
   tags: grafana
 
 - name: librenms
-  include_tasks: librenms.yml
+  ansible.builtin.include_tasks: librenms.yml
   tags: librenms
 
 - name: mosquitto
-  include_tasks: mosquitto.yml
+  ansible.builtin.include_tasks: mosquitto.yml
   tags: mosquitto
 
 - name: grafana - configure freeipa
-  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ grafana_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ grafana_ldap_bind_pw }}"
@@ -40,7 +40,7 @@
   tags: grafana
 
 - name: librenms - configure freeipa
-  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ librenms_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ librenms_ldap_bind_pw }}"

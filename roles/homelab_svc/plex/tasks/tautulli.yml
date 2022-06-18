@@ -1,13 +1,13 @@
 ---
 - name: tautulli - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/tautulli/config/newsletter_template"
     state: directory
     recurse: yes
   tags: tautulli
 
 - name: tautulli - copy files
-  template:
+  ansible.builtin.template:
     src: recently_added.html.j2
     dest: "{{ app_path }}/tautulli/config/newsletter_template/recently_added.html"
     owner: "{{ puid }}"
@@ -16,7 +16,7 @@
   tags: tautulli
 
 - name: tautulli - start
-  docker_container:
+  community.docker.docker_container:
     name: tautulli
     image: "{{ tautulli_image }}"
     pull: yes

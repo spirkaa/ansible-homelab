@@ -1,23 +1,23 @@
 ---
 - name: Install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - figlet
 
 - name: Delete /etc/motd
-  file:
+  ansible.builtin.file:
     path: /etc/motd
     state: absent
 
 - name: Create update-motd.d dir
-  file:
+  ansible.builtin.file:
     path: /etc/update-motd.d
     state: directory
     recurse: yes
 
 - name: Copy files
-  copy:
+  ansible.builtin.copy:
     src: "files/{{ item }}"
     dest: "/etc/update-motd.d"
     mode: 0755
@@ -27,7 +27,7 @@
     - 90-footer
 
 - name: Copy 10-sysinfo
-  template:
-    src: templates/10-sysinfo.j2
+  ansible.builtin.template:
+    src: 10-sysinfo.j2
     dest: /etc/update-motd.d/10-sysinfo
     mode: 0755

@@ -1,14 +1,14 @@
 ---
 - name: homeassistant - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ homeassistant_config_path }}"
     state: directory
     recurse: yes
   tags: homeassistant
 
 - name: homeassistant - copy files
-  template:
-    src: templates/homeassistant/{{ item.src }}
+  ansible.builtin.template:
+    src: homeassistant/{{ item.src }}
     dest: "{{ homeassistant_config_path }}/{{ item.dest }}"
     mode: 0644
   loop:
@@ -21,7 +21,7 @@
   tags: homeassistant
 
 - name: homeassistant - start
-  docker_container:
+  community.docker.docker_container:
     name: homeassistant
     image: "{{ homeassistant_image }}"
     pull: yes

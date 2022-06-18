@@ -1,40 +1,44 @@
 ---
 - name: Install package (Debian 10)
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - rsnapshot
   when: ansible_distribution == "Debian" and ansible_distribution_version == "10"
 
-- block:
+- name: Install package (Debian 11) (block)
+  block:
     - name: Check whether rsnapshot is installed
-      command: dpkg-query -W rsnapshot
+      ansible.builtin.command: >
+        dpkg-query -W rsnapshot
       ignore_errors: True
       register: rsnapshot_is_installed
       changed_when: rsnapshot_is_installed.rc != 0
 
-    - block:
+    - name: Download and install package
+      block:
         - name: Download package
-          get_url:
+          ansible.builtin.get_url:
             url: "{{ rsnapshot_package_url }}"
             dest: /tmp/{{ rsnapshot_package_url | basename }}
             checksum: "{{ rsnapshot_checksum }}"
+            mode: 0644
 
         - name: Install package (Debian 11)
-          apt:
+          ansible.builtin.apt:
             deb: /tmp/{{ rsnapshot_package_url | basename }}
             state: present
       when: rsnapshot_version not in rsnapshot_is_installed.stdout
   when: ansible_distribution == "Debian" and ansible_distribution_version == "11"
 
 - name: Copy configuration
-  template:
-    src: templates/rsnapshot.conf.j2
+  ansible.builtin.template:
+    src: rsnapshot.conf.j2
     dest: /etc/rsnapshot.conf
     mode: 0644
 
 - name: Copy cron schedule
-  copy:
+  ansible.builtin.copy:
     src: files/rsnapshot
     dest: /etc/cron.d
     mode: 0644

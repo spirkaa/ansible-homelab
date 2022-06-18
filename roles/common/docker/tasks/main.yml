@@ -1,19 +1,19 @@
 ---
 - name: Create docker.service.d directory
-  file:
+  ansible.builtin.file:
     path: /etc/systemd/system/docker.service.d
     state: directory
     recurse: yes
 
 - name: Copy daemon.json
-  copy:
+  ansible.builtin.copy:
     src: files/daemon.json
     dest: /etc/docker
     mode: 0644
   notify: Restart docker service
 
 - name: Copy override.conf
-  copy:
+  ansible.builtin.copy:
     src: files/override.conf
     dest: /etc/systemd/system/docker.service.d
     mode: 0644

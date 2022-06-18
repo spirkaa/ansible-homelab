@@ -1,11 +1,11 @@
 ---
 - name: minio - start
-  docker_container:
+  community.docker.docker_container:
     name: minio
     image: "{{ minio_image }}"
     pull: yes
     user: 1000:1000
-    command: "server /data --console-address :9001"
+    command: server /data --console-address :9001
     ports:
       - "9000:9000"
       - "9001:9001"

@@ -1,20 +1,20 @@
 ---
 - name: jellyfin
-  include_tasks: jellyfin.yml
+  ansible.builtin.include_tasks: jellyfin.yml
   tags: jellyfin
 
 - name: plex
-  include_tasks: plex.yml
+  ansible.builtin.include_tasks: plex.yml
   tags: plex
 
 - name: tautulli
-  include_tasks: tautulli.yml
+  ansible.builtin.include_tasks: tautulli.yml
   tags: tautulli
 
 - name: ombi
-  include_tasks: ombi.yml
+  ansible.builtin.include_tasks: ombi.yml
   tags: ombi
 
 # - name: airvideohd
-#   include_tasks: airvideohd.yml
+#   ansible.builtin.include_tasks: airvideohd.yml
 #   tags: airvideohd

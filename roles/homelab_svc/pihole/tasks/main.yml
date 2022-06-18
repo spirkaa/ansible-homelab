@@ -1,14 +1,14 @@
 ---
 - name: pihole - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/pihole/config/dnsmasq.d"
     state: directory
     recurse: yes
   tags: pihole
 
 - name: pihole - copy files
-  template:
-    src: templates/{{ item.src }}
+  ansible.builtin.template:
+    src: "{{ item.src }}"
     dest: "{{ app_path }}/pihole/{{ item.dest }}"
     mode: 0644
   loop:
@@ -18,7 +18,7 @@
   tags: pihole
 
 - name: pihole - start
-  docker_container:
+  community.docker.docker_container:
     name: pihole
     image: "{{ pihole_image }}"
     pull: yes
@@ -55,7 +55,7 @@
   tags: pihole
 
 - name: pihole - wait for container healthy state
-  docker_container_info:
+  community.docker.docker_container_info:
     name: pihole
   register: result
   retries: 10

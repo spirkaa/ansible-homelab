@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  package:
+  ansible.builtin.package:
     state: present
     name:
       - sudo
@@ -8,68 +8,73 @@
       - smartmontools
       - hddtemp
 
-- block:
+- name: Tasks for specific hosts
+  block:
     - name: Install packages
-      package:
+      ansible.builtin.package:
         state: present
         name:
           - ipmitool
 
     - name: Copy telegraf_ipmi script
-      copy:
+      ansible.builtin.copy:
         src: files/telegraf_ipmi
         dest: /usr/local/bin
         mode: 0755
   when: inventory_hostname == "spsrv" or inventory_hostname == "spmaxi"
 
-- block:
+- name: Tasks for specific hosts
+  block:
     - name: Copy hddtemp config generator
-      copy:
+      ansible.builtin.copy:
         src: files/hddtemp_systemd_gen
         dest: /usr/local/bin/hddtemp_systemd_gen
         mode: 0755
       register: hddtemp_cfg
 
     - name: Creaty systemd dir
-      file:
+      ansible.builtin.file:
         path: /usr/lib/systemd/system
         state: directory
         mode: 0755
 
     - name: Configure hddtemp
-      shell: >
+      ansible.builtin.shell: >
         /usr/local/bin/hddtemp_systemd_gen > /usr/lib/systemd/system/hddtemp.service
       when: hddtemp_cfg.changed
       notify: restart hddtemp
   when: inventory_hostname == "spsrv"
 
 - name: Copy sudoers.d file
-  copy:
+  ansible.builtin.copy:
     src: files/telegraf_sudo
     dest: /etc/sudoers.d
     mode: 0440
 
 - name: Check whether telegraf is installed
-  command: dpkg-query -W telegraf
+  ansible.builtin.command: >
+    dpkg-query -W telegraf
   ignore_errors: True
   register: telegraf_is_installed
   changed_when: telegraf_is_installed.rc != 0
 
-- block:
+- name: Download and install package
+  block:
     - name: Download telegraf package
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ telegraf_agent_url }}"
         dest: /tmp/{{ telegraf_agent_package }}
+        mode: 0644
 
     - name: Install telegraf package
-      apt:
+      ansible.builtin.apt:
         deb: /tmp/{{ telegraf_agent_package }}
         state: present
   when: telegraf_agent_version not in telegraf_is_installed.stdout
 
 - name: Copy telegraf.conf
-  template:
-    src: templates/telegraf.conf.j2
+  ansible.builtin.template:
+    src: telegraf.conf.j2
     dest: /etc/telegraf/telegraf.conf
     mode: 0644
   notify: restart telegraf

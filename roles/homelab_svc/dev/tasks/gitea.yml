@@ -60,7 +60,7 @@
   notify: gitea - restart
   tags: gitea
 
-- name: gitea - db - start
+- name: gitea-db - start
   community.docker.docker_container:
     name: gitea-db
     image: "{{ gitea_db_image }}"
@@ -124,14 +124,14 @@
         --email-attribute mail \
         --public-ssh-key-attribute ipaSshPubKey \
         --synchronize-users'
-  register: _auth_source_result
+  register: _auth_source_ldap_result
   retries: 12
   delay: 5
-  until: _auth_source_result is not failed
-  changed_when: _auth_source_result.rc == 0
+  until: _auth_source_ldap_result is not failed
+  changed_when: _auth_source_ldap_result.rc == 0
   failed_when: >
-    _auth_source_result.rc >= 1 and
-    "login source already exists" not in _auth_source_result.stdout
+    _auth_source_ldap_result.rc >= 1 and
+    "login source already exists" not in _auth_source_ldap_result.stdout
   no_log: true
   tags: gitea
 
@@ -144,7 +144,8 @@
   failed_when: gpg_key.rc == 2
   tags: gitea
 
-- block:
+- name: gitea - gpg
+  block:
     - name: gitea - gpg - copy key template
       ansible.builtin.copy:
         src: files/gen-key-script

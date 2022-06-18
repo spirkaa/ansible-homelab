@@ -1,15 +1,18 @@
 ---
 - name: mergerfs - check if installed
-  ansible.builtin.command: dpkg-query -W mergerfs
+  ansible.builtin.command: >
+    dpkg-query -W mergerfs
   ignore_errors: True
   register: mergerfs_is_installed
   changed_when: mergerfs_is_installed.rc != 0
 
-- block:
+- name: mergerfs - download and install package
+  block:
     - name: mergerfs - download package
       ansible.builtin.get_url:
         url: "{{ mergerfs_package_url }}"
         dest: /tmp/{{ mergerfs_package_name }}
+        mode: 0644
 
     - name: mergerfs - install package
       ansible.builtin.apt:

@@ -1,13 +1,13 @@
 ---
 - name: mosquitto - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/mosquitto/config"
     state: directory
     recurse: yes
   tags: mosquitto
 
 - name: mosquitto - copy files
-  copy:
+  ansible.builtin.copy:
     src: files/mosquitto.conf
     dest: "{{ app_path }}/mosquitto/config"
     owner: "1883"
@@ -17,7 +17,7 @@
   tags: mosquitto
 
 - name: mosquitto - start
-  docker_container:
+  community.docker.docker_container:
     name: mosquitto
     image: "{{ mosquitto_image }}"
     pull: yes

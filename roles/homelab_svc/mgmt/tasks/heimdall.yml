@@ -1,6 +1,6 @@
 ---
 - name: heimdall - start
-  docker_container:
+  community.docker.docker_container:
     name: heimdall
     image: "{{ heimdall_image }}"
     pull: yes

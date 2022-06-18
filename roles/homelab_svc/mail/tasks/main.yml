@@ -1,6 +1,6 @@
 ---
 - name: autodiscover - start
-  docker_container:
+  community.docker.docker_container:
     name: autodiscover
     image: "{{ mail_autodiscover_image }}"
     pull: yes
@@ -26,14 +26,14 @@
   tags: mail
 
 - name: mail - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ mail_cert_path_host }}"
     state: directory
     recurse: yes
   tags: mail
 
 - name: mail - copy certificate
-  copy:
+  ansible.builtin.copy:
     content: "{{ inventory__ssl_certificate }}"
     dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.crt"
     mode: 0644
@@ -41,7 +41,7 @@
   tags: mail
 
 - name: mail - copy certificate private key
-  copy:
+  ansible.builtin.copy:
     content: "{{ inventory__ssl_private_key }}"
     dest: "{{ mail_cert_path_host }}/{{ mail_cert_name }}.key"
     mode: 0644
@@ -50,14 +50,14 @@
   tags: mail
 
 - name: mail - copy env file
-  template:
-    src: templates/env-mailserver.j2
+  ansible.builtin.template:
+    src: env-mailserver.j2
     dest: "{{ app_path }}/env-mailserver"
     mode: 0644
   tags: mail
 
 - name: mail - copy conf files
-  copy:
+  ansible.builtin.copy:
     src: "files/{{ item }}"
     dest: "{{ app_path }}"
     mode: 0644
@@ -67,16 +67,17 @@
   tags: mail
 
 - name: mail - download setup.sh
-  get_url:
+  ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/docker-mailserver/docker-mailserver/v{{ mailserver_version }}/setup.sh
     dest: "{{ app_path }}/setup_original.sh"
     mode: 0755
   register: mail_download_setup_sh_result
   tags: mail
 
-- block:
+- name: mail - setup.sh
+  block:
     - name: mail - copy setup.sh
-      copy:
+      ansible.builtin.copy:
         src: "{{ app_path }}/setup_original.sh"
         dest: "{{ app_path }}/setup.sh"
         mode: 0755
@@ -84,7 +85,7 @@
       tags: mail
 
     - name: mail - fix setup.sh for bash version <4.4
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: "{{ app_path }}/setup.sh"
         state: absent
         regexp: "^shopt -s inherit_errexit"
@@ -92,7 +93,7 @@
   when: mail_download_setup_sh_result.changed
 
 - name: mail - start
-  docker_container:
+  community.docker.docker_container:
     name: mail
     image: "{{ mail_image }}"
     pull: yes
@@ -122,7 +123,8 @@
   tags: mail
 
 - name: mail - customize running container
-  command: docker exec mail sh -c '{{ item }}'
+  ansible.builtin.command: >
+    docker exec mail sh -c '{{ item }}'
   changed_when: true
   when: mail_start.changed
   notify: mail - restart
@@ -131,27 +133,30 @@
   tags: mail
 
 - name: mail - generate dkim
-  command: "{{ app_path }}/setup.sh config dkim keysize 4096 domain {{ mail_domainname }}"
+  ansible.builtin.command: >
+    {{ app_path }}/setup.sh config dkim keysize 4096 domain {{ mail_domainname }}
   register: dkim_result
   changed_when: '"Creating DKIM private key" in dkim_result.stdout'
   notify: mail - restart
   tags: mail
 
-- block:
+- name: mail - dkim key
+  block:
     - name: mail - get dkim key
-      command: cat {{ mail_config_path_host }}/opendkim/keys/{{ mail_domainname }}/mail.txt
+      ansible.builtin.command: >
+        cat {{ mail_config_path_host }}/opendkim/keys/{{ mail_domainname }}/mail.txt
       register: dkim_key
       changed_when: false
       tags: mail
 
     - name: mail - print dkim key
-      debug:
+      ansible.builtin.debug:
         var: dkim_key.stdout_lines
       tags: mail
   when: dkim_result.changed
 
 - name: mail - configure freeipa
-  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ mail_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ mail_ldap_bind_pw }}"

@@ -16,7 +16,7 @@
 
   tasks:
     - name: proxmox - prepare freeipa
-      include_tasks: roles/homelab_svc/mgmt/tasks/freeipa_service_bind.yml
+      ansible.builtin.include_tasks: roles/homelab_svc/mgmt/tasks/freeipa_service_bind.yml
       vars:
         freeipa_service_bind_sysaccount_dn: "{{ proxmox_ldap_bind_dn }}"
         freeipa_service_bind_sysaccount_pass: "{{ proxmox_ldap_bind_pw }}"

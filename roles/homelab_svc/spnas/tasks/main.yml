@@ -1,58 +1,58 @@
 ---
 - name: muximux
-  include_tasks: muximux.yml
+  ansible.builtin.include_tasks: muximux.yml
   tags: muximux
 
 - name: delugevpn
-  include_tasks: delugevpn.yml
+  ansible.builtin.include_tasks: delugevpn.yml
   tags: delugevpn
 
 - name: jackett
-  include_tasks: jackett.yml
+  ansible.builtin.include_tasks: jackett.yml
   tags: jackett
 
 - name: prowlarr
-  include_tasks: prowlarr.yml
+  ansible.builtin.include_tasks: prowlarr.yml
   tags: prowlarr
 
 - name: sonarr
-  include_tasks: sonarr.yml
+  ansible.builtin.include_tasks: sonarr.yml
   tags: sonarr
 
 - name: radarr
-  include_tasks: radarr.yml
+  ansible.builtin.include_tasks: radarr.yml
   tags: radarr
 
 - name: lidarr
-  include_tasks: lidarr.yml
+  ansible.builtin.include_tasks: lidarr.yml
   tags: lidarr
 
 - name: bazarr
-  include_tasks: bazarr.yml
+  ansible.builtin.include_tasks: bazarr.yml
   tags: bazarr
 
 - name: flaresolverr
-  include_tasks: flaresolverr.yml
+  ansible.builtin.include_tasks: flaresolverr.yml
   tags: flaresolverr
 
 - name: monitorrent
-  include_tasks: monitorrent.yml
+  ansible.builtin.include_tasks: monitorrent.yml
   tags: monitorrent
 
 - name: samba
-  include_tasks: samba.yml
+  ansible.builtin.include_tasks: samba.yml
   tags: samba
 
 - name: minio
-  include_tasks: minio.yml
+  ansible.builtin.include_tasks: minio.yml
   tags: minio
 
 - name: nextcloud
-  include_tasks: nextcloud.yml
+  ansible.builtin.include_tasks: nextcloud.yml
   tags: nextcloud
 
 - name: nextcloud - configure freeipa
-  include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
     freeipa_service_bind_group_name: nextcloud_users
   args:

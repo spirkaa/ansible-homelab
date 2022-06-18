@@ -1,6 +1,6 @@
 ---
 - name: drone - start
-  docker_container:
+  community.docker.docker_container:
     name: drone
     image: "{{ drone_image }}"
     pull: yes
@@ -23,7 +23,7 @@
   tags: drone
 
 - name: drone-runner-docker - start
-  docker_container:
+  community.docker.docker_container:
     name: drone-runner-docker
     image: "{{ drone_runner_docker_image }}"
     pull: yes

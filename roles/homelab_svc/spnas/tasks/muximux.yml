@@ -1,6 +1,6 @@
 ---
 - name: muximux - start
-  docker_container:
+  community.docker.docker_container:
     name: muximux
     image: "{{ muximux_image }}"
     pull: yes
@@ -24,7 +24,7 @@
   tags: muximux
 
 - name: muximux - delete old front-end
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ muximux_www }}"
   notify: muximux - restart
@@ -32,11 +32,11 @@
   tags: muximux
 
 - name: Force all notified handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
   tags: muximux
 
 - name: muximux - wait for settings.ini.php-example
-  wait_for:
+  ansible.builtin.wait_for:
     path: "{{ muximux_www }}/muximux/settings.ini.php-example"
     state: present
     timeout: 30
@@ -44,8 +44,8 @@
   tags: muximux
 
 - name: muximux - copy files
-  template:
-    src: templates/settings.ini.php.j2
+  ansible.builtin.template:
+    src: settings.ini.php.j2
     dest: "{{ muximux_www }}/muximux/settings.ini.php"
     owner: "{{ puid }}"
     group: "{{ pgid }}"

@@ -1,34 +1,41 @@
 ---
 - name: Get pveversion for backup filename
-  shell: pveversion | awk -F / '{print $2}'
-  register: pveversion
+  ansible.builtin.command: >
+    pveversion
+  register: _pveversion_result
   changed_when: false
 
+- name: Set fact
+  ansible.builtin.set_fact:
+    proxmoxlib: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    pveversion: "{{ _pveversion_result.stdout.split('/')[1] }}"
+
 - name: Check if backup file exists
-  stat:
-    path: "/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js.bak-{{ pveversion.stdout }}"
+  ansible.builtin.stat:
+    path: "{{ proxmoxlib }}.bak-{{ pveversion }}"
   register: proxmoxlib_backup
 
-- block:
+- name: Remove nag message
+  block:
   - name: Make a backup of original file
-    copy:
+    ansible.builtin.copy:
       remote_src: True
-      src: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
-      dest: "/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js.bak-{{ pveversion.stdout }}"
+      src: "{{ proxmoxlib }}"
+      dest: "{{ proxmoxlib }}.bak-{{ pveversion }}"
       mode: preserve
 
   # credit: https://johnscs.com/remove-proxmox51-subscription-notice/
   - name: Modify line in file to remove nag message
-    shell:
-      cmd: |
-        sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
-    notify: restart pveproxy
+    ansible.builtin.command: >
+      sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" {{ proxmoxlib }}
     args:
       warn: no
+    changed_when: true
+    notify: restart pveproxy
   when: not proxmoxlib_backup.stat.exists
 
 - name: Change Proxmox replication interval
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /lib/systemd/system/pvesr.timer
     regexp: "^OnCalendar=minutely"
     line: "OnCalendar=hourly"

@@ -1,6 +1,6 @@
 ---
 - name: jellyfin - start
-  docker_container:
+  community.docker.docker_container:
     name: jellyfin
     image: "{{ jellyfin_image }}"
     pull: yes

@@ -1,6 +1,6 @@
 ---
 - name: airvideohd - start
-  docker_container:
+  community.docker.docker_container:
     name: airvideohd
     image: "{{ airvideohd_image }}"
     pull: yes

@@ -1,11 +1,13 @@
 ---
 - name: snapraid - check if installed
-  ansible.builtin.command: dpkg-query -W snapraid
+  ansible.builtin.command: >
+    dpkg-query -W snapraid
   ignore_errors: True
   register: snapraid_is_installed
   changed_when: snapraid_is_installed.rc != 0
 
-- block:
+- name: snapraid - download and install package
+  block:
     - name: snapraid - copy package
       ansible.builtin.copy:
         src: files/{{ snapraid_package_name }}

@@ -1,13 +1,13 @@
 ---
 - name: jackett - restart
-  docker_container:
+  community.docker.docker_container:
     name: jackett
     state: started
     restart: yes
   when: not jackett_start.changed
 
 - name: samba - restart
-  docker_container:
+  community.docker.docker_container:
     name: samba
     state: started
     restart: yes
@@ -15,14 +15,14 @@
   when: not samba_start.changed
 
 - name: nextcloud - restart
-  docker_container:
+  community.docker.docker_container:
     name: nextcloud
     state: started
     restart: yes
   no_log: true
 
 - name: muximux - restart
-  docker_container:
+  community.docker.docker_container:
     name: muximux
     state: started
     restart: yes

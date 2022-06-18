@@ -1,18 +1,20 @@
 ---
 - name: Update postfix lookup tables
-  command: postmap /etc/postfix/{{ item }}
+  ansible.builtin.command: >
+    postmap /etc/postfix/{{ item }}
   loop:
     - sasl_passwd
     - smtp_generic_maps
   listen: postfix config changed
 
 - name: Restart postfix
-  service:
+  ansible.builtin.service:
     name: postfix
     state: restarted
   listen: postfix config changed
 
 - name: Send test mail
-  shell: echo "test mail from {{ inventory_hostname }}" | /usr/bin/pvemailforward
+  ansible.builtin.shell: >
+    echo "test mail from {{ inventory_hostname }}" | /usr/bin/pvemailforward
   changed_when: false
   listen: postfix config changed

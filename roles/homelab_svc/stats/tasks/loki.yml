@@ -1,26 +1,27 @@
 ---
 - name: loki - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/loki/data"
     state: directory
     recurse: yes
   tags: [loki, grafana]
 
 - name: loki - get data dir ownership
-  stat:
+  ansible.builtin.stat:
     path: "{{ app_path }}/loki/data"
   register: loki_data
   tags: [loki, grafana]
 
 - name: loki - set data dir ownership
-  command: chown -R 10001:10001 {{ app_path }}/loki/data
+  ansible.builtin.command: >
+    chown -R 10001:10001 {{ app_path }}/loki/data
   when: loki_data.stat.uid != 10001 or loki_data.stat.gid != 10001
   args:
     warn: no
   tags: [loki, grafana]
 
 - name: loki - start
-  docker_container:
+  community.docker.docker_container:
     name: loki
     image: "{{ loki_image }}"
     pull: yes

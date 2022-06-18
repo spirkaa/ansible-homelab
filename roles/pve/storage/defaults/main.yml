@@ -71,6 +71,6 @@ snapraid_run_path: "{{ snapraid_run_dest }}/snapraid-runner"
 snapraid_run_conf: "{{ snapraid_run_path }}.conf"
 snapraid_run_bin: "{{ snapraid_run_path }}.py"
 
-snapraid_run_command: python3 {{ snapraid_run_bin }} -c {{ snapraid_run_conf}} > /dev/null 2>&1 && curl -fsS --retry 3 {{ inventory__healthchecksio_url }}/spsrv-snapraid-runner > /dev/null 2>&1
+snapraid_run_command: python3 {{ snapraid_run_bin }} -c {{ snapraid_run_conf }} > /dev/null 2>&1 && curl -fsS --retry 3 {{ inventory__healthchecksio_url }}/spsrv-snapraid-runner > /dev/null 2>&1
 snapraid_cron_jobs:
   - { job: "{{ snapraid_run_command }}", name: "snapraid_runner", weekday: "*", hour: "01" }

@@ -13,7 +13,7 @@
 
 - name: Set facts (resources and pools)
   ansible.builtin.set_fact:
-    pve_resource_exists: "{{ _resources.stdout | from_yaml | selectattr('vmid', 'equalto', vmid|int) | list }}"
+    pve_resource_exists: "{{ _resources.stdout | from_yaml | selectattr('vmid', 'equalto', vmid | int) | list }}"
     pve_resources_list: "{{ _resources.stdout | from_yaml }}"
     pve_pool_exists: "{{ _pools.stdout | from_yaml | selectattr('poolid', 'equalto', resourse_pool) | list }}"
     pve_pools_list: "{{ _pools.stdout | from_yaml }}"

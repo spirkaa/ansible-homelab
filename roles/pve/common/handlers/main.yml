@@ -1,10 +1,10 @@
 ---
 - name: restart pveproxy
-  service:
+  ansible.builtin.service:
     name: pveproxy
     state: restarted
 
 - name: reload pvesr
-  service:
+  ansible.builtin.service:
     name: pvesr
     state: reloaded

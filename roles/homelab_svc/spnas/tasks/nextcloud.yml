@@ -1,6 +1,6 @@
 ---
 - name: nextcloud-db - start
-  docker_container:
+  community.docker.docker_container:
     name: nextcloud-db
     image: "{{ nextcloud_db_image }}"
     pull: yes
@@ -20,7 +20,7 @@
   tags: nextcloud
 
 - name: nextcloud - start
-  docker_container:
+  community.docker.docker_container:
     name: nextcloud
     image: "{{ nextcloud_image }}"
     pull: yes
@@ -50,16 +50,19 @@
   no_log: true
   tags: nextcloud
 
-- block:
+- name: nextcloud - post-start tasks
+  block:
     - name: nextcloud - fix ldap
-      command: docker exec --user root nextcloud sh -c '{{ item }}'
+      ansible.builtin.command: >
+        docker exec --user root nextcloud sh -c '{{ item }}'
       notify: nextcloud - restart
       loop:
         - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
+      changed_when: true
       tags: nextcloud
 
     - name: nextcloud - wait for app startup is complete
-      uri:
+      ansible.builtin.uri:
         url: https://cloud.{{ inventory__site }}
         status_code: 200
       register: result
@@ -69,11 +72,13 @@
       tags: nextcloud
 
     - name: nextcloud - execute commands in container
-      command: docker exec nextcloud sh -c '{{ item }}'
+      ansible.builtin.command: >
+        docker exec nextcloud sh -c '{{ item }}'
       notify: nextcloud - restart
       loop:
         - occ db:add-missing-columns
         - occ db:add-missing-primary-keys
         - occ db:add-missing-indices
+      changed_when: true
       tags: nextcloud
   when: nextcloud_start.changed

@@ -1,36 +1,36 @@
 ---
 - name: vaultwarden
-  include_tasks: vaultwarden.yml
+  ansible.builtin.include_tasks: vaultwarden.yml
   tags: vaultwarden
 
 - name: freeipa
-  include_tasks: freeipa.yml
+  ansible.builtin.include_tasks: freeipa.yml
   tags: freeipa
 
 - name: heimdall
-  include_tasks: heimdall.yml
+  ansible.builtin.include_tasks: heimdall.yml
   tags: heimdall
 
 - name: portainer
-  include_tasks: portainer.yml
+  ansible.builtin.include_tasks: portainer.yml
   tags: portainer
 
 - name: unifi
-  include_tasks: unifi.yml
+  ansible.builtin.include_tasks: unifi.yml
   tags: unifi
 
 - name: authentik
-  include_tasks: authentik.yml
+  ansible.builtin.include_tasks: authentik.yml
   tags: authentik
 
 - name: dex
-  include_tasks: dex.yml
+  ansible.builtin.include_tasks: dex.yml
   tags: dex
 
 # - name: vault
-#   include_tasks: vault.yml
+#   ansible.builtin.include_tasks: vault.yml
 #   tags: vault
 
 # - name: unms
-#   include_tasks: unms.yml
+#   ansible.builtin.include_tasks: unms.yml
 #   tags: unms

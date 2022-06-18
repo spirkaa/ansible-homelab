@@ -2,16 +2,16 @@
 - hosts: all
   gather_facts: no
 
-- import_playbook: deploy_homelab_set_static_dns.yml
-- import_playbook: deploy_homelab_svc_mgmt.yml
-- import_playbook: deploy_homelab_manage_users.yml
-# - import_playbook: deploy_homelab_svc_pihole.yml
-- import_playbook: deploy_homelab_svc_rp.yml
-- import_playbook: deploy_homelab_svc_mail.yml
-- import_playbook: deploy_homelab_svc_stats.yml
-- import_playbook: deploy_homelab_svc_dev.yml
-- import_playbook: deploy_homelab_svc_spnas.yml
-- import_playbook: deploy_homelab_svc_plex.yml
-- import_playbook: deploy_homelab_svc_projects.yml
-- import_playbook: ha.yml
-- import_playbook: deploy_homelab_upgrade_packages.yml
+- ansible.builtin.import_playbook: deploy_homelab_set_static_dns.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_mgmt.yml
+- ansible.builtin.import_playbook: deploy_homelab_manage_users.yml
+# - ansible.builtin.import_playbook: deploy_homelab_svc_pihole.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_rp.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_mail.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_stats.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_dev.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_spnas.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_plex.yml
+- ansible.builtin.import_playbook: deploy_homelab_svc_projects.yml
+- ansible.builtin.import_playbook: ha.yml
+- ansible.builtin.import_playbook: deploy_homelab_upgrade_packages.yml

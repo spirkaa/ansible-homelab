@@ -1,6 +1,6 @@
 ---
 - name: phpldapadmin - start
-  docker_container:
+  community.docker.docker_container:
     name: phpldapadmin
     image: "{{ phpldapadmin_image }}"
     pull: yes
@@ -25,13 +25,13 @@
   tags: freeipa
 
 - name: freeipa - delete old ipaupgrade.log
-  file:
+  ansible.builtin.file:
     path: "{{ freeipa_data_host_path }}/var/log/ipaupgrade.log"
     state: absent
   tags: freeipa
 
 - name: freeipa - start
-  docker_container:
+  community.docker.docker_container:
     name: freeipa
     image: "{{ freeipa_image }}"
     pull: yes
@@ -79,34 +79,35 @@
   no_log: true
   tags: freeipa
 
-- block:
+- name: freeipa - wait
+  block:
     - name: freeipa - wait for install to finish
-      wait_for:
+      ansible.builtin.wait_for:
         path: "{{ freeipa_data_host_path }}/var/log/ipaserver-install.log"
         search_regex: "The ipa-server-install command was successful"
         timeout: 1200
       tags: freeipa
 
     - name: freeipa - wait for ipaupgrade.log
-      wait_for:
+      ansible.builtin.wait_for:
         path: "{{ freeipa_data_host_path }}/var/log/ipaupgrade.log"
         state: present
         timeout: 30
       tags: freeipa
 
     - name: freeipa - wait for upgrade to finish
-      wait_for:
+      ansible.builtin.wait_for:
         path: "{{ freeipa_data_host_path }}/var/log/ipaupgrade.log"
         search_regex: "The ipa-server-upgrade command was successful"
         timeout: 120
       tags: freeipa
   when: freeipa_start.changed
-  ignore_errors: yes
+  ignore_errors: yes  # noqa ignore-errors
 
 - name: freeipa - customize - copy custom schema
   vars:
     realm: "{{ app_base_domain | replace('.','-') | upper }}"  # int.domain.com -> INT-DOMAIN-COM
-  copy:
+  ansible.builtin.copy:
     src: files/98postfix-book.ldif
     dest: "{{ freeipa_data_host_path }}/etc/dirsrv/slapd-{{ realm }}/schema"
     owner: "389"
@@ -116,11 +117,11 @@
   tags: freeipa
 
 - name: Force all notified handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
   tags: freeipa
 
 - name: freeipa - wait for ipa webui become available
-  uri:
+  ansible.builtin.uri:
     url: https://{{ inventory__ldap_domain }}/ipa/ui/
     status_code: 200
   register: result
@@ -130,7 +131,7 @@
   tags: freeipa
 
 - name: freeipa - customize - check if permisssion already exists
-  command: >
+  ansible.builtin.command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
     ipa permission-show "Read Postfix Book Attributes"'
@@ -141,7 +142,7 @@
   tags: freeipa
 
 - name: freeipa - customize - permisssion for custom schema attrs
-  command: >
+  ansible.builtin.command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
     ipa permission-add "Read Postfix Book Attributes"
@@ -156,7 +157,7 @@
   tags: freeipa
 
 - name: freeipa - customize - check if default user object classes already modified
-  command: >
+  ansible.builtin.command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
     ipa config-show --all'
@@ -166,7 +167,7 @@
   tags: freeipa
 
 - name: freeipa - customize - default user object classes
-  command: >
+  ansible.builtin.command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
     ipa config-mod
@@ -183,7 +184,7 @@
 - name: freeipa - customize - password global policy
   vars:
     change_check_str: "Max lifetime (days): {{ freeipa_password_policy_maxlife }}"
-  command: >
+  ansible.builtin.command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
     ipa pwpolicy-mod global_policy

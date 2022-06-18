@@ -1,13 +1,13 @@
 ---
 - name: monitorrent - create dir
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/monitorrent/config"
     state: directory
     recurse: yes
   tags: monitorrent
 
 - name: monitorrent - touch db
-  file:
+  ansible.builtin.file:
     path: "{{ app_path }}/monitorrent/config/monitorrent.db"
     state: touch
     access_time: preserve
@@ -16,7 +16,7 @@
   tags: monitorrent
 
 - name: monitorrent - start
-  docker_container:
+  community.docker.docker_container:
     name: monitorrent
     image: "{{ monitorrent_image }}"
     pull: yes

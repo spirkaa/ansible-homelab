@@ -1,6 +1,6 @@
 ---
 - name: dex - configure freeipa
-  include_tasks: freeipa_service_bind.yml
+  ansible.builtin.include_tasks: freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ dex_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ dex_ldap_bind_pw }}"
