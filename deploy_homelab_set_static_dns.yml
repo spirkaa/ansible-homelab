@@ -79,6 +79,23 @@
 
       - { alias: "gw-wg", inet: "{{ ip_gw_wg }}" }
 
+      - { alias: "k8s-controlplane-01", inet: "192.168.13.201" }
+      - { alias: "k8s-controlplane-02", inet: "192.168.13.202" }
+      - { alias: "k8s-controlplane-03", inet: "192.168.13.203" }
+      - { alias: "k8s-controlplane-04", inet: "192.168.13.204" }
+      - { alias: "k8s-controlplane-05", inet: "192.168.13.205" }
+      - { alias: "k8s-controlplane-06", inet: "192.168.13.206" }
+      - { alias: "k8s-lb-01", inet: "192.168.13.221" }
+      - { alias: "k8s-lb-02", inet: "192.168.13.222" }
+      - { alias: "k8s-lb-03", inet: "192.168.13.223" }
+      - { alias: "k8s-lb-04", inet: "192.168.13.224" }
+      - { alias: "k8s-worker-01", inet: "192.168.13.211" }
+      - { alias: "k8s-worker-02", inet: "192.168.13.212" }
+      - { alias: "k8s-worker-03", inet: "192.168.13.213" }
+      - { alias: "k8s-worker-04", inet: "192.168.13.214" }
+      - { alias: "k8s-worker-05", inet: "192.168.13.215" }
+      - { alias: "k8s-worker-06", inet: "192.168.13.216" }
+
   tasks:
     - name: Set static DNS mapping
       community.network.edgeos_config:
