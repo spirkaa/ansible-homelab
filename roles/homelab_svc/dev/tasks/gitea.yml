@@ -66,14 +66,11 @@
     image: "{{ gitea_db_image }}"
     pull: yes
     env:
-      MYSQL_ROOT_PASSWORD: "{{ gitea_db_root_pass }}"
-      MYSQL_DATABASE: "{{ gitea_db_user }}"
-      MYSQL_USER: "{{ gitea_db_user }}"
-      MYSQL_PASSWORD: "{{ gitea_db_pass }}"
-      MYSQL_CHARSET: "utf8mb4"
-      MYSQL_COLLATION: "utf8mb4_unicode_ci"
+      POSTGRES_USER: "{{ gitea_db_user }}"
+      POSTGRES_PASSWORD: "{{ gitea_db_pass }}"
+      POSTGRES_DB: "{{ gitea_db_user }}"
     volumes:
-      - "{{ app_path }}/gitea/db:/var/lib/mysql"
+      - "{{ app_path }}/gitea/db:/var/lib/postgresql/data"
     restart_policy: unless-stopped
     state: started
   no_log: true

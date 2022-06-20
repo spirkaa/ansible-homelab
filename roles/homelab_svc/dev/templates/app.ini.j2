@@ -17,13 +17,12 @@ LFS_START_SERVER = true
 LFS_JWT_SECRET   = {{ gitea_lfs_jwt_secret }}
 
 [database]
-DB_TYPE  = mysql
+DB_TYPE  = postgres
 HOST     = {{ gitea_db_host }}
 NAME     = {{ gitea_db_user }}
 USER     = {{ gitea_db_user }}
 PASSWD   = {{ gitea_db_pass }}
 SSL_MODE = disable
-CHARSET  = utf8mb4
 LOG_SQL  = false
 
 [security]
@@ -83,6 +82,12 @@ REPO_INDEXER_ENABLED = true
 [openid]
 ENABLE_OPENID_SIGNIN = false
 ENABLE_OPENID_SIGNUP = false
+
+[oauth2_client]
+OPENID_CONNECT_SCOPES = profile email groups
+ENABLE_AUTO_REGISTRATION = true
+USERNAME = email
+ACCOUNT_LINKING = auto
 
 [webhook]
 ALLOWED_HOST_LIST = *

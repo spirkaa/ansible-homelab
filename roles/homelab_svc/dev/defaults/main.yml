@@ -7,7 +7,7 @@ tz: "{{ inventory__docker_tz }}"
 code_image: linuxserver/code-server:4.4.0-ls121
 drone_image: drone/drone:2.11
 drone_runner_docker_image: drone/drone-runner-docker:latest
-gitea_db_image: yobasystems/alpine-mariadb:10.6
+gitea_db_image: postgres:14-alpine
 gitea_image: gitea/gitea:dev
 jenkins_image: git.devmem.ru/projects/jenkins:latest
 registry_image: registry:2.8
@@ -21,13 +21,6 @@ smtp_port: "{{ inventory__smtp_port }}"
 smtp_user: "{{ inventory__smtp_username }}"
 smtp_pass: "{{ inventory__smtp_password }}"
 
-gitea_db_root_pass: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          30376334303566343333383233383838613266363131326536346635623765643862336365393834
-          3263656530633737646232653437373936323731336338390a646365663134363565613332333634
-          63626337396264633132393435666534396462336232313166333839623466396630343330336366
-          3730376262663161330a396162623862643838623930383164343933353434656534383864343062
-          66613061353637326563383762373735613536653733643636306133636130363135
 gitea_db_user: gitea
 gitea_db_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -36,7 +29,7 @@ gitea_db_pass: !vault |
           32646561373836376364333465613835306164653662386561313430313533613537303338633864
           6162653436616432350a366466336533643461303030306539373061613230306337643662666637
           64346230626635663633653636376365396236323736376462323364356238383434
-gitea_db_host: gitea-db:3306
+gitea_db_host: gitea-db:5432
 gitea_domain: git.{{ inventory__site }}
 gitea_root_url: "https://{{ gitea_domain }}"
 gitea_ssh_user: git
