@@ -21,10 +21,16 @@
     networks_cli_compatible: yes
     labels:
       traefik.enable: "true"
-      traefik.http.routers.portainer.rule: "HostRegexp(`minio{fqdn:(.{{ inventory__homelab_domain }})?}`)"
-      traefik.http.services.portainer.loadbalancer.server.port: "9001"
-      traefik.http.routers.portainer.entrypoints: "websecure"
-      traefik.http.routers.portainer.tls: "true"
+      traefik.http.routers.minio.rule: "HostRegexp(`s3{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.services.minio-svc.loadbalancer.server.port: "9000"
+      traefik.http.routers.minio.entrypoints: "websecure"
+      traefik.http.routers.minio.tls: "true"
+      traefik.http.routers.minio.service: minio-svc
+      traefik.http.routers.minio-console.rule: "HostRegexp(`minio{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.services.minio-console-svc.loadbalancer.server.port: "9001"
+      traefik.http.routers.minio-console.entrypoints: "websecure"
+      traefik.http.routers.minio-console.tls: "true"
+      traefik.http.routers.minio-console.service: minio-console-svc
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s

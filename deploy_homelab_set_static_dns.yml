@@ -34,6 +34,8 @@
       - { alias: "cloud", inet: "{{ ip_spnas }}" }
       - { alias: "prowlarr", inet: "{{ ip_spnas }}" }
       - { alias: "flaresolverr", inet: "{{ ip_spnas }}" }
+      - { alias: "minio", inet: "{{ ip_spnas }}" }
+      - { alias: "s3", inet: "{{ ip_spnas }}" }
 
       - { alias: "dev", inet: "{{ ip_dev }}" }
       - { alias: "traefik-dev", inet: "{{ ip_dev }}" }
