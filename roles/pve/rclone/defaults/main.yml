@@ -1,6 +1,6 @@
 ---
-rclone_version: 1.58.0
-rclone_url: https://github.com/rclone/rclone/releases/download/v{{ rclone_version }}/rclone-v{{ rclone_version }}-linux-amd64.deb
+rclone_version: v1.58.1
+rclone_url: https://github.com/rclone/rclone/releases/download/{{ rclone_version }}/rclone-{{ rclone_version }}-linux-amd64.deb
 
 rclone_config_location: /root/.config/rclone/rclone.conf
 

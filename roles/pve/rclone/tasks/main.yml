@@ -24,7 +24,7 @@
           ansible.builtin.apt:
             deb: /tmp/{{ rclone_url | basename }}
             state: present
-      when: rclone_version not in rclone_is_installed.stdout
+      when: rclone_version[1:] not in rclone_is_installed.stdout
 
     - name: Create config dir
       ansible.builtin.file:
