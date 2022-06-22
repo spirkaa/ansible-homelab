@@ -23,6 +23,11 @@
     username: "{{ jenkins_gitea_user }}"
     password: "{{ jenkins_gitea_user_password }}"
     reauthorize: yes
+  register: _docker_login
+  retries: 15
+  delay: 1
+  until: _docker_login is not failed
+  tags: jenkins
 
 - name: jenkins - start
   community.docker.docker_container:
