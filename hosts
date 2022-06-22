@@ -10,7 +10,7 @@ ubnt-erx-cml
 
 [proxmox]
 spsrv
-spmaxi
+# spmaxi
 spmini
 sppve
 
@@ -25,8 +25,8 @@ dev
 stats
 rp
 mail
-pihole
-projects
+# pihole
+# projects
 
 [ct:vars]
 ansible_user=root
