@@ -49,7 +49,6 @@
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
       - "{{ freeipa_data_host_path }}:/data"
-      - "{{ freeipa_journal_host_path }}:/var/log/journal"
     tmpfs:
       - "/run"
       - "/tmp"
@@ -116,7 +115,7 @@
   notify: freeipa - restart
   tags: freeipa
 
-- name: Force all notified handlers
+- name: freeipa - flush_handlers
   ansible.builtin.meta: flush_handlers
   tags: freeipa
 
