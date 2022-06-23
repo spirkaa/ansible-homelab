@@ -15,7 +15,7 @@ rclone_sync_config:
     src: /mnt/tank0/ds0/minio
     dest: "gdrive-spnas-minio:"
     weekday: "*"
-    hour: "07"
+    hour: "08"
   - name: rclone-sync-downloads
     src: /mnt/storage/downloads
     dest: "gdrive-spnas-downloads:"
