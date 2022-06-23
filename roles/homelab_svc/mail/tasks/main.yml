@@ -69,28 +69,9 @@
 - name: mail - download setup.sh
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/docker-mailserver/docker-mailserver/v{{ mailserver_version }}/setup.sh
-    dest: "{{ app_path }}/setup_original.sh"
+    dest: "{{ app_path }}"
     mode: 0755
-  register: mail_download_setup_sh_result
   tags: mail
-
-- name: mail - setup.sh
-  block:
-    - name: mail - copy setup.sh
-      ansible.builtin.copy:
-        src: "{{ app_path }}/setup_original.sh"
-        dest: "{{ app_path }}/setup.sh"
-        mode: 0755
-        remote_src: yes
-      tags: mail
-
-    - name: mail - fix setup.sh for bash version <4.4
-      ansible.builtin.lineinfile:
-        path: "{{ app_path }}/setup.sh"
-        state: absent
-        regexp: "^shopt -s inherit_errexit"
-      tags: mail
-  when: mail_download_setup_sh_result.changed
 
 - name: mail - start
   community.docker.docker_container:
