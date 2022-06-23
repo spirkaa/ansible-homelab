@@ -7,10 +7,6 @@
   ansible.builtin.include_tasks: freeipa.yml
   tags: freeipa
 
-- name: heimdall
-  ansible.builtin.include_tasks: heimdall.yml
-  tags: heimdall
-
 - name: portainer
   ansible.builtin.include_tasks: portainer.yml
   tags: portainer
@@ -34,3 +30,7 @@
 # - name: unms
 #   ansible.builtin.include_tasks: unms.yml
 #   tags: unms
+
+# - name: heimdall
+#   ansible.builtin.include_tasks: heimdall.yml
+#   tags: heimdall
