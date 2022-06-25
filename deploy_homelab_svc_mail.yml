@@ -1,14 +1,14 @@
 ---
-- hosts: spsrv
+- hosts: sppve
   gather_facts: no
 
   vars:
     resource_type: ct
-    vmid: 206
+    vmid: 506
     hostname: mail
     comment: Mail
     cores: 2
-    mem: 2048
+    mem: 3072
     disk_size: 8
     net_ip: 192.168.12.250
     net_vlan: 12
@@ -25,6 +25,12 @@
 
 - hosts: mail
   gather_facts: no
+
+  pre_tasks:
+    - name: remove postfix package
+      ansible.builtin.package:
+        state: absent
+        name: postfix
 
   roles:
     - { role: homelab_svc/mail, tags: [mail, svc] }
