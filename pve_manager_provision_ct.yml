@@ -6,14 +6,15 @@
     resource_type: ct
     resourse_pool: test
     resourse_pool_comment: test
+    # ct_template: spsrv-proxmox:vztmpl/debian-11-docker.tar.zst
     vmid: 5501
     hostname: test-ct
     net_ip: 192.168.13.50
     ct_other_options: >
       --swap 0
-    lxc_options:
-      - "lxc.cgroup2.devices.allow: c 226:* rwm"
-      - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
+    # lxc_options:
+    #   - "lxc.cgroup2.devices.allow: c 226:* rwm"
+    #   - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
 
   roles:
     - pve_manager

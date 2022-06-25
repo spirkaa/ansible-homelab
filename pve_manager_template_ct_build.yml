@@ -5,9 +5,11 @@
 
   vars:
     template_storage_name: spsrv-proxmox
-    template_name: ubuntu-22.04-standard_22.04-1_amd64.tar.zst
     template_storage_path: /mnt/pve/{{ template_storage_name }}/template/cache/
+    template_name: ubuntu-22.04-standard_22.04-1_amd64.tar.zst
     template_name_custom: ubuntu-22.04-docker.tar.zst
+    # template_name: debian-11-standard_11.3-1_amd64.tar.zst
+    # template_name_custom: debian-11-docker.tar.zst
 
     resource_type: ct
     ct_template: "{{ template_storage_name }}:vztmpl/{{ template_name }}"
