@@ -12,6 +12,6 @@
 - name: Edit grub config
   ansible.builtin.lineinfile:
     path: /etc/default/grub
-    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
-    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"'
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet delayacct intel_iommu=on"'
   notify: update-grub
