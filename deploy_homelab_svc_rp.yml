@@ -1,10 +1,10 @@
 ---
-- hosts: spsrv
+- hosts: spmini
   gather_facts: no
 
   vars:
     resource_type: ct
-    vmid: 205
+    vmid: 505
     hostname: rp
     comment: Reverse Proxy
     cores: 2
