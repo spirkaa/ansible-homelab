@@ -20,6 +20,7 @@
     start_tls: yes
     validate_certs: no
   delegate_to: localhost
+  become: false
 
 - name: freeipa - ensure service group is present
   community.general.ipa_group:
@@ -28,3 +29,4 @@
     ipa_host: "{{ inventory__ldap_domain }}"
     ipa_pass: "{{ freeipa_admin_password }}"
   delegate_to: localhost
+  become: false

@@ -55,7 +55,7 @@
     sysctls:
       net.ipv6.conf.all.disable_ipv6: 0
     security_opts:
-      - "seccomp:unconfined"
+      - seccomp=unconfined
     command: >
       --unattended
       --realm={{ app_base_domain | upper }}
