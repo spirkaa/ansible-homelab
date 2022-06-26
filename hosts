@@ -21,7 +21,6 @@ ansible_user=root
 plex
 spnas
 mgmt
-dev
 stats
 rp
 mail
@@ -32,6 +31,7 @@ mail
 ansible_user=root
 
 [vm]
+dev
 gw-wg
 
 [vm:vars]

@@ -3,28 +3,42 @@
   gather_facts: no
 
   vars:
-    resource_type: ct
-    vmid: 203
+    resource_type: vm
+    vmid: 112
     hostname: dev
     comment: Development
-    cores: 2
-    mem: 2048
-    disk_size: 20
+    vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-20.04-server-cloudimg-amd64.img
+    cores: 4
+    mem: 4096
+    disk_size: 30
     net_ip: 192.168.10.12
     net_vlan: 10
     net_gw: 192.168.10.1
     net_dns: 192.168.10.1
     net_domain: "{{ inventory__homelab_domain }}"
-    ct_other_options: >
+    vm_other_options: >
       --onboot 1
 
   roles:
-    - pve_manager
-    - portainer_api
+    - { role: pve_manager }
+    - { role: portainer_api }
 
 
 - hosts: dev
-  gather_facts: no
+  gather_facts: yes
+
+  vars:
+    gitea_ssh_user: ubuntu
+
+  pre_tasks:
+    - name: Wait for cloud-init to finish
+      ansible.builtin.wait_for:
+        path: /var/lib/cloud/instance/boot-finished
 
   roles:
-    - { role: homelab_svc/dev, tags: [dev, svc] }
+    # - { role: common/packages, become: true }
+    # - { role: spirkaa.zsh_prezto }
+    # - { role: spirkaa.nano }
+    # - { role: common/sshd, become: true }
+    # - { role: common/docker, become: true }
+    - { role: homelab_svc/dev, become: true, tags: [dev, svc] }
