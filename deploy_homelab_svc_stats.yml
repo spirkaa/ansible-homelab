@@ -1,10 +1,10 @@
 ---
-- hosts: spsrv
+- hosts: spmini
   gather_facts: no
 
   vars:
     resource_type: ct
-    vmid: 204
+    vmid: 504
     hostname: stats
     comment: Monitoring
     cores: 2
