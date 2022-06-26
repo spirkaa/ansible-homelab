@@ -18,14 +18,14 @@
 
 - name: gitea - ssh passthrough - get pub key of created user
   ansible.builtin.command: >
-    cat /home/git/.ssh/id_rsa.pub
+    cat /home/{{ gitea_ssh_user }}/.ssh/id_rsa.pub
   register: git_key
   changed_when: false
   tags: gitea
 
 - name: gitea - ssh passthrough - add pub key to authorized_keys
   ansible.builtin.lineinfile:
-    path: /home/git/.ssh/authorized_keys
+    path: /home/{{ gitea_ssh_user }}/.ssh/authorized_keys
     line: no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ git_key.stdout }}
     owner: "{{ gitea_ssh_user }}"
     group: "{{ gitea_ssh_user }}"
@@ -91,7 +91,7 @@
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
-      - "/home/git/.ssh/:/data/git/.ssh"
+      - "/home/{{ gitea_ssh_user }}/.ssh/:/data/git/.ssh"
       - "{{ app_path }}/gitea/data:/data"
     links:
       - "gitea-db:gitea-db"
