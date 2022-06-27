@@ -64,6 +64,7 @@
   loop:
     - 10-master.conf
     - 15-mailboxes.conf
+    - jail.local
   tags: mail
 
 - name: mail - download setup.sh
@@ -94,6 +95,7 @@
       - "{{ app_path }}/certs:{{ mail_cert_path }}:ro"
       - "{{ app_path }}/10-master.conf:/etc/dovecot/conf.d/10-master.conf:ro"
       - "{{ app_path }}/15-mailboxes.conf:/etc/dovecot/conf.d/15-mailboxes.conf:ro"
+      - "{{ app_path }}/jail.local:/etc/fail2ban/jail.local:ro"
     capabilities:
       - net_admin
       - sys_ptrace
@@ -111,6 +113,7 @@
   notify: mail - restart
   loop:
     - echo "TLS_REQCERT allow" >> /etc/ldap/ldap.conf
+    - sed -i '\''s/{ type <addr_type>\\; \\}/{ type <addr_type>\\; flags interval\\; \\}/g'\'' /etc/fail2ban/action.d/nftables.conf
   tags: mail
 
 - name: mail - generate dkim
