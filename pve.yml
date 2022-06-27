@@ -6,6 +6,7 @@
     snmp_syslocation: krs
 
   roles:
+    - { role: common/apt_sources, tags: [pve, pve_apt_sources] }
     - { role: pve/common, tags: [pve, pve_common] }
     - { role: common/packages, tags: [pve, pve_packages] }
     - { role: spirkaa.zsh_prezto, tags: [pve, pve_zsh] }
