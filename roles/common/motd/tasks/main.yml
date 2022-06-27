@@ -31,3 +31,13 @@
     src: 10-sysinfo.j2
     dest: /etc/update-motd.d/10-sysinfo
     mode: 0755
+  when: ansible_distribution == "Debian"
+
+- name: Remove unwanted motd blocks
+  ansible.builtin.file:
+    path: /etc/update-motd.d/{{ item }}
+    state: absent
+  loop:
+    - 10-help-text
+    - 50-motd-news
+  when: ansible_distribution == "Ubuntu"
