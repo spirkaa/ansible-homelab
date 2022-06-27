@@ -1,5 +1,6 @@
 ---
-- hosts: spsrv
+- name: Provision host
+  hosts: spsrv
   gather_facts: no
 
   vars:
@@ -24,21 +25,45 @@
     - { role: portainer_api }
 
 
-- hosts: dev
+- name: Pre-configure host
+  hosts: dev
   gather_facts: yes
-
-  vars:
-    gitea_ssh_user: ubuntu
 
   pre_tasks:
     - name: Wait for cloud-init to finish
       ansible.builtin.wait_for:
         path: /var/lib/cloud/instance/boot-finished
 
+    - name: Check if reboot required
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot
+      ansible.builtin.reboot:
+      when: reboot_required.stat.exists
+      become: true
+
+
+# - name: Apply common roles
+#   hosts: dev
+#   gather_facts: no
+
+#   roles:
+#     - { role: common/packages, become: true }
+#     - { role: spirkaa.zsh_prezto }
+#     - { role: spirkaa.nano }
+#     - { role: common/motd, become: true }
+#     - { role: common/sshd, become: true }
+#     - { role: common/docker, become: true }
+
+
+- name: Apply host-specific roles
+  hosts: dev
+  gather_facts: no
+
+  vars:
+    gitea_ssh_user: ubuntu
+
   roles:
-    # - { role: common/packages, become: true }
-    # - { role: spirkaa.zsh_prezto }
-    # - { role: spirkaa.nano }
-    # - { role: common/sshd, become: true }
-    # - { role: common/docker, become: true }
     - { role: homelab_svc/dev, become: true, tags: [dev, svc] }
