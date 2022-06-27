@@ -1,5 +1,6 @@
 ---
-- hosts: spsrv
+- name: Provision host
+  hosts: spsrv
   gather_facts: no
 
   vars:
@@ -19,13 +20,48 @@
     - { role: portainer_api }
 
 
-- hosts: gw-wg
+- name: Pre-configure host
+  hosts: gw-wg
   gather_facts: yes
 
-  vars:
-    sshd_permit_root_login: "no"
-    sshd_authorized_keys_user: ubuntu
+  pre_tasks:
+    - name: Wait for cloud-init to finish
+      ansible.builtin.wait_for:
+        path: /var/lib/cloud/instance/boot-finished
 
+    - name: Check if reboot required
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot
+      ansible.builtin.reboot:
+      when: reboot_required.stat.exists
+      become: true
+
+
+# - name: Apply common roles
+#   hosts: gw-wg
+#   gather_facts: no
+
+#   vars:
+#     sshd_permit_root_login: "no"
+#     sshd_authorized_keys_user: ubuntu
+
+#   roles:
+#     - { role: common/packages, become: true }
+#     - { role: spirkaa.zsh_prezto }
+#     - { role: spirkaa.nano }
+#     - { role: common/motd, become: true }
+#     - { role: common/sshd, become: true }
+#     - { role: common/docker, become: true }
+
+
+- name: Apply host-specific roles
+  hosts: gw-wg
+  gather_facts: no
+
+  vars:
     wg_pia_name: wg-pia
     wg_pia_image: thrnz/docker-wireguard-pia:latest
     wg_pia_user: "{{ inventory__piavpn_user }}"
@@ -56,18 +92,8 @@
     squid_name: squid
     squid_image: b4tman/squid:latest
 
-  pre_tasks:
-    - name: Wait for cloud-init to finish
-      ansible.builtin.wait_for:
-        path: /var/lib/cloud/instance/boot-finished
-
   roles:
-    - { role: common/packages, become: true }
-    - { role: spirkaa.zsh_prezto }
-    - { role: spirkaa.nano }
-    - { role: common/sshd, become: true }
     - { role: common/wireguard, become: true }
-    - { role: common/docker, become: true }
 
   tasks:
     - name: Flush handlers
