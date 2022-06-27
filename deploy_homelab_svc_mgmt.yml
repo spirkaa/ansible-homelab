@@ -1,29 +1,69 @@
 ---
-- hosts: spsrv
+- name: Provision host
+  hosts: sppve
   gather_facts: no
 
   vars:
-    resource_type: ct
-    vmid: 202
+    resource_type: vm
+    vmid: 110
     hostname: mgmt
     comment: Management
+    vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-20.04-server-cloudimg-amd64.img
     cores: 2
-    mem: 5120
-    disk_size: 30
+    mem: 4096
+    disk_size: 20
     net_ip: 192.168.11.2
     net_vlan: 11
     net_gw: 192.168.11.1
     net_dns: 192.168.11.1
     net_domain: "{{ inventory__homelab_domain }}"
-    ct_other_options: >
+    vm_other_options: >
       --onboot 1
 
   roles:
-    - pve_manager
+    - { role: pve_manager }
 
 
-- hosts: mgmt
+- name: Pre-configure host
+  hosts: mgmt
+  gather_facts: yes
+
+  pre_tasks:
+    - name: Wait for cloud-init to finish
+      ansible.builtin.wait_for:
+        path: /var/lib/cloud/instance/boot-finished
+
+    - name: Check if reboot required
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot
+      ansible.builtin.reboot:
+      when: reboot_required.stat.exists
+      become: true
+
+  roles:
+    - { role: common/sytemd_resolved }
+
+
+# - name: Apply common roles
+#   hosts: mgmt
+#   gather_facts: no
+
+#   roles:
+#     - { role: common/packages, become: true }
+#     - { role: spirkaa.zsh_prezto }
+#     - { role: spirkaa.nano }
+#     - { role: common/motd, become: true }
+#     - { role: common/sshd, become: true }
+#     - { role: common/docker, become: true }
+
+
+- name: Apply host-specific roles
+  hosts: mgmt
   gather_facts: no
 
   roles:
-    - { role: homelab_svc/mgmt, tags: [mgmt, svc] }
+    - { role: homelab_svc/mgmt, become: true, tags: [mgmt, svc] }
+    - { role: portainer_api }
