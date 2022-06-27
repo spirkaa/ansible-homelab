@@ -1,0 +1,26 @@
+---
+- name: Create config dir
+  ansible.builtin.file:
+    path: /etc/systemd/resolved.conf.d
+    state: directory
+    mode: 0755
+  become: true
+
+- name: Copy config
+  ansible.builtin.template:
+    src: resolved.conf.j2
+    dest: /etc/systemd/resolved.conf.d/resolved.conf
+    mode: 0644
+  notify: restart systemd-resolved
+  become: true
+
+- name: Replace resolv.conf symlink
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    path: /etc/resolv.conf
+    state: link
+  notify: restart systemd-resolved
+  become: true
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
