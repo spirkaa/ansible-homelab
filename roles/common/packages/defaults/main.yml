@@ -1,22 +1,25 @@
 ---
 packages_base:
-  - mc
-  - tmux
-  - rsync
-  - wget
+  - bmon
+  - bzip2
   - curl
   - git
-  - jq
-  - net-tools
-  - tcpdump
-  - mtr-tiny
-  - bmon
+  - htop
   - iftop
   - iotop
-  - htop
+  - jq
+  - mc
+  - mtr-tiny
   - ncdu
-  - bzip2
-  - zip
-  - unzip
+  - net-tools
   - nfs-common
   - open-iscsi
+  - pigz
+  - rsync
+  - sysstat
+  - tcpdump
+  - tmux
+  - unzip
+  - wget
+  - zip
+  - zstd
