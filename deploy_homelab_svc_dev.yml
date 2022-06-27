@@ -34,6 +34,11 @@
       ansible.builtin.wait_for:
         path: /var/lib/cloud/instance/boot-finished
 
+    - name: Set timezone
+      community.general.timezone:
+        name: Europe/Moscow
+      become: true
+
     - name: Check if reboot required
       ansible.builtin.stat:
         path: /var/run/reboot-required

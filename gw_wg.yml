@@ -8,9 +8,10 @@
     vmid: 111
     hostname: gw-wg
     comment: PIA WireGuard
+    vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-20.04-server-cloudimg-amd64.img
     net_ip: 192.168.13.2
     cores: 1
-    mem: 512
+    mem: 1024
     disk_size: 5
     vm_other_options: >
       --onboot 1
@@ -28,6 +29,11 @@
     - name: Wait for cloud-init to finish
       ansible.builtin.wait_for:
         path: /var/lib/cloud/instance/boot-finished
+
+    - name: Set timezone
+      community.general.timezone:
+        name: Europe/Moscow
+      become: true
 
     - name: Check if reboot required
       ansible.builtin.stat:
