@@ -1,5 +1,5 @@
 ---
-- name: bootstrap ct
+- name: Provision ct
   hosts: sppve
   gather_facts: no
 
@@ -18,17 +18,17 @@
     net_ip: 192.168.13.55
 
   pre_tasks:
-    - name: download template
+    - name: Download template
       ansible.builtin.command: >
         pveam download {{ template_storage_name }} {{ template_name }}
       register: _template_download_result
       changed_when: "'finished' and not 'no need to download' in _template_download_result.stdout"
 
   roles:
-    - pve_manager
+    - { role: pve_manager }
 
   tasks:
-    - name: set facts
+    - name: set_fact
       ansible.builtin.set_fact:
         vmid: "{{ vmid }}"
         hostname: "{{ hostname }}"
@@ -36,25 +36,33 @@
         template_name_custom: "{{ template_name_custom }}"
 
 
-- name: provision ct
+- name: Pre-configure ct
   hosts: ct-template
   gather_facts: yes
 
-  pre_tasks:
-    - name: set timezone
-      community.general.timezone:
-        name: Europe/Moscow
+  roles:
+    - { role: common/apt_sources }
 
-    - name: set locale
-      ansible.builtin.command: >
-        localectl set-locale LANG=en_US.UTF-8
-      changed_when: true
-
-    - name: upgrade packages
+  tasks:
+    - name: Upgrade packages
       ansible.builtin.package:
         update_cache: yes
         state: latest
         name: "*"
+
+    - name: Set timezone
+      community.general.timezone:
+        name: Europe/Moscow
+
+    - name: Set locale
+      ansible.builtin.command: >
+        localectl set-locale LANG=en_US.UTF-8
+      changed_when: true
+
+
+- name: Configure ct
+  hosts: ct-template
+  gather_facts: yes
 
   roles:
     - { role: common/packages }
@@ -65,10 +73,10 @@
     - { role: common/docker }
 
   tasks:
-    - name: flush handlers
+    - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 
-    - name: cleanup packages
+    - name: Cleanup packages
       ansible.builtin.shell: >
         apt-get clean -y \
         && rm -rf /var/lib/apt/lists/*
@@ -80,7 +88,7 @@
       ansible.builtin.reboot:
 
 
-- name: create template from ct
+- name: Create template from ct
   hosts: sppve
   gather_facts: no
 
@@ -97,7 +105,7 @@
 
     - name: "{{ hostname }} - create backup"
       ansible.builtin.command: >
-        vzdump {{ vmid }} --mode stop --compress zstd --dumpdir {{ template_storage_path }}
+        vzdump {{ vmid }} --mode stop --compress zstd --zstd 0 --dumpdir {{ template_storage_path }}
       changed_when: true
 
     - name: "{{ hostname }} - destroy ct"
