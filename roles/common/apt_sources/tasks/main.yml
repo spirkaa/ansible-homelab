@@ -1,0 +1,11 @@
+---
+- name: Configure APT sources list
+  ansible.builtin.template:
+    src: sources.list.j2
+    dest: /etc/apt/sources.list
+    mode: 0644
+  notify: Update APT cache
+  become: true
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

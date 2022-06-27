@@ -1,0 +1,5 @@
+---
+- name: Update APT cache
+  ansible.builtin.package:
+    update_cache: yes
+  become: true

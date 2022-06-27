@@ -1,0 +1,17 @@
+{{ ansible_managed | comment }}
+
+{% if ansible_distribution == "Debian" %}
+deb {{ apt_sources_mirror_url }}/debian {{ ansible_distribution_release | lower }} main contrib
+deb {{ apt_sources_mirror_url }}/debian {{ ansible_distribution_release | lower }}-updates main contrib
+
+{% if ansible_distribution_major_version | int < 11 %}
+deb http://security.debian.org/debian-security {{ ansible_distribution_release | lower }}/updates main contrib
+{% else %}
+deb http://security.debian.org/debian-security {{ ansible_distribution_release | lower }}-security main contrib
+{% endif %}
+{% elif ansible_distribution == "Ubuntu" %}
+deb {{ apt_sources_mirror_url }}/ubuntu {{ ansible_distribution_release | lower }} main restricted universe multiverse
+deb {{ apt_sources_mirror_url }}/ubuntu {{ ansible_distribution_release | lower }}-updates main restricted universe multiverse
+
+deb {{ apt_sources_mirror_url }}/ubuntu {{ ansible_distribution_release | lower }}-security main restricted universe multiverse
+{% endif %}
