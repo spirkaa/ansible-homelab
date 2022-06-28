@@ -8,6 +8,7 @@
     snmp_syslocation: cml
 
   roles:
+    # - { role: common/apt_sources, tags: [pve, apt_sources] }
     # - { role: common/packages, tags: [ha, packages] }
     # - { role: spirkaa.zsh_prezto, tags: [ha, zsh] }
     # - { role: spirkaa.nano, tags: [ha, nano] }
