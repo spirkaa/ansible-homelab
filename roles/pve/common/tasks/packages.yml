@@ -10,12 +10,9 @@
     path: /etc/apt/sources.list.d/pve-enterprise.list
     state: absent
 
-- name: Update APT cache
-  ansible.builtin.package:
-    update_cache: yes
-
 - name: Install packages
   ansible.builtin.package:
+    update_cache: yes
     state: present
     name:
       - openvswitch-switch
