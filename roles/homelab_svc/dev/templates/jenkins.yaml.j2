@@ -194,6 +194,20 @@ jobs:
               }
             }
           }
+          buildStrategies {
+            buildRegularBranches {}
+            buildChangeRequests {
+              ignoreTargetOnlyChanges(true)
+              ignoreUntrustedChanges(false)
+            }
+            buildTags {
+              atLeastDays('-1')
+              atMostDays('7')
+            }
+          }
+        }
+        configure { node ->
+          node / buildStrategies / "jenkins.branch.buildstrategies.basic.SkipInitialBuildOnFirstBranchIndexing" {}
         }
         configure { node ->
           node / triggers / "com.cloudbees.hudson.plugins.folder.computed.PeriodicFolderTrigger" {
