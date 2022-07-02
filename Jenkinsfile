@@ -9,7 +9,7 @@ pipeline {
   }
 
   triggers {
-    cron('H 9 * * 6')
+    cron(BRANCH_NAME == 'main' ? 'H 10 * * 6' : '')
   }
 
   environment {
