@@ -52,15 +52,6 @@
 
 - name: nextcloud - post-start tasks
   block:
-    - name: nextcloud - fix ldap
-      ansible.builtin.command: >
-        docker exec --user root nextcloud sh -c '{{ item }}'
-      notify: nextcloud - restart
-      loop:
-        - echo "TLS_REQCERT allow" >> /etc/openldap/ldap.conf
-      changed_when: true
-      tags: nextcloud
-
     - name: nextcloud - wait for app startup is complete
       ansible.builtin.uri:
         url: https://cloud.{{ inventory__site }}
