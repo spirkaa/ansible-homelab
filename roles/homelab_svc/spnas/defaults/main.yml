@@ -4,7 +4,7 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-delugevpn_image: binhex/arch-delugevpn:2.1.0-1-01
+delugevpn_image: binhex/arch-delugevpn:2.0.5-1-04
 jackett_image: linuxserver/jackett:development-v0.20.1261-ls494
 prowlarr_image: linuxserver/prowlarr:nightly-0.4.2.1846-ls366
 sonarr_image: linuxserver/sonarr:develop-3.0.8.1538-ls289
