@@ -7,13 +7,13 @@
   ansible.builtin.include_tasks: plex.yml
   tags: plex
 
-- name: tautulli
-  ansible.builtin.include_tasks: tautulli.yml
-  tags: tautulli
+# - name: tautulli
+#   ansible.builtin.include_tasks: tautulli.yml
+#   tags: tautulli
 
-- name: ombi
-  ansible.builtin.include_tasks: ombi.yml
-  tags: ombi
+# - name: ombi
+#   ansible.builtin.include_tasks: ombi.yml
+#   tags: ombi
 
 # - name: airvideohd
 #   ansible.builtin.include_tasks: airvideohd.yml

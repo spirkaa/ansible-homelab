@@ -3,9 +3,9 @@
   ansible.builtin.include_tasks: freeipa.yml
   tags: freeipa
 
-- name: vaultwarden
-  ansible.builtin.include_tasks: vaultwarden.yml
-  tags: vaultwarden
+# - name: vaultwarden
+#   ansible.builtin.include_tasks: vaultwarden.yml
+#   tags: vaultwarden
 
 - name: portainer
   ansible.builtin.include_tasks: portainer.yml

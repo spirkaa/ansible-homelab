@@ -3,41 +3,41 @@
   ansible.builtin.include_tasks: muximux.yml
   tags: muximux
 
-- name: delugevpn
-  ansible.builtin.include_tasks: delugevpn.yml
-  tags: delugevpn
+# - name: delugevpn
+#   ansible.builtin.include_tasks: delugevpn.yml
+#   tags: delugevpn
 
-- name: jackett
-  ansible.builtin.include_tasks: jackett.yml
-  tags: jackett
+# - name: jackett
+#   ansible.builtin.include_tasks: jackett.yml
+#   tags: jackett
 
-- name: prowlarr
-  ansible.builtin.include_tasks: prowlarr.yml
-  tags: prowlarr
+# - name: prowlarr
+#   ansible.builtin.include_tasks: prowlarr.yml
+#   tags: prowlarr
 
-- name: sonarr
-  ansible.builtin.include_tasks: sonarr.yml
-  tags: sonarr
+# - name: sonarr
+#   ansible.builtin.include_tasks: sonarr.yml
+#   tags: sonarr
 
-- name: radarr
-  ansible.builtin.include_tasks: radarr.yml
-  tags: radarr
+# - name: radarr
+#   ansible.builtin.include_tasks: radarr.yml
+#   tags: radarr
 
-- name: lidarr
-  ansible.builtin.include_tasks: lidarr.yml
-  tags: lidarr
+# - name: lidarr
+#   ansible.builtin.include_tasks: lidarr.yml
+#   tags: lidarr
 
-- name: bazarr
-  ansible.builtin.include_tasks: bazarr.yml
-  tags: bazarr
+# - name: bazarr
+#   ansible.builtin.include_tasks: bazarr.yml
+#   tags: bazarr
 
-- name: flaresolverr
-  ansible.builtin.include_tasks: flaresolverr.yml
-  tags: flaresolverr
+# - name: flaresolverr
+#   ansible.builtin.include_tasks: flaresolverr.yml
+#   tags: flaresolverr
 
-- name: monitorrent
-  ansible.builtin.include_tasks: monitorrent.yml
-  tags: monitorrent
+# - name: monitorrent
+#   ansible.builtin.include_tasks: monitorrent.yml
+#   tags: monitorrent
 
 - name: samba
   ansible.builtin.include_tasks: samba.yml

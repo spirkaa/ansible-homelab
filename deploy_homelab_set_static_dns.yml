@@ -16,33 +16,35 @@
     ip_projects: 192.168.12.251
     ip_ha: 192.168.20.176
     ip_gw_wg: 192.168.13.2
+    ip_k8s_ingress: 192.168.13.240
     dns_entries:
       - { alias: "plex", inet: "{{ ip_plex }}" }
       - { alias: "traefik-plex", inet: "{{ ip_plex }}" }
-      - { alias: "ombi", inet: "{{ ip_plex }}" }
-      - { alias: "tautulli", inet: "{{ ip_plex }}" }
+      # - { alias: "ombi", inet: "{{ ip_plex }}" }
+      # - { alias: "tautulli", inet: "{{ ip_plex }}" }
 
       - { alias: "spnas", inet: "{{ ip_spnas }}" }
       - { alias: "traefik-spnas", inet: "{{ ip_spnas }}" }
-      - { alias: "deluge", inet: "{{ ip_spnas }}" }
-      - { alias: "jackett", inet: "{{ ip_spnas }}" }
-      - { alias: "monitorrent", inet: "{{ ip_spnas }}" }
-      - { alias: "sonarr", inet: "{{ ip_spnas }}" }
-      - { alias: "radarr", inet: "{{ ip_spnas }}" }
-      - { alias: "lidarr", inet: "{{ ip_spnas }}" }
-      - { alias: "bazarr", inet: "{{ ip_spnas }}" }
       - { alias: "cloud", inet: "{{ ip_spnas }}" }
-      - { alias: "prowlarr", inet: "{{ ip_spnas }}" }
-      - { alias: "flaresolverr", inet: "{{ ip_spnas }}" }
       - { alias: "minio", inet: "{{ ip_spnas }}" }
       - { alias: "s3", inet: "{{ ip_spnas }}" }
 
+      - { alias: "deluge", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "jackett", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "monitorrent", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "sonarr", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "radarr", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "lidarr", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "bazarr", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "prowlarr", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "flaresolverr", inet: "{{ ip_k8s_ingress }}" }
+
       - { alias: "dev", inet: "{{ ip_dev }}" }
       - { alias: "traefik-dev", inet: "{{ ip_dev }}" }
-      - { alias: "code", inet: "{{ ip_dev }}" }
+      # - { alias: "code", inet: "{{ ip_dev }}" }
       - { alias: "git", inet: "{{ ip_dev }}" }
-      - { alias: "drone", inet: "{{ ip_dev }}" }
-      - { alias: "registry", inet: "{{ ip_dev }}" }
+      # - { alias: "drone", inet: "{{ ip_dev }}" }
+      # - { alias: "registry", inet: "{{ ip_dev }}" }
       - { alias: "jenkins", inet: "{{ ip_dev }}" }
 
       - { alias: "mgmt", inet: "{{ ip_mgmt }}" }
