@@ -42,11 +42,13 @@
       ansible.builtin.stat:
         path: /var/run/reboot-required
       register: reboot_required
+      tags: reboot
 
     - name: Reboot
       ansible.builtin.reboot:
       when: reboot_required.stat.exists
       become: true
+      tags: reboot
 
   roles:
     - { role: common/sytemd_resolved }
