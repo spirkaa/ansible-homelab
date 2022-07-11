@@ -87,7 +87,7 @@
     env:
       USER_UID: "{{ puid }}"
       USER_GID: "{{ pgid }}"
-      GNUPGHOME: "{{ gitea_repository_root }}/.gnupg"
+      GNUPGHOME: "{{ gitea_home_path }}/.gnupg"
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
@@ -146,7 +146,7 @@
     - name: gitea - gpg - copy key template
       ansible.builtin.copy:
         src: files/gen-key-script
-        dest: "{{ gitea_repository_root_host }}/.gnupg/gen-key-script"
+        dest: "{{ gitea_home_path_host }}/.gnupg/gen-key-script"
         owner: "{{ gitea_ssh_user }}"
         group: "{{ gitea_ssh_user }}"
         mode: 0600
@@ -155,14 +155,14 @@
     - name: gitea - gpg - generate key
       ansible.builtin.command: >
         docker exec -u git gitea sh -c \
-          'gpg --batch --gen-key {{ gitea_repository_root }}/.gnupg/gen-key-script'
+          'gpg --batch --gen-key {{ gitea_home_path }}/.gnupg/gen-key-script'
       args:
-        creates: "{{ gitea_repository_root_host }}/.gnupg/private-keys-v1.d"
+        creates: "{{ gitea_home_path_host }}/.gnupg/private-keys-v1.d"
       tags: gitea
 
     - name: gitea - gpg - delete key template
       ansible.builtin.file:
-        path: "{{ gitea_repository_root_host }}/.gnupg/gen-key-script"
+        path: "{{ gitea_home_path_host }}/.gnupg/gen-key-script"
         state: absent
       tags: gitea
 
@@ -179,8 +179,8 @@
         docker exec -u git gitea sh -c \
           '{{ item }}'
       loop:
-        - git config --file {{ gitea_repository_root }}/.gitconfig user.signingkey {{ gpg_key_id.stdout }}
-        - git config --file {{ gitea_repository_root }}/.gitconfig commit.gpgsign true
+        - git config --file {{ gitea_home_path }}/.gitconfig user.signingkey {{ gpg_key_id.stdout }}
+        - git config --file {{ gitea_home_path }}/.gitconfig commit.gpgsign true
       changed_when: true
       notify: gitea - restart
       tags: gitea
