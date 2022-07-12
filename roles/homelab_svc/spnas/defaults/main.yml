@@ -14,7 +14,7 @@ bazarr_image: linuxserver/bazarr:development-v1.0.5-beta.39-ls360
 muximux_image: linuxserver/muximux:version-418923c8
 flaresolverr_image: flaresolverr/flaresolverr:v2.2.4
 monitorrent_image: werwolfby/alpine-monitorrent:1.1.12
-nextcloud_db_image: yobasystems/alpine-mariadb:10.6
+nextcloud_db_image: postgres:14-alpine
 nextcloud_image: ghcr.io/wonderfall/nextcloud:24
 samba_image: mbentley/timemachine:smb
 minio_image: minio/minio:RELEASE.2022-06-30T20-58-09Z

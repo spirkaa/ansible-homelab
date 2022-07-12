@@ -5,15 +5,11 @@
     image: "{{ nextcloud_db_image }}"
     pull: yes
     env:
-      MYSQL_ROOT_PASSWORD: "{{ nextcloud_db_root_pass }}"
-      MYSQL_DATABASE: "{{ nextcloud_db_user }}"
-      MYSQL_USER: "{{ nextcloud_db_user }}"
-      MYSQL_PASSWORD: "{{ nextcloud_db_pass }}"
-      MYSQL_CHARSET: "utf8mb4"
-      MYSQL_COLLATION: "utf8mb4_unicode_ci"
+      POSTGRES_USER: "{{ nextcloud_db_user }}"
+      POSTGRES_PASSWORD: "{{ nextcloud_db_pass }}"
+      POSTGRES_DB: "{{ nextcloud_db_user }}"
     volumes:
-      - "{{ app_path }}/nextcloud/db:/var/lib/mysql"
-    command: --skip-innodb-read-only-compressed
+      - "{{ app_path }}/nextcloud/db:/var/lib/postgresql/data"
     restart_policy: unless-stopped
     state: started
   no_log: true
@@ -30,7 +26,7 @@
       UID: "{{ puid }}"
       GID: "{{ pgid }}"
       TZ: "{{ tz }}"
-      DB_TYPE: "mysql"
+      DB_TYPE: "pgsql"
       DB_HOST: "nextcloud-db"
       DB_NAME: "{{ nextcloud_db_user }}"
       DB_USER: "{{ nextcloud_db_user }}"
