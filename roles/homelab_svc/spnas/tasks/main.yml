@@ -47,9 +47,9 @@
   ansible.builtin.include_tasks: minio.yml
   tags: minio
 
-- name: nextcloud
-  ansible.builtin.include_tasks: nextcloud.yml
-  tags: nextcloud
+# - name: nextcloud
+#   ansible.builtin.include_tasks: nextcloud.yml
+#   tags: nextcloud
 
 - name: nextcloud - configure freeipa
   ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
