@@ -207,6 +207,11 @@ jobs:
           }
         }
         configure { node ->
+          node / "properties" / "ru.omniverse.jenkins.skip__cron__rebuild.SkipCronRebuild" {
+            skipTagRebuild(true)
+          }
+        }
+        configure { node ->
           node / buildStrategies / "jenkins.branch.buildstrategies.basic.SkipInitialBuildOnFirstBranchIndexing" {}
         }
         configure { node ->
