@@ -7,9 +7,9 @@
 #   ansible.builtin.include_tasks: vaultwarden.yml
 #   tags: vaultwarden
 
-- name: portainer
-  ansible.builtin.include_tasks: portainer.yml
-  tags: portainer
+# - name: portainer
+#   ansible.builtin.include_tasks: portainer.yml
+#   tags: portainer
 
 - name: unifi
   ansible.builtin.include_tasks: unifi.yml

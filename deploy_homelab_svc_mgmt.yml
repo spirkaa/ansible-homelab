@@ -22,6 +22,7 @@
 
   roles:
     - { role: pve_manager }
+    - { role: portainer_api }
 
 
 - name: Pre-configure host
@@ -73,4 +74,3 @@
 
   roles:
     - { role: homelab_svc/mgmt, become: true, tags: [mgmt, svc] }
-    - { role: portainer_api }

@@ -24,8 +24,8 @@
       # - { alias: "tautulli", inet: "{{ ip_plex }}" }
 
       - { alias: "spnas", inet: "{{ ip_spnas }}" }
+      # - { alias: "cloud", inet: "{{ ip_spnas }}" }
       - { alias: "traefik-spnas", inet: "{{ ip_spnas }}" }
-      - { alias: "cloud", inet: "{{ ip_spnas }}" }
       - { alias: "minio", inet: "{{ ip_spnas }}" }
       - { alias: "s3", inet: "{{ ip_spnas }}" }
 
@@ -38,6 +38,7 @@
       - { alias: "bazarr", inet: "{{ ip_k8s_ingress }}" }
       - { alias: "prowlarr", inet: "{{ ip_k8s_ingress }}" }
       - { alias: "flaresolverr", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "portainer", inet: "{{ ip_k8s_ingress }}" }
 
       - { alias: "dev", inet: "{{ ip_dev }}" }
       - { alias: "traefik-dev", inet: "{{ ip_dev }}" }
@@ -49,13 +50,12 @@
 
       - { alias: "mgmt", inet: "{{ ip_mgmt }}" }
       - { alias: "traefik-mgmt", inet: "{{ ip_mgmt }}" }
-      - { alias: "portainer", inet: "{{ ip_mgmt }}" }
       - { alias: "unifi", inet: "{{ ip_mgmt }}" }
       - { alias: "unms", inet: "{{ ip_mgmt }}" }
-      - { alias: "bw", inet: "{{ ip_mgmt }}" }
+      # - { alias: "bw", inet: "{{ ip_mgmt }}" }
       - { alias: "ipa", inet: "{{ ip_mgmt }}" }
       - { alias: "ldap", inet: "{{ ip_mgmt }}" }
-      - { alias: "vault", inet: "{{ ip_mgmt }}" }
+      # - { alias: "vault", inet: "{{ ip_mgmt }}" }
 
       - { alias: "stats", inet: "{{ ip_stats }}" }
       - { alias: "traefik-stats", inet: "{{ ip_stats }}" }
@@ -70,11 +70,11 @@
 
       - { alias: "rp", inet: "{{ ip_rp }}" }
 
-      - { alias: "pihole", inet: "{{ ip_pihole }}" }
-      - { alias: "traefik-pihole", inet: "{{ ip_pihole }}" }
+      # - { alias: "pihole", inet: "{{ ip_pihole }}" }
+      # - { alias: "traefik-pihole", inet: "{{ ip_pihole }}" }
 
-      - { alias: "projects", inet: "{{ ip_projects }}" }
-      - { alias: "traefik-projects", inet: "{{ ip_projects }}" }
+      # - { alias: "projects", inet: "{{ ip_projects }}" }
+      # - { alias: "traefik-projects", inet: "{{ ip_projects }}" }
 
       - { alias: "ha", inet: "{{ ip_ha }}" }
       - { alias: "traefik-ha", inet: "{{ ip_ha }}" }
