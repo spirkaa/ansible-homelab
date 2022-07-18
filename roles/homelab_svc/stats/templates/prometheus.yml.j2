@@ -9,15 +9,15 @@ scrape_configs:
     static_configs:
       - targets: ['prometheus.{{ inventory__homelab_domain }}']
 
-  - job_name: 'loki'
-    scheme: https
-    static_configs:
-      - targets: ['loki.{{ inventory__homelab_domain }}']
+  # - job_name: 'loki'
+  #   scheme: https
+  #   static_configs:
+  #     - targets: ['loki.{{ inventory__homelab_domain }}']
 
-  - job_name: 'grafana'
-    scheme: https
-    static_configs:
-      - targets: ['grafana.{{ inventory__homelab_domain }}']
+  # - job_name: 'grafana'
+  #   scheme: https
+  #   static_configs:
+  #     - targets: ['grafana.{{ inventory__homelab_domain }}']
 
   - job_name: 'cadvisor'
     scheme: https

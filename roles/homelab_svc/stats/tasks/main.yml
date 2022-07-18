@@ -1,7 +1,7 @@
 ---
-- name: loki
-  ansible.builtin.include_tasks: loki.yml
-  tags: [loki, grafana]
+# - name: loki
+#   ansible.builtin.include_tasks: loki.yml
+#   tags: [loki, grafana]
 
 - name: prometheus
   ansible.builtin.include_tasks: prometheus.yml
@@ -11,9 +11,9 @@
   ansible.builtin.include_tasks: influxdb.yml
   tags: [influxdb, grafana]
 
-- name: grafana
-  ansible.builtin.include_tasks: grafana.yml
-  tags: grafana
+# - name: grafana
+#   ansible.builtin.include_tasks: grafana.yml
+#   tags: grafana
 
 - name: librenms
   ansible.builtin.include_tasks: librenms.yml

@@ -60,9 +60,9 @@
       - { alias: "stats", inet: "{{ ip_stats }}" }
       - { alias: "traefik-stats", inet: "{{ ip_stats }}" }
       - { alias: "nms", inet: "{{ ip_stats }}" }
-      - { alias: "grafana", inet: "{{ ip_stats }}" }
+      # - { alias: "grafana", inet: "{{ ip_stats }}" }
       - { alias: "influxdb", inet: "{{ ip_stats }}" }
-      - { alias: "loki", inet: "{{ ip_stats }}" }
+      # - { alias: "loki", inet: "{{ ip_stats }}" }
       - { alias: "prometheus", inet: "{{ ip_stats }}" }
 
       - { alias: "mail", inet: "{{ ip_mail }}" }
