@@ -39,6 +39,7 @@
       - { alias: "prowlarr", inet: "{{ ip_k8s_ingress }}" }
       - { alias: "flaresolverr", inet: "{{ ip_k8s_ingress }}" }
       - { alias: "portainer", inet: "{{ ip_k8s_ingress }}" }
+      - { alias: "unifi-ui", inet: "{{ ip_k8s_ingress }}" }
 
       - { alias: "dev", inet: "{{ ip_dev }}" }
       - { alias: "traefik-dev", inet: "{{ ip_dev }}" }
@@ -50,8 +51,7 @@
 
       - { alias: "mgmt", inet: "{{ ip_mgmt }}" }
       - { alias: "traefik-mgmt", inet: "{{ ip_mgmt }}" }
-      - { alias: "unifi", inet: "{{ ip_mgmt }}" }
-      - { alias: "unms", inet: "{{ ip_mgmt }}" }
+      # - { alias: "unms", inet: "{{ ip_mgmt }}" }
       # - { alias: "bw", inet: "{{ ip_mgmt }}" }
       - { alias: "ipa", inet: "{{ ip_mgmt }}" }
       - { alias: "ldap", inet: "{{ ip_mgmt }}" }
@@ -83,6 +83,7 @@
 
       - { alias: "gw-wg", inet: "{{ ip_gw_wg }}" }
 
+      - { alias: "unifi", inet: "192.168.13.250" }
       - { alias: "k8s-controlplane-01", inet: "192.168.13.201" }
       - { alias: "k8s-controlplane-02", inet: "192.168.13.202" }
       - { alias: "k8s-controlplane-03", inet: "192.168.13.203" }
