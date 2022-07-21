@@ -11,7 +11,7 @@
     ip_mgmt: 192.168.11.2
     ip_stats: 192.168.12.98
     # ip_mail: 192.168.12.250
-    ip_rp: 192.168.12.254
+    # ip_rp: 192.168.12.254
     # ip_pihole: 192.168.16.2
     # ip_projects: 192.168.12.251
     ip_ha: 192.168.20.176
@@ -68,7 +68,7 @@
       # - { alias: "mail", inet: "{{ ip_mail }}" }
       # - { alias: "traefik-mail", inet: "{{ ip_mail }}" }
 
-      - { alias: "rp", inet: "{{ ip_rp }}" }
+      # - { alias: "rp", inet: "{{ ip_rp }}" }
 
       # - { alias: "pihole", inet: "{{ ip_pihole }}" }
       # - { alias: "traefik-pihole", inet: "{{ ip_pihole }}" }

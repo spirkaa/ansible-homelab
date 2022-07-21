@@ -21,7 +21,7 @@ ansible_user=root
 plex
 spnas
 stats
-rp
+# rp
 # mail
 # pihole
 # projects
