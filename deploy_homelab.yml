@@ -7,7 +7,7 @@
 - ansible.builtin.import_playbook: deploy_homelab_manage_users.yml
 # - ansible.builtin.import_playbook: deploy_homelab_svc_pihole.yml
 - ansible.builtin.import_playbook: deploy_homelab_svc_rp.yml
-- ansible.builtin.import_playbook: deploy_homelab_svc_mail.yml
+# - ansible.builtin.import_playbook: deploy_homelab_svc_mail.yml
 - ansible.builtin.import_playbook: deploy_homelab_svc_stats.yml
 - ansible.builtin.import_playbook: deploy_homelab_svc_dev.yml
 - ansible.builtin.import_playbook: deploy_homelab_svc_spnas.yml

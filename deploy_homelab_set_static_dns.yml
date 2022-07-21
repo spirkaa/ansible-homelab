@@ -10,10 +10,10 @@
     ip_dev: 192.168.10.12
     ip_mgmt: 192.168.11.2
     ip_stats: 192.168.12.98
-    ip_mail: 192.168.12.250
+    # ip_mail: 192.168.12.250
     ip_rp: 192.168.12.254
-    ip_pihole: 192.168.16.2
-    ip_projects: 192.168.12.251
+    # ip_pihole: 192.168.16.2
+    # ip_projects: 192.168.12.251
     ip_ha: 192.168.20.176
     ip_gw_wg: 192.168.13.2
     ip_k8s_ingress: 192.168.13.240
@@ -65,8 +65,8 @@
       # - { alias: "loki", inet: "{{ ip_stats }}" }
       - { alias: "prometheus", inet: "{{ ip_stats }}" }
 
-      - { alias: "mail", inet: "{{ ip_mail }}" }
-      - { alias: "traefik-mail", inet: "{{ ip_mail }}" }
+      # - { alias: "mail", inet: "{{ ip_mail }}" }
+      # - { alias: "traefik-mail", inet: "{{ ip_mail }}" }
 
       - { alias: "rp", inet: "{{ ip_rp }}" }
 
