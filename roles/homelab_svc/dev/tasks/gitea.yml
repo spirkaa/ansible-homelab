@@ -71,6 +71,9 @@
       POSTGRES_DB: "{{ gitea_db_user }}"
     volumes:
       - "{{ app_path }}/gitea/db:/var/lib/postgresql/data"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
     restart_policy: unless-stopped
     state: started
   no_log: true
@@ -93,8 +96,15 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/home/{{ gitea_ssh_user }}/.ssh/:/data/git/.ssh"
       - "{{ app_path }}/gitea/data:/data"
-    links:
-      - "gitea-db:gitea-db"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: yes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.gitea.rule: "HostRegexp(`git{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.services.gitea.loadbalancer.server.port: "3000"
+      traefik.http.routers.gitea.entrypoints: "websecure"
+      traefik.http.routers.gitea.tls: "true"
     restart_policy: unless-stopped
     state: started
   register: gitea_start
