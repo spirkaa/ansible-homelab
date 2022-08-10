@@ -84,18 +84,19 @@ ENABLE_OPENID_SIGNIN = false
 ENABLE_OPENID_SIGNUP = false
 
 [oauth2_client]
-OPENID_CONNECT_SCOPES = profile email groups
+OPENID_CONNECT_SCOPES    = profile email groups
 ENABLE_AUTO_REGISTRATION = true
-USERNAME = email
-ACCOUNT_LINKING = auto
+USERNAME                 = email
+ACCOUNT_LINKING          = auto
 
 [webhook]
 ALLOWED_HOST_LIST = *
 
 [mailer]
-ENABLED = true
+ENABLED        = true
 SUBJECT_PREFIX = [git]
-HOST           = {{ smtp_host }}:{{ smtp_port }}
+SMTP_ADDR      = {{ smtp_host }}
+SMTP_PORT      = {{ smtp_port }}
 FROM           = Gitea <{{ smtp_user }}>
 USER           = {{ smtp_user }}
 PASSWD         = {{ smtp_pass }}
