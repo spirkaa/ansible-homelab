@@ -10,5 +10,5 @@
 
 1. На сервере с помощью `rclone config` создать remote
 1. На сервере скопировать параметры remote из `.config/rclone/rclone.conf` в `rclone_configs.vault.yml`
-1. Настроить расписание в переменной `rclone_sync_config`
+1. Настроить расписание в переменной `rclone_jobs`
 1. Добавить проверку на healthchecks.io

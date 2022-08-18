@@ -34,7 +34,7 @@
 #
 ##############################################################################
 
-FILENAME=`basename "$0"`
+FILENAME=$(basename "$0")
 
 #### rclone sync options
 
@@ -46,12 +46,12 @@ MINAGE=15m
 TRANSFERS=32
 CHECKERS=32
 
-# ---- Location of sync log [will be rotated with savelog]
+# ---- Location of job log [will be rotated with savelog]
 LOGFILE="/var/log/$FILENAME.log"
 LOGS='-v --log-file='$LOGFILE
 
 # ---- Location of cron log
-CRONLOG=/var/log/rclone-sync.log
+CRONLOG=/var/log/rclone-jobs.log
 
 ###################################################
 ## Locking Boilerplate from https://gist.github.com/przemoc/571091
@@ -101,8 +101,12 @@ savelog -n -c 7 $LOGFILE >> $CRONLOG
 # Log startup
 echo $(date)" | starting $FILENAME..." >> $CRONLOG
 
-# Now do the sync!
+# Now do the work!
+{% if item.type == "sync" %}
 rclone sync $SRC $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS --min-age $MINAGE --delete-excluded $EXCLUDE
+{% elif item.type == "rcat" %}
+tar -cf - $EXCLUDE --directory=$SRC . | pigz -p 4 | rclone rcat $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS
+{% endif %}
 
 # log success
 echo $(date)" | completed $FILENAME." >> $CRONLOG

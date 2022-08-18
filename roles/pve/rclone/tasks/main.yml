@@ -40,28 +40,28 @@
         force: no
       no_log: true
 
-    - name: Create scripts dir
+    - name: Create jobs dir
       ansible.builtin.file:
-        path: "{{ rclone_sync_path }}"
+        path: "{{ rclone_jobs_path }}"
         state: directory
         recurse: yes
 
-    - name: Copy scripts
+    - name: Copy jobs
       ansible.builtin.template:
-        src: rclone-sync.j2
-        dest: "{{ rclone_sync_path }}/{{ item.name }}"
+        src: rclone-job.j2
+        dest: "{{ rclone_jobs_path }}/{{ item.name }}"
         mode: 0755
-      loop: "{{ rclone_sync_config }}"
+      loop: "{{ rclone_jobs }}"
 
-    - name: Setup cron jobs
+    - name: Setup cron
       ansible.builtin.cron:
         user: "{{ item.user | default('root') }}"
-        job: "/opt/rclone-sync/{{ item.name }} > /dev/null 2>&1 && curl -fsS --retry 3 {{ inventory__healthchecksio_url }}/{{ item.name }} > /dev/null 2>&1"
+        job: "{{ rclone_jobs_path }}/{{ item.name }} > /dev/null 2>&1 && curl -fsS --retry 3 {{ inventory__healthchecksio_url }}/{{ item.name }} > /dev/null 2>&1"
         name: "{{ item.name }}"
         weekday: "{{ item.weekday | default('*') }}"
         minute: "{{ item.minute | default('00') }}"
         hour: "{{ item.hour | default('00') }}"
         dom: "{{ item.dom | default('*') }}"
-      loop: "{{ rclone_sync_config }}"
+      loop: "{{ rclone_jobs }}"
       no_log: true
   when: inventory_hostname == "spsrv"

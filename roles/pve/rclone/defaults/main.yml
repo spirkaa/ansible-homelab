@@ -4,25 +4,29 @@ rclone_url: https://github.com/rclone/rclone/releases/download/{{ rclone_version
 
 rclone_config_location: /root/.config/rclone/rclone.conf
 
-rclone_sync_path: /opt/rclone-sync
-rclone_sync_config:
+rclone_jobs_path: /opt/rclone-jobs
+rclone_jobs:
+  - name: rclone-rcat-minio
+    type: rcat
+    src: $(find /mnt/tank0/ds0/minio/.zfs/snapshot -maxdepth 1 -type d | grep zfs-auto-snap_daily-"$(date --iso="date")")
+    dest: "gdrive-spnas-minio:/backup/zfs-auto-snap_daily.tar.gz"
+    weekday: "*"
+    hour: "08"
   - name: rclone-sync-proxmox
+    type: sync
     src: /mnt/tank0/ds0/proxmox/dump
     dest: "gdrive-spnas-proxmox:"
     weekday: "*"
     hour: "03"
-  - name: rclone-sync-minio
-    src: /mnt/tank0/ds0/minio
-    dest: "gdrive-spnas-minio:"
-    weekday: "*"
-    hour: "08"
   - name: rclone-sync-downloads
+    type: sync
     src: /mnt/storage/downloads
     dest: "gdrive-spnas-downloads:"
     exclude: "--exclude incomplete/** --exclude tmp/**"
     weekday: "2,5"
     hour: "05"
   - name: rclone-sync-cloud
+    type: sync
     src: /mnt/tank0/ds0/cloud
     dest: "gdrive-spnas-cloud:"
     exclude: "--exclude .dropbox.cache/**"
