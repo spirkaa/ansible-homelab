@@ -2,11 +2,18 @@
 - hosts: linux
   gather_facts: no
 
+  handlers:
+    - name: Upgrade packages result
+      ansible.builtin.debug:
+        var: upgrade_packages_result.stdout_lines
+
   tasks:
     - name: Upgrade packages
       ansible.builtin.package:
         update_cache: yes
         state: latest
         name: "*"
+      register: upgrade_packages_result
       become: true
+      notify: Upgrade packages result
       tags: upgrade_packages
