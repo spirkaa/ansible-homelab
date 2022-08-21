@@ -107,6 +107,7 @@ rclone sync $SRC $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS --min-a
 {% elif item.type == "rcat" %}
 tar -cf - $EXCLUDE --directory=$SRC . | pigz -p 4 | rclone rcat $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS
 {% endif %}
+{{ item.post_cmd | default('', true) }}
 
 # log success
 echo $(date)" | completed $FILENAME." >> $CRONLOG

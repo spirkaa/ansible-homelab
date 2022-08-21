@@ -10,6 +10,7 @@ rclone_jobs:
     type: rcat
     src: $(find /mnt/tank0/ds0/minio/.zfs/snapshot -maxdepth 1 -type d | grep zfs-auto-snap_daily-"$(date --iso="date")")
     dest: "gdrive-spnas-minio:/backup/zfs-auto-snap_daily.tar.gz"
+    post_cmd: umount /mnt/tank0/ds0/minio/.zfs/snapshot/* > /dev/null 2>&1
     weekday: "*"
     hour: "08"
   - name: rclone-sync-proxmox
