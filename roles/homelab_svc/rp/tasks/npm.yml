@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: npm-db
     image: "{{ npm_db_image }}"
-    pull: yes
+    pull: true
     env:
       MYSQL_ROOT_PASSWORD: "{{ npm_db_root_pass }}"
       MYSQL_DATABASE: "{{ npm_db_user }}"
@@ -22,7 +22,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/npm/app/data/nginx"
     state: directory
-    recurse: yes
+    recurse: true
   tags: npm
 
 - name: npm - copy files
@@ -38,7 +38,7 @@
   community.docker.docker_container:
     name: npm
     image: "{{ npm_image }}"
-    pull: yes
+    pull: true
     ports:
       - "80:80"
       - "81:81"

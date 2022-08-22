@@ -2,7 +2,7 @@
 - name: snapraid - check if installed
   ansible.builtin.command: >
     dpkg-query -W snapraid
-  ignore_errors: True
+  ignore_errors: true
   register: snapraid_is_installed
   changed_when: snapraid_is_installed.rc != 0
 

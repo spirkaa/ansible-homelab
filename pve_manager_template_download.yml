@@ -1,6 +1,6 @@
 ---
 - hosts: proxmox
-  gather_facts: no
+  gather_facts: false
 
   vars:
     template_image_url:
@@ -15,7 +15,7 @@
           ansible.builtin.get_url:
             url: "{{ item }}"
             dest: "{{ template_image_path }}/{{ item | basename }}"
-            force: yes
+            force: true
           loop: "{{ template_image_url }}"
 
         - name: template image - install qemu-guest-agent

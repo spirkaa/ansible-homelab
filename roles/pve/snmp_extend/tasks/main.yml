@@ -17,7 +17,7 @@
     url: "{{ item }}"
     dest: "{{ snmp_extend_scripts_path }}/{{ item | basename }}"
     mode: 0755
-    force: yes
+    force: true
   loop: "{{ snmp_extend_scripts }}"
   notify: restart snmpd
 

@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/influxdb/config"
     state: directory
-    recurse: yes
+    recurse: true
   tags: [influxdb, grafana]
 
 - name: influxdb - copy files
@@ -18,7 +18,7 @@
   community.docker.docker_container:
     name: influxdb
     image: "{{ influxdb_image }}"
-    pull: yes
+    pull: true
     ports:
       - "2003:2003"
       - "8086:8086"
@@ -27,7 +27,7 @@
       - "{{ app_path }}/influxdb/db:/var/lib/influxdb"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.influxdb.rule: "HostRegexp(`influxdb{fqdn:(.{{ inventory__homelab_domain }})?}`)"

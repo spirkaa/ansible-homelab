@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/grafana/{{ item }}"
     state: directory
-    recurse: yes
+    recurse: true
   loop:
     - "config/provisioning/dashboards"
     - "config/provisioning/datasources"
@@ -40,14 +40,14 @@
     chown -R 472:472 {{ app_path }}/grafana/data
   when: grafana_data.stat.uid != 472 or grafana_data.stat.gid != 472
   args:
-    warn: no
+    warn: false
   tags: grafana
 
 - name: grafana - start
   community.docker.docker_container:
     name: grafana
     image: "{{ grafana_image }}"
-    pull: yes
+    pull: true
     env:
       GF_AUTH_LDAP_ENABLED: "true"
       GF_SMTP_ENABLED: "true"
@@ -65,7 +65,7 @@
       - "{{ app_path }}/grafana/data:/var/lib/grafana"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.grafana.rule: "HostRegexp(`grafana{fqdn:(.{{ app_base_domain }})?}`)"

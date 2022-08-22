@@ -1,7 +1,7 @@
 ---
 - hosts: ubnt-erx-krs
   strategy: linear
-  gather_facts: no
+  gather_facts: false
 
   vars:
     dn: "{{ inventory__homelab_domain }}"

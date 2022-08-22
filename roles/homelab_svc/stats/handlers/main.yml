@@ -15,7 +15,7 @@
   community.docker.docker_container:
     name: librenms
     state: started
-    restart: yes
+    restart: true
   no_log: true
   when: not librenms_start.changed
 
@@ -23,26 +23,26 @@
   community.docker.docker_container:
     name: influxdb
     state: started
-    restart: yes
+    restart: true
   when: not influxdb_start.changed
 
 - name: mosquitto - restart
   community.docker.docker_container:
     name: mosquitto
     state: started
-    restart: yes
+    restart: true
   when: not mosquitto_start.changed
 
 - name: grafana - restart
   community.docker.docker_container:
     name: grafana
     state: started
-    restart: yes
+    restart: true
   when: not grafana_start.changed
 
 - name: prometheus - restart
   community.docker.docker_container:
     name: prometheus
     state: started
-    restart: yes
+    restart: true
   when: not prometheus_start.changed

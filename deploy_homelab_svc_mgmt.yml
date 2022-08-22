@@ -1,7 +1,7 @@
 ---
 - name: Provision host
   hosts: sppve
-  gather_facts: no
+  gather_facts: false
 
   vars:
     resource_type: vm
@@ -27,7 +27,7 @@
 
 - name: Pre-configure host
   hosts: mgmt
-  gather_facts: yes
+  gather_facts: true
 
   pre_tasks:
     - name: Wait for cloud-init to finish
@@ -57,7 +57,7 @@
 
 # - name: Apply common roles
 #   hosts: mgmt
-#   gather_facts: no
+#   gather_facts: false
 
 #   roles:
 #     - { role: common/packages, become: true }
@@ -70,7 +70,7 @@
 
 - name: Apply host-specific roles
   hosts: mgmt
-  gather_facts: no
+  gather_facts: false
 
   roles:
     - { role: homelab_svc/mgmt, become: true, tags: [mgmt, svc] }

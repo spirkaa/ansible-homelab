@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: librenms-db
     image: "{{ librenms_db_image }}"
-    pull: yes
+    pull: true
     env:
       MYSQL_ROOT_PASSWORD: "{{ librenms_db_root_pass }}"
       MYSQL_DATABASE: "{{ librenms_db_user }}"
@@ -15,7 +15,7 @@
       - "{{ app_path }}/librenms/db:/var/lib/mysql"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     command:
       --sql-mode=""
       --lower_case_table_names=0
@@ -29,7 +29,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/librenms"
     state: directory
-    recurse: yes
+    recurse: true
   tags: librenms
 
 - name: librenms - copy files
@@ -46,7 +46,7 @@
   community.docker.docker_container:
     name: librenms
     image: "{{ librenms_image }}"
-    pull: yes
+    pull: true
     env:
       TZ: "{{ tz }}"
       DB_HOST: "librenms-db"
@@ -66,7 +66,7 @@
       - "librenms-weathermap-output:/opt/librenms/html/plugins/Weathermap/output"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.librenms.rule: "HostRegexp(`nms{fqdn:(.{{ app_base_domain }})?}`)"

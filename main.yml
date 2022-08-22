@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  gather_facts: no
+  gather_facts: false
 
 - ansible.builtin.import_playbook: vps.yml
 - ansible.builtin.import_playbook: pve.yml

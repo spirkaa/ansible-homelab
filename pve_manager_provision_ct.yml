@@ -1,6 +1,6 @@
 ---
 - hosts: sppve
-  gather_facts: no
+  gather_facts: false
 
   vars:
     resource_type: ct
@@ -21,7 +21,7 @@
 
 
 - hosts: test-ct
-  gather_facts: yes
+  gather_facts: true
 
   tasks:
     - name: print facts

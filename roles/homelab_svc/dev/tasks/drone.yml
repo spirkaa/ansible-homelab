@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: drone
     image: "{{ drone_image }}"
-    pull: yes
+    pull: true
     ports:
       - "8080:80"
     env:
@@ -26,7 +26,7 @@
   community.docker.docker_container:
     name: drone-runner-docker
     image: "{{ drone_runner_docker_image }}"
-    pull: yes
+    pull: true
     env:
       DRONE_RPC_HOST: "{{ drone_host }}"
       DRONE_RPC_PROTO: "{{ drone_proto }}"

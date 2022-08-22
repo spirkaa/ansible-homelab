@@ -8,7 +8,7 @@
 
 - name: Install packages
   ansible.builtin.package:
-    update_cache: yes
+    update_cache: true
     state: present
     name:
       - wireguard
@@ -22,6 +22,6 @@
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: "1"
-    sysctl_set: yes
-    reload: yes
+    sysctl_set: true
+    reload: true
     state: present

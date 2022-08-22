@@ -1,6 +1,6 @@
 ---
 - hosts: sppve
-  gather_facts: no
+  gather_facts: false
 
   vars:
     resource_type: ct
@@ -24,7 +24,7 @@
 
 
 - hosts: mail
-  gather_facts: no
+  gather_facts: false
 
   pre_tasks:
     - name: remove postfix package

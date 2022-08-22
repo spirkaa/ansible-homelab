@@ -1,6 +1,6 @@
 ---
 - hosts: linux
-  gather_facts: no
+  gather_facts: false
 
   handlers:
     - name: Upgrade packages result
@@ -10,7 +10,7 @@
   tasks:
     - name: Upgrade packages
       ansible.builtin.package:
-        update_cache: yes
+        update_cache: true
         state: latest
         name: "*"
       register: upgrade_packages_result

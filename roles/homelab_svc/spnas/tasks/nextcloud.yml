@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: nextcloud-db
     image: "{{ nextcloud_db_image }}"
-    pull: yes
+    pull: true
     env:
       POSTGRES_USER: "{{ nextcloud_db_user }}"
       POSTGRES_PASSWORD: "{{ nextcloud_db_pass }}"
@@ -19,7 +19,7 @@
   community.docker.docker_container:
     name: nextcloud
     image: "{{ nextcloud_image }}"
-    pull: yes
+    pull: true
     ports:
       - "8888:8888"
     env:

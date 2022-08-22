@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: phpldapadmin
     image: "{{ phpldapadmin_image }}"
-    pull: yes
+    pull: true
     env:
       PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'{{ inventory__ldap_domain }}': [{'server': [{'tls': 'true'},{'hide_noaccess_base': 'true'}]}, {'login': [{'bind_id': '{{ phpldapadmin_bind_id }}'},{'timeout': '60'}]}, {'appearance': [{'open_tree': 'true'}]}]}]"
       PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "allow"
@@ -13,7 +13,7 @@
       - "phpldapadmin-var-www:/var/www/phpldapadmin"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.phpldapadmin.rule: "HostRegexp(`ldap{fqdn:(.{{ app_base_domain }})?}`)"
@@ -34,7 +34,7 @@
   community.docker.docker_container:
     name: freeipa
     image: "{{ freeipa_image }}"
-    pull: yes
+    pull: true
     hostname: "{{ inventory__ldap_domain }}"
     ports:
       - "389:389"  # ldap
@@ -64,7 +64,7 @@
       --admin-password={{ freeipa_admin_password }}
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.freeipa.rule: "HostRegexp(`ipa{fqdn:(.{{ app_base_domain }})?}`)"
@@ -101,7 +101,7 @@
         timeout: 120
       tags: freeipa
   when: freeipa_start.changed
-  ignore_errors: yes  # noqa ignore-errors
+  ignore_errors: true  # noqa ignore-errors
 
 - name: freeipa - customize - copy custom schema
   vars:

@@ -1,7 +1,7 @@
 ---
 - name: Provision host
   hosts: spsrv
-  gather_facts: no
+  gather_facts: false
 
   vars:
     resource_type: vm
@@ -23,7 +23,7 @@
 
 - name: Pre-configure host
   hosts: gw-wg
-  gather_facts: yes
+  gather_facts: true
 
   pre_tasks:
     - name: Wait for cloud-init to finish
@@ -50,7 +50,7 @@
 
 # - name: Apply common roles
 #   hosts: gw-wg
-#   gather_facts: no
+#   gather_facts: false
 
 #   vars:
 #     sshd_permit_root_login: "no"
@@ -67,7 +67,7 @@
 
 - name: Apply host-specific roles
   hosts: gw-wg
-  gather_facts: no
+  gather_facts: false
 
   vars:
     wg_pia_name: wg-pia
@@ -111,8 +111,8 @@
       ansible.posix.sysctl:
         name: net.ipv4.conf.all.src_valid_mark
         value: "1"
-        sysctl_set: yes
-        reload: yes
+        sysctl_set: true
+        reload: true
         state: present
       become: true
 
@@ -120,7 +120,7 @@
       community.docker.docker_container:
         name: "{{ wg_pia_name }}"
         image: "{{ wg_pia_image }}"
-        pull: yes
+        pull: true
         env:
           LOC: "{{ wg_pia_location }}"
           USER: "{{ wg_pia_user }}"
@@ -148,7 +148,7 @@
       community.docker.docker_container:
         name: "{{ wg_access_name }}"
         image: "{{ wg_access_image }}"
-        pull: yes
+        pull: true
         env:
           WG_LOG_LEVEL: "info"
           WG_VPN_CIDRV6: "0"
@@ -162,7 +162,7 @@
           WG_VPN_ALLOWED_IPS: "0.0.0.0/0"
         volumes:
           - "wg-access-server-data:/data"
-        privileged: yes
+        privileged: true
         network_mode: host
         devices:
           - "/dev/net/tun:/dev/net/tun"
@@ -175,7 +175,7 @@
       community.docker.docker_container:
         name: "{{ squid_name }}"
         image: "{{ squid_image }}"
-        pull: yes
+        pull: true
         volumes:
           - "squid-var-cache:/var/cache/squid"
         dns_servers:

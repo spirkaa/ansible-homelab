@@ -3,5 +3,5 @@
   community.docker.docker_container:
     name: homeassistant
     state: started
-    restart: yes
+    restart: true
   when: not homeassistant_start.changed

@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: vaultwarden
     image: "{{ vaultwarden_image }}"
-    pull: yes
+    pull: true
     ports:
       - "19080:80"
       - "3012:3012"
@@ -40,7 +40,7 @@
   community.docker.docker_container:
     name: vaultwarden_ldap
     image: "{{ vaultwarden_ldap_image }}"
-    pull: yes
+    pull: true
     volumes:
       - "{{ app_path }}/vaultwarden/ldap_config.toml:/config.toml:ro"
     restart_policy: unless-stopped

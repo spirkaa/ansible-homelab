@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: autodiscover
     image: "{{ mail_autodiscover_image }}"
-    pull: yes
+    pull: true
     hostname: autodiscover
     domainname: "{{ mail_domainname }}"
     ports:
@@ -29,7 +29,7 @@
   ansible.builtin.file:
     path: "{{ mail_cert_path_host }}"
     state: directory
-    recurse: yes
+    recurse: true
   tags: mail
 
 - name: mail - copy certificate
@@ -78,7 +78,7 @@
   community.docker.docker_container:
     name: mail
     image: "{{ mail_image }}"
-    pull: yes
+    pull: true
     hostname: "{{ mail_hostname }}"
     domainname: "{{ mail_domainname }}"
     ports:

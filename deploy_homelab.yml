@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  gather_facts: no
+  gather_facts: false
 
 - ansible.builtin.import_playbook: deploy_homelab_set_static_dns.yml
 - ansible.builtin.import_playbook: deploy_homelab_svc_mgmt.yml

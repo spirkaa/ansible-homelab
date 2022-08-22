@@ -1,6 +1,6 @@
 ---
 - hosts: proxmox
-  gather_facts: yes
+  gather_facts: true
 
   vars:
     snmp_syslocation: krs

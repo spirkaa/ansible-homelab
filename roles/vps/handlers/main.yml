@@ -2,7 +2,7 @@
 - name: restart wireguard
   ansible.builtin.service:
     name: wg-quick@{{ vps_wg_interface }}
-    enabled: yes
+    enabled: true
     state: restarted
 
 - name: save iptables

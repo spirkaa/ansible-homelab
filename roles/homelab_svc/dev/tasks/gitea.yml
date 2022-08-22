@@ -10,7 +10,7 @@
     name: "{{ gitea_ssh_user }}"
     uid: "{{ puid }}"
     group: "{{ gitea_ssh_user }}"
-    generate_ssh_key: yes
+    generate_ssh_key: true
     password: ""
     update_password: on_create
   no_log: true
@@ -30,7 +30,7 @@
     owner: "{{ gitea_ssh_user }}"
     group: "{{ gitea_ssh_user }}"
     mode: 0600
-    create: yes
+    create: true
     state: present
   tags: gitea
 
@@ -45,7 +45,7 @@
   ansible.builtin.file:
     path: "{{ gitea_app_data_path_host }}/conf"
     state: directory
-    recurse: yes
+    recurse: true
   tags: gitea
 
 - name: gitea - copy files
@@ -64,7 +64,7 @@
   community.docker.docker_container:
     name: gitea-db
     image: "{{ gitea_db_image }}"
-    pull: yes
+    pull: true
     env:
       POSTGRES_USER: "{{ gitea_db_user }}"
       POSTGRES_PASSWORD: "{{ gitea_db_pass }}"
@@ -73,7 +73,7 @@
       - "{{ app_path }}/gitea/db:/var/lib/postgresql/data"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     restart_policy: unless-stopped
     state: started
   no_log: true
@@ -83,7 +83,7 @@
   community.docker.docker_container:
     name: gitea
     image: "{{ gitea_image }}"
-    pull: yes
+    pull: true
     ports:
       - "3000:3000"
       - "127.0.0.1:2222:22"
@@ -98,7 +98,7 @@
       - "{{ app_path }}/gitea/data:/data"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.gitea.rule: "HostRegexp(`git{fqdn:(.{{ inventory__homelab_domain }})?}`)"

@@ -23,8 +23,8 @@
     server_uri: ldap://{{ inventory__ldap_domain }}/
     bind_dn: cn=Directory Manager
     bind_pw: "{{ freeipa_ds_password }}"
-    start_tls: yes
-    validate_certs: no
+    start_tls: true
+    validate_certs: false
   loop: "{{ user.value.attrs }}"
   when: user.value.attrs | default(false)
 
@@ -32,7 +32,7 @@
   community.general.ipa_group:
     cn: "{{ item | default('ipausers') }}"
     user: "{{ user.key }}"
-    append: yes
+    append: true
     state: present
     ipa_host: "{{ inventory__ldap_domain }}"
     ipa_pass: "{{ freeipa_admin_password }}"

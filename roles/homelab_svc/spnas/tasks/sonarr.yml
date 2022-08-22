@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: sonarr
     image: "{{ sonarr_image }}"
-    pull: yes
+    pull: true
     env:
       PUID: "{{ puid }}"
       PGID: "{{ pgid }}"
@@ -13,7 +13,7 @@
       - "{{ app_path }}/data/downloads:/downloads"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.sonarr.rule: "HostRegexp(`sonarr{fqdn:(.{{ inventory__homelab_domain }})?}`)"

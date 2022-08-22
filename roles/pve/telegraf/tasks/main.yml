@@ -54,7 +54,7 @@
 - name: Check whether telegraf is installed
   ansible.builtin.command: >
     dpkg-query -W telegraf
-  ignore_errors: True
+  ignore_errors: true
   register: telegraf_is_installed
   changed_when: telegraf_is_installed.rc != 0
 

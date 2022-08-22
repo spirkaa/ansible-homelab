@@ -12,7 +12,7 @@
 
 - name: Install packages
   ansible.builtin.package:
-    update_cache: yes
+    update_cache: true
     state: present
     name:
       - openvswitch-switch

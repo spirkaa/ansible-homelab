@@ -3,5 +3,5 @@
   community.docker.docker_container:
     name: mail
     state: started
-    restart: yes
+    restart: true
   no_log: true

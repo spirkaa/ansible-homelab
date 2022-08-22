@@ -3,6 +3,6 @@
   community.docker.docker_container:
     name: npm
     state: started
-    restart: yes
+    restart: true
   no_log: true
   when: not npm_start.changed

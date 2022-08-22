@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: grocy
     image: "{{ grocy_image }}"
-    pull: yes
+    pull: true
     ports:
       - "9283:80"
     env:
@@ -20,7 +20,7 @@
   community.docker.docker_container:
     name: barcodebuddy
     image: "{{ barcodebuddy_image }}"
-    pull: yes
+    pull: true
     ports:
       - "9284:80"
     env:

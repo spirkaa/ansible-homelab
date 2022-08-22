@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: delugevpn
     image: "{{ delugevpn_image }}"
-    pull: yes
+    pull: true
     ports:
       - "8112:8112"
       - "8118:8118"
@@ -34,10 +34,10 @@
       - "{{ app_path }}/data/downloads:/downloads"
     sysctls:
       net.ipv4.conf.all.src_valid_mark: 1
-    privileged: yes
+    privileged: true
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.delugevpn.rule: "HostRegexp(`deluge{fqdn:(.{{ inventory__homelab_domain }})?}`)"

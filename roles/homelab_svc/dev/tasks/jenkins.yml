@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/{{ jenkins_home }}/casc_configs"
     state: directory
-    recurse: yes
+    recurse: true
   tags: jenkins
 
 - name: jenkins - copy files
@@ -22,7 +22,7 @@
     registry_url: "{{ gitea_domain }}"
     username: "{{ jenkins_gitea_user }}"
     password: "{{ jenkins_gitea_user_password }}"
-    reauthorize: yes
+    reauthorize: true
   register: _docker_login
   retries: 15
   delay: 1
@@ -33,7 +33,7 @@
   community.docker.docker_container:
     name: jenkins
     image: "{{ jenkins_image }}"
-    pull: yes
+    pull: true
     user: root
     ports:
       - "8081:8080"

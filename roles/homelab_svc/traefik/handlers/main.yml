@@ -3,5 +3,5 @@
   community.docker.docker_container:
     name: traefik
     state: started
-    restart: yes
+    restart: true
   when: not traefik_start.changed

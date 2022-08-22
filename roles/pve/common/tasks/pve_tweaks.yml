@@ -19,7 +19,7 @@
   block:
   - name: Make a backup of original file
     ansible.builtin.copy:
-      remote_src: True
+      remote_src: true
       src: "{{ proxmoxlib }}"
       dest: "{{ proxmoxlib }}.bak-{{ pveversion }}"
       mode: preserve
@@ -29,7 +29,7 @@
     ansible.builtin.command: >
       sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" {{ proxmoxlib }}
     args:
-      warn: no
+      warn: false
     changed_when: true
     notify: restart pveproxy
   when: not proxmoxlib_backup.stat.exists

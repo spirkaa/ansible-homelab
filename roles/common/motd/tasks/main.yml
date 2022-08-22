@@ -14,7 +14,7 @@
   ansible.builtin.file:
     path: /etc/update-motd.d
     state: directory
-    recurse: yes
+    recurse: true
 
 - name: Copy files
   ansible.builtin.copy:

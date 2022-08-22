@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: airvideohd
     image: "{{ airvideohd_image }}"
-    pull: yes
+    pull: true
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/dev/shm/airvideohd:/conversionPath"

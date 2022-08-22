@@ -1,6 +1,6 @@
 ---
 - hosts: spmini
-  gather_facts: no
+  gather_facts: false
 
   vars:
     resource_type: ct
@@ -24,7 +24,7 @@
 
 
 - hosts: stats
-  gather_facts: no
+  gather_facts: false
 
   roles:
     - { role: homelab_svc/stats, tags: [stats, svc] }

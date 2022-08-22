@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/samba/config"
     state: directory
-    recurse: yes
+    recurse: true
   tags: samba
 
 - name: samba - copy files
@@ -18,7 +18,7 @@
   community.docker.docker_container:
     name: samba
     image: "{{ samba_image }}"
-    pull: yes
+    pull: true
     env:
       DEBUG_LEVEL: "0"
       CUSTOM_SMB_CONF: "true"

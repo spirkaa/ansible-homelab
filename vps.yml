@@ -1,6 +1,6 @@
 ---
 - hosts: vps
-  gather_facts: yes
+  gather_facts: true
 
   vars:
     sshd_port: 51858

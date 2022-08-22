@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   connection: local
-  gather_facts: no
+  gather_facts: false
 
   vars:
     proxmox_ldap_bind_dn: uid=proxmoxsvc,{{ inventory__ldap_sysaccounts_dn }}

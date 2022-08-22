@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/pihole/config/dnsmasq.d"
     state: directory
-    recurse: yes
+    recurse: true
   tags: pihole
 
 - name: pihole - copy files
@@ -21,7 +21,7 @@
   community.docker.docker_container:
     name: pihole
     image: "{{ pihole_image }}"
-    pull: yes
+    pull: true
     hostname: "pihole.{{ app_base_domain }}"
     ports:
       - "53:53/tcp"
@@ -40,7 +40,7 @@
       - 1.1.1.1
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.pihole.rule: "HostRegexp(`{catchall:.*}`)"

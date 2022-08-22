@@ -17,8 +17,8 @@
     server_uri: ldap://{{ inventory__ldap_domain }}/
     bind_dn: cn=Directory Manager
     bind_pw: "{{ freeipa_ds_password }}"
-    start_tls: yes
-    validate_certs: no
+    start_tls: true
+    validate_certs: false
   delegate_to: localhost
   become: false
 

@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: /etc/systemd/system/docker.service.d
     state: directory
-    recurse: yes
+    recurse: true
 
 - name: Copy daemon.json
   ansible.builtin.copy:

@@ -8,7 +8,7 @@
     - name: Check whether rclone is installed
       ansible.builtin.command: >
         dpkg-query -W rclone
-      ignore_errors: True
+      ignore_errors: true
       register: rclone_is_installed
       changed_when: rclone_is_installed.rc != 0
 
@@ -37,14 +37,14 @@
         src: rclone.conf.j2
         dest: "{{ rclone_config_location }}"
         mode: 0600
-        force: no
+        force: false
       no_log: true
 
     - name: Create jobs dir
       ansible.builtin.file:
         path: "{{ rclone_jobs_path }}"
         state: directory
-        recurse: yes
+        recurse: true
 
     - name: Copy jobs
       ansible.builtin.template:

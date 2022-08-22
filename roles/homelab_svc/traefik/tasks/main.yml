@@ -8,7 +8,7 @@
   ansible.builtin.file:
     path: "{{ traefik_cert_path_host }}"
     state: directory
-    recurse: yes
+    recurse: true
   tags: traefik
 
 - name: traefik - copy certificate
@@ -40,7 +40,7 @@
   community.docker.docker_container:
     name: traefik
     image: "{{ traefik_image }}"
-    pull: yes
+    pull: true
     ports:
       - "{{ traefik_web_port }}:80"
       - "{{ traefik_websecure_port }}:443"
@@ -50,7 +50,7 @@
       - "{{ traefik_cert_path_host }}:{{ traefik_cert_path }}"
     networks:
       - name: "{{ traefik_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     command:
       --log.level={{ traefik_log_level }}
       --api=true

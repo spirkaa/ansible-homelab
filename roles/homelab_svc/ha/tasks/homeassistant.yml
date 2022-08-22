@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ homeassistant_config_path }}"
     state: directory
-    recurse: yes
+    recurse: true
   tags: homeassistant
 
 - name: homeassistant - copy files
@@ -24,7 +24,7 @@
   community.docker.docker_container:
     name: homeassistant
     image: "{{ homeassistant_image }}"
-    pull: yes
+    pull: true
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ homeassistant_config_path }}:/config"

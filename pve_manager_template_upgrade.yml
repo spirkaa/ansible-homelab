@@ -1,6 +1,6 @@
 ---
 - hosts: spsrv
-  gather_facts: no
+  gather_facts: false
 
   vars:
     resource_type: vm
@@ -24,7 +24,7 @@
 
 
 - hosts: templatevm
-  gather_facts: no
+  gather_facts: false
 
   handlers:
     - name: run script
@@ -32,7 +32,7 @@
         /tmp/sys_prep_cloud.sh
       async: 1
       poll: 0
-      become: yes
+      become: true
 
   tasks:
     - name: Wait for yum process to exit (cloud-init updates)
@@ -50,7 +50,7 @@
 
 
 - hosts: spsrv
-  gather_facts: no
+  gather_facts: false
 
   tasks:
     - name: Check that VM is stopped

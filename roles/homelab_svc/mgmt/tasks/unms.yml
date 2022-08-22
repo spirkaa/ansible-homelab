@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: unms
     image: "{{ unms_image }}"
-    pull: yes
+    pull: true
     ports:
       - "2055:2055/udp"
     env:
@@ -12,7 +12,7 @@
       - "{{ app_path }}/unms/config:/config"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.unms.rule: "HostRegexp(`unms{fqdn:(.{{ inventory__homelab_domain }})?}`)"

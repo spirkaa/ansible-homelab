@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: vault
     image: "{{ vault_image }}"
-    pull: yes
+    pull: true
     env:
       VAULT_ADDR: "{{ vault_api_addr }}"
       VAULT_API_ADDR: "{{ vault_api_addr }}"
@@ -13,7 +13,7 @@
       - "{{ app_path }}/vault/logs:/vault/logs"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.vault.rule: "HostRegexp(`vault{fqdn:(.{{ inventory__homelab_domain }})?}`)"

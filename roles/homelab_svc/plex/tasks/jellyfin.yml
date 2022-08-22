@@ -3,7 +3,7 @@
   community.docker.docker_container:
     name: jellyfin
     image: "{{ jellyfin_image }}"
-    pull: yes
+    pull: true
     ports:
       - "8096:8096"
     env:

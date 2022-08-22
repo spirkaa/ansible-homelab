@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ app_path }}/registry/config"
     state: directory
-    recurse: yes
+    recurse: true
   tags: registry
 
 - name: registry - copy files
@@ -20,7 +20,7 @@
   community.docker.docker_container:
     name: registry
     image: "{{ registry_image }}"
-    pull: yes
+    pull: true
     env:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes:
@@ -28,7 +28,7 @@
       - "{{ app_path }}/registry/data:/var/lib/registry"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     restart_policy: unless-stopped
     state: started
   register: registry_start
@@ -38,7 +38,7 @@
   community.docker.docker_container:
     name: registry-ui
     image: "{{ registry_ui_image }}"
-    pull: yes
+    pull: true
     env:
       REGISTRY_TITLE: "{{ app_base_domain }}"
       DELETE_IMAGES: "true"
@@ -47,7 +47,7 @@
       NGINX_PROXY_PASS_URL: "http://registry:5000"
     networks:
       - name: "{{ app_network_name }}"
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     labels:
       traefik.enable: "true"
       traefik.http.routers.registry-ui.rule: "HostRegexp(`registry{fqdn:(.{{ app_base_domain }})?}`)"

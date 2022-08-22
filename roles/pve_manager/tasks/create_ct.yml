@@ -30,7 +30,7 @@
           ansible.builtin.copy:
             src: /etc/pve/lxc/{{ vmid }}.conf
             dest: /tmp/{{ vmid }}.conf
-            remote_src: yes
+            remote_src: true
             owner: root
             group: www-data
             mode: preserve
@@ -47,7 +47,7 @@
           ansible.builtin.copy:
             src: /tmp/{{ vmid }}.conf
             dest: /etc/pve/lxc/{{ vmid }}.conf
-            remote_src: yes
+            remote_src: true
             owner: root
             group: www-data
             mode: preserve
