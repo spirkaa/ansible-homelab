@@ -95,6 +95,13 @@ unclassified:
     maxAttachmentSizeMb: 20
     precedenceBulk: true
     watchingEnabled: false
+  pipeline-cache:
+    endpoint: "{{ jenkins_s3_endpoint }}"
+    region: "{{ jenkins_s3_region }}"
+    bucket: "{{ jenkins_s3_bucket }}"
+    username: "{{ jenkins_s3_key }}"
+    password: "{{ jenkins_s3_secret }}"
+    threshold: 1000
 credentials:
   system:
     domainCredentials:
