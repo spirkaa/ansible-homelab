@@ -1,11 +1,18 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'git.devmem.ru/projects/ansible:base'
+      registryUrl 'https://git.devmem.ru'
+      registryCredentialsId 'gitea-user'
+      alwaysPull true
+      reuseNode true
+    }
+  }
 
   options {
     buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '60'))
     parallelsAlwaysFailFast()
     disableConcurrentBuilds()
-    skipDefaultCheckout true
   }
 
   triggers {
@@ -13,12 +20,8 @@ pipeline {
   }
 
   environment {
-    REGISTRY = 'git.devmem.ru'
-    REGISTRY_URL = "https://${REGISTRY}"
-    REGISTRY_CREDS_ID = 'gitea-user'
     ANSIBLE_CREDS_ID = 'jenkins-ssh-key'
     ANSIBLE_VAULT_CREDS_ID = 'ansible-homelab-vault-password'
-    ANSIBLE_IMAGE = "${REGISTRY}/projects/ansible:base"
   }
 
   parameters {
@@ -27,36 +30,22 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') {
-      when {
-        branch 'main'
-        beforeAgent true
-        anyOf {
-          triggeredBy cause: 'UserIdCause'
-          triggeredBy 'TimerTrigger'
-        }
-      }
+    stage('Run pre-commit') {
       steps {
-        checkout scm
+        cache(path: "/home/jenkins/agent/workspace/.cache/pre-commit", key: "pre-commit-${hashFiles('.pre-commit-config.yaml')}") {
+          sh '''#!/bin/bash
+            PRE_COMMIT_HOME=/home/jenkins/agent/workspace/.cache/pre-commit pre-commit run --all-files --verbose --color always
+          '''
+        }
       }
     }
 
     stage('Run playbook') {
       when {
         branch 'main'
-        beforeAgent true
         anyOf {
           triggeredBy cause: 'UserIdCause'
           triggeredBy 'TimerTrigger'
-        }
-      }
-      agent {
-        docker {
-          image env.ANSIBLE_IMAGE
-          registryUrl env.REGISTRY_URL
-          registryCredentialsId env.REGISTRY_CREDS_ID
-          alwaysPull true
-          reuseNode true
         }
       }
       steps {

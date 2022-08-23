@@ -4,3 +4,5 @@ warn_list:
   - package-latest
   - schema
   - yaml
+
+offline: true
