@@ -1,7 +1,7 @@
 ---
-- name: muximux
-  ansible.builtin.include_tasks: muximux.yml
-  tags: muximux
+# - name: muximux
+#   ansible.builtin.include_tasks: muximux.yml
+#   tags: muximux
 
 # - name: delugevpn
 #   ansible.builtin.include_tasks: delugevpn.yml
