@@ -43,8 +43,8 @@ mergerfs_version: 2.33.5
 mergerfs_package_name: mergerfs_{{ mergerfs_version }}.debian-bullseye_amd64.deb
 mergerfs_package_url: https://github.com/trapexit/mergerfs/releases/download/{{ mergerfs_version }}/{{ mergerfs_package_name }}
 
-snapraid_version: 12.1-1
-snapraid_package_name: "snapraid_{{ snapraid_version }}_amd64.deb"
+snapraid_version: "12.2"
+snapraid_package_name: snapraid_{{ snapraid_version }}-1_amd64.deb
 
 snapraid_bin_path: /usr/local/bin/snapraid
 snapraid_config_path: /etc/snapraid.conf
