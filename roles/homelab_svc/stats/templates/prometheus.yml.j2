@@ -66,3 +66,10 @@ scrape_configs:
   # - job_name: 'node-exporter'
   #   static_configs:
   #     - targets: ['node-exporter:9100']
+
+  - job_name: 'minio'
+    scheme: https
+    metrics_path: /minio/v2/metrics/cluster
+    bearer_token: "{{ prometheus_minio_bearer_token }}"
+    static_configs:
+    - targets: ['s3.{{ inventory__homelab_domain }}']
