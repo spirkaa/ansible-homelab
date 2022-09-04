@@ -44,6 +44,15 @@
       - "/usr/bin/docker:/usr/bin/docker"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "{{ app_path }}/{{ jenkins_home }}:/var/jenkins_home"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.jenkins.rule: "HostRegexp(`jenkins{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.services.jenkins.loadbalancer.server.port: "8080"
+      traefik.http.routers.jenkins.entrypoints: "websecure"
+      traefik.http.routers.jenkins.tls: "true"
     restart_policy: unless-stopped
     state: started
   register: jenkins_start
