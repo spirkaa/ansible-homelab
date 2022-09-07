@@ -95,6 +95,18 @@ unclassified:
     maxAttachmentSizeMb: 20
     precedenceBulk: true
     watchingEnabled: false
+  openTelemetry:
+    authentication: "noAuthentication"
+    disabledResourceProviders: "io.opentelemetry.sdk.extension.resources.ProcessResourceProvider"
+    endpoint: "http://otel.home.devmem.ru:4317"
+    exportOtelConfigurationAsEnvironmentVariables: true
+    ignoredSteps: "dir,echo,isUnix,pwd,properties"
+    observabilityBackends:
+    - customObservabilityBackend:
+        name: "SigNoz"
+        traceVisualisationUrlTemplate: "https://signoz.k8s.devmem.ru/trace/^${traceId}?spanId=^${spanId}"
+    serviceName: "jenkins"
+    serviceNamespace: "jenkins"
   pipeline-cache:
     endpoint: "{{ jenkins_s3_endpoint }}"
     region: "{{ jenkins_s3_region }}"
