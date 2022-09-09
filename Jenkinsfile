@@ -6,6 +6,7 @@ pipeline {
       registryCredentialsId 'gitea-user'
       alwaysPull true
       reuseNode true
+      args '-v /tmp/.cache:/tmp/.cache'
     }
   }
 
@@ -32,9 +33,9 @@ pipeline {
   stages {
     stage('Run pre-commit') {
       steps {
-        cache(path: "/home/jenkins/agent/workspace/.cache/pre-commit", key: "pre-commit-${hashFiles('.pre-commit-config.yaml')}") {
+        cache(path: "/tmp/.cache/pre-commit", key: "pre-commit-${hashFiles('**/.pre-commit-config.yaml')}") {
           sh '''#!/bin/bash
-            PRE_COMMIT_HOME=/home/jenkins/agent/workspace/.cache/pre-commit pre-commit run --all-files --verbose --color always
+            PRE_COMMIT_HOME=/tmp/.cache/pre-commit pre-commit run --all-files --verbose --color always
           '''
         }
       }
