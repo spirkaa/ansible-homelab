@@ -37,6 +37,72 @@ jenkins:
         name: "worker"
         remoteFs: "/home/jenkins/agent"
         removeVolumes: true
+  - kubernetes:
+      containerCap: 3
+      containerCapStr: "3"
+      credentialsId: "k8s-jenkins-agent-sa"
+      jenkinsUrl: "https://jenkins.home.devmem.ru"
+      name: "k8s"
+      namespace: "jenkins"
+      podRetention: "onFailure"
+      podLabels:
+      - key: "jenkins"
+        value: "inbound-agent"
+      serverCertificate: |-
+        {{ jenkins_k8s_cert | string | indent(width=8) }}
+      serverUrl: "https://192.168.13.254:6443"
+      webSocket: true
+      templates:
+      - name: "k8s-inbound-agent"
+        nodeUsageMode: "NORMAL"
+        yamlMergeStrategy: "override"
+        yaml: |-
+          apiVersion: v1
+          kind: Pod
+          spec:
+            containers:
+            - name: jnlp
+              image: git.devmem.ru/projects/jenkins-agent-dind:latest
+              securityContext:
+                privileged: true
+              workingDir: /home/jenkins/agent
+              volumeMounts:
+              - mountPath: /home/jenkins/agent
+                name: workspace-volume
+              - mountPath: /lib/modules
+                name: lib-modules
+                readOnly: true
+              - mountPath: /sys/fs/cgroup
+                name: sys-fs-cgroup
+            imagePullSecrets:
+            - name: regcred
+            hostNetwork: false
+            automountServiceAccountToken: false
+            enableServiceLinks: false
+            dnsPolicy: Default
+            restartPolicy: Never
+            terminationGracePeriodSeconds: 60
+            volumes:
+            - name: workspace-volume
+              emptyDir: {}
+            - name: lib-modules
+              hostPath:
+                path: /lib/modules
+                type: Directory
+            - name: sys-fs-cgroup
+              hostPath:
+                path: /sys/fs/cgroup
+                type: Directory
+            affinity:
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                    - key: jenkins
+                      operator: In
+                      values:
+                      - inbound-agent
+                  topologyKey: kubernetes.io/hostname
 unclassified:
   location:
     adminAddress: "{{ inventory__smtp_username }}"
@@ -181,6 +247,11 @@ credentials:
           scope: GLOBAL
           username: "{{ inventory__smtp_username }}"
           password: "{{ inventory__smtp_password }}"
+      - string:
+          description: "k8s-jenkins-agent-sa"
+          id: "k8s-jenkins-agent-sa"
+          scope: GLOBAL
+          secret: "{{ jenkins_k8s_sa_token }}"
 jobs:
 # https://jenkinsci.github.io/job-dsl-plugin/#path/organizationFolder
 # https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/integrations/src/test/resources/io/jenkins/plugins/casc/SeedJobTest_withGiteaOrganisation.yml
