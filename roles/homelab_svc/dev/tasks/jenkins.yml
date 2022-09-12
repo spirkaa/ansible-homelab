@@ -36,7 +36,7 @@
     pull: true
     user: root
     ports:
-      - "8081:8080"
+      - "8080:8080"
       - "50000:50000"
     env:
       CASC_JENKINS_CONFIG: /var/jenkins_home/casc_configs/jenkins.yaml
