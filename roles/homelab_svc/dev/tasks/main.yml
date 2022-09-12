@@ -7,6 +7,10 @@
   ansible.builtin.include_tasks: jenkins.yml
   tags: jenkins
 
+- name: nexus
+  ansible.builtin.include_tasks: nexus.yml
+  tags: nexus
+
 # - name: drone
 #   ansible.builtin.include_tasks: drone.yml
 #   tags: drone

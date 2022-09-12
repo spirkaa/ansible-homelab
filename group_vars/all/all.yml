@@ -14,6 +14,9 @@ inventory__ssl_private_key: "{{ vault_inventory__ssl_private_key }}"
 inventory__http_proxy: http://192.168.13.2:3128
 inventory__http_proxy_no: "localhost,127.0.0.1"
 
+inventory__s3_endpoint_external: https://s3.{{ inventory__site }}
+inventory__s3_endpoint_internal: https://s3.{{ inventory__homelab_domain }}
+
 inventory__smtp_host: smtp.devmem.ru
 inventory__smtp_port: 587
 inventory__smtp_username: noreply@{{ inventory__site }}
@@ -77,6 +80,7 @@ inventory__ldap_users:
       - jenkins_users
       - librenms_admins
       - mail_users
+      - nexus_admins
       - nextcloud_users
       - portainer_users
       - proxmox_admins

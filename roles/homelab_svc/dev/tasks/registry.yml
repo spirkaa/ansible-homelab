@@ -1,7 +1,7 @@
 ---
 - name: registry - create dir
   ansible.builtin.file:
-    path: "{{ app_path }}/registry/config"
+    path: "{{ dev_app_path }}/registry/config"
     state: directory
     recurse: true
   tags: registry
@@ -9,7 +9,7 @@
 - name: registry - copy files
   ansible.builtin.template:
     src: "{{ item.src }}"
-    dest: "{{ app_path }}/{{ item.dest }}"
+    dest: "{{ dev_app_path }}/{{ item.dest }}"
     mode: 0644
   loop:
     - { src: config.yml.j2, dest: registry/config/config.yml }
@@ -24,8 +24,8 @@
     env:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes:
-      - "{{ app_path }}/registry/config/config.yml:/etc/docker/registry/config.yml"
-      - "{{ app_path }}/registry/data:/var/lib/registry"
+      - "{{ dev_app_path }}/registry/config/config.yml:/etc/docker/registry/config.yml"
+      - "{{ dev_app_path }}/registry/data:/var/lib/registry"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: true

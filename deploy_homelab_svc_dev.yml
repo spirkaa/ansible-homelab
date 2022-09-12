@@ -10,7 +10,7 @@
     comment: Development
     vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-20.04-server-cloudimg-amd64.img
     cores: 4
-    mem: 4096
+    mem: 8192
     disk_size: 30
     net_ip: 192.168.10.12
     net_vlan: 10

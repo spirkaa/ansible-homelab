@@ -1,5 +1,5 @@
 ---
-app_path: /docker/dev
+dev_app_path: /docker/dev
 puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
@@ -12,6 +12,7 @@ gitea_image: gitea/gitea:dev
 jenkins_image: git.devmem.ru/projects/jenkins:latest
 registry_image: registry:2.8
 registry_ui_image: joxit/docker-registry-ui:2.2
+nexus_image: sonatype/nexus3:3.41.1
 
 app_network_name: "{{ inventory__docker_network }}"
 app_base_domain: "{{ inventory__homelab_domain }}"
@@ -20,6 +21,8 @@ smtp_host: "{{ inventory__smtp_host }}"
 smtp_port: "{{ inventory__smtp_port }}"
 smtp_user: "{{ inventory__smtp_username }}"
 smtp_pass: "{{ inventory__smtp_password }}"
+
+s3_endpoint: "{{ inventory__s3_endpoint_internal }}"
 
 gitea_db_user: gitea
 gitea_db_pass: !vault |
@@ -34,7 +37,7 @@ gitea_domain: git.{{ inventory__site }}
 gitea_root_url: "https://{{ gitea_domain }}"
 gitea_ssh_user: git
 gitea_app_data_path: /data/gitea
-gitea_app_data_path_host: "{{ app_path }}/gitea{{ gitea_app_data_path }}"
+gitea_app_data_path_host: "{{ dev_app_path }}/gitea{{ gitea_app_data_path }}"
 gitea_home_path: "{{ gitea_app_data_path }}/home"
 gitea_home_path_host: "{{ gitea_app_data_path_host }}/home"
 gitea_repository_root: "{{ gitea_app_data_path }}/repositories"
@@ -140,7 +143,7 @@ jenkins_ldap_access_group: jenkins_users
 jenkins_ldap_user_search: (&(objectclass=inetorgperson)(memberof=cn={{ jenkins_ldap_access_group }},{{ inventory__ldap_groups_dn }})(uid={0}))
 jenkins_gitea_user: jenkins
 jenkins_gitea_user_password: "{{ inventory__ldap_users[jenkins_gitea_user].password }}"
-jenkins_s3_endpoint: https://s3.{{ inventory__homelab_domain }}
+jenkins_s3_endpoint: "{{ s3_endpoint }}"
 jenkins_s3_region: main
 jenkins_s3_bucket: jenkins
 jenkins_s3_key: "{{ jenkins_s3_bucket }}"
@@ -531,3 +534,305 @@ jenkins_k8s_cert: !vault |
           63383931343133343335353832363739653636646536386666376631653738343635326430373330
           37363963643764383732623964653331336630643564373365313661336339313437373463333462
           393832653332353962383433653832303537
+
+nexus_app_data: "{{ dev_app_path }}/nexus/data"
+nexus_api_url: https://nexus.{{ app_base_domain }}/service/rest/v1
+nexus_admin_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32373032666434323063313966323738366263313832343134363731656165326230346334306231
+          6661646562393431333630396430653666326436343036640a366638626430666439376434343461
+          39656137316137346463636564636332303434373037353634363263343537653835626437373835
+          6535653564626364640a366562373931316336343437633961643239356366326638346534306233
+          37353135623563313338616130383566373266393864653436633636353031356534323061353630
+          3637393264316663656534386631373333396435363633623532
+nexus_ldap_access_group: nexus_users
+nexus_ldap_admins: nexus_admins
+nexus_ldap_config:
+  authPassword: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          64393862366336303230346364346633636135633631313136386634303136363232363935363766
+          3833626131663130303139323963613636666432353730620a316665643937626330346335666232
+          30303566356631323039363731323563303733363238623866343736333237343235333630353433
+          3136313337313535350a613263333339366330366139366465333535633538323735613238376233
+          34633263383463346662646134333864643737373633666465313961333735326464
+  authRealm: ""
+  authScheme: simple
+  authUsername: uid=nexussvc,{{ inventory__ldap_sysaccounts_dn }}
+  connectionRetryDelaySeconds: 300
+  connectionTimeoutSeconds: 30
+  groupType: dynamic
+  host: "{{ inventory__ldap_domain }}"
+  ldapGroupsAsRoles: true
+  maxIncidentsCount: 3
+  name: freeipa
+  port: "{{ inventory__ldap_port }}"
+  protocol: ldap
+  searchBase: "{{ inventory__ldap_base_dn }}"
+  userBaseDn: cn=users,cn=accounts
+  userEmailAddressAttribute: mail
+  userIdAttribute: uid
+  userLdapFilter: "&(memberof=cn={{ nexus_ldap_access_group }},{{ inventory__ldap_groups_dn }})"
+  userMemberOfAttribute: memberOf
+  userObjectClass: inetOrgPerson
+  userPasswordAttribute: ""
+  userRealNameAttribute: cn
+nexus_role_config:
+  id: "{{ nexus_ldap_admins }}"
+  source: default
+  name: "{{ nexus_ldap_admins }}"
+  description: "{{ nexus_ldap_admins }}"
+  roles:
+    - nx-admin
+nexus_anonymous_access_config:
+  enabled: true
+  userId: anonymous
+  realmName: NexusAuthorizingRealm
+nexus_s3_config:
+  name: minio
+  bucketConfiguration:
+    bucket:
+      region: us-east-1
+      name: nexus
+      prefix: ""
+      expiration: 0
+    encryption:
+      encryptionType: none
+    bucketSecurity:
+      accessKeyId: nexus
+      secretAccessKey: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35653039333938623930613365633262636165656166663536633362323666623162393938393239
+          6165336463386231623039366237333432343665373236370a663231313936613165363061333930
+          63363932316432353265383662656365376333363837666431636632386334363362623365653662
+          3161356436386232650a376266323263323062653634666435353561613666646165386135346166
+          32643764663264306637313335613565656132363838633461303731343432343865393435653866
+          6338616365353632303931653466343438653263383130386364
+    advancedBucketConnection:
+      endpoint: "{{ s3_endpoint }}"
+      signerType: S3SignerType
+      forcePathStyle: true
+nexus_email_config:
+  enabled: true
+  host: "{{ smtp_host }}"
+  port: "{{ smtp_port }}"
+  username: "{{ smtp_user }}"
+  password: "{{ smtp_pass }}"
+  fromAddress: "{{ smtp_user }}"
+  subjectPrefix: "[nexus]"
+  startTlsEnabled: true
+  startTlsRequired: true
+  sslOnConnectEnabled: false
+  sslServerIdentityCheckEnabled: true
+  nexusTrustStoreEnabled: false
+nexus_cleanup_policy_edit: false
+nexus_cleanup_policy:
+  name: apt-unused-90-days
+  format: apt
+  last_download_before: "90"
+nexus_default_repositories:
+  - maven-central
+  - maven-public
+  - maven-releases
+  - maven-snapshots
+  - nuget-group
+  - nuget-hosted
+  - nuget.org-proxy
+nexus_apt_repositories:
+  - name: debian-bullseye
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: bullseye
+      flat: false
+    proxy:
+      remoteUrl: http://mirror.docker.ru/debian
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: debian-bullseye-updates
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: bullseye-updates
+      flat: false
+    proxy:
+      remoteUrl: http://mirror.docker.ru/debian
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: debian-bullseye-security
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: bullseye-security
+      flat: false
+    proxy:
+      remoteUrl: http://security.debian.org/debian-security
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: ubuntu-jammy
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: jammy
+      flat: false
+    proxy:
+      remoteUrl: http://mirror.docker.ru/ubuntu
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: ubuntu-jammy-updates
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: jammy-updates
+      flat: false
+    proxy:
+      remoteUrl: http://mirror.docker.ru/ubuntu
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: ubuntu-jammy-security
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: jammy-security
+      flat: false
+    proxy:
+      remoteUrl: http://security.ubuntu.com/ubuntu
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: ubuntu-focal
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: focal
+      flat: false
+    proxy:
+      remoteUrl: http://mirror.docker.ru/ubuntu
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: ubuntu-focal-updates
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: focal-updates
+      flat: false
+    proxy:
+      remoteUrl: http://mirror.docker.ru/ubuntu
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true
+  - name: ubuntu-focal-security
+    online: true
+    storage:
+      blobStoreName: minio
+      strictContentTypeValidation: true
+      writePolicy: ALLOW
+    cleanup:
+      policyNames:
+        - apt-unused-90-days
+    apt:
+      distribution: focal-security
+      flat: false
+    proxy:
+      remoteUrl: http://security.ubuntu.com/ubuntu
+      contentMaxAge: 1440
+      metadataMaxAge: 1440
+    negativeCache:
+      enabled: true
+      timeToLive: 1440
+    httpClient:
+      blocked: false
+      autoBlock: true

@@ -1,7 +1,7 @@
 ---
 - name: jenkins - create dir
   ansible.builtin.file:
-    path: "{{ app_path }}/{{ jenkins_home }}/casc_configs"
+    path: "{{ dev_app_path }}/{{ jenkins_home }}/casc_configs"
     state: directory
     recurse: true
   tags: jenkins
@@ -9,7 +9,7 @@
 - name: jenkins - copy files
   ansible.builtin.template:
     src: "{{ item.src }}"
-    dest: "{{ app_path }}/{{ item.dest }}"
+    dest: "{{ dev_app_path }}/{{ item.dest }}"
     mode: 0644
   loop:
     - { src: jenkins.yaml.j2, dest: "{{ jenkins_home }}/casc_configs/jenkins.yaml" }
@@ -43,7 +43,7 @@
     volumes:
       - "/usr/bin/docker:/usr/bin/docker"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "{{ app_path }}/{{ jenkins_home }}:/var/jenkins_home"
+      - "{{ dev_app_path }}/{{ jenkins_home }}:/var/jenkins_home"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: true

@@ -70,7 +70,7 @@
       POSTGRES_PASSWORD: "{{ gitea_db_pass }}"
       POSTGRES_DB: "{{ gitea_db_user }}"
     volumes:
-      - "{{ app_path }}/gitea/db:/var/lib/postgresql/data"
+      - "{{ dev_app_path }}/gitea/db:/var/lib/postgresql/data"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: true
@@ -95,7 +95,7 @@
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
       - "/home/{{ gitea_ssh_user }}/.ssh/:/data/git/.ssh"
-      - "{{ app_path }}/gitea/data:/data"
+      - "{{ dev_app_path }}/gitea/data:/data"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: true

@@ -16,7 +16,7 @@
       DRONE_SERVER_PROTO: "{{ drone_proto }}"
       DRONE_USER_CREATE: "username:{{ drone_admin_user }},admin:true"
     volumes:
-      - "{{ app_path }}/drone/data:/data"
+      - "{{ dev_app_path }}/drone/data:/data"
     restart_policy: unless-stopped
     state: started
   no_log: true

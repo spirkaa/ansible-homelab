@@ -1,0 +1,320 @@
+---
+- name: nexus - configure freeipa
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  vars:
+    freeipa_service_bind_sysaccount_dn: "{{ nexus_ldap_config['authUsername'] }}"
+    freeipa_service_bind_sysaccount_pass: "{{ nexus_ldap_config['authPassword'] }}"
+    freeipa_service_bind_group_name: "{{ item }}"
+  args:
+    apply:
+      tags: nexus
+  loop:
+    - "{{ nexus_ldap_access_group }}"
+    - "{{ nexus_ldap_admins }}"
+  tags: nexus
+
+- name: nexus - create dir
+  ansible.builtin.file:
+    path: "{{ nexus_app_data }}"
+    state: directory
+    recurse: true
+  tags: nexus
+
+- name: nexus - get data dir ownership
+  ansible.builtin.stat:
+    path: "{{ nexus_app_data }}"
+  register: __nexus_app_data_stat
+  tags: nexus
+
+- name: nexus - set data dir ownership
+  ansible.builtin.command: >
+    chown -R 200:200 {{ nexus_app_data }}
+  when: __nexus_app_data_stat.stat.uid != 200 or __nexus_app_data_stat.stat.gid != 200
+  args:
+    warn: false
+  tags: nexus
+
+- name: nexus - start
+  community.docker.docker_container:
+    name: nexus
+    image: "{{ nexus_image }}"
+    pull: true
+    ports:
+      - "8081:8081"
+    volumes:
+      - "{{ nexus_app_data }}:/nexus-data"
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.nexus.rule: "HostRegexp(`nexus{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.services.nexus.loadbalancer.server.port: "8081"
+      traefik.http.routers.nexus.entrypoints: "websecure"
+      traefik.http.routers.nexus.tls: "true"
+    restart_policy: unless-stopped
+    state: started
+  register: nexus_start
+  notify: nexus - restart
+  no_log: true
+  tags: nexus
+
+- name: nexus - flush_handlers
+  ansible.builtin.meta: flush_handlers
+  tags: nexus
+
+- name: nexus - check if admin.password file exists
+  ansible.builtin.stat:
+    path: "{{ nexus_app_data }}/admin.password"
+  register: __nexus_admin_password_file
+  tags: nexus
+
+- name: nexus - get generated admin password
+  when: __nexus_admin_password_file.stat.exists
+  block:
+    - name: nexus - get content of admin.password file
+      ansible.builtin.slurp:
+        src: "{{ nexus_app_data }}/admin.password"
+      register: __nexus_admin_password_initial
+      no_log: true
+      tags: nexus
+
+    - name: nexus - change admin password
+      ansible.builtin.uri:
+        url: "{{ nexus_api_url }}/security/users/admin/change-password"
+        method: PUT
+        status_code: 204
+        user: admin
+        password: "{{ __nexus_admin_password_initial.content | b64decode }}"
+        force_basic_auth: true
+        headers:
+          Content-Type: text/plain
+        body_format: raw
+        body: "{{ nexus_admin_password }}"
+      register: __nexus_change_admin_password
+      changed_when: __nexus_change_admin_password.status == 204
+      no_log: true
+      tags: nexus
+
+- name: nexus - set email config
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/email"
+    method: PUT
+    status_code: 204
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    body_format: json
+    body: "{{ nexus_email_config | from_yaml }}"
+  tags: nexus
+
+- name: nexus - check anonymous access status
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/security/anonymous"
+    method: GET
+    status_code: 200
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+  register: __nexus_check_anonymous_access
+  tags: nexus
+
+- name: nexus - set anonymous access to {{ nexus_anonymous_access_config['enabled'] }}
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/security/anonymous"
+    method: PUT
+    status_code: 200
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+    body_format: json
+    body: "{{ nexus_anonymous_access_config | from_yaml }}"
+  register: __nexus_set_anonymous_access
+  changed_when:
+    - __nexus_set_anonymous_access.status == 200
+    - __nexus_check_anonymous_access.content != __nexus_set_anonymous_access.content
+  tags: nexus
+
+- name: nexus - add ldap auth
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/security/ldap"
+    method: POST
+    status_code: 201
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+    body_format: json
+    body: "{{ nexus_ldap_config | from_yaml }}"
+  register: __nexus_add_ldap_auth
+  changed_when: __nexus_add_ldap_auth.status == 201
+  failed_when:
+    - __nexus_add_ldap_auth.status != 201
+    - '"Duplicated record" not in __nexus_add_ldap_auth.content'
+  tags: nexus
+
+- name: nexus - add admin role for ldap group
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/security/roles"
+    method: POST
+    status_code: 200
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+    body_format: json
+    body: "{{ nexus_role_config | from_yaml }}"
+  register: __nexus_add_admin_role
+  changed_when: __nexus_add_admin_role.status == 200
+  failed_when:
+    - __nexus_add_admin_role.status != 200
+    - '"already exists" not in __nexus_add_admin_role.content'
+  tags: nexus
+
+- name: nexus - check if blob store '{{ nexus_s3_config['name'] }}' exists
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/blobstores/s3/{{ nexus_s3_config['name'] }}"
+    method: GET
+    status_code: 200, 400
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+  register: __nexus_check_blob_store
+  tags: nexus
+
+- name: nexus - add blob store '{{ nexus_s3_config['name'] }}'
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/blobstores/s3"
+    method: POST
+    status_code: 201
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+    body_format: json
+    body: "{{ nexus_s3_config | from_yaml }}"
+  register: __nexus_add_blob_store
+  changed_when: __nexus_add_blob_store.status == 201
+  when: __nexus_check_blob_store.status == 400
+  tags: nexus
+
+- name: nexus - list repositories
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/repositories"
+    method: GET
+    status_code: 200
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+  register: __nexus_list_repositories
+  tags: nexus
+
+- name: nexus - set current repositories list
+  ansible.builtin.set_fact:
+    nexus_current_repositories: "{{ __nexus_list_repositories.json | map(attribute='name') | list }}"
+  tags: nexus
+
+- name: nexus - delete default repositories
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/repositories/{{ item }}"
+    method: DELETE
+    status_code: 204
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+  register: __nexus_delete_default_repositories
+  changed_when: __nexus_delete_default_repositories.status == 204
+  when: not nexus_current_repositories | symmetric_difference(nexus_default_repositories) | length
+  loop: "{{ nexus_default_repositories }}"
+  tags: nexus
+
+- name: nexus - cleanup policy
+  when: nexus_cleanup_policy_edit
+  block:
+    - name: nexus - enable scripts
+      ansible.builtin.lineinfile:
+        dest: "{{ nexus_app_data }}/etc/nexus.properties"
+        regexp: "^nexus.scripts.allowCreation="
+        line: "nexus.scripts.allowCreation=true"
+      notify: nexus - restart
+      tags: nexus
+
+    - name: nexus - flush_handlers
+      ansible.builtin.meta: flush_handlers
+      tags: nexus
+
+    - name: nexus - delete cleanup policy script
+      ansible.builtin.uri:
+        url: "{{ nexus_api_url }}/script/cleanup_policy"
+        method: DELETE
+        status_code: 204, 404
+        user: admin
+        password: "{{ nexus_admin_password }}"
+        force_basic_auth: true
+      changed_when: true
+      tags: nexus
+
+    - name: nexus - create cleanup policy script
+      ansible.builtin.uri:
+        url: "{{ nexus_api_url }}/script"
+        method: POST
+        status_code: 204
+        user: admin
+        password: "{{ nexus_admin_password }}"
+        force_basic_auth: true
+        return_content: true
+        body_format: json
+        body:
+          name: cleanup_policy
+          type: groovy
+          content: "{{ lookup('file', 'nexus/cleanup_policy.groovy') }}"
+      changed_when: true
+      tags: nexus
+
+    - name: nexus - add cleanup policy
+      ansible.builtin.uri:
+        url: "{{ nexus_api_url }}/script/cleanup_policy/run"
+        method: POST
+        status_code: 200
+        user: admin
+        password: "{{ nexus_admin_password }}"
+        force_basic_auth: true
+        return_content: true
+        headers:
+          Content-Type: "text/plain"
+        body_format: raw
+        body: "{{ nexus_cleanup_policy | to_json }}"
+      changed_when: true
+      tags: nexus
+
+- name: nexus - add apt repositories
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/repositories/apt/proxy"
+    method: POST
+    status_code: 201
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+    body_format: json
+    body: "{{ item | from_yaml }}"
+  register: __nexus_add_apt_repositories
+  changed_when: __nexus_add_apt_repositories.status == 201
+  failed_when:
+    - __nexus_add_apt_repositories.status != 201
+    - '"created already" not in __nexus_add_apt_repositories.content'
+  loop: "{{ nexus_apt_repositories }}"
+  tags: nexus
+
+- name: nexus - disable scripts
+  ansible.builtin.lineinfile:
+    dest: "{{ nexus_app_data }}/etc/nexus.properties"
+    regexp: "^nexus.scripts.allowCreation="
+    line: "nexus.scripts.allowCreation=false"
+  when: nexus_cleanup_policy_edit
+  notify: nexus - restart
+  tags: nexus

@@ -2,11 +2,12 @@
 
 Роль Ansible, которая запускает Docker контейнеры:
 
-* [linuxserver/code-server](https://hub.docker.com/r/linuxserver/code-server/tags)
-* [gitea/gitea](https://hub.docker.com/r/gitea/gitea/tags) + [yobasystems/alpine-mariadb](https://hub.docker.com/r/yobasystems/alpine-mariadb/tags)
-* [drone/drone](https://hub.docker.com/r/drone/drone/tags) + [drone/drone-runner-docker](https://hub.docker.com/r/drone/drone-runner-docker/tags)
-* [registry](https://hub.docker.com/_/registry?tab=tags) + [joxit/docker-registry-ui](https://hub.docker.com/r/joxit/docker-registry-ui/tags)
+* [gitea/gitea](https://hub.docker.com/r/gitea/gitea/tags) + [postgres](https://hub.docker.com/_/postgres/tags)
 * [jenkins](https://www.jenkins.io/)
+* [sonatype/nexus3](https://hub.docker.com/r/sonatype/nexus3/tags)
+* ~~[linuxserver/code-server](https://hub.docker.com/r/linuxserver/code-server/tags)~~
+* ~~[drone/drone](https://hub.docker.com/r/drone/drone/tags) + [drone/drone-runner-docker](https://hub.docker.com/r/drone/drone-runner-docker/tags)~~
+* ~~[registry](https://hub.docker.com/_/registry/tags) + [joxit/docker-registry-ui](https://hub.docker.com/r/joxit/docker-registry-ui/tags)~~
 
 ## Зависимости
 
@@ -14,6 +15,30 @@
 * Роль homelab_svc/cadvisor
 
 ## Заметки
+
+### Включить метрики Gitea
+
+<https://docs.gitea.io/en-us/config-cheat-sheet/#metrics-metrics>
+
+1. Сгенерировать токен
+
+        $ openssl rand -hex 16
+          fa021205d4ce2cce14b692b60ea6df1b
+
+1. Настроить Gitea
+
+        $ nano gitea/conf/app.ini
+          [metrics]
+          ENABLED=true
+          TOKEN=fa021205d4ce2cce14b692b60ea6df1b
+
+1. Настроить Prometheus
+
+        - job_name: 'gitea'
+            scheme: https
+            bearer_token: fa021205d4ce2cce14b692b60ea6df1b
+            static_configs:
+            - targets: ['gitea.domain.com']
 
 ### Включить метрики Drone
 
@@ -41,27 +66,3 @@
             bearer_token: kRKuQ2JM0ahkEo2rjXnz3RCrBG1IfF7h
             static_configs:
             - targets: ['drone.domain.com']
-
-### Включить метрики Gitea
-
-<https://docs.gitea.io/en-us/config-cheat-sheet/#metrics-metrics>
-
-1. Сгенерировать токен
-
-        $ openssl rand -hex 16
-          fa021205d4ce2cce14b692b60ea6df1b
-
-1. Настроить Gitea
-
-        $ nano gitea/conf/app.ini
-          [metrics]
-          ENABLED=true
-          TOKEN=fa021205d4ce2cce14b692b60ea6df1b
-
-1. Настроить Prometheus
-
-        - job_name: 'gitea'
-            scheme: https
-            bearer_token: fa021205d4ce2cce14b692b60ea6df1b
-            static_configs:
-            - targets: ['gitea.domain.com']

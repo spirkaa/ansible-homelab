@@ -19,3 +19,20 @@
     state: started
     restart: true
   when: not jenkins_start.changed
+
+- name: nexus - restart
+  community.docker.docker_container:
+    name: nexus
+    state: started
+    restart: true
+  no_log: true
+
+- name: nexus - wait for api become available
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/status"
+    status_code: 200
+  register: __nexus_wait_for_api
+  until: __nexus_wait_for_api.status == 200
+  retries: 60
+  delay: 1
+  listen: nexus - restart
