@@ -218,8 +218,8 @@ credentials:
           secret: "{{ jenkins_ansible_vault_password }}"
       {% for key in inventory__sshd_authorized_keys -%}
       - string:
-          description: "ssh-pub-key-{{ key.split(' ')[-1] | replace('@','-') }}"
-          id: "ssh-pub-key-{{ key.split(' ')[-1] | replace('@','-') }}"
+          description: "ssh-pub-key-{{ key.split(' ')[-1] | replace('@', '-') }}"
+          id: "ssh-pub-key-{{ key.split(' ')[-1] | replace('@', '-') }}"
           scope: GLOBAL
           secret: "{{ key }}"
       {% endfor -%}

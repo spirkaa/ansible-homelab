@@ -105,7 +105,7 @@
 
 - name: freeipa - customize - copy custom schema
   vars:
-    realm: "{{ app_base_domain | replace('.','-') | upper }}"  # int.domain.com -> INT-DOMAIN-COM
+    realm: "{{ app_base_domain | replace('.', '-') | upper }}"  # int.domain.com -> INT-DOMAIN-COM
   ansible.builtin.copy:
     src: files/98postfix-book.ldif
     dest: "{{ freeipa_data_host_path }}/etc/dirsrv/slapd-{{ realm }}/schema"

@@ -76,8 +76,8 @@ portainer_ldap_bind_pw: !vault |
           3733
 portainer_ldap_access_group: portainer_users
 
-vault_unseal_key: "{{ lookup('env','VAULT_UNSEAL_KEY') }}"
-vault_token: "{{ lookup('env','VAULT_TOKEN') }}"
+vault_unseal_key: "{{ lookup('env', 'VAULT_UNSEAL_KEY') }}"
+vault_token: "{{ lookup('env', 'VAULT_TOKEN') }}"
 vault_local_config: "{{ lookup('file', 'vault/config.json') }}"
 vault_docker_exec: docker exec -e VAULT_TOKEN={{ vault_token }} vault sh -c
 vault_api_addr: http://127.0.0.1:8200
