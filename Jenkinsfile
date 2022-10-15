@@ -26,12 +26,19 @@ pipeline {
   }
 
   parameters {
+    booleanParam(name: 'PRE_COMMIT', defaultValue: true, description: 'Run pre-commit?')
     string(name: 'ANSIBLE_PLAYBOOK', defaultValue: 'main.yml', description: 'Playbook name')
     string(name: 'ANSIBLE_EXTRAS', defaultValue: '--skip-tags create,dyn_inventory,portainer_api,reboot,cadvisor,jenkins', description: 'ansible-playbook extra params')
   }
 
   stages {
     stage('Run pre-commit') {
+      when {
+        expression { params.PRE_COMMIT }
+        not {
+          triggeredBy 'TimerTrigger'
+        }
+      }
       steps {
         cache(path: "/tmp/.cache/pre-commit", key: "pre-commit-${hashFiles('**/.pre-commit-config.yaml')}") {
           sh '''#!/bin/bash
