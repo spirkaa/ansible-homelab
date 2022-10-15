@@ -79,6 +79,8 @@
   tags: freeipa
 
 - name: freeipa - wait
+  when: freeipa_start.changed
+  ignore_errors: true  # noqa ignore-errors
   block:
     - name: freeipa - wait for install to finish
       ansible.builtin.wait_for:
@@ -100,8 +102,6 @@
         search_regex: "The ipa-server-upgrade command was successful"
         timeout: 120
       tags: freeipa
-  when: freeipa_start.changed
-  ignore_errors: true  # noqa ignore-errors
 
 - name: freeipa - customize - copy custom schema
   vars:

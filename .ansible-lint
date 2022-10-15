@@ -1,9 +1,10 @@
 warn_list:
   - no-handler
-  - meta-no-info
   - package-latest
+skip_list:
+  - meta-no-info
+  - name[casing]
+  - name[template]
   - schema
   - yaml
-skip_list:
-  - name[casing]
 offline: true

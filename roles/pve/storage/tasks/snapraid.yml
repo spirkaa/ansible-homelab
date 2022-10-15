@@ -7,6 +7,7 @@
   changed_when: snapraid_is_installed.rc != 0
 
 - name: snapraid - download and install package
+  when: snapraid_version not in snapraid_is_installed.stdout
   block:
     - name: snapraid - copy package
       ansible.builtin.copy:
@@ -18,7 +19,6 @@
       ansible.builtin.apt:
         deb: /tmp/{{ snapraid_package_name }}
         state: present
-  when: snapraid_version not in snapraid_is_installed.stdout
 
 - name: snapraid - copy configuration
   ansible.builtin.template:

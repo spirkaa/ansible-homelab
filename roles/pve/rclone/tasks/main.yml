@@ -4,6 +4,7 @@
   no_log: true
 
 - name: Tasks for specific hosts
+  when: inventory_hostname == "spsrv"
   block:
     - name: Check whether rclone is installed
       ansible.builtin.command: >
@@ -13,6 +14,7 @@
       changed_when: rclone_is_installed.rc != 0
 
     - name: Download and install package
+      when: rclone_version[1:] not in rclone_is_installed.stdout
       block:
         - name: Download rclone package
           ansible.builtin.get_url:
@@ -24,7 +26,6 @@
           ansible.builtin.apt:
             deb: /tmp/{{ rclone_url | basename }}
             state: present
-      when: rclone_version[1:] not in rclone_is_installed.stdout
 
     - name: Create config dir
       ansible.builtin.file:
@@ -64,4 +65,3 @@
         dom: "{{ item.dom | default('*') }}"
       loop: "{{ rclone_jobs }}"
       no_log: true
-  when: inventory_hostname == "spsrv"

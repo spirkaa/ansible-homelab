@@ -1,5 +1,6 @@
 ---
 - name: "{{ hostname }} - Create vm"
+  when: not pve_resource_exists
   block:
     - name: "{{ hostname }} - Create"
       ansible.builtin.command: >
@@ -47,4 +48,3 @@
       ansible.builtin.command: >
         qm resize {{ vmid }} scsi0 {{ disk_size }}G
       changed_when: true
-  when: not pve_resource_exists

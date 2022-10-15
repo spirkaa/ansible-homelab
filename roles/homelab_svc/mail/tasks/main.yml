@@ -125,6 +125,7 @@
   tags: mail
 
 - name: mail - dkim key
+  when: dkim_result.changed
   block:
     - name: mail - get dkim key
       ansible.builtin.command: >
@@ -137,7 +138,6 @@
       ansible.builtin.debug:
         var: dkim_key.stdout_lines
       tags: mail
-  when: dkim_result.changed
 
 - name: mail - configure freeipa
   ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml

@@ -152,6 +152,7 @@
   tags: gitea
 
 - name: gitea - gpg
+  when: gpg_key is defined and not gpg_key.stdout
   block:
     - name: gitea - gpg - copy key template
       ansible.builtin.copy:
@@ -194,4 +195,3 @@
       changed_when: true
       notify: gitea - restart
       tags: gitea
-  when: gpg_key is defined and not gpg_key.stdout

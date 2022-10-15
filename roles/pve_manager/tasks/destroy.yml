@@ -3,6 +3,7 @@
   ansible.builtin.include_tasks: util_resources_facts.yml
 
 - name: resource destroy
+  when: pve_resource_exists
   block:
     - name: "{{ hostname }} - Destroy"
       ansible.builtin.shell: >
@@ -15,7 +16,6 @@
         pct stop {{ vmid }}; pct destroy {{ vmid }}
       changed_when: true
       when: resource_type == "ct"
-  when: pve_resource_exists
 
 - name: Delete Resource Pool
   ansible.builtin.command: >

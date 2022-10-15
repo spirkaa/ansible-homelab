@@ -1,5 +1,6 @@
 ---
 - name: Tasks for specific hosts
+  when: inventory_hostname == "spsrv"
   block:
     - name: Install packages
       ansible.builtin.package:
@@ -21,4 +22,3 @@
         - upsd.users
         - upsmon.conf
       notify: restart nut
-  when: inventory_hostname == "spsrv"

@@ -3,6 +3,9 @@
   ansible.builtin.include_tasks: util_resources_facts.yml
 
 - name: start
+  when:
+    - pve_resource_exists
+    - pve_resource_exists[0].status != 'running'
   block:
     - name: "{{ hostname }} - Start"
       ansible.builtin.command: >
@@ -20,6 +23,3 @@
       ansible.builtin.wait_for:
         host: "{{ net_ip }}"
         port: 22
-  when: >
-    pve_resource_exists and
-    pve_resource_exists[0].status != 'running'

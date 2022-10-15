@@ -9,6 +9,7 @@
       - hddtemp
 
 - name: Tasks for specific hosts
+  when: inventory_hostname == "spsrv" or inventory_hostname == "spmaxi"
   block:
     - name: Install packages
       ansible.builtin.package:
@@ -21,9 +22,9 @@
         src: files/telegraf_ipmi
         dest: /usr/local/bin
         mode: 0755
-  when: inventory_hostname == "spsrv" or inventory_hostname == "spmaxi"
 
 - name: Tasks for specific hosts
+  when: inventory_hostname == "spsrv"
   block:
     - name: Copy hddtemp config generator
       ansible.builtin.copy:
@@ -43,7 +44,6 @@
         /usr/local/bin/hddtemp_systemd_gen > /usr/lib/systemd/system/hddtemp.service
       when: hddtemp_cfg.changed
       notify: restart hddtemp
-  when: inventory_hostname == "spsrv"
 
 - name: Copy sudoers.d file
   ansible.builtin.copy:
@@ -59,6 +59,7 @@
   changed_when: telegraf_is_installed.rc != 0
 
 - name: Download and install package
+  when: telegraf_agent_version not in telegraf_is_installed.stdout
   block:
     - name: Download telegraf package
       ansible.builtin.get_url:
@@ -70,7 +71,6 @@
       ansible.builtin.apt:
         deb: /tmp/{{ telegraf_agent_package }}
         state: present
-  when: telegraf_agent_version not in telegraf_is_installed.stdout
 
 - name: Copy telegraf.conf
   ansible.builtin.template:

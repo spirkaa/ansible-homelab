@@ -1,5 +1,6 @@
 ---
 - name: "{{ hostname }} - Create ct"
+  when: not pve_resource_exists
   block:
     - name: "{{ hostname }} - Create"
       ansible.builtin.command: >
@@ -25,6 +26,7 @@
       changed_when: true
 
     - name: "{{ hostname }} - lxc options"
+      when: lxc_options is defined
       block:
         - name: "{{ hostname }} - Copy config to tmp"
           ansible.builtin.copy:
@@ -51,5 +53,3 @@
             owner: root
             group: www-data
             mode: preserve
-      when: lxc_options is defined
-  when: not pve_resource_exists

@@ -1,5 +1,6 @@
 ---
 - name: storage tasks
+  when: inventory_hostname == "spsrv"
   block:
     - name: mount
       ansible.builtin.include_tasks: mount.yml
@@ -12,4 +13,3 @@
 
     - name: nfs
       ansible.builtin.include_tasks: nfs.yml
-  when: inventory_hostname == "spsrv"

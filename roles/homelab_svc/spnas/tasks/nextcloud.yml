@@ -47,6 +47,7 @@
   tags: nextcloud
 
 - name: nextcloud - post-start tasks
+  when: nextcloud_start.changed
   block:
     - name: nextcloud - wait for app startup is complete
       ansible.builtin.uri:
@@ -68,4 +69,3 @@
         - occ db:add-missing-indices
       changed_when: true
       tags: nextcloud
-  when: nextcloud_start.changed

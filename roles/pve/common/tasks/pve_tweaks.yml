@@ -16,6 +16,7 @@
   register: proxmoxlib_backup
 
 - name: Remove nag message
+  when: not proxmoxlib_backup.stat.exists
   block:
   - name: Make a backup of original file
     ansible.builtin.copy:
@@ -32,7 +33,6 @@
       warn: false
     changed_when: true
     notify: restart pveproxy
-  when: not proxmoxlib_backup.stat.exists
 
 - name: Change Proxmox replication interval
   ansible.builtin.lineinfile:

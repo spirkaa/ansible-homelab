@@ -13,9 +13,6 @@ repos:
         args: [--strict]
         exclude: .pre-commit-config|.github/|files/|Definitions/|vault
   - repo: https://github.com/ansible/ansible-lint.git
-    rev: v6.5.2
+    rev: v6.8.2
     hooks:
       - id: ansible-lint
-        entry: ansible-lint
-        additional_dependencies:
-          - .[core]

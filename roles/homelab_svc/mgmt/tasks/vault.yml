@@ -44,6 +44,7 @@
   tags: vault
 
 - name: vault - init
+  when: not vault_status.initialized
   block:
     - name: vault - init
       ansible.builtin.command: >
@@ -64,9 +65,13 @@
       ansible.builtin.debug:
         msg: "export VAULT_UNSEAL_KEY={{ vault_unseal_key }}; export VAULT_TOKEN={{ vault_token }}"
       tags: vault
-  when: not vault_status.initialized
 
 - name: vault - unseal key
+  no_log: true
+  when:
+    - vault_status.initialized
+    - vault_status.sealed
+    - not vault_unseal_key | length
   block:
     - name: vault - unseal - prompt for key
       ansible.builtin.pause:
@@ -80,11 +85,6 @@
       ansible.builtin.set_fact:
         vault_unseal_key: "{{ prompt.user_input }}"
       tags: vault
-  no_log: true
-  when: >
-    vault_status.initialized and
-    vault_status.sealed and not
-    vault_unseal_key | length
 
 - name: vault - unseal
   ansible.builtin.command: >
@@ -96,6 +96,8 @@
   tags: vault
 
 - name: vault - configure
+  no_log: true
+  when: vault_token | length
   block:
     - name: vault - audit enable
       ansible.builtin.command: >
@@ -173,8 +175,6 @@
         msg: "export VAULT_ROLE_ID={{ _vault_role_id_result.stdout }}; export VAULT_SECRET_ID={{ _vault_secret_id_result.stdout }}"
       no_log: false
       tags: vault
-  no_log: true
-  when: vault_token | length
 
 - name: vault - configure freeipa
   ansible.builtin.include_tasks: freeipa_service_bind.yml
