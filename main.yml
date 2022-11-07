@@ -6,3 +6,4 @@
 - ansible.builtin.import_playbook: pve.yml
 - ansible.builtin.import_playbook: gw_wg.yml
 - ansible.builtin.import_playbook: deploy_homelab.yml
+- ansible.builtin.import_playbook: ha.yml

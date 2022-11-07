@@ -90,6 +90,12 @@ camera:
     auto_update: true
 
 binary_sensor:
+  - platform: workday
+    country: RU
+    add_holidays:
+      - "2023-02-24"
+      - "2023-05-08"
+      - "2023-11-06"
   - platform: template
     sensors:
       bathroom_motion_sensors:

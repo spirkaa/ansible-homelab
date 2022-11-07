@@ -13,5 +13,4 @@
 - ansible.builtin.import_playbook: deploy_homelab_svc_spnas.yml
 - ansible.builtin.import_playbook: deploy_homelab_svc_plex.yml
 # - ansible.builtin.import_playbook: deploy_homelab_svc_projects.yml
-- ansible.builtin.import_playbook: ha.yml
 - ansible.builtin.import_playbook: deploy_homelab_upgrade_packages.yml
