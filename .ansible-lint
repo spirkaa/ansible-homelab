@@ -1,3 +1,4 @@
+offline: true
 warn_list:
   - no-handler
   - package-latest
@@ -7,4 +8,5 @@ skip_list:
   - name[template]
   - schema
   - yaml
-offline: true
+exclude_paths:
+  - .pre-commit-config.yaml

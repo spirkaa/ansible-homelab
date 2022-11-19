@@ -6,13 +6,16 @@ repos:
       - id: check-merge-conflict
       - id: mixed-line-ending
       - id: trailing-whitespace
-  - repo: https://github.com/adrienverge/yamllint.git
+  - repo: https://github.com/adrienverge/yamllint
     rev: v1.28.0
     hooks:
       - id: yamllint
         args: [--strict]
         exclude: .pre-commit-config|.github/|files/|Definitions/|vault
-  - repo: https://github.com/ansible/ansible-lint.git
-    rev: v6.8.2
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v6.8.6
     hooks:
       - id: ansible-lint
+        additional_dependencies:
+          - .
+          - ansible-core==2.13.6
