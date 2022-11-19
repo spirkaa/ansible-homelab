@@ -4,8 +4,8 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-samba_image: mbentley/timemachine:smb-20221002
-minio_image: minio/minio:RELEASE.2022-10-02T19-29-29Z
+samba_image: mbentley/timemachine:smb-20221119
+minio_image: minio/minio:RELEASE.2022-11-17T23-20-09Z
 
 delugevpn_image: binhex/arch-delugevpn:2.0.5-1-04
 jackett_image: linuxserver/jackett:development-v0.20.1261-ls494
