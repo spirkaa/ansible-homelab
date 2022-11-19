@@ -95,6 +95,15 @@ jenkins:
                 path: /sys/fs/cgroup
                 type: Directory
             affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: devmem.ru/pve-host
+                      operator: NotIn
+                      values:
+                      - spsrv
               podAntiAffinity:
                 requiredDuringSchedulingIgnoredDuringExecution:
                 - labelSelector:
