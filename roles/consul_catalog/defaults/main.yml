@@ -1,0 +1,39 @@
+---
+consul_api_url: https://consul.k8s.{{ inventory__site }}/v1
+consul_token: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66376362636435656136383232363537353535636163393366613639323561663734353936343361
+          6133356137613062656266376231386231656433326565660a663432353230303533393732353964
+          32333835333065393466313163356230326163653539633961653161393539326263333731643663
+          3936373363356166390a383532663263333462626238636339646334653732636264373162643764
+          34353931613039353239656339386131366137353265356436383461343561633836356461343431
+          3630303839346130633863326132376462303933343434323831
+
+consul_node_name: "{{ inventory_hostname_short }}"
+consul_node_address: "{{ inventory_hostname_short }}.{{ app_base_domain }}"
+consul_service_name: "{{ inventory_hostname_short }}"
+consul_service_address: "{{ consul_node_address }}"
+consul_service_port: 443
+consul_service_metrics_path: /metrics
+
+consul_node_definition:
+  Node: "{{ consul_node_name }}"
+  Address: "{{ consul_node_address }}"
+  NodeMeta:
+    external-node: "true"
+    external-probe: "true"
+  Service:
+    Service: "{{ consul_service_name }}"
+    Address: "{{ consul_service_address }}"
+    Port: "{{ consul_service_port }}"
+    Tags:
+      - external
+      - metrics
+      - metrics_path={{ consul_service_metrics_path }}
+  Check:
+    Node: "{{ consul_node_name }}"
+    Name: http-check
+    status: passing
+    Definition:
+      http: https://{{ consul_node_address }}
+      interval: 30s

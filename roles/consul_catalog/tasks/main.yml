@@ -1,0 +1,10 @@
+---
+- name: catalog - register
+  ansible.builtin.uri:
+    url: "{{ consul_api_url }}/catalog/register"
+    method: PUT
+    headers:
+      X-Consul-Token: "{{ consul_token }}"
+    body_format: json
+    body: "{{ consul_node_definition | from_yaml }}"
+  tags: consul_catalog
