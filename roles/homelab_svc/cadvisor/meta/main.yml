@@ -1,2 +1,6 @@
 ---
-dependencies: []
+dependencies:
+  - role: consul_catalog
+    vars:
+      consul_service_name: cadvisor
+      consul_service_address: "{{ inventory_hostname_short }}.{{ app_base_domain }}"

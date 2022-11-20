@@ -61,3 +61,14 @@
     apply:
       tags: nextcloud
   tags: nextcloud
+
+- name: minio - consul_catalog
+  ansible.builtin.include_tasks: ../../consul_catalog/tasks/main.yml
+  vars:
+    consul_service_name: minio
+    consul_service_address: s3.{{ app_base_domain }}
+    consul_service_metrics_path: /minio/v2/metrics/cluster
+  args:
+    apply:
+      tags: jenkins
+  tags: jenkins

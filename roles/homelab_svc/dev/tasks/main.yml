@@ -37,12 +37,33 @@
     - "{{ gitea_ldap_admins }}"
   tags: gitea
 
+- name: gitea - consul_catalog
+  ansible.builtin.include_tasks: ../../consul_catalog/tasks/main.yml
+  vars:
+    consul_service_name: gitea
+    consul_service_address: git.{{ app_base_domain }}
+  args:
+    apply:
+      tags: gitea
+  tags: gitea
+
 - name: jenkins - configure freeipa
   ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
   vars:
     freeipa_service_bind_sysaccount_dn: "{{ jenkins_ldap_bind_dn }}"
     freeipa_service_bind_sysaccount_pass: "{{ jenkins_ldap_bind_pw }}"
     freeipa_service_bind_group_name: "{{ jenkins_ldap_access_group }}"
+  args:
+    apply:
+      tags: jenkins
+  tags: jenkins
+
+- name: jenkins - consul_catalog
+  ansible.builtin.include_tasks: ../../consul_catalog/tasks/main.yml
+  vars:
+    consul_service_name: jenkins
+    consul_service_address: jenkins.{{ app_base_domain }}
+    consul_service_metrics_path: /prometheus/
   args:
     apply:
       tags: jenkins

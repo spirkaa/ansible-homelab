@@ -1,2 +1,6 @@
 ---
-dependencies: []
+dependencies:
+  - role: consul_catalog
+    vars:
+      consul_service_name: traefik
+      consul_service_address: traefik-{{ inventory_hostname_short }}.{{ traefik_domain_name }}
