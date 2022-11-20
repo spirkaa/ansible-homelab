@@ -4,7 +4,7 @@
 
   vars:
     resource_type: ct
-    vmid: 500
+    vmid: 501
     hostname: plex
     comment: Plex
     cores: 4
