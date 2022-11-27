@@ -10,11 +10,12 @@ consul_token: !vault |
           6161316430643834623131393031343665383332653465646631
 
 consul_node_name: "{{ inventory_hostname_short }}"
-consul_node_address: "{{ inventory_hostname_short }}.{{ app_base_domain }}"
+consul_node_address: "{{ inventory_hostname_short }}.{{ inventory__homelab_domain }}"
 consul_service_name: "{{ inventory_hostname_short }}"
 consul_service_address: "{{ consul_node_address }}"
 consul_service_port: 443
 consul_service_metrics_path: /metrics
+consul_service_metrics_scheme: https
 
 consul_node_definition:
   Node: "{{ consul_node_name }}"
@@ -30,10 +31,11 @@ consul_node_definition:
       - external
       - metrics
       - metrics_path={{ consul_service_metrics_path }}
+      - metrics_scheme={{ consul_service_metrics_scheme }}
   Check:
     Node: "{{ consul_node_name }}"
     Name: http-check
     status: passing
     Definition:
-      http: https://{{ consul_node_address }}
+      http: "{{ consul_service_metrics_scheme }}://{{ consul_node_address }}"
       interval: 30s

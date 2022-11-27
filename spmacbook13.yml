@@ -1,0 +1,12 @@
+---
+- hosts: spmacbook13
+  gather_facts: true
+
+  vars:
+    consul_service_name: node-exporter
+    consul_service_port: 9100
+    consul_service_metrics_path: /metrics
+    consul_service_metrics_scheme: http
+
+  roles:
+    - consul_catalog
