@@ -1,0 +1,34 @@
+# {{ ansible_managed }}
+
+include /etc/squid/conf.d/*.conf
+
+auth_param basic program /usr/lib/squid/basic_ldap_auth -b "{{ inventory__ldap_base_dn }}" -D "{{ squid_ldap_bind_dn }}" -w {{ squid_ldap_bind_pw }} -f "{{ squid_ldap_user_filter }}" {{ squid_ldap_host }}
+acl ldap-auth proxy_auth REQUIRED
+
+acl SSL_ports port 443
+acl Safe_ports port 80          # http
+acl Safe_ports port 21          # ftp
+acl Safe_ports port 443         # https
+acl Safe_ports port 70          # gopher
+acl Safe_ports port 210         # wais
+acl Safe_ports port 1025-65535  # unregistered ports
+acl Safe_ports port 280         # http-mgmt
+acl Safe_ports port 488         # gss-http
+acl Safe_ports port 591         # filemaker
+acl Safe_ports port 777         # multiling http
+
+http_access deny !Safe_ports
+http_access deny CONNECT !SSL_ports
+
+http_access allow localhost manager
+http_access deny manager
+
+http_access allow localhost
+http_access allow ldap-auth
+http_access deny all
+
+http_port 3129
+
+coredump_dir /var/cache/squid
+
+include /etc/squid/conf.d.tail/*.conf

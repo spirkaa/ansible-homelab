@@ -1,0 +1,55 @@
+---
+- name: squid - create dir
+  ansible.builtin.file:
+    path: "{{ squid_config_path }}"
+    state: directory
+    recurse: true
+  tags: squid
+
+- name: squid - copy files
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ squid_config_path }}/{{ item.dest }}"
+    mode: 0644
+  loop:
+    - { src: squid.conf.j2, dest: squid.conf }
+  notify: squid-ldap - restart
+  tags: squid
+
+- name: squid - start
+  community.docker.docker_container:
+    name: squid
+    image: "{{ squid_image }}"
+    pull: true
+    volumes:
+      - "squid-var-cache:/var/cache/squid"
+    dns_servers:
+      - 1.1.1.1
+    network_mode: host
+    healthcheck:
+      test: ["CMD-SHELL", "squidclient -T 3 mgr:info 2> /dev/null | grep -qF '200 OK'"]
+      interval: 60s
+      timeout: 3s
+    restart_policy: unless-stopped
+    state: started
+  tags: squid
+
+- name: squid-ldap - start
+  community.docker.docker_container:
+    name: squid-ldap
+    image: "{{ squid_image }}"
+    pull: true
+    volumes:
+      - "{{ squid_config_path }}/squid.conf:/etc/squid/squid.conf"
+      - "squid-ldap-var-cache:/var/cache/squid"
+    dns_servers:
+      - 1.1.1.1
+    network_mode: host
+    healthcheck:
+      test: ["CMD-SHELL", "squidclient -T 3 mgr:info 2> /dev/null | grep -qF '200 OK'"]
+      interval: 60s
+      timeout: 3s
+    restart_policy: unless-stopped
+    state: started
+  register: squid_ldap_start
+  tags: squid

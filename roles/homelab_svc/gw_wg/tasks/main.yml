@@ -1,0 +1,26 @@
+---
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: wg_pia
+  ansible.builtin.include_tasks: wg_pia.yml
+  tags: wg_pia
+
+- name: wg_access_server
+  ansible.builtin.include_tasks: wg_access_server.yml
+  tags: wg_access_server
+
+- name: squid
+  ansible.builtin.include_tasks: squid.yml
+  tags: squid
+
+- name: squid - configure freeipa
+  ansible.builtin.include_tasks: ../mgmt/tasks/freeipa_service_bind.yml
+  vars:
+    freeipa_service_bind_sysaccount_dn: "{{ squid_ldap_bind_dn }}"
+    freeipa_service_bind_sysaccount_pass: "{{ squid_ldap_bind_pw }}"
+    freeipa_service_bind_group_name: "{{ squid_ldap_access_group }}"
+  args:
+    apply:
+      tags: squid
+  tags: squid

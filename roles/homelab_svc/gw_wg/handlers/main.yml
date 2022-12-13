@@ -1,0 +1,7 @@
+---
+- name: squid-ldap - restart
+  community.docker.docker_container:
+    name: squid-ldap
+    state: started
+    restart: true
+  when: not squid_ldap_start.changed

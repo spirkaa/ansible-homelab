@@ -1,0 +1,27 @@
+---
+- name: wg-access-server - start
+  community.docker.docker_container:
+    name: wg-access-server
+    image: "{{ wg_access_server_image }}"
+    pull: true
+    env:
+      WG_LOG_LEVEL: "info"
+      WG_VPN_CIDRV6: "0"
+      WG_ADMIN_PASSWORD: "{{ wg_access_server_admin_pass }}"
+      WG_WIREGUARD_PRIVATE_KEY: "{{ wg_access_server_private_key }}"
+      WG_WIREGUARD_INTERFACE: "wg1"
+      WG_EXTERNAL_HOST: "vpn.devmem.ru"
+      WG_WIREGUARD_PORT: "51821"
+      WG_IPV4_NAT_ENABLED: "false"
+      WG_VPN_CLIENT_ISOLATION: "true"
+      WG_VPN_ALLOWED_IPS: "0.0.0.0/0"
+    volumes:
+      - "wg-access-server-data:/data"
+    privileged: true
+    network_mode: host
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
+    restart_policy: unless-stopped
+    state: started
+  no_log: true
+  tags: wg_access_server
