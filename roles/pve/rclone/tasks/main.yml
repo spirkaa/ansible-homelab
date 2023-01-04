@@ -63,5 +63,6 @@
         minute: "{{ item.minute | default('00') }}"
         hour: "{{ item.hour | default('00') }}"
         dom: "{{ item.dom | default('*') }}"
+        disabled: "{{ item.disabled | default(false) }}"
       loop: "{{ rclone_jobs }}"
       no_log: true
