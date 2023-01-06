@@ -7,7 +7,7 @@ tz: "{{ inventory__docker_tz }}"
 grafana_image: grafana/grafana:latest
 influxdb_image: influxdb:1.8-alpine
 librenms_db_image: yobasystems/alpine-mariadb:10.6
-librenms_image: jarischaefer/docker-librenms:22.6.0
+librenms_image: jarischaefer/docker-librenms:22.12.0
 loki_image: grafana/loki:latest
 mosquitto_image: eclipse-mosquitto:latest
 prometheus_image: prom/prometheus:latest
