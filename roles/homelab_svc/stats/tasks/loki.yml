@@ -12,12 +12,10 @@
   register: loki_data
   tags: [loki, grafana]
 
-- name: loki - set data dir ownership
+- name: loki - set data dir ownership  # noqa deprecated-command-syntax
   ansible.builtin.command: >
     chown -R 10001:10001 {{ app_path }}/loki/data
   when: loki_data.stat.uid != 10001 or loki_data.stat.gid != 10001
-  args:
-    warn: false
   tags: [loki, grafana]
 
 - name: loki - start

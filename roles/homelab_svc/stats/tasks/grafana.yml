@@ -35,12 +35,10 @@
   register: grafana_data
   tags: grafana
 
-- name: grafana - set data dir ownership
+- name: grafana - set data dir ownership  # noqa deprecated-command-syntax
   ansible.builtin.command: >
     chown -R 472:472 {{ app_path }}/grafana/data
   when: grafana_data.stat.uid != 472 or grafana_data.stat.gid != 472
-  args:
-    warn: false
   tags: grafana
 
 - name: grafana - start

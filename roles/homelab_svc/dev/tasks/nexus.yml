@@ -26,12 +26,10 @@
   register: __nexus_app_data_stat
   tags: nexus
 
-- name: nexus - set data dir ownership
+- name: nexus - set data dir ownership  # noqa deprecated-command-syntax
   ansible.builtin.command: >
     chown -R 200:200 {{ nexus_app_data }}
   when: __nexus_app_data_stat.stat.uid != 200 or __nexus_app_data_stat.stat.gid != 200
-  args:
-    warn: false
   tags: nexus
 
 - name: nexus - start
