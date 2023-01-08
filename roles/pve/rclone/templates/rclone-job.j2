@@ -105,7 +105,7 @@ echo $(date)" | starting $FILENAME..." >> $CRONLOG
 {% if item.type == "sync" %}
 rclone sync $SRC $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS --min-age $MINAGE --delete-excluded $EXCLUDE --drive-stop-on-upload-limit
 {% elif item.type == "rcat" %}
-tar -cf - $EXCLUDE --directory=$SRC . | pigz -p 4 | rclone rcat $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS --drive-stop-on-upload-limit
+tar -I "pzstd -p 4" -cf - $EXCLUDE --directory=$SRC . | rclone rcat $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS --drive-stop-on-upload-limit
 {% endif %}
 {{ item.post_cmd | default('', true) }}
 
