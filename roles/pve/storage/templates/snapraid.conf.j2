@@ -22,7 +22,7 @@ content {{ disk.path }}/.snapraid.content
 
 # Data disks
 {% for disk in data_disks %}
-data d0{{ loop.index }} {{ disk.path }}
+data {{ disk.path.split('/')[-1] }} {{ disk.path }}
 {% endfor %}
 
 exclude incomplete/
