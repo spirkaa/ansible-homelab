@@ -14,6 +14,7 @@ data_disks:
   - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHVUJKZ-part1, path: /mnt/data/disk07, fs: ext4, opts: defaults, content: false }
   - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_7HK0X5ZN-part1, path: /mnt/data/disk08, fs: ext4, opts: defaults, content: false }
   - { src: /dev/disk/by-id/ata-WDC_WUH721818ALE6L4_5DH2YXJJ-part1, path: /mnt/data/disk00, fs: xfs, opts: defaults, content: true }
+  # - { src: /dev/disk/by-id/ata-WUH721818ALE6L4_4MG51P8H-part1, path: /mnt/data/disk10, fs: xfs, opts: defaults, content: true }
 
 extra_mountpoints:
   - { path: "{{ main_storage_path }}" }
