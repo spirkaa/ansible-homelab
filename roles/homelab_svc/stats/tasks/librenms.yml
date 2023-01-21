@@ -36,8 +36,8 @@
   ansible.builtin.template:
     src: config.custom.php.j2
     dest: "{{ app_path }}/librenms/config.custom.php"
-    owner: "999"
-    group: "999"
+    owner: "997"
+    group: "997"
     mode: 0664
   notify: librenms - restart
   tags: librenms
