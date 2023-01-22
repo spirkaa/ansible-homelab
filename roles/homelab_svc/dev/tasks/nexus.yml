@@ -171,7 +171,7 @@
     - '"already exists" not in __nexus_add_admin_role.content'
   tags: nexus
 
-- name: nexus - check if blob store '{{ nexus_s3_config['name'] }}' exists
+- name: nexus - check if s3 blob store '{{ nexus_s3_config['name'] }}' exists
   ansible.builtin.uri:
     url: "{{ nexus_api_url }}/blobstores/s3/{{ nexus_s3_config['name'] }}"
     method: GET
@@ -183,7 +183,7 @@
   register: __nexus_check_blob_store
   tags: nexus
 
-- name: nexus - add blob store '{{ nexus_s3_config['name'] }}'
+- name: nexus - add s3 blob store '{{ nexus_s3_config['name'] }}'
   ansible.builtin.uri:
     url: "{{ nexus_api_url }}/blobstores/s3"
     method: POST
@@ -197,6 +197,20 @@
   register: __nexus_add_blob_store
   changed_when: __nexus_add_blob_store.status == 201
   when: __nexus_check_blob_store.status == 400
+  tags: nexus
+
+- name: nexus - update s3 blob store '{{ nexus_s3_config['name'] }}'
+  ansible.builtin.uri:
+    url: "{{ nexus_api_url }}/blobstores/s3/{{ nexus_s3_config['name'] }}"
+    method: PUT
+    status_code: 204
+    user: admin
+    password: "{{ nexus_admin_password }}"
+    force_basic_auth: true
+    return_content: true
+    body_format: json
+    body: "{{ nexus_s3_config | from_yaml }}"
+  when: __nexus_check_blob_store.status == 200
   tags: nexus
 
 - name: nexus - list repositories
@@ -304,7 +318,7 @@
   changed_when: __nexus_add_apt_repositories.status == 201
   failed_when:
     - __nexus_add_apt_repositories.status != 201
-    - '"created already" not in __nexus_add_apt_repositories.content'
+    - '"found duplicated key" not in __nexus_add_apt_repositories.content'
   loop: "{{ nexus_apt_repositories }}"
   tags: nexus
 
