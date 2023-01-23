@@ -9,7 +9,6 @@ parity_disks:
 data_disks:
   - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_2SGEZJ8N-part1, path: /mnt/data/disk01, fs: ext4, opts: defaults, content: false }
   - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHUH8NZ-part1, path: /mnt/data/disk02, fs: ext4, opts: defaults, content: false }
-  - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGAJ19Z-part1, path: /mnt/data/disk04, fs: ext4, opts: defaults, content: false }
   - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_1EHVUJKZ-part1, path: /mnt/data/disk07, fs: ext4, opts: defaults, content: false }
   - { src: /dev/disk/by-id/ata-WDC_WD80EMAZ-00WJTA0_7HK0X5ZN-part1, path: /mnt/data/disk08, fs: ext4, opts: defaults, content: false }
   - { src: /dev/disk/by-id/ata-WDC_WUH721818ALE6L4_5DH2YXJJ-part1, path: /mnt/data/disk00, fs: xfs, opts: defaults, content: true }
@@ -31,6 +30,7 @@ extra_mountpoints:
 #   - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGN507Z-part1, path: /mnt/data/disk05, fs: ext4, opts: defaults, state: absent, content: false }
 #   - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_7JKK8PRC-part1, path: /mnt/data/disk06, fs: ext4, opts: defaults, state: absent, content: false }
 #   - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGRYMDZ-part1, path: /mnt/data/disk03, fs: ext4, opts: defaults, state: absent, content: false }
+#   - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGAJ19Z-part1, path: /mnt/data/disk04, fs: ext4, opts: defaults, state: absent, content: false }
 
 fstab_mergerfs:
   - src: /mnt/data/*
