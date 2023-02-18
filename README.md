@@ -6,7 +6,9 @@
 
 * Одна команда для настройки хостов Proxmox, настройки DNS, создания контейнеров LXC и запуска в них сервисов на Docker
 
-      ansible-playbook main.yml
+```shell
+ansible-playbook main.yml
+```
 
 * Чтобы сократить время выполнения, можно запускать отдельные задачи с помощью тегов
   * `pve` - все задачи для хостов Proxmox
@@ -17,7 +19,24 @@
   * `upgrade_packages` - обновление пакетов на всех хостах LXC
   * `dns` - задачи для DNS-сервера на роутере
 
-        ansible-playbook main.yml -t svc
+```shell
+ansible-playbook main.yml -t svc
+```
+
+## Ansible Vault
+
+Строка
+
+```shell
+ansible-vault encrypt_string --encrypt-vault-id default --vault-password-file .vault_password --stdin-name 'secret'
+```
+
+Файл
+
+```shell
+ansible-vault decrypt group_vars/all/vault.yml --vault-password-file .vault_password
+ansible-vault encrypt group_vars/all/vault.yml
+```
 
 ## Как добавить новое приложение
 
