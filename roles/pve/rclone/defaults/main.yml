@@ -31,6 +31,6 @@ rclone_jobs:
     type: sync
     src: /mnt/tank0/ds0/cloud
     dest: "gdrive-spnas-cloud:"
-    exclude: "--exclude .dropbox.cache/**"
+    exclude: "--exclude .dropbox.cache/** --exclude data/appdata_ocadc83b19e7/preview/**"
     weekday: "3,6"
     hour: "05"
