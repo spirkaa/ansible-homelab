@@ -1,5 +1,6 @@
 ---
-- hosts: spmini
+- name: Provision host
+  hosts: spmini
   gather_facts: false
 
   vars:
@@ -23,7 +24,8 @@
     - portainer_api
 
 
-- hosts: stats
+- name: Apply host-specific roles
+  hosts: stats
   gather_facts: false
 
   roles:

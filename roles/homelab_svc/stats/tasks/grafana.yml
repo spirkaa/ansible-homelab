@@ -39,6 +39,7 @@
   ansible.builtin.command: >
     chown -R 472:472 {{ app_path }}/grafana/data
   when: grafana_data.stat.uid != 472 or grafana_data.stat.gid != 472
+  changed_when: true
   tags: grafana
 
 - name: grafana - start

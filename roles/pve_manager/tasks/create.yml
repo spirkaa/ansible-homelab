@@ -6,6 +6,7 @@
   ansible.builtin.command: >
     pvesh create /pools -poolid "{{ resourse_pool }}"
       --comment "{{ resourse_pool_comment }}"
+  changed_when: true
   when: not pve_pool_exists
 
 - name: include create_vm.yml

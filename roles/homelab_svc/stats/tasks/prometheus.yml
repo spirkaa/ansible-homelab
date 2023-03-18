@@ -26,6 +26,7 @@
 - name: prometheus - set data dir ownership  # noqa deprecated-command-syntax
   ansible.builtin.command: >
     chown -R 65534:65534 {{ app_path }}/prometheus/data
+  changed_when: true
   when: prometheus_data.stat.uid != 65534 or prometheus_data.stat.gid != 65534
   tags: [prometheus, grafana]
 

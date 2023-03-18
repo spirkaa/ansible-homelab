@@ -1,5 +1,6 @@
 ---
-- hosts: proxmox
+- name: Download VM templates
+  hosts: proxmox
   gather_facts: false
 
   vars:
@@ -10,11 +11,13 @@
 
   tasks:
     - name: template image
+      run_once: true
       block:
         - name: template image - download
           ansible.builtin.get_url:
             url: "{{ item }}"
             dest: "{{ template_image_path }}/{{ item | basename }}"
+            mode: 0644
             force: true
           loop: "{{ template_image_url }}"
 
@@ -31,4 +34,3 @@
               --run-command "echo -n > /etc/machine-id"
           changed_when: true
           loop: "{{ template_image_url }}"
-      run_once: true

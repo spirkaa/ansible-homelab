@@ -1,12 +1,10 @@
 offline: true
-warn_list:
-  - no-handler
-  - package-latest
 skip_list:
   - meta-no-info
   - name[casing]
   - name[template]
-  - schema
+  - no-handler
+  - package-latest
+  - run-once[task]
+  - role-name[path]
   - yaml
-exclude_paths:
-  - .pre-commit-config.yaml

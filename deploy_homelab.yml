@@ -1,16 +1,40 @@
 ---
-- hosts: all
+- name: Deploy homelab
+  hosts: all
   gather_facts: false
 
-- ansible.builtin.import_playbook: deploy_homelab_set_static_dns.yml
-- ansible.builtin.import_playbook: deploy_homelab_svc_mgmt.yml
-- ansible.builtin.import_playbook: deploy_homelab_manage_users.yml
-# - ansible.builtin.import_playbook: deploy_homelab_svc_pihole.yml
-# - ansible.builtin.import_playbook: deploy_homelab_svc_rp.yml
-# - ansible.builtin.import_playbook: deploy_homelab_svc_mail.yml
-- ansible.builtin.import_playbook: deploy_homelab_svc_stats.yml
-- ansible.builtin.import_playbook: deploy_homelab_svc_dev.yml
-- ansible.builtin.import_playbook: deploy_homelab_svc_spnas.yml
-- ansible.builtin.import_playbook: deploy_homelab_svc_plex.yml
-# - ansible.builtin.import_playbook: deploy_homelab_svc_projects.yml
-- ansible.builtin.import_playbook: deploy_homelab_upgrade_packages.yml
+- name: Include deploy_homelab_set_static_dns
+  ansible.builtin.import_playbook: deploy_homelab_set_static_dns.yml
+
+- name: Include deploy_homelab_svc_mgmt
+  ansible.builtin.import_playbook: deploy_homelab_svc_mgmt.yml
+
+- name: Include deploy_homelab_manage_users
+  ansible.builtin.import_playbook: deploy_homelab_manage_users.yml
+
+# - name: Include deploy_homelab_svc_pihole
+#   ansible.builtin.import_playbook: deploy_homelab_svc_pihole.yml
+
+# - name: Include deploy_homelab_svc_rp
+#   ansible.builtin.import_playbook: deploy_homelab_svc_rp.yml
+
+# - name: Include deploy_homelab_svc_mail
+#   ansible.builtin.import_playbook: deploy_homelab_svc_mail.yml
+
+- name: Include deploy_homelab_svc_stats
+  ansible.builtin.import_playbook: deploy_homelab_svc_stats.yml
+
+- name: Include deploy_homelab_svc_dev
+  ansible.builtin.import_playbook: deploy_homelab_svc_dev.yml
+
+- name: Include deploy_homelab_svc_spnas
+  ansible.builtin.import_playbook: deploy_homelab_svc_spnas.yml
+
+- name: Include deploy_homelab_svc_plex
+  ansible.builtin.import_playbook: deploy_homelab_svc_plex.yml
+
+# - name: Include deploy_homelab_svc_projects
+#   ansible.builtin.import_playbook: deploy_homelab_svc_projects.yml
+
+- name: Include deploy_homelab_upgrade_packages
+  ansible.builtin.import_playbook: deploy_homelab_upgrade_packages.yml

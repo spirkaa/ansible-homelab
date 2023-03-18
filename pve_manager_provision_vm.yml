@@ -1,5 +1,6 @@
 ---
-- hosts: spsrv
+- name: Provision VM
+  hosts: spsrv
   gather_facts: false
 
   vars:
@@ -14,7 +15,8 @@
     - pve_manager
 
 
-- hosts: test-vm
+- name: Test VM
+  hosts: test-vm
   gather_facts: true
 
   pre_tasks:

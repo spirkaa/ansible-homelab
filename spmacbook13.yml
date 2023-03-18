@@ -1,5 +1,6 @@
 ---
-- hosts: spmacbook13
+- name: Apply host-specific roles
+  hosts: spmacbook13
   gather_facts: true
 
   vars:

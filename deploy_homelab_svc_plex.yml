@@ -1,5 +1,6 @@
 ---
-- hosts: sppve
+- name: Provision host
+  hosts: sppve
   gather_facts: false
 
   vars:
@@ -26,7 +27,8 @@
     - portainer_api
 
 
-- hosts: plex
+- name: Apply host-specific roles
+  hosts: plex
   gather_facts: false
 
   roles:

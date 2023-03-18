@@ -1,12 +1,12 @@
 ---
 roles:
-  - spirkaa.nano
-  - spirkaa.zsh_prezto
-  - geerlingguy.pip
-  - geerlingguy.docker
+  - name: spirkaa.nano
+  - name: spirkaa.zsh_prezto
+  - name: geerlingguy.pip
+  - name: geerlingguy.docker
 
 collections:
-  - ansible.posix
-  - community.docker
-  - community.general
-  - community.network
+  - name: ansible.posix
+  - name: community.docker
+  - name: community.general
+  - name: community.network

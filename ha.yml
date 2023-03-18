@@ -1,5 +1,6 @@
 ---
-- hosts: ha
+- name: Apply host-specific roles
+  hosts: ha
   gather_facts: true
 
   vars:

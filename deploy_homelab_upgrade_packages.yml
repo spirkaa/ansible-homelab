@@ -1,5 +1,6 @@
 ---
-- hosts: linux
+- name: Upgrade packages
+  hosts: linux
   gather_facts: false
 
   handlers:

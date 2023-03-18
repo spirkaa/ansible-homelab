@@ -40,6 +40,9 @@ pipeline {
         }
       }
       steps {
+        withCredentials([string(credentialsId: "${ANSIBLE_VAULT_CREDS_ID}", variable: 'ANSIBLE_VAULT_PASS')]) {
+          sh 'echo $ANSIBLE_VAULT_PASS > .vault_password'
+        }
         cache(path: "/tmp/.cache/pre-commit", key: "pre-commit-${hashFiles('**/.pre-commit-config.yaml')}") {
           sh '''#!/bin/bash
             PRE_COMMIT_HOME=/tmp/.cache/pre-commit pre-commit run --all-files --verbose --color always

@@ -30,6 +30,7 @@
   ansible.builtin.command: >
     chown -R 200:200 {{ nexus_app_data }}
   when: __nexus_app_data_stat.stat.uid != 200 or __nexus_app_data_stat.stat.gid != 200
+  changed_when: true
   tags: nexus
 
 - name: nexus - start

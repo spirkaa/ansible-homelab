@@ -1,5 +1,6 @@
 ---
-- hosts: proxmox
+- name: Apply host-specific roles
+  hosts: proxmox
   gather_facts: true
 
   vars:

@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Configure FreeIPA for Proxmox
+  hosts: localhost
   connection: local
   gather_facts: false
 

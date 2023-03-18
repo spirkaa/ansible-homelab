@@ -76,7 +76,7 @@
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 
-    - name: Cleanup packages
+    - name: Cleanup packages  # noqa command-instead-of-module
       ansible.builtin.shell: >
         apt-get clean -y \
         && rm -rf /var/lib/apt/lists/*

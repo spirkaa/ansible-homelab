@@ -1,5 +1,6 @@
 ---
-- hosts: sppve
+- name: Provision CT
+  hosts: sppve
   gather_facts: false
 
   vars:
@@ -20,7 +21,8 @@
     - pve_manager
 
 
-- hosts: test-ct
+- name: Test CT
+  hosts: test-ct
   gather_facts: true
 
   tasks:

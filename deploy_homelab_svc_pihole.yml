@@ -1,5 +1,6 @@
 ---
-- hosts: spsrv
+- name: Provision host
+  hosts: spsrv
   gather_facts: false
 
   vars:
@@ -23,7 +24,8 @@
     - portainer_api
 
 
-- hosts: pihole
+- name: Apply host-specific roles
+  hosts: pihole
   gather_facts: false
 
   roles:

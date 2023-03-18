@@ -1,5 +1,6 @@
 ---
-- hosts: spsrv
+- name: Provision host
+  hosts: spsrv
   gather_facts: false
 
   vars:
@@ -31,7 +32,8 @@
     - { role: portainer_api }
 
 
-- hosts: spnas
+- name: Apply host-specific roles
+  hosts: spnas
   gather_facts: false
 
   roles:

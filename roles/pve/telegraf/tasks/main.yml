@@ -42,6 +42,7 @@
     - name: Configure hddtemp
       ansible.builtin.shell: >
         /usr/local/bin/hddtemp_systemd_gen > /usr/lib/systemd/system/hddtemp.service
+      changed_when: true
       when: hddtemp_cfg.changed
       notify: restart hddtemp
 

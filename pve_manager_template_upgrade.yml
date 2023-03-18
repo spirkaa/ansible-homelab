@@ -1,5 +1,6 @@
 ---
-- hosts: spsrv
+- name: Provision VM
+  hosts: spsrv
   gather_facts: false
 
   vars:
@@ -23,7 +24,8 @@
         updated_image_name: "{{ updated_image_name }}"
 
 
-- hosts: templatevm
+- name: Configure VM
+  hosts: templatevm
   gather_facts: false
 
   handlers:
@@ -48,8 +50,8 @@
         mode: 0755
       notify: run script
 
-
-- hosts: spsrv
+- name: Create template
+  hosts: spsrv
   gather_facts: false
 
   tasks:
@@ -63,6 +65,7 @@
       changed_when: false
 
     - name: Convert qcow2
+      when: "'stopped' in vm_status.stdout"
       block:
         - name: Convert disk to qcow2 (full-size)
           ansible.builtin.command: >
@@ -85,4 +88,3 @@
           ansible.builtin.command: >
             qm destroy {{ vmid }}
           changed_when: true
-      when: "'stopped' in vm_status.stdout"

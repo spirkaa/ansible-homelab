@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Manage FreeIPA users
+  hosts: localhost
   connection: local
   gather_facts: false
 

@@ -1,5 +1,6 @@
 ---
-- hosts: ubnt-erx-krs
+- name: Manage DNS
+  hosts: ubnt-erx-krs
   strategy: linear
   gather_facts: false
 
