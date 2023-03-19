@@ -1,6 +1,6 @@
 ---
 snapshot_root: /mnt/pve/spsrv-proxmox/host-backup
 
-rsnapshot_version: 1.4.4-1
+rsnapshot_version: "1.4.5-1"
 rsnapshot_package_url: https://rsnapshot.org/downloads/rsnapshot_{{ rsnapshot_version }}_all.deb
-rsnapshot_checksum: sha256:92f9124e93520f955cf7b52dc23a5dbb30e9dd1b7bc8e02536e4e2df4101bf60
+rsnapshot_checksum: sha256:9c75d83eaf64823ed5dab7c2c53202f9ef249b40a6ec39210e1b85bb00b6074c
