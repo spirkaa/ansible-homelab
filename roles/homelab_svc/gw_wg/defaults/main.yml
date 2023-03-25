@@ -7,7 +7,7 @@ squid_image: ghcr.io/spirkaa/squid:latest
 
 wg_pia_user: "{{ inventory__piavpn_user }}"
 wg_pia_pass: "{{ inventory__piavpn_pass }}"
-wg_pia_location: swiss
+wg_pia_location: ee
 wg_pia_local_network: 192.168.0.0/16
 wg_pia_firewall: "0"
 wg_pia_fwd_iface: eth0
