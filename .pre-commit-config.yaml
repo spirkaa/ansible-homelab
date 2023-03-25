@@ -1,18 +1,18 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
       - id: end-of-file-fixer
       - id: check-merge-conflict
       - id: mixed-line-ending
       - id: trailing-whitespace
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.29.0
+    rev: v1.30.0
     hooks:
       - id: yamllint
         args: [--strict]
         exclude: .pre-commit-config|.github/|files/|Definitions/|vault
   - repo: https://github.com/ansible/ansible-lint
-    rev: v6.14.2
+    rev: v6.14.3
     hooks:
       - id: ansible-lint

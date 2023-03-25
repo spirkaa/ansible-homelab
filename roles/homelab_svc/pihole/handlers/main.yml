@@ -9,3 +9,4 @@
 - name: pihole - update lists
   ansible.builtin.command: >
     docker exec pihole sh -c '/usr/local/sbin/pihole-updatelists > /dev/null 2>&1'
+  changed_when: true

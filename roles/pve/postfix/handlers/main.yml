@@ -6,6 +6,7 @@
     - sasl_passwd
     - smtp_generic_maps
   listen: postfix config changed
+  changed_when: true
 
 - name: Restart postfix
   ansible.builtin.service:
@@ -13,8 +14,8 @@
     state: restarted
   listen: postfix config changed
 
-- name: Send test mail
+- name: Send test mail  # noqa: risky-shell-pipe
   ansible.builtin.shell: >
-    echo "test mail from {{ inventory_hostname }}" | /usr/bin/pvemailforward
+    echo "test mail from {{ inventory_hostname }}" | /usr/bin/proxmox-mail-forward
   changed_when: false
   listen: postfix config changed

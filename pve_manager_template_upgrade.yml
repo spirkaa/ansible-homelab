@@ -35,6 +35,7 @@
       async: 1
       poll: 0
       become: true
+      changed_when: true
 
   tasks:
     - name: Wait for yum process to exit (cloud-init updates)
