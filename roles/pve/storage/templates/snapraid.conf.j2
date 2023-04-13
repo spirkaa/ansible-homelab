@@ -8,7 +8,6 @@
 {% endfor %}
 
 # Content file location(s)
-content /var/snapraid.content
 {% for disk in parity_disks %}
 {% if disk.content == true %}
 content {{ disk.path }}/snapraid.content
