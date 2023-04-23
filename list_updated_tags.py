@@ -7,38 +7,37 @@
 * Docker должен быть установлен
 """
 
-import logging
 import json
+import logging
 import os
 import re
 import subprocess
 from datetime import datetime, timedelta
-from dateutil import parser
 from pathlib import Path
 
 import pexpect
+from dateutil import parser
 from dotenv import load_dotenv
 
-logger = logging.getLogger("__name__")
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
 DOCKER_USERNAME = os.getenv("DOCKER_USERNAME")
 DOCKER_PASSWORD = os.getenv("DOCKER_PASSWORD")
 
+MARKDOWN_FILE = "roles/homelab_svc/spnas/README.md"
+ARM = ["arm32", "arm64"]
+
 
 def get_repos(file_path: str) -> list:
-    """
-    Find repo names in markdown files
-    """
+    """Find all docker image repository names in markdown file."""
     content = Path(file_path).read_text()
     return re.findall(r"\[(.+?)\]", content)
 
 
-def docker_login(username: str, password: str):
-    """
-    Login to the Docker Hub
-    """
+def docker_login(username: str, password: str) -> None:
+    """Login to the Docker Hub in hub-tool."""
     child = pexpect.spawn("hub-tool login")
     child.expect("Username:")
     child.sendline(username)
@@ -47,10 +46,8 @@ def docker_login(username: str, password: str):
     child.expect("Login Succeeded", timeout=10)
 
 
-def list_updated_tags(repository: str, days: int = 7):
-    """
-    List all tags in repo and filter results by date
-    """
+def list_tags(repository: str) -> list[dict]:
+    """List all docker image tags in repository."""
     try:
         logger.info("%s", repository)
         hub_tool = subprocess.run(
@@ -68,31 +65,38 @@ def list_updated_tags(repository: str, days: int = 7):
             check=True,
             encoding="utf-8",
         )
-        if hub_tool.stdout:
-            if hub_tool.stdout != "null\n":
-                for tag in json.loads(hub_tool.stdout):
-                    tag_last_updated = tag["LastUpdated"]
-                    tag_last_updated_dt = parser.parse(tag_last_updated).replace(
-                        tzinfo=None
-                    )
-                    if tag_last_updated_dt > datetime.now() - timedelta(days=days):
-                        tag_name = tag["Name"]
-                        if not any(platform in tag_name for platform in ["arm32", "arm64"]):
-                            print(tag_name, "-", tag_last_updated)
-            else:
-                logger.error("%s: repo not found on docker hub", repository)
-        else:
+        if not hub_tool.stdout:
             logger.error("%s: something bad happened", repository)
-        print("")
+            return
+        if hub_tool.stdout == "null\n":
+            logger.error("%s: repo not found on docker hub", repository)
+            return
+        return json.loads(hub_tool.stdout)
     except subprocess.CalledProcessError as e:
         print(e.stderr)
 
 
+def filter_tags(tags: list[dict], days: int = 7) -> None:
+    """Filter docker image tags by date."""
+    for tag in tags:
+        tag_last_updated = tag["LastUpdated"]
+        tag_last_updated_dt = parser.parse(tag_last_updated).replace(tzinfo=None)
+        if tag_last_updated_dt < datetime.now() - timedelta(days=days):
+            return
+        tag_name = tag["Name"]
+        if not any(platform in tag_name for platform in ARM):
+            print(tag_name, "-", tag_last_updated)
+
+
 def main():
+    """Main function."""
     docker_login(DOCKER_USERNAME, DOCKER_PASSWORD)
-    repos = get_repos("roles/homelab_svc/spnas/README.md")
+    repos = get_repos(MARKDOWN_FILE)
     for repo in repos:
-        list_updated_tags(repo)
+        tags = list_tags(repo)
+        if tags is not None:
+            filter_tags(tags)
+            print("")
 
 
 if __name__ == "__main__":
@@ -101,5 +105,4 @@ if __name__ == "__main__":
         format="%(asctime)s [%(levelname)8s] [%(name)s:%(lineno)s:%(funcName)20s()] --- %(message)s",
         level=logging.DEBUG,
     )
-
     main()
