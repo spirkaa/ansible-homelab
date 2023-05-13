@@ -12,7 +12,7 @@ gitea_image: gitea/gitea:dev
 jenkins_image: git.devmem.ru/projects/jenkins:latest
 registry_image: registry:2.8
 registry_ui_image: joxit/docker-registry-ui:2.2
-nexus_image: sonatype/nexus3:3.47.1
+nexus_image: sonatype/nexus3:3.53.1
 
 app_network_name: "{{ inventory__docker_network }}"
 app_base_domain: "{{ inventory__homelab_domain }}"
