@@ -5,7 +5,7 @@ pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
 esphome_image: esphome/esphome:latest
-barcodebuddy_image: f0rc3/barcodebuddy-docker:latest
+barcodebuddy_image: f0rc3/barcodebuddy:latest
 grocy_image: linuxserver/grocy:latest
 homeassistant_image: homeassistant/home-assistant:latest
 
