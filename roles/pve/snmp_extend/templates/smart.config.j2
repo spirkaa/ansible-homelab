@@ -2,6 +2,7 @@ smartctl=/usr/sbin/smartctl
 cache=/var/cache/smart
 useSN=0
 nvme0n1
+nvme1n1
 {% if inventory_hostname == "spsrv" %}
 sda
 sdb
@@ -10,9 +11,4 @@ sdd
 sde
 sdf
 sdg
-sdh
-sdi
-sdj
-sdk
-sdl
 {% endif %}
