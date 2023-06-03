@@ -40,8 +40,8 @@ JWT_SECRET = {{ gitea_jwt_secret }}
 [log]
 ROOT_PATH          = {{ gitea_app_data_path }}/log
 MODE               = file
-LEVEL              = info
-DISABLE_ROUTER_LOG = true
+LEVEL              = Info
+logger.router.MODE =
 
 [service]
 REGISTER_EMAIL_CONFIRM            = false
@@ -120,4 +120,7 @@ ENABLED = true
 ALLOW_LOCALNETWORKS = true
 
 [packages]
+ENABLED = true
+
+[actions]
 ENABLED = true
