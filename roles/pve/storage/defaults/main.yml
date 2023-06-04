@@ -17,6 +17,7 @@ extra_mountpoints:
   - { src: "{{ main_storage_path }}/downloads", path: "{{ nfs_export_path }}/downloads", fs: none, opts: "bind,_netdev,x-systemd.requires=/mnt/storage", state: mounted }
   - { src: "{{ zfs_path }}/proxmox", path: "{{ nfs_export_path }}/proxmox", fs: none, opts: "bind,_netdev,x-systemd.requires=zfs-mount.service", state: mounted }
   - { src: "{{ zfs_path }}/cloud", path: "{{ nfs_export_path }}/cloud", fs: none, opts: "bind,_netdev,x-systemd.requires=zfs-mount.service", state: mounted }
+  - { src: "{{ zfs_path }}/src", path: "{{ nfs_export_path }}/src", fs: none, opts: "bind,_netdev,x-systemd.requires=zfs-mount.service", state: mounted }
 
 # zfs_disks:
 #   - ata-WDC_WD120EMFZ-11A6JA0_Z2KAEX5T
@@ -45,6 +46,7 @@ nfs_exports:
   - "{{ nfs_export_path }}/proxmox 10.10.20.0/24(rw,fsid=1,no_root_squash,no_subtree_check)"
   - "{{ nfs_export_path }}/downloads 10.10.20.0/24(rw,fsid=2,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
   - "{{ nfs_export_path }}/cloud 10.10.20.0/24(rw,fsid=3,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
+  - "{{ nfs_export_path }}/src 10.10.20.0/24(rw,fsid=4,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
 
 mergerfs_version: "2.35.1"
 mergerfs_package_name: mergerfs_{{ mergerfs_version }}.debian-bullseye_amd64.deb
