@@ -38,7 +38,7 @@ fstab_mergerfs:
   - src: /mnt/data/*
     path: "{{ main_storage_path }}"
     fs: fuse.mergerfs
-    opts: defaults,nonempty,allow_other,use_ino,noforget,inodecalc=path-hash,cache.files=off,moveonenospc=true,category.create=pfrd,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs
+    opts: defaults,noforget,inodecalc=path-hash,cache.files=off,moveonenospc=true,category.create=pfrd,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs
 
 nfs_exports:
   - "{{ nfs_export_path }} 10.10.20.0/24(ro,fsid=0,no_subtree_check)"
@@ -46,7 +46,7 @@ nfs_exports:
   - "{{ nfs_export_path }}/downloads 10.10.20.0/24(rw,fsid=2,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
   - "{{ nfs_export_path }}/cloud 10.10.20.0/24(rw,fsid=3,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
 
-mergerfs_version: "2.34.1"
+mergerfs_version: "2.35.1"
 mergerfs_package_name: mergerfs_{{ mergerfs_version }}.debian-bullseye_amd64.deb
 mergerfs_package_url: https://github.com/trapexit/mergerfs/releases/download/{{ mergerfs_version }}/{{ mergerfs_package_name }}
 
