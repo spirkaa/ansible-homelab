@@ -9,7 +9,7 @@
       WG_VPN_CIDRV6: "0"
       WG_ADMIN_PASSWORD: "{{ wg_access_server_admin_pass }}"
       WG_WIREGUARD_PRIVATE_KEY: "{{ wg_access_server_private_key }}"
-      WG_WIREGUARD_INTERFACE: "wg1"
+      WG_WIREGUARD_INTERFACE: "{{ wg_access_server_interface }}"
       WG_EXTERNAL_HOST: "vpn.devmem.ru"
       WG_WIREGUARD_PORT: "51821"
       WG_IPV4_NAT_ENABLED: "false"
@@ -24,4 +24,30 @@
     restart_policy: unless-stopped
     state: started
   no_log: true
+  tags: wg_access_server
+
+- name: wg-access-server - download wg-json
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/WireGuard/wireguard-tools/master/contrib/json/wg-json
+    dest: /opt/wg-json
+    mode: 0755
+    force: true
+  tags: wg_access_server
+
+- name: wg-access-server - copy files
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: /opt/{{ item.dest }}
+    mode: 0755
+  loop:
+    - { src: set_wg_fwmark.sh.j2, dest: set_wg_fwmark.sh }
+  tags: wg_access_server
+
+- name: wg-access-server - create a cron job
+  ansible.builtin.cron:
+    name: set_wg_fwmark
+    minute: "*"
+    user: root
+    job: /opt/set_wg_fwmark.sh >/dev/null 2>&1
+    cron_file: ansible_set_wg_fwmark
   tags: wg_access_server

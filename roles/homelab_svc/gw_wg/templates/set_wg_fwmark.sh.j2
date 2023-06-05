@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# {{ ansible_managed }}
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+# Check and set fwmark on wireguard interface
+if ! /opt/wg-json | jq -e '.{{ wg_access_server_interface }} | has("fwmark")'; then
+  /usr/bin/wg set {{ wg_access_server_interface }} fwmark 51820
+fi
+
+# Check and add rule to iptables
+if ! /usr/sbin/iptables -C FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu; then
+  /usr/sbin/iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+fi
