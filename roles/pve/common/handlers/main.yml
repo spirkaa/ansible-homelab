@@ -3,8 +3,3 @@
   ansible.builtin.service:
     name: pveproxy
     state: restarted
-
-- name: reload pvesr
-  ansible.builtin.service:
-    name: pvesr
-    state: reloaded

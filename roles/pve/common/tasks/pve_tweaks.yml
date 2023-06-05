@@ -1,41 +1,9 @@
 ---
-- name: Get pveversion for backup filename
-  ansible.builtin.command: >
-    pveversion
-  register: _pveversion_result
-  changed_when: false
-
-- name: Set fact
-  ansible.builtin.set_fact:
-    proxmoxlib: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
-    pveversion: "{{ _pveversion_result.stdout.split('/')[1] }}"
-
-- name: Check if backup file exists
-  ansible.builtin.stat:
-    path: "{{ proxmoxlib }}.bak-{{ pveversion }}"
-  register: proxmoxlib_backup
-
-- name: Remove nag message
-  when: not proxmoxlib_backup.stat.exists
-  block:
-  - name: Make a backup of original file
-    ansible.builtin.copy:
-      remote_src: true
-      src: "{{ proxmoxlib }}"
-      dest: "{{ proxmoxlib }}.bak-{{ pveversion }}"
-      mode: preserve
-
-  # credit: https://johnscs.com/remove-proxmox51-subscription-notice/
-  - name: Modify line in file to remove nag message  # noqa command-instead-of-module
-    ansible.builtin.command: >
-      sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" {{ proxmoxlib }}
-    changed_when: true
-    notify: restart pveproxy
-
-- name: Change Proxmox replication interval
-  ansible.builtin.lineinfile:
-    path: /lib/systemd/system/pvesr.timer
-    regexp: "^OnCalendar=minutely"
-    line: "OnCalendar=hourly"
-  when: ansible_distribution == "Debian" and ansible_distribution_version == "10"
-  notify: reload pvesr
+# credit: https://johnscs.com/remove-proxmox51-subscription-notice/ & https://github.com/foundObjects/pve-nag-buster
+- name: Modify line in file to remove nag message
+  ansible.builtin.replace:
+    path: /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+    regexp: 'res[\s\n]*\.data\.status\.toLowerCase\(\) !== .active.'
+    replace: "false"
+    backup: true
+  notify: restart pveproxy
