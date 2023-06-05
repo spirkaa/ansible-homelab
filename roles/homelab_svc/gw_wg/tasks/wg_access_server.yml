@@ -15,6 +15,7 @@
       WG_IPV4_NAT_ENABLED: "false"
       WG_VPN_CLIENT_ISOLATION: "true"
       WG_VPN_ALLOWED_IPS: "0.0.0.0/0"
+      WG_DISABLE_INACTIVE: "true"
     volumes:
       - "wg-access-server-data:/data"
     privileged: true
