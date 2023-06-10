@@ -33,6 +33,10 @@
     dest: /opt/wg-json
     mode: 0755
     force: true
+  register: _download_result
+  retries: 60
+  delay: 1
+  until: _download_result is not failed
   tags: wg_access_server
 
 - name: wg-access-server - copy files
