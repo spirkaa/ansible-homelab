@@ -15,7 +15,7 @@
       NO_PROXY: "{{ inventory__http_proxy_no }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/dev/shm:/ram_transcode"
+      - "transcode:/ram_transcode"
       - "{{ app_path }}/jellyfin/config:/config"
       - "{{ app_path }}/downloads:/storage/downloads"
     devices:

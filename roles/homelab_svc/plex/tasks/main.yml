@@ -1,4 +1,14 @@
 ---
+- name: create transcode tmpfs volume
+  community.docker.docker_volume:
+    volume_name: transcode
+    driver_options:
+      type: tmpfs
+      device: tmpfs
+      o: size=3000m
+    state: present
+  tags: [jellyfin, plex]
+
 - name: jellyfin
   ansible.builtin.include_tasks: jellyfin.yml
   tags: jellyfin
