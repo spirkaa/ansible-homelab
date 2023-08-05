@@ -138,7 +138,7 @@
   changed_when: _auth_source_ldap_result.rc == 0
   failed_when: >
     _auth_source_ldap_result.rc >= 1 and
-    "login source already exists" not in _auth_source_ldap_result.stdout
+    "login source already exists" not in _auth_source_ldap_result.stderr
   no_log: true
   tags: gitea
 

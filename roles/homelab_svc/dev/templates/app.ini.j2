@@ -1,60 +1,61 @@
 APP_NAME = Gitea
 RUN_USER = git
 RUN_MODE = prod
+WORK_PATH = /app/gitea
 
 [server]
-DOMAIN           = {{ gitea_domain }}
-ROOT_URL         = {{ gitea_root_url }}/
-HTTP_PORT        = 3000
-DISABLE_SSH      = false
-SSH_DOMAIN       = {{ gitea_domain }}
-SSH_PORT         = 22
-SSH_LISTEN_PORT  = 22
-OFFLINE_MODE     = true
-APP_DATA_PATH    = {{ gitea_app_data_path }}
-LANDING_PAGE     = login
+DOMAIN = {{ gitea_domain }}
+ROOT_URL = {{ gitea_root_url }}/
+HTTP_PORT = 3000
+DISABLE_SSH = false
+SSH_DOMAIN = {{ gitea_domain }}
+SSH_PORT = 22
+SSH_LISTEN_PORT = 22
+OFFLINE_MODE = true
+APP_DATA_PATH = {{ gitea_app_data_path }}
+LANDING_PAGE = login
 LFS_START_SERVER = true
-LFS_JWT_SECRET   = {{ gitea_lfs_jwt_secret }}
+LFS_JWT_SECRET = {{ gitea_lfs_jwt_secret }}
 
 [database]
-DB_TYPE  = postgres
-HOST     = {{ gitea_db_host }}
-NAME     = {{ gitea_db_user }}
-USER     = {{ gitea_db_user }}
-PASSWD   = {{ gitea_db_pass }}
+DB_TYPE = postgres
+HOST = {{ gitea_db_host }}
+NAME = {{ gitea_db_user }}
+USER = {{ gitea_db_user }}
+PASSWD = {{ gitea_db_pass }}
 SSL_MODE = disable
-LOG_SQL  = false
+LOG_SQL = false
 
 [security]
-INSTALL_LOCK                  = true
-SECRET_KEY                    = {{ gitea_secret_key }}
-INTERNAL_TOKEN                = {{ gitea_internal_token }}
-LOGIN_REMEMBER_DAYS           = 30
-REVERSE_PROXY_LIMIT           = 1
+INSTALL_LOCK = true
+SECRET_KEY = {{ gitea_secret_key }}
+INTERNAL_TOKEN = {{ gitea_internal_token }}
+LOGIN_REMEMBER_DAYS = 30
+REVERSE_PROXY_LIMIT = 1
 REVERSE_PROXY_TRUSTED_PROXIES = 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 
 [oauth2]
-ENABLE     = true
+ENABLE = true
 JWT_SECRET = {{ gitea_jwt_secret }}
 
 [log]
-ROOT_PATH          = {{ gitea_app_data_path }}/log
-MODE               = file
-LEVEL              = Info
+ROOT_PATH = {{ gitea_app_data_path }}/log
+MODE = file
+LEVEL = Info
 logger.router.MODE =
 
 [service]
-REGISTER_EMAIL_CONFIRM            = false
-DISABLE_REGISTRATION              = true
-ALLOW_ONLY_EXTERNAL_REGISTRATION  = false
-REQUIRE_SIGNIN_VIEW               = true
-ENABLE_NOTIFY_MAIL                = true
-ENABLE_CAPTCHA                    = false
-DEFAULT_KEEP_EMAIL_PRIVATE        = false
+REGISTER_EMAIL_CONFIRM = false
+DISABLE_REGISTRATION = true
+ALLOW_ONLY_EXTERNAL_REGISTRATION = false
+REQUIRE_SIGNIN_VIEW = true
+ENABLE_NOTIFY_MAIL = true
+ENABLE_CAPTCHA = false
+DEFAULT_KEEP_EMAIL_PRIVATE = false
 DEFAULT_ALLOW_CREATE_ORGANIZATION = true
-DEFAULT_ENABLE_TIMETRACKING       = true
-NO_REPLY_ADDRESS                  = {{ gitea_domain }}
-AUTO_WATCH_NEW_REPOS              = false
+DEFAULT_ENABLE_TIMETRACKING = true
+NO_REPLY_ADDRESS = {{ gitea_domain }}
+AUTO_WATCH_NEW_REPOS = false
 
 [repository]
 ROOT = {{ gitea_repository_root }}
@@ -63,14 +64,14 @@ ROOT = {{ gitea_repository_root }}
 FILE_MAX_SIZE = 10
 
 [repository.signing]
-SIGNING_KEY    = default
+SIGNING_KEY = default
 INITIAL_COMMIT = always
-CRUD_ACTIONS   = pubkey, twofa, parentsigned
-WIKI           = never
-MERGES         = pubkey, twofa, basesigned, commitssigned
+CRUD_ACTIONS = pubkey, twofa, parentsigned
+WIKI = never
+MERGES = pubkey, twofa, basesigned, commitssigned
 
 [ui]
-FEED_MAX_COMMIT_NUM  = 10
+FEED_MAX_COMMIT_NUM = 10
 GRAPH_MAX_COMMIT_NUM = 200
 
 [ui.admin]
@@ -84,37 +85,36 @@ ENABLE_OPENID_SIGNIN = false
 ENABLE_OPENID_SIGNUP = false
 
 [oauth2_client]
-OPENID_CONNECT_SCOPES    = profile email groups
+OPENID_CONNECT_SCOPES = profile email groups
 ENABLE_AUTO_REGISTRATION = true
-USERNAME                 = email
-ACCOUNT_LINKING          = auto
+USERNAME = email
+ACCOUNT_LINKING = auto
 
 [webhook]
 ALLOWED_HOST_LIST = *
 
 [mailer]
-ENABLED        = true
+ENABLED = true
 SUBJECT_PREFIX = [git]
-SMTP_ADDR      = {{ smtp_host }}
-SMTP_PORT      = {{ smtp_port }}
-FROM           = Gitea <{{ smtp_user }}>
-USER           = {{ smtp_user }}
-PASSWD         = {{ smtp_pass }}
+SMTP_ADDR = {{ smtp_host }}
+SMTP_PORT = {{ smtp_port }}
+FROM = Gitea <{{ smtp_user }}>
+USER = {{ smtp_user }}
+PASSWD = {{ smtp_pass }}
 
 [session]
 PROVIDER = db
 
 [picture]
-DISABLE_GRAVATAR        = true
+DISABLE_GRAVATAR = true
 ENABLE_FEDERATED_AVATAR = false
 
 [attachment]
-ENABLED  = true
+ENABLED = true
 MAX_SIZE = 10
 
 [metrics]
 ENABLED = true
-# TOKEN   = {{ gitea_metrics_token }}
 
 [migrations]
 ALLOW_LOCALNETWORKS = true
