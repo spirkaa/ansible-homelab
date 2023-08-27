@@ -29,8 +29,8 @@ mail_ldap_access_filter: (objectclass=inetorgperson)(memberof=cn={{ mail_ldap_ac
 
 mail_ldap_query_filter_user: (&{{ mail_ldap_access_filter }}(mail=%s))
 mail_ldap_query_filter_group: (&{{ mail_ldap_access_filter }}(mailgroupmember=%s))
-mail_ldap_query_filter_alias: (&{{ mail_ldap_access_filter }}(|(mail=%s)(mailalias=%s)))  # noqa var-spacing
-mail_ldap_query_filter_domain: (&{{ mail_ldap_access_filter }}(|(mail=*@%s)(mailalias=*@%s)(mailgroupmember=*@%s)))  # noqa var-spacing
+mail_ldap_query_filter_alias: (&{{ mail_ldap_access_filter }}(|(mail=%s)(mailalias=%s)))  # noqa: jinja[spacing]
+mail_ldap_query_filter_domain: (&{{ mail_ldap_access_filter }}(|(mail=*@%s)(mailalias=*@%s)(mailgroupmember=*@%s)))  # noqa: jinja[spacing]
 
 mail_dovecot_pass_filter: (&{{ mail_ldap_access_filter }}(uid=%n))
 mail_dovecot_user_filter: (&{{ mail_ldap_access_filter }}(uid=%n))

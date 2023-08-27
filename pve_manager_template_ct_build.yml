@@ -76,7 +76,7 @@
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 
-    - name: Cleanup packages  # noqa command-instead-of-module
+    - name: Cleanup packages  # noqa: command-instead-of-module
       ansible.builtin.shell: >
         apt-get clean -y \
         && rm -rf /var/lib/apt/lists/*
@@ -111,7 +111,7 @@
         pct destroy {{ vmid }}
       changed_when: true
 
-    - name: "{{ hostname }} - get backup files"  # noqa risky-shell-pipe
+    - name: "{{ hostname }} - get backup files"  # noqa: risky-shell-pipe
       ansible.builtin.shell: >
         ls {{ template_storage_path }} | grep {{ vmid }}
       register: _backup_files

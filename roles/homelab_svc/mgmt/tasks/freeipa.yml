@@ -80,7 +80,7 @@
 
 - name: freeipa - wait
   when: freeipa_start.changed
-  ignore_errors: true  # noqa ignore-errors
+  ignore_errors: true  # noqa: ignore-errors
   block:
     - name: freeipa - wait for install to finish
       ansible.builtin.wait_for:

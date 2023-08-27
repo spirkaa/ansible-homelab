@@ -12,7 +12,7 @@
   register: loki_data
   tags: [loki, grafana]
 
-- name: loki - set data dir ownership  # noqa deprecated-command-syntax
+- name: loki - set data dir ownership  # noqa: no-free-form
   ansible.builtin.command: >
     chown -R 10001:10001 {{ app_path }}/loki/data
   changed_when: true

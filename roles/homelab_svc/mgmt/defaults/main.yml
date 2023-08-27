@@ -94,9 +94,9 @@ vault_ldap_access_group: vault_users
 vault_ldap_admins: vault_admins
 vault_ldap_rw_users: vault_rw_users
 vault_ldap_ro_users: vault_ro_users
-vault_ldap_user_filter: (&(objectclass=inetorgperson)(memberof=cn={{ vault_ldap_access_group }},{{ inventory__ldap_groups_dn }})({% raw %}{{.UserAttr}}={{.Username}}{% endraw %}))  # noqa var-spacing
+vault_ldap_user_filter: (&(objectclass=inetorgperson)(memberof=cn={{ vault_ldap_access_group }},{{ inventory__ldap_groups_dn }})({% raw %}{{.UserAttr}}={{.Username}}{% endraw %}))  # noqa: jinja[spacing]
 vault_ldap_user_attr: uid
-vault_ldap_group_filter: (member={% raw %}{{.UserDN}}{% endraw %})  # noqa var-spacing
+vault_ldap_group_filter: (member={% raw %}{{.UserDN}}{% endraw %})  # noqa: jinja[spacing]
 vault_ldap_group_attr: cn
 vault_ldap_config: "{{ lookup('template', 'vault_ldap_config.j2') }}"
 

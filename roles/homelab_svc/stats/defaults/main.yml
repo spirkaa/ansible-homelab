@@ -29,7 +29,7 @@ grafana_ldap_bind_pw: !vault |
           3765643132373666370a313939373431653631326165323163376636316436323430373861356530
           3139
 grafana_ldap_access_group: grafana_users
-grafana_ldap_access_filter: (&(&(objectclass=inetorgperson)(memberof=cn={{ grafana_ldap_access_group }},{{ inventory__ldap_groups_dn }}))(|(uid=%s)(mail=%s)))  # noqa var-spacing
+grafana_ldap_access_filter: (&(&(objectclass=inetorgperson)(memberof=cn={{ grafana_ldap_access_group }},{{ inventory__ldap_groups_dn }}))(|(uid=%s)(mail=%s)))  # noqa: jinja[spacing]
 grafana_ldap_admins: grafana_admins
 grafana_ldap_admins_dn: cn={{ grafana_ldap_admins }},{{ inventory__ldap_groups_dn }}
 grafana_ldap_editors: grafana_rw_users

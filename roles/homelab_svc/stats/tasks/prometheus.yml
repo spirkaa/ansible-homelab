@@ -23,7 +23,7 @@
   register: prometheus_data
   tags: [prometheus, grafana]
 
-- name: prometheus - set data dir ownership  # noqa deprecated-command-syntax
+- name: prometheus - set data dir ownership  # noqa: no-free-form
   ansible.builtin.command: >
     chown -R 65534:65534 {{ app_path }}/prometheus/data
   changed_when: true
