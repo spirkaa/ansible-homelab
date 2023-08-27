@@ -135,6 +135,9 @@
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
     ipa permission-show "Read Postfix Book Attributes"'
   register: permission_show
+  until: permission_show.rc == 0
+  retries: 5
+  delay: 5
   failed_when: permission_show.rc >= 1 and "permission not found" not in permission_show.stderr
   changed_when: false
   no_log: true
