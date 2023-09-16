@@ -15,8 +15,9 @@
     # ip_rp: 192.168.12.254
     # ip_pihole: 192.168.16.2
     # ip_projects: 192.168.12.251
-    ip_ha: 192.168.20.176
-    ip_spmacbook13: 192.168.20.3
+    ip_ha: 192.168.20.10
+    ip_spbleq12: 192.168.20.3
+    ip_spmacbook13: 192.168.20.4
     ip_gw_wg: 192.168.13.2
     ip_k8s_ingress: 192.168.13.240
     dns_entries:
@@ -79,6 +80,7 @@
       # - { alias: "projects", inet: "{{ ip_projects }}" }
       # - { alias: "traefik-projects", inet: "{{ ip_projects }}" }
 
+      - { alias: "spbleq12", inet: "{{ ip_spbleq12 }}" }
       - { alias: "spmacbook13", inet: "{{ ip_spmacbook13 }}" }
       - { alias: "ha", inet: "{{ ip_ha }}" }
       - { alias: "traefik-ha", inet: "{{ ip_ha }}" }

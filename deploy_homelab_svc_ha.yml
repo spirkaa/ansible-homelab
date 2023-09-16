@@ -1,0 +1,33 @@
+---
+- name: Provision host
+  hosts: spbleq12
+  gather_facts: false
+
+  vars:
+    resource_type: ct
+    ct_template: local:vztmpl/ubuntu-22.04-docker.tar.zst
+    vmid: 3000
+    hostname: ha
+    comment: Home Assistant
+    cores: 2
+    mem: 4096
+    disk_size: 20
+    net_ip: 192.168.20.10
+    net_vlan: ""
+    net_gw: 192.168.20.1
+    net_dns: 192.168.20.1
+    net_domain: "{{ inventory__homelab_domain }}"
+    ct_other_options: >
+      --onboot 1
+
+  roles:
+    - pve_manager
+    - portainer_api
+
+
+- name: Apply host-specific roles
+  hosts: ha
+  gather_facts: false
+
+  roles:
+    - { role: homelab_svc/ha, tags: [stats, svc] }

@@ -26,6 +26,7 @@ net_cidr: 24
 net_gw: 192.168.13.1
 net_dns: 192.168.13.1
 net_domain: "{{ inventory__homelab_domain }}"
+net_tag: "{{ ',tag=' if net_vlan else '' }}"
 
 # Файл с ключами должен находиться на сервере Proxmox
 ssh_keys: ~/.ssh/authorized_keys

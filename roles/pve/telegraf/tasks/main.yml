@@ -6,7 +6,6 @@
       - sudo
       - lm-sensors
       - smartmontools
-      - hddtemp
 
 - name: Tasks for specific hosts
   when: inventory_hostname == "spsrv" or inventory_hostname == "spmaxi"
@@ -26,6 +25,12 @@
 - name: Tasks for specific hosts
   when: inventory_hostname == "spsrv"
   block:
+    - name: Install packages
+      ansible.builtin.package:
+        state: present
+        name:
+          - hddtemp
+
     - name: Copy hddtemp config generator
       ansible.builtin.copy:
         src: files/hddtemp_systemd_gen

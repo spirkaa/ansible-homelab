@@ -3,9 +3,6 @@
   hosts: proxmox
   gather_facts: true
 
-  vars:
-    snmp_syslocation: krs
-
   roles:
     - { role: common/apt_sources, tags: [pve, pve_apt_sources] }
     - { role: pve/common, tags: [pve, pve_common] }
@@ -24,4 +21,4 @@
     - { role: pve/snmp_extend, tags: [pve, pve_snmp] }
     - { role: pve/smartd, tags: [pve, pve_smartd] }
     - { role: pve/storage, tags: [pve, pve_storage] }
-    - { role: common/wireguard, tags: [pve, pve_wireguard] }
+    # - { role: common/wireguard, tags: [pve, pve_wireguard] }

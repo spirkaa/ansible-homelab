@@ -9,9 +9,17 @@
     - { src: kvm-intel.conf, dest: /etc/modprobe.d }
     - { src: modules, dest: /etc }
 
+- name: Set sysctl entries
+  ansible.posix.sysctl:
+    name: kernel.task_delayacct
+    value: "1"
+    sysctl_set: true
+    reload: true
+    state: present
+
 - name: Edit grub config
   ansible.builtin.lineinfile:
     path: /etc/default/grub
     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
-    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet delayacct intel_iommu=on"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet delayacct intel_iommu=on iommu=pt"'
   notify: update-grub

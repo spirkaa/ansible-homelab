@@ -1,4 +1,17 @@
 ---
+- name: Install packages
+  ansible.builtin.package:
+    update_cache: true
+    state: present
+    name:
+      - openssh-server
+
+- name: Enable and start service
+  ansible.builtin.service:
+    name: ssh
+    enabled: true
+    state: started
+
 - name: Add authorized keys
   ansible.posix.authorized_key:
     user: "{{ sshd_authorized_keys_user }}"
@@ -6,7 +19,7 @@
     key: "{{ item }}"
   loop: "{{ sshd_authorized_keys }}"
   no_log: true
-  notify: restart sshd
+  notify: restart ssh
   when: sshd_authorized_keys_add
 
 - name: Set sshd_config params
@@ -26,4 +39,4 @@
     - { regexp: "^#?PermitEmptyPasswords", line: "PermitEmptyPasswords no" }
     - { regexp: "^#?AuthenticationMethods", line: "AuthenticationMethods {{ sshd_authentication_methods }}" }
     - { regexp: "^#?X11Forwarding", line: "X11Forwarding no" }
-  notify: restart sshd
+  notify: restart ssh

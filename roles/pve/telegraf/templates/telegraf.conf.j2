@@ -65,7 +65,7 @@
   use_sudo = true
   attributes = true
 
-{% if inventory_hostname == "spmini" or inventory_hostname == "sppve" %}
+{% if inventory_hostname == "spmini" or inventory_hostname == "sppve" or inventory_hostname == "spbleq12" %}
 [[inputs.sensors]]
 {% endif %}
 

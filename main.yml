@@ -12,8 +12,5 @@
 - name: Include gw_wg
   ansible.builtin.import_playbook: gw_wg.yml
 
-- name: Include ha
-  ansible.builtin.import_playbook: ha.yml
-
 - name: Include deploy_homelab
   ansible.builtin.import_playbook: deploy_homelab.yml

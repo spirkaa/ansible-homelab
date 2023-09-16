@@ -21,6 +21,9 @@
 # - name: Include deploy_homelab_svc_mail
 #   ansible.builtin.import_playbook: deploy_homelab_svc_mail.yml
 
+- name: Include deploy_homelab_svc_ha
+  ansible.builtin.import_playbook: deploy_homelab_svc_ha.yml
+
 - name: Include deploy_homelab_svc_stats
   ansible.builtin.import_playbook: deploy_homelab_svc_stats.yml
 
