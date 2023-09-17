@@ -43,7 +43,9 @@ fstab_mergerfs:
 
 nfs_exports:
   - "{{ nfs_export_path }} 10.10.20.0/24(ro,fsid=0,no_subtree_check)"
+  - "{{ nfs_export_path }} 192.168.20.0/24(ro,fsid=0,no_subtree_check)"
   - "{{ nfs_export_path }}/proxmox 10.10.20.0/24(rw,fsid=1,no_root_squash,no_subtree_check)"
+  - "{{ nfs_export_path }}/proxmox 192.168.20.0/24(rw,fsid=1,no_root_squash,no_subtree_check)"
   - "{{ nfs_export_path }}/downloads 10.10.20.0/24(rw,fsid=2,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
   - "{{ nfs_export_path }}/cloud 10.10.20.0/24(rw,fsid=3,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
   - "{{ nfs_export_path }}/src 10.10.20.0/24(rw,fsid=4,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
