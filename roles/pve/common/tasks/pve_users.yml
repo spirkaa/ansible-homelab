@@ -1,0 +1,18 @@
+---
+- name: Get Proxmox users
+  ansible.builtin.command: >
+    pveum user list --output-format json
+  register: _user_check
+  changed_when: false
+
+- name: Configure root email
+  ansible.builtin.command: >
+    pveum user modify root@pam --email {{ inventory__admin_mail }}
+  changed_when: true
+  when: >
+    not (_user_check.stdout |
+    from_json |
+    selectattr('userid', 'equalto', 'root@pam') |
+    selectattr('email', 'defined') |
+    selectattr('email', 'equalto', inventory__admin_mail) |
+    list)

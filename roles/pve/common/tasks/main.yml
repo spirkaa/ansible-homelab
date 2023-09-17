@@ -2,5 +2,8 @@
 - name: Packages tasks
   ansible.builtin.include_tasks: packages.yml
 
+- name: Proxmox users
+  ansible.builtin.include_tasks: pve_users.yml
+
 - name: Proxmox tweaks
   ansible.builtin.include_tasks: pve_tweaks.yml
