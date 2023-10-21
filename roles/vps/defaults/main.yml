@@ -1,6 +1,6 @@
 ---
 vps_wan_interface: eth0
-vps_wg_interface: wg0
+vps_wg_interface: wg1
 vps_wg_config_path: /etc/wireguard
 vps_wg_private_ip: 10.255.255.1
 vps_wg_port: 51820
@@ -30,9 +30,22 @@ vps_wg_peers:
     as: 64647
     pubkey: neMYevYaQuS3xpQPU7yA+c5cmTRXenGhQ7S8EYDLYDw=
     private_ip: 10.255.255.20
+  - name: gw_wg
+    as: 64648
+    pubkey: nilkhfa4oZUahbwAC+8zH8DAuKaolLH/ndAhlLznPFY=
+    private_ip: 10.255.255.30
 
 vps_antifilter_path: /opt/antifilter/antifilter.sh
 vps_bird_config_path: /etc/bird
+
+wg_pia_image: thrnz/docker-wireguard-pia:latest
+wg_pia_user: "{{ inventory__piavpn_user }}"
+wg_pia_pass: "{{ inventory__piavpn_pass }}"
+wg_pia_location: lv
+wg_pia_local_network: ""
+wg_pia_firewall: "0"
+wg_pia_fwd_iface: wg1
+wg_pia_post_up: ip rule add from $(ip -br address show dev eth0 | awk '{print $3}' | awk -F/ '{print $1}') lookup main
 
 # vps_iptables_forward_ports:
 #   - { port: "80", proto: "tcp", comment: "http", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8080 }

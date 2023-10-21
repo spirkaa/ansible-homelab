@@ -20,6 +20,7 @@
       LOCAL_NETWORK: "{{ wg_pia_local_network }}"
       FIREWALL: "{{ wg_pia_firewall }}"
       FWD_IFACE: "{{ wg_pia_fwd_iface }}"
+      POST_UP: "{{ wg_pia_post_up }}"
     volumes:
       - "pia:/pia"
       - "pia-shared:/pia-shared"

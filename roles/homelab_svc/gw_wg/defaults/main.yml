@@ -1,16 +1,22 @@
 ---
 app_path: /docker/gw-wg
 
-wg_pia_image: thrnz/docker-wireguard-pia:latest
 wg_access_server_image: ghcr.io/freifunkmuc/wg-access-server:master
 squid_image: ghcr.io/spirkaa/squid:latest
 
-wg_pia_user: "{{ inventory__piavpn_user }}"
-wg_pia_pass: "{{ inventory__piavpn_pass }}"
-wg_pia_location: lv
-wg_pia_local_network: 192.168.0.0/16
-wg_pia_firewall: "0"
-wg_pia_fwd_iface: eth0
+vps_wg_interface: wg2
+vps_wg_config_path: /etc/wireguard
+vps_wg_private_ip: 10.255.255.30
+vps_wg_endpoint: vps-sd-ams.devmem.ru:51820
+vps_wg_privkey: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          31316162363136393962366633616263343730623937333534326264616363356136343435656132
+          3366396362313131663435306464343839633139386332610a393438643663383830633434396262
+          37323138363861656132353462616637303061326137373432663738363364386635333936376136
+          3064306237323266630a633064376535353737653338323835383064326465393066663431376231
+          30333264366432303366303330653536316331303131653336383033346538363633363639373064
+          6539653134386438626634323564363636363965373262346337
+vps_wg_pubkey: nilkhfa4oZUahbwAC+8zH8DAuKaolLH/ndAhlLznPFY=
 
 wg_access_server_admin_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256

@@ -1,0 +1,10 @@
+[Interface]
+Address = {{ vps_wg_private_ip }}/24
+PrivateKey = {{ vps_wg_privkey }}
+PostUp = range=192.168.0.0/16; iface=$(ip route show default | awk '/default/ {print $5}'); gaddr=$(ip route show default | awk '/default/ {print $3}'); ip route add "$range" via "$gaddr"; iptables -A OUTPUT -o "$iface" --destination "$range" -j ACCEPT; iptables -A INPUT -i "$iface" --source "$range" -j ACCEPT; iptables -t nat -A POSTROUTING -o %i -j MASQUERADE; iptables -A FORWARD -i %i -o "$iface" -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -A FORWARD -i "$iface" -o %i -j ACCEPT
+PreDown = range=192.168.0.0/16; iface=$(ip route show default | awk '/default/ {print $5}'); gaddr=$(ip route show default | awk '/default/ {print $3}'); ip route delete "$range" via "$gaddr"; iptables -D OUTPUT -o "$iface" --destination "$range" -j ACCEPT; iptables -D INPUT -i "$iface" --source "$range" -j ACCEPT; iptables -t nat -D POSTROUTING -o %i -j MASQUERADE; iptables -D FORWARD -i %i -o "$iface" -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -D FORWARD -i "$iface" -o %i -j ACCEPT
+
+[Peer]
+PublicKey = ptgafvY1m2aj4FKFwBCeEVylpPjaynqEYm0tQyR3P2c=
+AllowedIPs = 0.0.0.0/0
+Endpoint = {{ vps_wg_endpoint }}

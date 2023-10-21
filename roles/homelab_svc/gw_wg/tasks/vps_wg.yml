@@ -1,0 +1,16 @@
+---
+- name: wireguard - create directories
+  ansible.builtin.file:
+    path: "{{ vps_wg_config_path }}"
+    state: directory
+    mode: 0700
+  tags: vps_wg
+
+- name: wireguard - copy configuration
+  ansible.builtin.template:
+    src: wireguard.conf.j2
+    dest: "{{ vps_wg_config_path }}/{{ vps_wg_interface }}.conf"
+    mode: 0600
+  no_log: true
+  notify: restart wireguard
+  tags: vps_wg

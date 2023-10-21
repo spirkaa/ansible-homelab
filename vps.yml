@@ -10,11 +10,11 @@
     sshd_authentication_methods: publickey
 
   roles:
-    # - { role: common/apt_sources, tags: [pve, apt_sources] }
     # - { role: common/packages, tags: [vps, packages] }
     # - { role: spirkaa.zsh_prezto, tags: [vps, zsh] }
     # - { role: spirkaa.nano, tags: [vps, nano] }
     # - { role: common/motd, tags: [vps, motd] }
     # - { role: common/sshd, tags: [vps, sshd] }
     # - { role: common/snmp, tags: [vps, snmp] }
+    # - { role: common/docker, tags: [vps, docker] }
     - { role: vps, tags: [vps, vps_specific] }

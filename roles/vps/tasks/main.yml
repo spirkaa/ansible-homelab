@@ -10,3 +10,7 @@
 
 - name: haproxy tasks
   ansible.builtin.include_tasks: haproxy.yml
+
+- name: wg_pia
+  ansible.builtin.include_tasks: wg_pia.yml
+  tags: wg_pia

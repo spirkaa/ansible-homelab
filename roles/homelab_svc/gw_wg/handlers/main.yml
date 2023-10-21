@@ -1,4 +1,10 @@
 ---
+- name: restart wireguard
+  ansible.builtin.service:
+    name: wg-quick@{{ vps_wg_interface }}
+    enabled: true
+    state: restarted
+
 - name: squid-ldap - restart
   community.docker.docker_container:
     name: squid-ldap

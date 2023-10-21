@@ -1,5 +1,10 @@
 [vps]
-vps-sd-msk.devmem.ru ansible_user=root ansible_port=51858
+vps-sd-msk.devmem.ru
+vps-sd-ams.devmem.ru
+
+[vps:vars]
+ansible_user=root
+ansible_port=51858
 
 [routers]
 ubnt-erx-krs

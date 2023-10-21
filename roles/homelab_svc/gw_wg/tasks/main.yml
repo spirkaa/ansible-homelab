@@ -2,9 +2,9 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
-- name: wg_pia
-  ansible.builtin.include_tasks: wg_pia.yml
-  tags: wg_pia
+- name: vps_wg
+  ansible.builtin.include_tasks: vps_wg.yml
+  tags: vps_wg
 
 - name: wg_access_server
   ansible.builtin.include_tasks: wg_access_server.yml
