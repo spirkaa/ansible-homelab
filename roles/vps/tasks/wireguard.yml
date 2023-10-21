@@ -19,13 +19,33 @@
   no_log: true
   notify: restart wireguard
 
-- name: wireguard - configure iptables - forwarding
+- name: wireguard - configure iptables - accept forward
+  ansible.builtin.iptables:
+    chain: FORWARD
+    policy: ACCEPT
+  notify: save iptables
+
+- name: wireguard - configure iptables - forwarding from {{ vps_wan_interface }} to {{ vps_wg_interface }}
+  ansible.builtin.iptables:
+    chain: FORWARD
+    in_interface: "{{ vps_wan_interface }}"
+    out_interface: "{{ vps_wg_interface }}"
+    jump: ACCEPT
+    action: insert
+    comment: "forwarding from {{ vps_wan_interface }} to {{ vps_wg_interface }}"
+  notify: save iptables
+
+- name: wireguard - configure iptables - forwarding from {{ vps_wg_interface }} to {{ vps_wan_interface }}
   ansible.builtin.iptables:
     chain: FORWARD
     in_interface: "{{ vps_wg_interface }}"
+    out_interface: "{{ vps_wan_interface }}"
+    ctstate:
+      - RELATED
+      - ESTABLISHED
     jump: ACCEPT
     action: insert
-    comment: "forwarding for {{ vps_wg_interface }}"
+    comment: "forwarding from {{ vps_wg_interface }} to {{ vps_wan_interface }}"
   notify: save iptables
 
 - name: wireguard - configure iptables - masquerade
