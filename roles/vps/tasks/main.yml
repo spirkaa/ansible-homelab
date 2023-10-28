@@ -13,4 +13,3 @@
 
 - name: wg_pia
   ansible.builtin.include_tasks: wg_pia.yml
-  tags: wg_pia
