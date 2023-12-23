@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: grocy
     image: "{{ grocy_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "9283:80"
@@ -20,6 +21,7 @@
   community.docker.docker_container:
     name: barcodebuddy
     image: "{{ barcodebuddy_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "9284:80"

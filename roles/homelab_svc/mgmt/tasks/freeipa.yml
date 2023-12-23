@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: phpldapadmin
     image: "{{ phpldapadmin_image }}"
+    image_name_mismatch: recreate
     pull: true
     env:
       PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'{{ inventory__ldap_domain }}': [{'server': [{'tls': 'true'},{'hide_noaccess_base': 'true'}]}, {'login': [{'bind_id': '{{ phpldapadmin_bind_id }}'},{'timeout': '60'}]}, {'appearance': [{'open_tree': 'true'}]}]}]"
@@ -34,6 +35,7 @@
   community.docker.docker_container:
     name: freeipa
     image: "{{ freeipa_image }}"
+    image_name_mismatch: recreate
     pull: true
     hostname: "{{ inventory__ldap_domain }}"
     ports:

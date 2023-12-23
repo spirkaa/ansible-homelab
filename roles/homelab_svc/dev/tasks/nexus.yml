@@ -37,6 +37,7 @@
   community.docker.docker_container:
     name: nexus
     image: "{{ nexus_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "8081:8081"

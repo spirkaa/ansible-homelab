@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: wg-access-server
     image: "{{ wg_access_server_image }}"
+    image_name_mismatch: recreate
     pull: true
     env:
       WG_LOG_LEVEL: "info"

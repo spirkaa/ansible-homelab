@@ -20,6 +20,7 @@
   community.docker.docker_container:
     name: mosquitto
     image: "{{ mosquitto_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "1883:1883"

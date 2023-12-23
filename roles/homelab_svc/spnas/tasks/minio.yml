@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: minio
     image: "{{ minio_image }}"
+    image_name_mismatch: recreate
     pull: true
     user: 1000:1000
     command: server /data --console-address :9001

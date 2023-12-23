@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: jellyfin
     image: "{{ jellyfin_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "8096:8096"

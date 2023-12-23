@@ -24,6 +24,7 @@
   community.docker.docker_container:
     name: homeassistant
     image: "{{ homeassistant_image }}"
+    image_name_mismatch: recreate
     pull: true
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

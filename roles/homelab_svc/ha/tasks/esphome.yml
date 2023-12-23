@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: esphome
     image: "{{ esphome_image }}"
+    image_name_mismatch: recreate
     pull: true
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

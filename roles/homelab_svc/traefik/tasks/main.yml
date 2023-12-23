@@ -40,6 +40,7 @@
   community.docker.docker_container:
     name: traefik
     image: "{{ traefik_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "{{ traefik_web_port }}:80"

@@ -14,6 +14,7 @@
       community.docker.docker_container:
         name: wg-pia
         image: "{{ wg_pia_image }}"
+        image_name_mismatch: recreate
         pull: true
         env:
           LOC: "{{ wg_pia_location }}"

@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: plex
     image: "{{ plex_image }}"
+    image_name_mismatch: recreate
     pull: true
     env:
       PUID: "{{ puid }}"

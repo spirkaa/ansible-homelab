@@ -18,6 +18,7 @@
   community.docker.docker_container:
     name: influxdb
     image: "{{ influxdb_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "2003:2003"

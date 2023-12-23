@@ -64,6 +64,7 @@
   community.docker.docker_container:
     name: gitea-db
     image: "{{ gitea_db_image }}"
+    image_name_mismatch: recreate
     pull: true
     env:
       POSTGRES_USER: "{{ gitea_db_user }}"
@@ -83,6 +84,7 @@
   community.docker.docker_container:
     name: gitea
     image: "{{ gitea_image }}"
+    image_name_mismatch: recreate
     pull: true
     ports:
       - "3000:3000"

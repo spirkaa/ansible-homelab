@@ -33,6 +33,7 @@
   community.docker.docker_container:
     name: jenkins
     image: "{{ jenkins_image }}"
+    image_name_mismatch: recreate
     pull: true
     user: root
     ports:

@@ -18,6 +18,7 @@
   community.docker.docker_container:
     name: samba
     image: "{{ samba_image }}"
+    image_name_mismatch: recreate
     pull: true
     env:
       DEBUG_LEVEL: "0"
