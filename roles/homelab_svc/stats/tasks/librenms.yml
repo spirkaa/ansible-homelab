@@ -3,6 +3,7 @@
   community.docker.docker_container:
     name: librenms-db
     image: "{{ librenms_db_image }}"
+    image_name_mismatch: recreate
     pull: true
     env:
       MYSQL_ROOT_PASSWORD: "{{ librenms_db_root_pass }}"
@@ -46,6 +47,7 @@
   community.docker.docker_container:
     name: librenms
     image: "{{ librenms_image }}"
+    image_name_mismatch: recreate
     pull: true
     env:
       TZ: "{{ tz }}"
