@@ -34,6 +34,10 @@ vps_wg_peers:
     as: 64648
     pubkey: nilkhfa4oZUahbwAC+8zH8DAuKaolLH/ndAhlLznPFY=
     private_ip: 10.255.255.30
+  - name: deluge
+    as: 64649
+    pubkey: bouK5la7YRtwplcnzEBNoVktaIVwWbCKDFaxvtDK6jw=
+    private_ip: 10.255.255.40
 
 vps_antifilter_path: /opt/antifilter/antifilter.sh
 vps_bird_config_path: /etc/bird
