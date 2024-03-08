@@ -7,7 +7,7 @@ tz: "{{ inventory__docker_tz }}"
 vault_image: vault:latest
 vaultwarden_image: vaultwarden/server:alpine
 vaultwarden_ldap_image: vividboarder/vaultwarden_ldap:alpine
-freeipa_image: freeipa/freeipa-server:fedora-37-4.10.1
+freeipa_image: freeipa/freeipa-server:fedora-39-4.11.1
 heimdall_image: linuxserver/heimdall:latest
 phpldapadmin_image: osixia/phpldapadmin:0.9.0
 portainer_image: portainer/portainer-ce:latest
