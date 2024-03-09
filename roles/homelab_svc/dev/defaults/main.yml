@@ -7,7 +7,7 @@ tz: "{{ inventory__docker_tz }}"
 code_image: linuxserver/code-server:4.4.0-ls121
 drone_image: drone/drone:2.11
 drone_runner_docker_image: drone/drone-runner-docker:latest
-gitea_db_image: postgres:14-alpine
+gitea_db_image: postgres:16-alpine
 gitea_image: gitea/gitea:nightly
 jenkins_image: git.devmem.ru/projects/jenkins:latest
 registry_image: registry:2.8
