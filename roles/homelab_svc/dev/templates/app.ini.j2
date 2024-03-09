@@ -1,7 +1,6 @@
 APP_NAME = Gitea
 RUN_USER = git
 RUN_MODE = prod
-WORK_PATH = /app/gitea
 
 [server]
 DOMAIN = {{ gitea_domain }}
@@ -35,7 +34,7 @@ REVERSE_PROXY_LIMIT = 1
 REVERSE_PROXY_TRUSTED_PROXIES = 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 
 [oauth2]
-ENABLE = true
+ENABLED = true
 JWT_SECRET = {{ gitea_jwt_secret }}
 
 [log]
