@@ -8,5 +8,6 @@ skip_list:
   - run-once[task]
   - role-name[path]
   - yaml
+  - var-naming[no-role-prefix]
 exclude_paths:
   - .pre-commit-config.yaml
