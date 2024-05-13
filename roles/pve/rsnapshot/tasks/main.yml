@@ -4,32 +4,6 @@
     state: present
     name:
       - rsnapshot
-  when: ansible_distribution == "Debian" and ansible_distribution_version != "11"
-
-- name: Install package (Debian 11) (block)
-  when: ansible_distribution == "Debian" and ansible_distribution_version == "11"
-  block:
-    - name: Check whether rsnapshot is installed
-      ansible.builtin.command: >
-        dpkg-query -W rsnapshot
-      ignore_errors: true
-      register: rsnapshot_is_installed
-      changed_when: rsnapshot_is_installed.rc != 0
-
-    - name: Download and install package
-      when: rsnapshot_version not in rsnapshot_is_installed.stdout
-      block:
-        - name: Download package
-          ansible.builtin.get_url:
-            url: "{{ rsnapshot_package_url }}"
-            dest: /tmp/{{ rsnapshot_package_url | basename }}
-            checksum: "{{ rsnapshot_checksum }}"
-            mode: 0644
-
-        - name: Install package (Debian 11)
-          ansible.builtin.apt:
-            deb: /tmp/{{ rsnapshot_package_url | basename }}
-            state: present
 
 - name: Copy configuration
   ansible.builtin.template:
