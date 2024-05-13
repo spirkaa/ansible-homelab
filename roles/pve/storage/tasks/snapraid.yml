@@ -1,24 +1,9 @@
 ---
-- name: snapraid - check if installed
-  ansible.builtin.command: >
-    dpkg-query -W snapraid
-  ignore_errors: true
-  register: snapraid_is_installed
-  changed_when: snapraid_is_installed.rc != 0
-
-- name: snapraid - download and install package
-  when: snapraid_version not in snapraid_is_installed.stdout
-  block:
-    - name: snapraid - copy package
-      ansible.builtin.copy:
-        src: files/{{ snapraid_package_name }}
-        dest: /tmp
-        mode: 0644
-
-    - name: snapraid - install package
-      ansible.builtin.apt:
-        deb: /tmp/{{ snapraid_package_name }}
-        state: present
+- name: snapraid - install package
+  ansible.builtin.package:
+    state: present
+    name:
+      - snapraid
 
 - name: snapraid - copy configuration
   ansible.builtin.template:

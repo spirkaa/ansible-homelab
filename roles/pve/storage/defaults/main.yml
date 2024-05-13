@@ -54,10 +54,7 @@ mergerfs_version: "2.40.2"
 mergerfs_package_name: mergerfs_{{ mergerfs_version }}.debian-bookworm_amd64.deb
 mergerfs_package_url: https://github.com/trapexit/mergerfs/releases/download/{{ mergerfs_version }}/{{ mergerfs_package_name }}
 
-snapraid_version: "12.2"
-snapraid_package_name: snapraid_{{ snapraid_version }}-1_amd64.deb
-
-snapraid_bin_path: /usr/local/bin/snapraid
+snapraid_bin_path: /usr/bin/snapraid
 snapraid_config_path: /etc/snapraid.conf
 snapraid_delete_threshold: 50
 snapraid_touch: true
