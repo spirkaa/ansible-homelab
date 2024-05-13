@@ -50,8 +50,8 @@ nfs_exports:
   - "{{ nfs_export_path }}/cloud 10.10.20.0/24(rw,fsid=3,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
   - "{{ nfs_export_path }}/src 10.10.20.0/24(rw,fsid=4,root_squash,all_squash,no_subtree_check,anonuid=1000,anongid=1000)"
 
-mergerfs_version: "2.35.1"
-mergerfs_package_name: mergerfs_{{ mergerfs_version }}.debian-bullseye_amd64.deb
+mergerfs_version: "2.40.2"
+mergerfs_package_name: mergerfs_{{ mergerfs_version }}.debian-bookworm_amd64.deb
 mergerfs_package_url: https://github.com/trapexit/mergerfs/releases/download/{{ mergerfs_version }}/{{ mergerfs_package_name }}
 
 snapraid_version: "12.2"
