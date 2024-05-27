@@ -428,3 +428,5 @@ pip-selfcheck.json
 plugins/
 roles_galaxy/
 .vault_password
+
+.vscode/
