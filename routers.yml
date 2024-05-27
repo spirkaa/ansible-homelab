@@ -1,0 +1,60 @@
+---
+- name: Update routers config
+  hosts: routers
+  strategy: linear  # because of mitogen_linear in ansible.cfg
+  gather_facts: false
+
+  tasks:
+    # - name: show configuration commands
+    #   community.network.edgeos_command:
+    #     commands: show configuration commands | no-more
+
+    - name: backup configs
+      community.network.edgeos_config:
+        backup: true
+        backup_options:
+          dir_path: backup
+
+    # - name: show ipset
+    #   community.network.edgeos_command:
+    #     commands: sudo ipset -L unblock_russia
+
+    # заменить set на delete для удаления записи
+    - name: configure
+      community.network.edgeos_config:
+        lines:
+          - set firewall group address-group unblock_russia description 'ipset group for domain-based selective routing'
+          - set service dns forwarding options ipset=/clamav.net/unblock_russia
+          - set service dns forwarding options ipset=/releases.hashicorp.com/unblock_russia
+          - set service dns forwarding options ipset=/registry.terraform.io/unblock_russia
+          - set service dns forwarding options ipset=/bigfangroup.org/unblock_russia
+          - set service dns forwarding options ipset=/bitru.org/unblock_russia
+          - set service dns forwarding options ipset=/kinozal.tv/unblock_russia
+          - set service dns forwarding options ipset=/riperam.org/unblock_russia
+          - set service dns forwarding options ipset=/rutracker.org/unblock_russia
+          - set service dns forwarding options ipset=/underver.se/unblock_russia
+          - set service dns forwarding options ipset=/sonarr.tv/unblock_russia
+          - set service dns forwarding options ipset=/radarr.video/unblock_russia
+          - set service dns forwarding options ipset=/lidarr.audio/unblock_russia
+          - set service dns forwarding options ipset=/prowlarr.com/unblock_russia
+          - set service dns forwarding options ipset=/servarr.com/unblock_russia
+          - set service dns forwarding options ipset=/notifiarr.com/unblock_russia
+          - set service dns forwarding options ipset=/notifiarr.wiki/unblock_russia
+          - set service dns forwarding options ipset=/themoviedb.org/unblock_russia
+          - set service dns forwarding options ipset=/tmdb.org/unblock_russia
+          - set service dns forwarding options ipset=/devops.com/unblock_russia
+          - set service dns forwarding options ipset=/sysdig.com/unblock_russia
+          - set service dns forwarding options ipset=/healthchecks.io/unblock_russia
+          - set service dns forwarding options ipset=/hc-ping.com/unblock_russia
+          - set service dns forwarding options ipset=/hchk.io/unblock_russia
+          - set service dns forwarding options ipset=/mattermost.com/unblock_russia
+          - set service dns forwarding options ipset=/openai.com/unblock_russia
+          - set service dns forwarding options ipset=/ui.com/unblock_russia
+          - set service dns forwarding options ipset=/docs.gitlab.com/unblock_russia
+          - set service dns forwarding options ipset=/gitlab.io/unblock_russia
+          - set service dns forwarding options ipset=/rwth-aachen.de/unblock_russia
+        save: true
+
+    - name: clear dns forwarding cache
+      community.network.edgeos_command:
+        commands: sudo /opt/vyatta/bin/sudo-users/vyatta-op-dns-forwarding.pl --clear-cache
