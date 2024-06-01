@@ -53,6 +53,9 @@
           - set service dns forwarding options ipset=/docs.gitlab.com/unblock_russia
           - set service dns forwarding options ipset=/gitlab.io/unblock_russia
           - set service dns forwarding options ipset=/rwth-aachen.de/unblock_russia
+          - set service dns forwarding options ipset=/johnvansickle.com/unblock_russia
+          - set service dns forwarding options ipset=/docker.com/unblock_russia
+          - set service dns forwarding options ipset=/docker.io/unblock_russia
         save: true
 
     - name: clear dns forwarding cache
