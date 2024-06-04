@@ -10,7 +10,7 @@ rclone_jobs:
     type: rcat
     src: $(find /mnt/tank0/ds0/minio/.zfs/snapshot -maxdepth 1 -type d | grep zfs-auto-snap_daily-"$(date --iso="date")")
     dest: "gdrive-spnas-minio:/backup/zfs-auto-snap_daily.tar.zst"
-    exclude: "--exclude=data/loki --exclude=data/.minio.sys/buckets/loki"
+    exclude: "--exclude=data/loki --exclude=data/.minio.sys/buckets/loki --exclude=data/thanos --exclude=data/.minio.sys/buckets/thanos --exclude=data/signoz --exclude=data/.minio.sys/buckets/signoz"
     post_cmd: umount /mnt/tank0/ds0/minio/.zfs/snapshot/* > /dev/null 2>&1
     weekday: "*"
     hour: "08"
