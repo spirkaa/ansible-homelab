@@ -93,23 +93,8 @@ binary_sensor:
           {% raw %}{{ is_state('binary_sensor.lumi_lumi_sensor_motion_3bf39503_ias_zone', 'on')
           or is_state('binary_sensor.lumi_lumi_sensor_motion_ias_zone', 'on') }}{% endraw %}
 
-weather:
-  - platform: gismeteo
-
-sensor:
-  - platform: gismeteo
-    monitored_conditions:
-      - weather
-      - temperature
-      - wind_speed
-      - wind_bearing
-      - humidity
-      - pressure
-      - clouds
-      - rain
-      - snow
-      - storm
-      - geomagnetic
+gismeteo:
+  vlublino:
 
 yandex_smart_home:
   notifier:
