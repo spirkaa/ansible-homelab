@@ -36,23 +36,6 @@
 
 FILENAME=$(basename "$0")
 
-#### rclone sync options
-
-SRC={{ item.src }}
-DEST={{ item.dest }}
-EXCLUDE='{{ item.exclude | default('', true) }}'
-
-MINAGE=15m
-TRANSFERS=32
-CHECKERS=32
-
-# ---- Location of job log [will be rotated with savelog]
-LOGFILE="/var/log/$FILENAME.log"
-LOGS='-v --log-file='$LOGFILE
-
-# ---- Location of cron log
-CRONLOG=/var/log/rclone-jobs.log
-
 ###################################################
 ## Locking Boilerplate from https://gist.github.com/przemoc/571091
 ## Included under MIT License:
@@ -65,54 +48,86 @@ CRONLOG=/var/log/rclone-jobs.log
 #
 # Lockable script boilerplate
 
-### HEADER ###
-
 LOCKFILE="/tmp/$FILENAME"
 LOCKFD=99
 
 # PRIVATE
-_lock()             { flock -$1 $LOCKFD; }
-_no_more_locking()  { _lock u; _lock xn && rm -f $LOCKFILE; }
-_prepare_locking()  { eval "exec $LOCKFD>\"$LOCKFILE\""; trap _no_more_locking EXIT; }
+_lock() { flock -$1 $LOCKFD; }
+_no_more_locking() {
+  _lock u
+  _lock xn && rm -f $LOCKFILE
+}
+_prepare_locking() {
+  eval "exec $LOCKFD>\"$LOCKFILE\""
+  trap _no_more_locking EXIT
+}
 
 # ON START
 _prepare_locking
 
 # PUBLIC
-exlock_now()        { _lock xn; }  # obtain an exclusive lock immediately or fail
-exlock()            { _lock x; }   # obtain an exclusive lock
-shlock()            { _lock s; }   # obtain a shared lock
-unlock()            { _lock u; }   # drop a lock
+exlock_now() { _lock xn; } # obtain an exclusive lock immediately or fail
+exlock() { _lock x; }      # obtain an exclusive lock
+shlock() { _lock s; }      # obtain a shared lock
+unlock() { _lock u; }      # drop a lock
 
 ###################################################
 # End of locking code from Pawelczyk
 ###################################################
 
+# location of job log
+LOGFILE="/var/log/$FILENAME.log"
+
+# lLocation of cron log
+CRONLOG=/var/log/rclone-jobs.log
+
+# create log entry
+logger() {
+  echo $(date -u)" | $FILENAME | $@" >>$CRONLOG
+}
+
 # make a log entry if we exit because locked
-exit_on_lock()      { echo $(date -u)" | $FILENAME already running." >> $CRONLOG; exit 1; }
+exit_on_lock() {
+  logger "already running"
+  exit 1
+}
 
-# Now check for lock
+logger "started"
+
+# obtain lock
 exlock_now || exit_on_lock
-# We now have the lock.
 
-# Rotate logs
-savelog -n -c 7 $LOGFILE >> $CRONLOG
+# rotate logs
+savelog -n -c 7 $LOGFILE >/dev/null 2>&1 && logger "rotated $LOGFILE"
 
-# Log startup
-echo $(date)" | starting $FILENAME..." >> $CRONLOG
+# run rclone
+SRC={{ item.src }}
+DEST={{ item.dest }}
+EXCLUDE='{{ item.exclude | default('', true) }}'
+LOG_ARGS='-v --log-file='$LOGFILE
+MINAGE=15m
+TRANSFERS=32
+CHECKERS=32
 
-# Now do the work!
 {% if item.type == "sync" %}
-rclone sync $SRC $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS --min-age $MINAGE --delete-excluded $EXCLUDE --drive-stop-on-upload-limit
+rclone sync $SRC $DEST \
+  $LOG_ARGS \
+  --transfers $TRANSFERS \
+  --checkers $CHECKERS \
+  --min-age $MINAGE \
+  --delete-excluded $EXCLUDE \
+  --drive-stop-on-upload-limit
 {% elif item.type == "rcat" %}
-tar -I "pzstd -p 4" -cf - $EXCLUDE --directory=$SRC . | rclone rcat $DEST $LOGS --transfers $TRANSFERS --checkers $CHECKERS --drive-stop-on-upload-limit
+tar -I "pzstd -p 4" -cf - $EXCLUDE --directory=$SRC . |
+  rclone rcat $DEST \
+    $LOG_ARGS \
+    --transfers $TRANSFERS \
+    --checkers $CHECKERS \
+    --drive-stop-on-upload-limit
 {% endif %}
 {{ item.post_cmd | default('', true) }}
 
-# log success
-echo $(date)" | completed $FILENAME." >> $CRONLOG
+logger "finished"
 
-# release the lock
+# release lock
 unlock
-
-exit
