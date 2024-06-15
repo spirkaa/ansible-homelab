@@ -19,18 +19,18 @@ rclone_jobs:
     src: /mnt/tank0/ds0/proxmox/dump
     dest: "gdrive-spnas-proxmox:"
     weekday: "*"
-    hour: "03"
+    hour: "05"
   - name: rclone-sync-downloads
     type: sync
     src: /mnt/storage/downloads
     dest: "gdrive-spnas-downloads:"
     exclude: "--exclude incomplete/** --exclude tmp/**"
     weekday: "2,5"
-    hour: "05"
+    hour: "07"
   - name: rclone-sync-cloud
     type: sync
     src: /mnt/tank0/ds0/cloud
     dest: "gdrive-spnas-cloud:"
     exclude: "--exclude .dropbox.cache/** --exclude data/appdata_ocadc83b19e7/preview/**"
     weekday: "3,6"
-    hour: "05"
+    hour: "07"
