@@ -4,15 +4,16 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-code_image: linuxserver/code-server:4.4.0-ls121
-drone_image: drone/drone:2.11
-drone_runner_docker_image: drone/drone-runner-docker:latest
 gitea_db_image: postgres:16-alpine
 gitea_image: gitea/gitea:nightly
 jenkins_image: git.devmem.ru/projects/jenkins:latest
+nexus_image: sonatype/nexus3:3.69.0
+
+code_image: linuxserver/code-server:4.4.0-ls121
+drone_image: drone/drone:2.11
+drone_runner_docker_image: drone/drone-runner-docker:latest
 registry_image: registry:2.8
 registry_ui_image: joxit/docker-registry-ui:2.2
-nexus_image: sonatype/nexus3:3.66.0
 
 app_network_name: "{{ inventory__docker_network }}"
 app_base_domain: "{{ inventory__homelab_domain }}"
