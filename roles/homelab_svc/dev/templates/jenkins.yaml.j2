@@ -41,40 +41,39 @@ jenkins:
   - kubernetes:
       containerCap: 3
       containerCapStr: "3"
-      credentialsId: "k8s-jenkins-agent-sa"
+      credentialsId: k8s-jenkins-agent-sa
       jenkinsUrl: "https://jenkins.home.devmem.ru"
-      name: "k8s"
-      namespace: "jenkins"
-      podRetention: "onFailure"
+      name: k8s
+      namespace: jenkins
+      podRetention: onFailure
       podLabels:
-      - key: "jenkins"
-        value: "inbound-agent"
+      - key: jenkins
+        value: inbound-agent
+      - key: app
+        value: jenkins-agent-dind
       serverCertificate: |-
         {{ jenkins_k8s_cert | string | indent(width=8) }}
       serverUrl: "https://192.168.13.254:6443"
       webSocket: true
       templates:
-      - name: "jenkins-agent-dind"
-        nodeUsageMode: "NORMAL"
-        yamlMergeStrategy: "override"
+      - name: jenkins-agent-dind
+        nodeUsageMode: NORMAL
+        yamlMergeStrategy: override
         yaml: |-
           apiVersion: v1
           kind: Pod
           spec:
             containers:
             - name: jnlp
-              image: git.devmem.ru/projects/jenkins-agent-dind:latest
+              image: ghcr.io/felipecrs/jenkins-agent-dind:latest
+              imagePullPolicy: Always
               securityContext:
                 privileged: true
               workingDir: /home/jenkins/agent
               volumeMounts:
               - mountPath: /home/jenkins/agent
                 name: workspace-volume
-              - mountPath: /lib/modules
-                name: lib-modules
-                readOnly: true
-              - mountPath: /sys/fs/cgroup
-                name: sys-fs-cgroup
+              terminationMessagePolicy: FallbackToLogsOnError
             imagePullSecrets:
             - name: regcred
             hostNetwork: false
@@ -86,14 +85,6 @@ jenkins:
             volumes:
             - name: workspace-volume
               emptyDir: {}
-            - name: lib-modules
-              hostPath:
-                path: /lib/modules
-                type: Directory
-            - name: sys-fs-cgroup
-              hostPath:
-                path: /sys/fs/cgroup
-                type: Directory
             affinity:
               nodeAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
