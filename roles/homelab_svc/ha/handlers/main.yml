@@ -5,3 +5,10 @@
     state: started
     restart: true
   when: not homeassistant_start.changed
+
+- name: esphome - restart
+  community.docker.docker_container:
+    name: esphome
+    state: started
+    restart: true
+  when: not esphome_start.changed

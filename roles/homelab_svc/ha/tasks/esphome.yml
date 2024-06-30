@@ -1,4 +1,22 @@
 ---
+- name: esphome - create dir
+  ansible.builtin.file:
+    path: "{{ esphome_config_path }}"
+    state: directory
+    recurse: true
+  tags: esphome
+
+- name: esphome - copy files
+  ansible.builtin.template:
+    src: esphome/{{ item.src }}
+    dest: "{{ esphome_config_path }}/{{ item.dest }}"
+    mode: 0644
+  loop:
+    - { src: ble-tracker.yaml.j2, dest: ble-tracker.yaml }
+    - { src: secrets.yaml.j2, dest: secrets.yaml }
+  notify: esphome - restart
+  tags: esphome
+
 - name: esphome - start
   community.docker.docker_container:
     name: esphome
@@ -7,8 +25,9 @@
     pull: true
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "{{ app_path }}/esphome/config:/config"
+      - "{{ esphome_config_path }}:/config"
     network_mode: host
     restart_policy: unless-stopped
     state: started
+  register: esphome_start
   tags: esphome

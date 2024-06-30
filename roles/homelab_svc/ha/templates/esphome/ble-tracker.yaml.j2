@@ -1,0 +1,72 @@
+esphome:
+  name: ble-tracker
+  platform: ESP32
+  board: lolin32
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: !secret wifi_hotspot_ssid
+    password: !secret wifi_hotspot_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  platform: esphome
+
+web_server:
+  port: 80
+
+esp32_ble_tracker:
+  scan_parameters:
+    active: false
+
+sensor:
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:A8:EF:A4
+    bindkey: eef418daf699a0c188f3bfd17e4565d9
+    temperature:
+      name: Living Room Temperature
+    humidity:
+      name: Living Room Humidity
+    battery_level:
+      name: Living Room Battery Level
+
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:75:3C:08
+    bindkey: eef418daf699a0c188f3bfd17e4565d9
+    temperature:
+      name: Bedroom Temperature
+    humidity:
+      name: Bedroom Humidity
+    battery_level:
+      name: Bedroom Battery Level
+
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:22:EB:24
+    bindkey: eef418daf699a0c188f3bfd17e4565d9
+    temperature:
+      name: Kitchen Temperature
+    humidity:
+      name: Kitchen Humidity
+    battery_level:
+      name: Kitchen Battery Level
+
+  - platform: xiaomi_lywsd03mmc
+    mac_address: A4:C1:38:E2:D6:44
+    bindkey: eef418daf699a0c188f3bfd17e4565d9
+    temperature:
+      name: Bathroom Temperature
+    humidity:
+      name: Bathroom Humidity
+    battery_level:
+      name: Bathroom Battery Level
