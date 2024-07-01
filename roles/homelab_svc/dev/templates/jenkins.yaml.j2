@@ -69,10 +69,14 @@ jenkins:
               imagePullPolicy: Always
               securityContext:
                 privileged: true
+                runAsUser: 0
+                runAsGroup: 0
               workingDir: /home/jenkins/agent
               volumeMounts:
               - mountPath: /home/jenkins/agent
                 name: workspace-volume
+              - mountPath: /tmp
+                name: tmp
               terminationMessagePolicy: FallbackToLogsOnError
             imagePullSecrets:
             - name: regcred
@@ -84,6 +88,8 @@ jenkins:
             terminationGracePeriodSeconds: 60
             volumes:
             - name: workspace-volume
+              emptyDir: {}
+            - name: tmp
               emptyDir: {}
             affinity:
               nodeAffinity:

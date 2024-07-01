@@ -45,7 +45,11 @@ pipeline {
         }
         cache(path: "/tmp/.cache/pre-commit", key: "pre-commit-${hashFiles('**/.pre-commit-config.yaml')}") {
           sh '''#!/bin/bash
-            PRE_COMMIT_HOME=/tmp/.cache/pre-commit pre-commit run --all-files --verbose --color always
+            export PRE_COMMIT_HOME=/tmp/.cache/pre-commit
+            pre-commit run --all-files --show-diff-on-failure --verbose --color always || {
+              cat ${PRE_COMMIT_HOME}/pre-commit.log 2>/dev/null || true
+              exit 1
+            }
           '''
         }
       }
