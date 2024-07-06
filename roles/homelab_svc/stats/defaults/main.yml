@@ -4,12 +4,13 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-grafana_image: grafana/grafana:latest
-influxdb_image: influxdb:1.8-alpine
 librenms_db_image: yobasystems/alpine-mariadb:10.11
-librenms_image: jarischaefer/docker-librenms:24.1.0
-loki_image: grafana/loki:latest
+librenms_image: jarischaefer/docker-librenms:24.6.0
+influxdb_image: influxdb:1.8-alpine
 mosquitto_image: eclipse-mosquitto:latest
+
+grafana_image: grafana/grafana:latest
+loki_image: grafana/loki:latest
 prometheus_image: prom/prometheus:latest
 
 app_network_name: "{{ inventory__docker_network }}"
