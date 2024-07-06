@@ -31,7 +31,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.influxdb.rule: "HostRegexp(`influxdb{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.influxdb.rule: "HostRegexp(`influxdb(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.influxdb.loadbalancer.server.port: "8086"
       traefik.http.routers.influxdb.entrypoints: "websecure"
       traefik.http.routers.influxdb.tls: "true"

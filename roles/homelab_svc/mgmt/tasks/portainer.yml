@@ -16,7 +16,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.portainer.rule: "HostRegexp(`portainer{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.portainer.rule: "HostRegexp(`portainer(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.portainer.loadbalancer.server.port: "9000"
       traefik.http.routers.portainer.entrypoints: "websecure"
       traefik.http.routers.portainer.tls: "true"

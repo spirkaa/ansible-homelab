@@ -16,7 +16,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.vault.rule: "HostRegexp(`vault{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.vault.rule: "HostRegexp(`vault(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.vault.loadbalancer.server.port: "8200"
       traefik.http.routers.vault.entrypoints: "websecure"
       traefik.http.routers.vault.tls: "true"

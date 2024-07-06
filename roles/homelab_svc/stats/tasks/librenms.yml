@@ -71,7 +71,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.librenms.rule: "HostRegexp(`nms{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.librenms.rule: "HostRegexp(`nms(.{{ app_base_domain }})?`)"
       traefik.http.routers.librenms.entrypoints: "websecure"
       traefik.http.routers.librenms.tls: "true"
     restart_policy: unless-stopped

@@ -48,7 +48,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.nexus.rule: "HostRegexp(`nexus{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.nexus.rule: "HostRegexp(`nexus(.{{ app_base_domain }})?`)"
       traefik.http.services.nexus.loadbalancer.server.port: "8081"
       traefik.http.routers.nexus.entrypoints: "websecure"
       traefik.http.routers.nexus.tls: "true"

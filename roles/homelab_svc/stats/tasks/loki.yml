@@ -33,7 +33,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.loki.rule: "HostRegexp(`loki{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.loki.rule: "HostRegexp(`loki(.{{ app_base_domain }})?`)"
       traefik.http.services.loki.loadbalancer.server.port: "3100"
       traefik.http.routers.loki.entrypoints: "websecure"
       traefik.http.routers.loki.tls: "true"

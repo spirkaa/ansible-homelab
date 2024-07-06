@@ -67,7 +67,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.grafana.rule: "HostRegexp(`grafana{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.grafana.rule: "HostRegexp(`grafana(.{{ app_base_domain }})?`)"
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
       traefik.http.routers.grafana.entrypoints: "websecure"
       traefik.http.routers.grafana.tls: "true"

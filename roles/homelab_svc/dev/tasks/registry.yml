@@ -50,7 +50,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.registry-ui.rule: "HostRegexp(`registry{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.registry-ui.rule: "HostRegexp(`registry(.{{ app_base_domain }})?`)"
       traefik.http.services.registry-ui.loadbalancer.server.port: "80"
       traefik.http.routers.registry-ui.entrypoints: "websecure"
       traefik.http.routers.registry-ui.tls: "true"

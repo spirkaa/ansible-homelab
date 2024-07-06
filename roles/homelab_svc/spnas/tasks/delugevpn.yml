@@ -40,7 +40,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.delugevpn.rule: "HostRegexp(`deluge{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.delugevpn.rule: "HostRegexp(`deluge(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.delugevpn.loadbalancer.server.port: "8112"
       traefik.http.routers.delugevpn.entrypoints: "websecure"
       traefik.http.routers.delugevpn.tls: "true"

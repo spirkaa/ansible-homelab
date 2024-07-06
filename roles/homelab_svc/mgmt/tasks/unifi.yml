@@ -24,7 +24,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.unifi.rule: "HostRegexp(`unifi{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.unifi.rule: "HostRegexp(`unifi(.{{ inventory__homelab_domain }})?`)"
       traefik.http.routers.unifi.entrypoints: "websecure"
       traefik.http.routers.unifi.tls: "true"
       traefik.http.services.unifi.loadbalancer.server.port: "8443"

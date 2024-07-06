@@ -16,7 +16,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.sonarr.rule: "HostRegexp(`sonarr{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.sonarr.rule: "HostRegexp(`sonarr(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.sonarr.loadbalancer.server.port: "8989"
       traefik.http.routers.sonarr.entrypoints: "websecure"
       traefik.http.routers.sonarr.tls: "true"

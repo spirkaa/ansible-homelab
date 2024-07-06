@@ -28,7 +28,7 @@
     labels:
       traefik.enable: "true"
       traefik.docker.network: "{{ app_network_name }}"
-      traefik.http.routers.cadvisor.rule: "HostRegexp(`{{ inventory_hostname_short }}{fqdn:(.{{ app_base_domain }})?}`) && PathPrefix(`/metrics`)"
+      traefik.http.routers.cadvisor.rule: "HostRegexp(`{{ inventory_hostname_short }}(.{{ app_base_domain }})?`) && PathPrefix(`/metrics`)"
       traefik.http.services.cadvisor.loadbalancer.server.port: "8080"
       traefik.http.routers.cadvisor.entrypoints: "websecure"
       traefik.http.routers.cadvisor.tls: "true"

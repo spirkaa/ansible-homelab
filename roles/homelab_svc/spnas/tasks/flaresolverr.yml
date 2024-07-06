@@ -14,7 +14,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.flaresolverr.rule: "HostRegexp(`flaresolverr{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.flaresolverr.rule: "HostRegexp(`flaresolverr(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.flaresolverr.loadbalancer.server.port: "8191"
       traefik.http.routers.flaresolverr.entrypoints: "websecure"
       traefik.http.routers.flaresolverr.tls: "true"

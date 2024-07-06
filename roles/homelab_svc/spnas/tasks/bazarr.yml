@@ -16,7 +16,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.bazarr.rule: "HostRegexp(`bazarr{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.bazarr.rule: "HostRegexp(`bazarr(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.bazarr.loadbalancer.server.port: "6767"
       traefik.http.routers.bazarr.entrypoints: "websecure"
       traefik.http.routers.bazarr.tls: "true"

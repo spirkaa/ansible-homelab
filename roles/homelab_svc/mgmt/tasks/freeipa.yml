@@ -17,7 +17,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.phpldapadmin.rule: "HostRegexp(`ldap{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.phpldapadmin.rule: "HostRegexp(`ldap(.{{ app_base_domain }})?`)"
       traefik.http.routers.phpldapadmin.entrypoints: "websecure"
       traefik.http.routers.phpldapadmin.tls: "true"
     restart_policy: unless-stopped
@@ -69,7 +69,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.freeipa.rule: "HostRegexp(`ipa{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.freeipa.rule: "HostRegexp(`ipa(.{{ app_base_domain }})?`)"
       traefik.http.routers.freeipa.entrypoints: "websecure"
       traefik.http.routers.freeipa.tls: "true"
       traefik.http.services.freeipa.loadbalancer.server.port: "443"

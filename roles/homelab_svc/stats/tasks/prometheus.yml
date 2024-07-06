@@ -43,7 +43,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.prometheus.rule: "HostRegexp(`prometheus{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.prometheus.rule: "HostRegexp(`prometheus(.{{ app_base_domain }})?`)"
       traefik.http.services.prometheus.loadbalancer.server.port: "9090"
       traefik.http.routers.prometheus.entrypoints: "websecure"
       traefik.http.routers.prometheus.tls: "true"

@@ -15,7 +15,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.prowlarr.rule: "HostRegexp(`prowlarr{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.prowlarr.rule: "HostRegexp(`prowlarr(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.prowlarr.loadbalancer.server.port: "9696"
       traefik.http.routers.prowlarr.entrypoints: "websecure"
       traefik.http.routers.prowlarr.tls: "true"

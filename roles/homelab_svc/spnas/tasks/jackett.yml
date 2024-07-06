@@ -35,7 +35,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.jackett.rule: "HostRegexp(`jackett{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.jackett.rule: "HostRegexp(`jackett(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.jackett.loadbalancer.server.port: "9117"
       traefik.http.routers.jackett.entrypoints: "websecure"
       traefik.http.routers.jackett.tls: "true"

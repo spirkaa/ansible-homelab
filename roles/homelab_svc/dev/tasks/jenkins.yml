@@ -50,7 +50,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.jenkins.rule: "HostRegexp(`jenkins{fqdn:(.{{ app_base_domain }})?}`)"
+      traefik.http.routers.jenkins.rule: "HostRegexp(`jenkins(.{{ app_base_domain }})?`)"
       traefik.http.services.jenkins.loadbalancer.server.port: "8080"
       traefik.http.routers.jenkins.entrypoints: "websecure"
       traefik.http.routers.jenkins.tls: "true"

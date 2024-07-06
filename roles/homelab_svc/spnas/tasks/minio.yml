@@ -25,12 +25,12 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.minio.rule: "HostRegexp(`s3{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.minio.rule: "HostRegexp(`s3(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.minio-svc.loadbalancer.server.port: "9000"
       traefik.http.routers.minio.entrypoints: "websecure"
       traefik.http.routers.minio.tls: "true"
       traefik.http.routers.minio.service: minio-svc
-      traefik.http.routers.minio-console.rule: "HostRegexp(`minio{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.minio-console.rule: "HostRegexp(`minio(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.minio-console-svc.loadbalancer.server.port: "9001"
       traefik.http.routers.minio-console.entrypoints: "websecure"
       traefik.http.routers.minio-console.tls: "true"

@@ -103,7 +103,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.gitea.rule: "HostRegexp(`git{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.gitea.rule: "HostRegexp(`git(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.gitea.loadbalancer.server.port: "3000"
       traefik.http.routers.gitea.entrypoints: "websecure"
       traefik.http.routers.gitea.tls: "true"

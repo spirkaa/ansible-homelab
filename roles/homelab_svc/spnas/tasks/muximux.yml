@@ -15,7 +15,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.muximux.rule: "HostRegexp(`spnas{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.muximux.rule: "HostRegexp(`spnas(.{{ inventory__homelab_domain }})?`)"
       traefik.http.routers.muximux.entrypoints: "websecure"
       traefik.http.routers.muximux.tls: "true"
     restart_policy: unless-stopped

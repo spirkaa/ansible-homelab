@@ -2,7 +2,7 @@
 app_path: /docker
 tz: "{{ inventory__docker_tz }}"
 
-traefik_image: traefik:2.10
+traefik_image: traefik:3.0
 
 traefik_network_name: traefik
 traefik_web_port: 80
@@ -16,4 +16,4 @@ traefik_config_file_host: "{{ app_path }}/traefik/dyn.toml"
 traefik_config_file: /etc/traefik/dyn.toml
 
 traefik_domain_name: "{{ inventory__homelab_domain }}"
-traefik_hostname_rule: HostRegexp(`traefik-{{ inventory_hostname_short }}{fqdn:(.{{ traefik_domain_name }})?}`)
+traefik_hostname_rule: HostRegexp(`traefik-{{ inventory_hostname_short }}(.{{ traefik_domain_name }})?`)

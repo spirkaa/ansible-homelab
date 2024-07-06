@@ -16,7 +16,7 @@
     networks_cli_compatible: true
     labels:
       traefik.enable: "true"
-      traefik.http.routers.lidarr.rule: "HostRegexp(`lidarr{fqdn:(.{{ inventory__homelab_domain }})?}`)"
+      traefik.http.routers.lidarr.rule: "HostRegexp(`lidarr(.{{ inventory__homelab_domain }})?`)"
       traefik.http.services.lidarr.loadbalancer.server.port: "8686"
       traefik.http.routers.lidarr.entrypoints: "websecure"
       traefik.http.routers.lidarr.tls: "true"
