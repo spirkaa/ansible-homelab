@@ -5,7 +5,7 @@
 
   vars:
     resource_type: vm
-    vmid: 112
+    vmid: 101
     hostname: dev
     comment: Development
     vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-20.04-server-cloudimg-amd64.img
