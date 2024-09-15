@@ -1,11 +1,4 @@
 ---
-- name: Add repository
-  ansible.builtin.copy:
-    src: files/buster-backports.list
-    dest: /etc/apt/sources.list.d
-    mode: 0644
-  when: ansible_distribution == "Debian" and ansible_distribution_version == "10"
-
 - name: Install packages
   ansible.builtin.package:
     update_cache: true

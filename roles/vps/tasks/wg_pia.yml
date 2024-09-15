@@ -1,5 +1,5 @@
 ---
-- name: "{{ hostname }} - lxc options"
+- name: wg-pia
   when: wg_pia_enabled | default(false) | bool
   block:
     - name: wg-pia - set sysctl entry
