@@ -1,0 +1,6 @@
+---
+- name: Install xray
+  ansible.builtin.include_tasks: install.yml
+
+- name: Configure xray
+  ansible.builtin.include_tasks: configure.yml

@@ -1,6 +1,6 @@
 [vps]
-vps-sd-msk.devmem.ru vps_wg_interface=wg0
-vps-sd-ams.devmem.ru wg_pia_enabled=true
+vps-sd-msk.devmem.ru vps_wg_interface=wg0 haproxy_enabled=true
+vps-sd-ams.devmem.ru wg_pia_enabled=true xray_enabled=true
 
 [vps:vars]
 ansible_user=root

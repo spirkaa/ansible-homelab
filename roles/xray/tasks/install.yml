@@ -1,0 +1,69 @@
+---
+- name: Check currently installed xray version
+  ansible.builtin.slurp:
+    src: "{{ (xray_path, 'version') | path_join }}"
+  register: xray_version_current
+  failed_when: false
+
+- name: Get release, unpack, install, clean up
+  vars:
+    xray_tmp_filename: "/tmp/{{ xray_url | basename }}"
+  when: (xray_version_current.content is not defined) or (xray_version_current.content | b64decode | default('') | trim != xray_version)
+  block:
+    - name: Ensure unzip is installed
+      ansible.builtin.package:
+        name: unzip
+        state: present
+
+    - name: Download xray binaries
+      ansible.builtin.get_url:
+        url: "{{ xray_url }}"
+        dest: "{{ xray_tmp_filename }}"
+        mode: "0644"
+
+    - name: Create xray directory
+      ansible.builtin.file:
+        path: "{{ xray_path }}"
+        state: directory
+        mode: "0644"
+
+    - name: Unzip xray binaries
+      ansible.builtin.unarchive:
+        src: "{{ xray_tmp_filename }}"
+        dest: "{{ xray_path }}"
+        mode: "0644"
+        remote_src: true
+
+    - name: Make xray binary executable
+      ansible.builtin.file:
+        path: "{{ (xray_path, 'xray') | path_join }}"
+        mode: "0755"
+
+    - name: Store xray version
+      ansible.builtin.copy:
+        content: "{{ xray_version }}"
+        dest: "{{ (xray_path, 'version') | path_join }}"
+        mode: "0644"
+
+    - name: Cleanup downloaded zip
+      ansible.builtin.file:
+        path: "{{ xray_tmp_filename }}"
+        state: absent
+
+- name: Copy systemd service
+  ansible.builtin.template:
+    src: xray.service.j2
+    dest: /etc/systemd/system/xray.service
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart xray
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start service
+  ansible.builtin.service:
+    name: xray
+    enabled: true
+    state: started

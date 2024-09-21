@@ -1,0 +1,6 @@
+---
+- name: Restart xray
+  ansible.builtin.service:
+    name: xray
+    state: restarted
+    daemon_reload: true
