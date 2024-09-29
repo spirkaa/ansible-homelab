@@ -42,9 +42,6 @@ gw-wg
 ansible_user=ubuntu
 ansible_python_interpreter=/usr/bin/python3
 
-[macos]
-spmacbook13 ansible_user=spirkaa
-
 [linux:children]
 vps
 proxmox

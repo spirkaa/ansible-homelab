@@ -2,14 +2,17 @@
 # Тип ресурса - vm или ct
 resource_type: vm
 
+# Использовать cloud-init
+cloud_init_enabled: true
+
 vmid: 5500
 hostname: tpl
-net_ip: 192.168.13.55
+# net_ip: 192.168.13.55
 
-vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-22.04-server-cloudimg-amd64.img
+vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-24.04-server-cloudimg-amd64.img
 vm_ostype: l26
 
-ct_template: spsrv-proxmox:vztmpl/ubuntu-22.04-docker.tar.zst
+ct_template: spsrv-proxmox:vztmpl/ubuntu-24.04-docker.tar.zst
 
 resourse_pool: ansible
 resourse_pool_comment: Created with a little help of Ansible
@@ -26,7 +29,7 @@ net_cidr: 24
 net_gw: 192.168.13.1
 net_dns: 192.168.13.1
 net_domain: "{{ inventory__homelab_domain }}"
-net_tag: "{{ ',tag=' if net_vlan else '' }}"
+net_tag: "{{ ',tag=' ~ net_vlan if net_vlan else '' }}"  # ~ (tilde) Converts all operands into strings and concatenates them.
 
 # Файл с ключами должен находиться на сервере Proxmox
 ssh_keys: ~/.ssh/authorized_keys

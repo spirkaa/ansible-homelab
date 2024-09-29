@@ -17,7 +17,6 @@
     # ip_projects: 192.168.12.251
     ip_ha: 192.168.20.10
     ip_spbleq12: 192.168.20.3
-    ip_spmacbook13: 192.168.20.4
     ip_gw_wg: 192.168.13.2
     ip_k8s_ingress: 192.168.13.240
     dns_entries:
@@ -67,7 +66,7 @@
       # - { alias: "grafana", inet: "{{ ip_stats }}" }
       - { alias: "influxdb", inet: "{{ ip_stats }}" }
       # - { alias: "loki", inet: "{{ ip_stats }}" }
-      - { alias: "prometheus", inet: "{{ ip_stats }}" }
+      # - { alias: "prometheus", inet: "{{ ip_stats }}" }
 
       # - { alias: "mail", inet: "{{ ip_mail }}" }
       # - { alias: "traefik-mail", inet: "{{ ip_mail }}" }
@@ -81,7 +80,6 @@
       # - { alias: "traefik-projects", inet: "{{ ip_projects }}" }
 
       - { alias: "spbleq12", inet: "{{ ip_spbleq12 }}" }
-      - { alias: "spmacbook13", inet: "{{ ip_spmacbook13 }}" }
       - { alias: "ha", inet: "{{ ip_ha }}" }
       - { alias: "traefik-ha", inet: "{{ ip_ha }}" }
       - { alias: "esp", inet: "{{ ip_ha }}" }

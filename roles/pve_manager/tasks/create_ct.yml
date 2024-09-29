@@ -11,7 +11,7 @@
           --cores {{ cores }}
           --memory {{ mem }}
           --nameserver {{ net_dns }}
-          --net0 name=eth0,bridge={{ net_br }},gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }},firewall=0{{ net_tag }}{{ net_vlan }}
+          --net0 name=eth0,bridge={{ net_br }},gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }},firewall=0{{ net_tag }}
           --rootfs {{ disk_storage }}:{{ disk_size }}
           --password {{ user_pass }}
           --searchdomain {{ net_domain }}

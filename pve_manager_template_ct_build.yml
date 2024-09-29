@@ -6,10 +6,8 @@
   vars:
     template_storage_name: spsrv-proxmox
     template_storage_path: /mnt/pve/{{ template_storage_name }}/template/cache/
-    template_name: ubuntu-22.04-standard_22.04-1_amd64.tar.zst
-    template_name_custom: ubuntu-22.04-docker.tar.zst
-    # template_name: debian-11-standard_11.3-1_amd64.tar.zst
-    # template_name_custom: debian-11-docker.tar.zst
+    template_name: ubuntu-24.04-standard_24.04-2_amd64.tar.zst
+    template_name_custom: ubuntu-24.04-docker.tar.zst
 
     resource_type: ct
     ct_template: "{{ template_storage_name }}:vztmpl/{{ template_name }}"
@@ -55,8 +53,9 @@
         name: Europe/Moscow
 
     - name: Set locale
-      ansible.builtin.command: >
-        localectl set-locale LANG=C.UTF-8
+      ansible.builtin.shell: >
+        localectl set-locale LANG=C.UTF-8 && \
+        locale-gen en_US.UTF-8
       changed_when: true
 
 

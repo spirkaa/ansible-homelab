@@ -5,14 +5,20 @@
 
   vars:
     template_image_url:
-      - https://cloud-images.ubuntu.com/releases/jammy/release/ubuntu-22.04-server-cloudimg-amd64.img
-      - https://cdimage.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+      - https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-amd64.img
     template_image_path: /mnt/pve/spsrv-proxmox/template/qcow2
+    # template_image_path: /var/lib/vz/template/qcow2
 
   tasks:
     - name: template image
       run_once: true
       block:
+        - name: template image - install libguestfs-tools
+          ansible.builtin.package:
+            state: present
+            name:
+              - libguestfs-tools
+
         - name: template image - download
           ansible.builtin.get_url:
             url: "{{ item }}"

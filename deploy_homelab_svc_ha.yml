@@ -10,7 +10,7 @@
     hostname: ha
     comment: Home Assistant
     cores: 2
-    mem: 4096
+    mem: 2048
     disk_size: 20
     net_ip: 192.168.20.10
     net_vlan: ""
@@ -30,4 +30,4 @@
   gather_facts: false
 
   roles:
-    - { role: homelab_svc/ha, tags: [stats, svc] }
+    - { role: homelab_svc/ha, tags: [ha, svc] }

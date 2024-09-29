@@ -23,3 +23,4 @@
       ansible.builtin.wait_for:
         host: "{{ net_ip }}"
         port: 22
+      when: cloud_init_enabled | bool

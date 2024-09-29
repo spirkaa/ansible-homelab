@@ -12,24 +12,13 @@
           --agent 1,fstrim_cloned_disks=1
           --cores {{ cores }}
           --memory {{ mem }}
-          --net0 virtio,bridge={{ net_br }},tag={{ net_vlan }}
-          --ipconfig0 gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }}
-          --nameserver {{ net_dns }}
-          --searchdomain {{ net_domain }}
-          --sshkeys "{{ ssh_keys }}"
+          --net0 virtio,bridge={{ net_br }}{{ net_tag }}
           {{ vm_other_options | default('', true) }}
       changed_when: true
 
-    - name: "{{ hostname }} - Set default user password"
-      ansible.builtin.command: >
-        qm set {{ vmid }}
-          --cipassword {{ user_pass }}
-      changed_when: true
-      no_log: true
-
     - name: "{{ hostname }} - Import qcow2 image"
       ansible.builtin.command: >
-        qm importdisk {{ vmid }} {{ vm_image }} {{ disk_storage }}
+        qm disk import {{ vmid }} {{ vm_image }} {{ disk_storage }}
       changed_when: true
 
     - name: "{{ hostname }} - Confige hardware"
@@ -37,12 +26,24 @@
         qm set {{ vmid }}
           --scsihw virtio-scsi-pci
           --scsi0 {{ disk_storage }}:vm-{{ vmid }}-disk-0,discard=on
-          --ide2 {{ disk_storage }}:cloudinit
           --bootdisk scsi0
           --boot c
           --serial0 socket
           --vga serial0
       changed_when: true
+
+    - name: "{{ hostname }} - Configure cloud-init"
+      ansible.builtin.command: >
+        qm set {{ vmid }}
+          --ide2 {{ disk_storage }}:cloudinit
+          --ipconfig0 gw={{ net_gw }},ip={{ net_ip }}/{{ net_cidr }}
+          --nameserver {{ net_dns }}
+          --searchdomain {{ net_domain }}
+          --sshkeys "{{ ssh_keys }}"
+          --cipassword {{ user_pass }}
+      changed_when: true
+      no_log: true
+      when: cloud_init_enabled | bool
 
     - name: "{{ hostname }} - Resize disk"
       ansible.builtin.command: >
