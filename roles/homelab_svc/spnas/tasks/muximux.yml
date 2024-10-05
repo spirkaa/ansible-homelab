@@ -5,8 +5,8 @@
     image: "{{ muximux_image }}"
     pull: true
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
     volumes:
       - "{{ app_path }}/muximux/config:/config"
@@ -49,6 +49,6 @@
     dest: "{{ muximux_www }}/muximux/settings.ini.php"
     owner: "{{ puid }}"
     group: "{{ pgid }}"
-    mode: 0664
+    mode: "0664"
   notify: muximux - restart
   tags: muximux

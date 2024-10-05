@@ -20,8 +20,8 @@
   ansible.builtin.copy:
     src: "files/{{ item }}"
     dest: "/etc/update-motd.d"
-    mode: 0755
-    directory_mode: 0755
+    mode: "0755"
+    directory_mode: "0755"
   loop:
     - 00-header
     - 90-footer
@@ -30,7 +30,7 @@
   ansible.builtin.template:
     src: 10-sysinfo.j2
     dest: /etc/update-motd.d/10-sysinfo
-    mode: 0755
+    mode: "0755"
   when: ansible_distribution == "Debian" or ansible_virtualization_type == "lxc"
 
 - name: Remove unwanted motd blocks

@@ -9,7 +9,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0664
+    mode: "0664"
   loop:
     - { src: snapraid.conf.j2, dest: /etc/snapraid.conf }
 
@@ -23,7 +23,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0664
+    mode: "0664"
   loop:
     - { src: snapraid-runner.conf.j2, dest: "{{ snapraid_run_conf }}" }
 
@@ -32,10 +32,10 @@
     user: "{{ item.user | default('root') }}"
     job: "{{ item.job }}"
     name: "{{ item.name }}"
-    weekday: "{{ item.weekday | default('*') }}"
-    minute: "{{ item.minute | default('00') }}"
-    hour: "{{ item.hour | default('00') }}"
-    dom: "{{ item.dom | default('*') }}"
+    weekday: "{{ item.weekday | default('*') | string }}"
+    minute: "{{ item.minute | default('00') | string }}"
+    hour: "{{ item.hour | default('00') | string }}"
+    dom: "{{ item.dom | default('*') | string }}"
     disabled: "{{ item.disabled | default(false) }}"
   loop: "{{ snapraid_cron_jobs }}"
   no_log: true

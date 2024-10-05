@@ -9,12 +9,12 @@
   ansible.builtin.copy:
     src: files/daemon.json
     dest: /etc/docker
-    mode: 0644
+    mode: "0644"
   notify: Restart docker service
 
 - name: Copy override.conf
   ansible.builtin.copy:
     src: files/override.conf
     dest: /etc/systemd/system/docker.service.d
-    mode: 0644
+    mode: "0644"
   notify: Restart docker service

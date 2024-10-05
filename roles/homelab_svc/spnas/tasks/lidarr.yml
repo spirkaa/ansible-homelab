@@ -5,8 +5,8 @@
     image: "{{ lidarr_image }}"
     pull: true
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
     volumes:
       - "{{ app_path }}/lidarr/config:/config"

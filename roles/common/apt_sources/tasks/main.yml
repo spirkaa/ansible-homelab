@@ -3,7 +3,7 @@
   ansible.builtin.template:
     src: sources.list.j2
     dest: /etc/apt/sources.list
-    mode: 0644
+    mode: "0644"
   notify: Update APT cache
   become: true
 

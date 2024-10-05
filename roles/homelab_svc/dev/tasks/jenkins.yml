@@ -10,7 +10,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ dev_app_path }}/{{ item.dest }}"
-    mode: 0644
+    mode: "0644"
   loop:
     - { src: jenkins.yaml.j2, dest: "{{ jenkins_home }}/casc_configs/jenkins.yaml" }
   notify: jenkins - restart

@@ -20,7 +20,7 @@
           ansible.builtin.get_url:
             url: "{{ rclone_url }}"
             dest: /tmp/{{ rclone_url | basename }}
-            mode: 0644
+            mode: "0644"
 
         - name: Install rclone package
           ansible.builtin.apt:
@@ -31,13 +31,13 @@
       ansible.builtin.file:
         path: "{{ rclone_config_location | dirname }}"
         state: directory
-        mode: 0700
+        mode: "0700"
 
     - name: Copy config
       ansible.builtin.template:
         src: rclone.conf.j2
         dest: "{{ rclone_config_location }}"
-        mode: 0600
+        mode: "0600"
         force: false
       no_log: true
 
@@ -51,7 +51,7 @@
       ansible.builtin.template:
         src: rclone-job.j2
         dest: "{{ rclone_jobs_path }}/{{ item.name }}"
-        mode: 0755
+        mode: "0755"
       loop: "{{ rclone_jobs }}"
 
     - name: Setup cron
@@ -59,10 +59,10 @@
         user: "{{ item.user | default('root') }}"
         job: "{{ rclone_jobs_path }}/{{ item.name }} >/dev/null 2>&1 && curl -fsS --retry 3 {{ inventory__healthchecksio_url }}/{{ item.name }} >/dev/null 2>&1"
         name: "{{ item.name }}"
-        weekday: "{{ item.weekday | default('*') }}"
-        minute: "{{ item.minute | default('00') }}"
-        hour: "{{ item.hour | default('00') }}"
-        dom: "{{ item.dom | default('*') }}"
+        weekday: "{{ item.weekday | default('*') | string }}"
+        minute: "{{ item.minute | default('00') | string }}"
+        hour: "{{ item.hour | default('00') | string }}"
+        dom: "{{ item.dom | default('*') | string }}"
         disabled: "{{ item.disabled | default(false) }}"
       loop: "{{ rclone_jobs }}"
       no_log: true

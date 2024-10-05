@@ -23,8 +23,8 @@
     ports:
       - "8888:8888"
     env:
-      UID: "{{ puid }}"
-      GID: "{{ pgid }}"
+      UID: "{{ puid | string }}"
+      GID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
       DB_TYPE: "pgsql"
       DB_HOST: "nextcloud-db"

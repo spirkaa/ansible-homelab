@@ -13,8 +13,8 @@
     dest: /etc/postfix/{{ item.dest }}
     mode: "{{ item.mode }}"
   loop:
-    - { src: sasl_passwd.j2, dest: sasl_passwd, mode: 600 }
-    - { src: smtp_header_checks.j2, dest: smtp_header_checks, mode: 644 }
-    - { src: main.cf.j2, dest: main.cf, mode: 644 }
-    - { src: smtp_generic_maps.j2, dest: smtp_generic_maps, mode: 644 }
+    - { src: sasl_passwd.j2, dest: sasl_passwd, mode: "0600" }
+    - { src: smtp_header_checks.j2, dest: smtp_header_checks, mode: "0644" }
+    - { src: main.cf.j2, dest: main.cf, mode: "0644" }
+    - { src: smtp_generic_maps.j2, dest: smtp_generic_maps, mode: "0644" }
   notify: postfix config changed

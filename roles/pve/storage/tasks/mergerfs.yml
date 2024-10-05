@@ -13,7 +13,7 @@
       ansible.builtin.get_url:
         url: "{{ mergerfs_package_url }}"
         dest: /tmp/{{ mergerfs_package_name }}
-        mode: 0644
+        mode: "0644"
 
     - name: mergerfs - install package
       ansible.builtin.apt:

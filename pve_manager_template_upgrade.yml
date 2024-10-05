@@ -48,7 +48,7 @@
       ansible.builtin.copy:
         src: files/sys_prep_cloud.sh
         dest: /tmp
-        mode: 0755
+        mode: "0755"
       notify: run script
 
 - name: Create template

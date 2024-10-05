@@ -10,8 +10,8 @@
 #   ansible.builtin.copy:
 #     src: "files/{{ item }}"
 #     dest: "{{ app_path }}/jackett"
-#     mode: 0644
-#     directory_mode: 0755
+#     mode: "0644"
+#     directory_mode: "0755"
 #   loop:
 #     - Definitions
 #   notify: jackett - restart
@@ -23,8 +23,8 @@
     image: "{{ jackett_image }}"
     pull: true
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
     volumes:
       - "{{ app_path }}/jackett/config:/config"

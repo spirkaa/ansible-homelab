@@ -8,8 +8,8 @@
     ports:
       - "9283:80"
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
     volumes:
       - "{{ app_path }}/grocy/config:/config"
@@ -26,8 +26,8 @@
     ports:
       - "9284:80"
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
     volumes:
       - "{{ app_path }}/barcodebuddy/config:/config"

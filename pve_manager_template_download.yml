@@ -23,7 +23,7 @@
           ansible.builtin.get_url:
             url: "{{ item }}"
             dest: "{{ template_image_path }}/{{ item | basename }}"
-            mode: 0644
+            mode: "0644"
             force: true
           loop: "{{ template_image_url }}"
 

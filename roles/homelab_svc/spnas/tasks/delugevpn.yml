@@ -25,8 +25,8 @@
       # VPN_OUTPUT_PORTS: "5678"
       DEBUG: "false"
       UMASK: "022"
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "delugevpn-data:/data"

@@ -10,13 +10,13 @@
   ansible.builtin.file:
     path: "{{ snmp_extend_scripts_path }}"
     state: directory
-    mode: 0755
+    mode: "0755"
 
 - name: Download scripts
   ansible.builtin.get_url:
     url: "{{ item }}"
     dest: "{{ snmp_extend_scripts_path }}/{{ item | basename }}"
-    mode: 0755
+    mode: "0755"
     force: true
   loop: "{{ snmp_extend_scripts }}"
   notify: restart snmpd
@@ -25,14 +25,14 @@
   ansible.builtin.template:
     src: smart.config.j2
     dest: /etc/snmp/extend/smart.config
-    mode: 0644
+    mode: "0644"
   notify: restart snmpd
 
 - name: Copy sudoers.d file
   ansible.builtin.copy:
     src: files/snmp_sudo
     dest: /etc/sudoers.d
-    mode: 0440
+    mode: "0440"
 
 - name: Create a cron job
   ansible.builtin.cron:

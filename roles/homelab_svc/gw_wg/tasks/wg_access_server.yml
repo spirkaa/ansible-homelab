@@ -31,7 +31,7 @@
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/WireGuard/wireguard-tools/master/contrib/json/wg-json
     dest: /opt/wg-json
-    mode: 0755
+    mode: "0755"
     force: true
   register: _download_result
   retries: 60
@@ -43,7 +43,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: /opt/{{ item.dest }}
-    mode: 0755
+    mode: "0755"
   loop:
     - { src: set_wg_fwmark.sh.j2, dest: set_wg_fwmark.sh }
   tags: wg_access_server

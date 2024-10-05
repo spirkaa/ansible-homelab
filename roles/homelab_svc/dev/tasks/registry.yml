@@ -10,7 +10,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ dev_app_path }}/{{ item.dest }}"
-    mode: 0644
+    mode: "0644"
   loop:
     - { src: config.yml.j2, dest: registry/config/config.yml }
   notify: registry - restart

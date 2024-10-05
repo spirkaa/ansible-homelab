@@ -7,8 +7,8 @@
     ports:
       - "8443:8443"
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
       PASSWORD: "{{ code_pass }}"
       SUDO_PASSWORD: "{{ code_pass }}"

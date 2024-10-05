@@ -10,13 +10,13 @@
   ansible.builtin.file:
     path: /etc/systemd/system/snmpd.service.d
     state: directory
-    mode: 0755
+    mode: "0755"
 
 - name: Copy service override
   ansible.builtin.copy:
     src: files/override.conf
     dest: /etc/systemd/system/snmpd.service.d
-    mode: 0644
+    mode: "0644"
   notify: restart snmpd
 
 - name: Get snmpd.conf content
@@ -30,7 +30,7 @@
   ansible.builtin.template:
     src: snmpd.conf.j2
     dest: /etc/snmp/snmpd.conf
-    mode: 0644
+    mode: "0644"
   no_log: true
   notify: restart snmpd
   when: >

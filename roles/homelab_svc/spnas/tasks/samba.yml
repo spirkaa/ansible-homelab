@@ -10,7 +10,7 @@
   ansible.builtin.template:
     src: smb.conf.j2
     dest: "{{ app_path }}/samba/config/smb.conf"
-    mode: 0644
+    mode: "0644"
   notify: samba - restart
   tags: samba
 
@@ -25,8 +25,8 @@
       CUSTOM_SMB_CONF: "true"
       SHARE_NAME: "timemachine"
       MIMIC_MODEL: "{{ samba_mimic_model }}"
-      TM_UID: "{{ puid }}"
-      TM_GID: "{{ pgid }}"
+      TM_UID: "{{ puid | string }}"
+      TM_GID: "{{ pgid | string }}"
       TM_USERNAME: "{{ samba_user }}"
       TM_GROUPNAME: "{{ samba_user }}"
       PASSWORD: "{{ samba_pass }}"

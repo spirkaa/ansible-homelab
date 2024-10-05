@@ -29,7 +29,7 @@
     line: no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ git_key.stdout }}
     owner: "{{ gitea_ssh_user }}"
     group: "{{ gitea_ssh_user }}"
-    mode: 0600
+    mode: "0600"
     create: true
     state: present
   tags: gitea
@@ -38,7 +38,7 @@
   ansible.builtin.copy:
     src: files/gitea
     dest: /usr/local/bin/gitea
-    mode: 0755
+    mode: "0755"
   tags: gitea
 
 - name: gitea - create dir
@@ -54,7 +54,7 @@
     dest: "{{ item.dest }}"
     owner: "{{ puid }}"
     group: "{{ pgid }}"
-    mode: 0600
+    mode: "0600"
   loop:
     - { src: app.ini.j2, dest: "{{ gitea_app_data_path_host }}/conf/app.ini" }
   notify: gitea - restart
@@ -90,8 +90,8 @@
       - "3000:3000"
       - "127.0.0.1:2222:22"
     env:
-      USER_UID: "{{ puid }}"
-      USER_GID: "{{ pgid }}"
+      USER_UID: "{{ puid | string }}"
+      USER_GID: "{{ pgid | string }}"
       GNUPGHOME: "{{ gitea_home_path }}/.gnupg"
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
@@ -162,7 +162,7 @@
         dest: "{{ gitea_home_path_host }}/.gnupg/gen-key-script"
         owner: "{{ gitea_ssh_user }}"
         group: "{{ gitea_ssh_user }}"
-        mode: 0600
+        mode: "0600"
       tags: gitea
 
     - name: gitea - gpg - generate key

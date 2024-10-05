@@ -10,7 +10,7 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ app_path }}/pihole/{{ item.dest }}"
-    mode: 0644
+    mode: "0644"
   loop:
     - { src: 10-internal.conf.j2, dest: config/dnsmasq.d/10-internal.conf }
     - { src: pihole-updatelists.conf.j2, dest: config/pihole-updatelists.conf }

@@ -12,7 +12,7 @@
     dest: "{{ app_path }}/tautulli/config/newsletter_template/recently_added.html"
     owner: "{{ puid }}"
     group: "{{ pgid }}"
-    mode: 0644
+    mode: "0644"
   tags: tautulli
 
 - name: tautulli - start
@@ -23,8 +23,8 @@
     ports:
       - "8181:8181"
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
       HTTP_PROXY: "{{ inventory__http_proxy }}"
       HTTPS_PROXY: "{{ inventory__http_proxy }}"

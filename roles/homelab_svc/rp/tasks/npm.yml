@@ -29,8 +29,8 @@
   ansible.builtin.copy:
     src: files/custom
     dest: "{{ app_path }}/npm/app/data/nginx"
-    mode: 0644
-    directory_mode: 0755
+    mode: "0644"
+    directory_mode: "0755"
   notify: npm - restart
   tags: npm
 

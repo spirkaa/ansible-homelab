@@ -10,7 +10,7 @@
   ansible.builtin.template:
     src: esphome/{{ item.src }}
     dest: "{{ esphome_config_path }}/{{ item.dest }}"
-    mode: 0644
+    mode: "0644"
   loop:
     - { src: ble-tracker.yaml.j2, dest: ble-tracker.yaml }
     - { src: secrets.yaml.j2, dest: secrets.yaml }

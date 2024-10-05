@@ -5,7 +5,7 @@
     state: directory
     owner: nobody
     group: nogroup
-    mode: 0777
+    mode: "0777"
   with_items:
     - "{{ parity_disks }}"
     - "{{ data_disks }}"

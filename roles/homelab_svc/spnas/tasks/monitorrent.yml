@@ -12,7 +12,7 @@
     state: touch
     access_time: preserve
     modification_time: preserve
-    mode: 0644
+    mode: "0644"
   tags: monitorrent
 
 - name: monitorrent - start

@@ -3,7 +3,7 @@
   ansible.builtin.copy:
     src: files/{{ item.src }}
     dest: "{{ item.dest }}"
-    mode: 0644
+    mode: "0644"
   loop:
     - { src: kvm.conf, dest: /etc/modprobe.d }
     - { src: kvm-intel.conf, dest: /etc/modprobe.d }

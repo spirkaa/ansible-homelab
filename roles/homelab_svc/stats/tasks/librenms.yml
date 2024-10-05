@@ -39,7 +39,7 @@
     dest: "{{ app_path }}/librenms/config.custom.php"
     owner: "997"
     group: "997"
-    mode: 0664
+    mode: "0664"
   notify: librenms - restart
   tags: librenms
 

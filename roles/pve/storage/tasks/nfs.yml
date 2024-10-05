@@ -10,14 +10,14 @@
   ansible.builtin.file:
     path: "{{ item.strip().split()[0] }}"
     state: directory
-    mode: 0777
+    mode: "0777"
   with_items: "{{ nfs_exports }}"
 
 - name: nfs - copy config
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0644
+    mode: "0644"
   loop:
     - { src: exports.j2, dest: /etc/exports }
   notify: nfs - re-export

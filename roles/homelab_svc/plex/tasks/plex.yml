@@ -6,8 +6,8 @@
     image_name_mismatch: recreate
     pull: true
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       VERSION: "latest"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"

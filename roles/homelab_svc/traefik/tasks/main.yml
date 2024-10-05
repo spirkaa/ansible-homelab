@@ -15,7 +15,7 @@
   ansible.builtin.copy:
     content: "{{ inventory__ssl_certificate }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.crt"
-    mode: 0644
+    mode: "0644"
   notify: traefik - restart
   tags: traefik
 
@@ -23,7 +23,7 @@
   ansible.builtin.copy:
     content: "{{ inventory__ssl_private_key }}"
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.key"
-    mode: 0644
+    mode: "0644"
   notify: traefik - restart
   no_log: true
   tags: traefik
@@ -32,7 +32,7 @@
   ansible.builtin.template:
     src: dyn.toml.j2
     dest: "{{ traefik_config_file_host }}"
-    mode: 0644
+    mode: "0644"
   notify: traefik - restart
   tags: traefik
 

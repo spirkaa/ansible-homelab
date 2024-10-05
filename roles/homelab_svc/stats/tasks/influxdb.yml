@@ -10,7 +10,7 @@
   ansible.builtin.copy:
     src: files/influxdb.conf
     dest: "{{ app_path }}/influxdb/config"
-    mode: 0644
+    mode: "0644"
   notify: influxdb - restart
   tags: [influxdb, grafana]
 

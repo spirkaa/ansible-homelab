@@ -3,7 +3,7 @@
   ansible.builtin.template:
     src: pve-no-subscription.list.j2
     dest: /etc/apt/sources.list.d/pve-no-subscription.list
-    mode: 0644
+    mode: "0644"
 
 - name: Remove enterprise repo
   ansible.builtin.file:

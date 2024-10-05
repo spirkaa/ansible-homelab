@@ -113,7 +113,7 @@
     dest: "{{ freeipa_data_host_path }}/etc/dirsrv/slapd-{{ realm }}/schema"
     owner: "389"
     group: "389"
-    mode: 0644
+    mode: "0644"
   notify: freeipa - restart
   tags: freeipa
 

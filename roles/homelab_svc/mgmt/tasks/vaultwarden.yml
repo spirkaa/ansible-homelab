@@ -32,7 +32,7 @@
   ansible.builtin.template:
     src: vaultwarden_ldap_config.toml.j2
     dest: "{{ app_path }}/vaultwarden/ldap_config.toml"
-    mode: 0644
+    mode: "0644"
   notify: vaultwarden_ldap - restart
   tags: vaultwarden
 

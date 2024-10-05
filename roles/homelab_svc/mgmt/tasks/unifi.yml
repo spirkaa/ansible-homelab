@@ -14,8 +14,8 @@
       - "8880:8880"
       - "6789:6789"
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ app_path }}/unifi/config:/config"

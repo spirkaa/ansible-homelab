@@ -7,8 +7,8 @@
     ports:
       - "3579:3579"
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       TZ: "{{ tz }}"
       HTTP_PROXY: "{{ inventory__http_proxy }}"
       HTTPS_PROXY: "{{ inventory__http_proxy }}"

@@ -147,7 +147,7 @@
     force_basic_auth: true
     return_content: true
     body_format: json
-    body: "{{ nexus_ldap_config | from_yaml }}"
+    body: "{{ nexus_ldap_config | string | from_yaml }}"
   register: __nexus_add_ldap_auth
   changed_when: __nexus_add_ldap_auth.status == 201
   failed_when:
@@ -195,7 +195,7 @@
     force_basic_auth: true
     return_content: true
     body_format: json
-    body: "{{ nexus_s3_config | from_yaml }}"
+    body: "{{ nexus_s3_config | string | from_yaml }}"
   register: __nexus_add_blob_store
   changed_when: __nexus_add_blob_store.status == 201
   when: __nexus_check_blob_store.status == 400
@@ -211,7 +211,7 @@
     force_basic_auth: true
     return_content: true
     body_format: json
-    body: "{{ nexus_s3_config | from_yaml }}"
+    body: "{{ nexus_s3_config | string | from_yaml }}"
   when: __nexus_check_blob_store.status == 200
   tags: nexus
 

@@ -8,8 +8,8 @@
     ports:
       - "8096:8096"
     env:
-      PUID: "{{ puid }}"
-      PGID: "{{ pgid }}"
+      PUID: "{{ puid | string }}"
+      PGID: "{{ pgid | string }}"
       JELLYFIN_PublishedServerUrl: https://j.{{ inventory__site }}
       HTTP_PROXY: "{{ inventory__http_proxy }}"
       HTTPS_PROXY: "{{ inventory__http_proxy }}"
