@@ -18,7 +18,7 @@
       USER: "{{ wg_pia_user }}"
       PASS: "{{ wg_pia_pass }}"
       LOCAL_NETWORK: "{{ wg_pia_local_network }}"
-      FIREWALL: "{{ wg_pia_firewall }}"
+      FIREWALL: "{{ wg_pia_firewall | string }}"
       FWD_IFACE: "{{ wg_pia_fwd_iface }}"
       POST_UP: "{{ wg_pia_post_up }}"
     volumes:
