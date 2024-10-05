@@ -1,5 +1,5 @@
 ---
-xray_version: v1.8.24
+xray_version: v24.9.30
 xray_url: https://github.com/XTLS/Xray-core/releases/download/{{ xray_version }}/Xray-linux-64.zip
 xray_path: /opt/xray
 xray_config: "{{ xray_path }}/config.json"

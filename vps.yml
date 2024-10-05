@@ -23,3 +23,8 @@
       tags:
         - vps
         - xray
+
+  pre_tasks:
+    - name: Set timezone
+      community.general.timezone:
+        name: Europe/Moscow

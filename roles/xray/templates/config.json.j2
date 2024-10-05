@@ -8,17 +8,10 @@
   },
   "inbounds": [
     {
-      "port": 443,
+      "port": {{ inventory__xray_config.port }},
       "protocol": "vless",
-      "tag": "vless_tls",
       "settings": {
-        "clients": [
-          {
-            "id": "{{ xray.uuid }}",
-            "email": "user@{{ ansible_fqdn }}",
-            "flow": "xtls-rprx-vision"
-          }
-        ],
+        "clients": {{ inventory__xray_config.clients | to_nice_json(indent=2) | indent(width=8, first=false) }},
         "decryption": "none"
       },
       "streamSettings": {
@@ -26,14 +19,18 @@
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "yahoo.com:443",
+          "dest": "{{ inventory__xray_config.server_name }}:{{ inventory__xray_config.port }}",
           "xver": 0,
-          "serverNames": ["yahoo.com"],
-          "privateKey": "{{ xray.x25519_private }}",
+          "serverNames": [
+            "{{ inventory__xray_config.server_name }}"
+          ],
+          "privateKey": "{{ inventory__xray_config.private_key }}",
           "minClientVer": "",
           "maxClientVer": "",
           "maxTimeDiff": 0,
-          "shortIds": ["{{ xray.short_id }}"]
+          "shortIds": [
+            "{{ inventory__xray_config.short_id }}"
+          ]
         }
       },
       "sniffing": {
