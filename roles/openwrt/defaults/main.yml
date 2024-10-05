@@ -1,0 +1,40 @@
+---
+openwrt_system:
+  hostname: "{{ inventory_hostname }}"
+  timezone: MSK-3
+  zonename: Europe/Moscow
+  ttylogin: 1
+
+openwrt_dropbear:
+  PasswordAuth: 0
+  RootPasswordAuth: 0
+
+openwrt_sing_box_config:
+  log:
+    level: info
+  route:
+    auto_detect_interface: true
+  inbounds:
+    - type: tun
+      interface_name: tun0
+      domain_strategy: ipv4_only
+      inet4_address: 172.16.250.1/30
+      auto_route: false
+      strict_route: false
+      sniff: true
+  outbounds:
+    - type: vless
+      flow: "{{ (inventory__xray_config.clients | selectattr('email', 'search', inventory_hostname))[0].flow }}"
+      uuid: "{{ (inventory__xray_config.clients | selectattr('email', 'search', inventory_hostname))[0].id }}"
+      server: "{{ inventory__xray_config.server }}"
+      server_port: "{{ inventory__xray_config.port }}"
+      tls:
+        enabled: true
+        server_name: "{{ inventory__xray_config.server_name }}"
+        reality:
+          enabled: true
+          public_key: "{{ inventory__xray_config.public_key }}"
+          short_id: "{{ inventory__xray_config.short_id }}"
+        utls:
+          enabled: true
+          fingerprint: chrome

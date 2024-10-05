@@ -10,6 +10,9 @@ ansible_port=51858
 ubnt-erx-krs
 ubnt-erx-cml
 
+[openwrt]
+gw-cml ansible_host=192.168.20.222
+
 [proxmox]
 spsrv snmp_syslocation=krs
 # spmaxi snmp_syslocation=krs

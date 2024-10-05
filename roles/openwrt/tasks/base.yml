@@ -1,0 +1,55 @@
+---
+- name: base | Encrypt root password
+  ansible.builtin.set_fact:
+    _root_password: "{{ openwrt_root_password | string | password_hash('sha512', openwrt_password_salt | string) }}"
+  delegate_to: localhost
+  no_log: true
+
+- name: base | Set root password
+  ansible.builtin.replace:
+    path: /etc/shadow
+    regexp: "^root:([^:]*):"
+    replace: "root:{{ _root_password }}:"
+  no_log: true
+
+- name: base | Configure system settings
+  uci:
+    command: set
+    config: system
+    section: "@system[0]"
+    type: system
+    value:
+      hostname: "{{ openwrt_system.hostname }}"
+      timezone: "{{ openwrt_system.timezone }}"
+      zonename: "{{ openwrt_system.zonename }}"
+      ttylogin: "{{ openwrt_system.ttylogin }}"
+  notify:
+    - Uci commit
+    - Reload system
+
+- name: base | Configure dropbear
+  uci:
+    command: set
+    config: dropbear
+    section: "@dropbear[0]"
+    type: dropbear
+    value:
+      PasswordAuth: "{{ openwrt_dropbear.PasswordAuth }}"
+      RootPasswordAuth: "{{ openwrt_dropbear.RootPasswordAuth }}"
+  notify:
+    - Uci commit
+    - Reload dropbear
+
+- name: base | Enable Luci HTTPS redirect
+  uci:
+    command: set
+    config: uhttpd
+    section: main
+    value:
+      redirect_https: 1
+  notify:
+    - Uci commit
+    - Reload uhttpd
+
+- name: base | Flush handlers
+  ansible.builtin.meta: flush_handlers

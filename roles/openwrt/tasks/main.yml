@@ -1,0 +1,12 @@
+---
+- name: Base config
+  ansible.builtin.include_tasks: base.yml
+
+- name: Dnscrypt-proxy2 tasks
+  ansible.builtin.include_tasks: dnscrypt-proxy2.yml
+
+- name: Sing-box tasks
+  ansible.builtin.include_tasks: sing-box.yml
+
+- name: Getdomains script tasks
+  ansible.builtin.include_tasks: getdomains.yml

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ "${ACTION}" = "add" ] && [ "${DEVICENAME}" = "tun0" ]; then
+    sleep 5
+    logger -t hotplug "Adding default route for vpn table via tun0"
+    ip route add table vpn default dev tun0
+fi

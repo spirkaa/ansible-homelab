@@ -1,0 +1,86 @@
+---
+- name: Provision host
+  hosts: spbleq12
+  gather_facts: false
+
+  vars:
+    resource_type: vm
+    inventory_groups: [openwrt]
+    cloud_init_enabled: false
+    vmid: 1000
+    hostname: gw-cml
+    comment: OpenWRT VPN Router
+    vm_image: /var/lib/vz/template/qcow2/openwrt-23.05.5-x86-64-generic-ext4-combined.img
+    net_ip: 192.168.20.222
+    net_cidr: 24
+    net_vlan: ""
+    net_gw: 192.168.20.1
+    net_dns: 192.168.20.1
+    cores: 2
+    mem: 1024
+    disk_size: 1
+    vm_other_options: >
+      --onboot 1
+    netmask: "{{ (net_ip ~ '/' ~ net_cidr) | ansible.utils.ipaddr('netmask') }}"
+
+  roles:
+    - { role: pve_manager }
+
+  tasks:
+    - name: Get network interfaces
+      ansible.builtin.command:
+        cmd: qm agent {{ vmid }} network-get-interfaces
+      changed_when: false
+      register: _interfaces_result
+      retries: 15
+      delay: 2
+      until: _interfaces_result is succeeded
+
+    - name: Check if network interface have ip address set
+      ansible.builtin.set_fact:
+        _interface_configured: "{{ _interfaces_result.stdout | from_json | json_query('[].\"ip-addresses\"[].\"ip-address\"') | intersect([net_ip]) }}"
+
+    - name: Configure network interface
+      ansible.builtin.command:
+        cmd: qm guest exec {{ vmid }} -- sh -c "{{ item }}"
+      register: _result
+      loop:
+        - uci set network.lan.ipaddr='{{ net_ip }}'
+        - uci set network.lan.netmask='{{ netmask }}'
+        - uci set network.lan.gateway='{{ net_gw }}'
+        - uci add_list network.lan.dns='{{ net_dns }}'
+        - uci commit network
+        - service network restart
+      changed_when: true
+      when: not _interface_configured
+
+    - name: Get authorized keys
+      ansible.builtin.command:
+        cmd: >
+          qm guest exec {{ vmid }} -- sh -c
+            "cat /etc/dropbear/authorized_keys || echo 'file not found'"
+      changed_when: false
+      register: _authorized_keys_result
+
+    - name: Check if authorized keys present
+      ansible.builtin.set_fact:
+        _authorized_keys_present: "{{ (_authorized_keys_result.stdout | from_json)['out-data'] | trim | split('\n') | symmetric_difference(inventory__sshd_authorized_keys) | length == 0 }}"
+
+    - name: Add authorized keys
+      ansible.builtin.command:
+        cmd: >
+          qm guest exec {{ vmid }} -- sh -c
+            "echo -e \"{{ inventory__sshd_authorized_keys | join('\n') }}\" >/etc/dropbear/authorized_keys"
+      changed_when: true
+      when: not _authorized_keys_present
+
+    - name: Wait for SSH port become available
+      ansible.builtin.wait_for:
+        host: "{{ net_ip }}"
+        port: 22
+
+- name: Configure host
+  hosts: gw-cml
+  strategy: linear  # role gekmihesg.openwrt don't work with mitogen
+  roles:
+    - openwrt

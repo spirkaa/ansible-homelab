@@ -1,6 +1,6 @@
 ---
-- name: "{{ hostname }} - Add to inventory group"
+- name: "{{ hostname }} - Add to inventory"
   ansible.builtin.add_host:
     name: "{{ hostname }}"
+    groups: "{{ inventory_groups | default(resource_type) }}"
     ansible_host: "{{ net_ip }}"
-    groups: "{{ resource_type }}"

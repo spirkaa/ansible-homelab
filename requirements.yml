@@ -4,6 +4,7 @@ roles:
   - name: spirkaa.zsh_prezto
   - name: geerlingguy.pip
   - name: geerlingguy.docker
+  - name: gekmihesg.openwrt
 
 collections:
   - name: ansible.posix

@@ -7,6 +7,8 @@ git+https://github.com/mitogen-hq/mitogen@master#egg=mitogen
 paramiko
 python-ldap
 yamllint
+netaddr
+passlib
 
 # Python
 pexpect
@@ -16,3 +18,4 @@ requests
 
 # Dev
 pre-commit
+djlint

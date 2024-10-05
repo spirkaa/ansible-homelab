@@ -1,0 +1,121 @@
+---
+- name: sing-box | Install package
+  community.general.opkg:
+    name: sing-box
+    state: present
+
+- name: sing-box | Configure service
+  uci:
+    command: set
+    config: sing-box
+    section: main
+    value:
+      enabled: 1
+      user: root
+  notify:
+    - Uci commit
+    - Reload sing-box
+
+- name: sing-box | Copy config
+  ansible.builtin.copy:
+    content: "{{ openwrt_sing_box_config | to_nice_json }}\n"
+    dest: /etc/sing-box/config.json
+    mode: "0644"
+    validate: sing-box check -c %s
+  notify:
+    - Reload sing-box
+
+- name: sing-box | Add vpn route table
+  ansible.builtin.lineinfile:
+    path: /etc/iproute2/rt_tables
+    line: "99\tvpn"
+  notify:
+    - Reload network
+
+- name: sing-box | Copy hotplug script for default route config
+  ansible.builtin.template:
+    src: 30-vpnroute.j2
+    dest: /etc/hotplug.d/net/30-vpnroute
+    mode: "0644"
+
+- name: sing-box | Configure routing rule mark0x1
+  uci:
+    command: section
+    config: network
+    type: rule
+    find_by:
+      name: mark0x1
+    value:
+      mark: "0x1"
+      priority: 100
+      lookup: vpn
+  notify:
+    - Uci commit
+    - Reload network
+
+- name: sing-box | Configure firewall zone
+  uci:
+    command: section
+    config: firewall
+    type: zone
+    find_by:
+      name: tun
+    value:
+      forward: ACCEPT
+      output: ACCEPT
+      name: tun
+      input: ACCEPT
+      masq: 1
+      mtu_fix: 1
+      device: tun0
+      family: ipv4
+  notify:
+    - Uci commit
+    - Reload firewall
+
+- name: sing-box | Configure forwarding
+  uci:
+    command: section
+    config: firewall
+    type: forwarding
+    find_by:
+      name: lan-tun
+    value:
+      dest: tun
+      src: lan
+      family: ipv4
+  notify:
+    - Uci commit
+    - Reload firewall
+
+- name: sing-box | Configure nfset vpn_domains
+  uci:
+    command: section
+    config: firewall
+    type: ipset
+    find_by:
+      name: vpn_domains
+    value:
+      match: dst_net
+  notify:
+    - Uci commit
+    - Reload firewall
+
+- name: sing-box | Configure mark traffic rule vpn_domains
+  uci:
+    command: section
+    config: firewall
+    type: rule
+    find_by:
+      name: mark_domains
+    value:
+      src: lan
+      dest: "*"
+      proto: all
+      ipset: vpn_domains
+      set_mark: "0x1"
+      target: MARK
+      family: ipv4
+  notify:
+    - Uci commit
+    - Reload firewall

@@ -1,0 +1,51 @@
+---
+- name: Uci commit
+  uci:
+    command: commit
+
+- name: Reload system
+  ansible.builtin.service:
+    name: system
+    state: reloaded
+
+- name: Reload uhttpd
+  ansible.builtin.service:
+    name: uhttpd
+    state: reloaded
+
+- name: Reload dropbear
+  ansible.builtin.service:
+    name: dropbear
+    state: reloaded
+
+- name: Reload sing-box
+  ansible.builtin.service:
+    name: sing-box
+    state: reloaded
+    enabled: true
+
+- name: Reload firewall
+  ansible.builtin.service:
+    name: firewall
+    state: reloaded
+
+- name: Reload network
+  ansible.builtin.service:
+    name: network
+    state: reloaded
+
+- name: Reload dnscrypt-proxy
+  ansible.builtin.service:
+    name: dnscrypt-proxy
+    state: reloaded
+    enabled: true
+
+- name: Reload dnsmasq
+  ansible.builtin.service:
+    name: dnsmasq
+    state: reloaded
+
+- name: Run getdomains script
+  ansible.builtin.service:
+    name: getdomains
+    state: restarted
