@@ -49,3 +49,8 @@
   ansible.builtin.service:
     name: getdomains
     state: restarted
+
+- name: Restart wireguard
+  ansible.builtin.shell:
+    cmd: ifdown {{ openwrt_wg_server.interface }} && ifup {{ openwrt_wg_server.interface }}
+  changed_when: true

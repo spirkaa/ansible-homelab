@@ -2,6 +2,10 @@
 - name: Base config
   ansible.builtin.include_tasks: base.yml
 
+- name: Wireguard tasks
+  ansible.builtin.include_tasks: wireguard.yml
+  when: openwrt_wg_server_enabled | default(false) | bool
+
 - name: Dnscrypt-proxy2 tasks
   ansible.builtin.include_tasks: dnscrypt-proxy2.yml
 

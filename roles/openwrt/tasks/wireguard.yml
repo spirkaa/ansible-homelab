@@ -1,0 +1,80 @@
+---
+- name: wireguard | Install package
+  community.general.opkg:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - wireguard-tools
+    - luci-proto-wireguard
+    - qrencode
+
+- name: wireguard | Add interface
+  uci:
+    command: add
+    config: network
+    type: interface
+    name: "{{ openwrt_wg_server.interface }}"
+  notify:
+    - Uci commit
+    - Reload network
+
+- name: wireguard | Configure interface
+  uci:
+    command: set
+    config: network
+    section: "{{ openwrt_wg_server.interface }}"
+    value:
+      proto: wireguard
+      private_key: "{{ openwrt_wg_server.private_key }}"
+      listen_port: "{{ openwrt_wg_server.listen_port }}"
+      addresses:
+        - "{{ openwrt_wg_server.addresses }}"
+  notify:
+    - Uci commit
+    - Restart wireguard
+
+- name: wireguard | Configure client
+  uci:
+    command: section
+    config: network
+    type: wireguard_{{ openwrt_wg_server.interface }}
+    find_by:
+      description: "{{ item.description }}"
+    value:
+      description: "{{ item.description }}"
+      public_key: "{{ item.public_key }}"
+      private_key: "{{ item.private_key | default(omit) }}"
+      allowed_ips:
+        - "{{ item.allowed_ips }}"
+  loop: "{{ openwrt_wg_server.clients }}"
+  loop_control:
+    label: "{{ item.description }}"
+  notify:
+    - Uci commit
+    - Restart wireguard
+
+- name: wireguard | Configure firewall zone "lan" - enable masquerading
+  uci:
+    command: set
+    config: firewall
+    section: "@zone[0]"
+    value:
+      masq: 1
+  notify:
+    - Uci commit
+    - Reload firewall
+
+- name: wireguard | Configure firewall zone "lan" - add_list
+  uci:
+    command: add_list
+    config: firewall
+    section: "@zone[0]"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    unique: true
+  loop:
+    - { option: network, value: "{{ openwrt_wg_server.interface }}" }
+    - { option: masq_src, value: "{{ openwrt_wg_server.addresses }}" }
+  notify:
+    - Uci commit
+    - Reload firewall
