@@ -1,22 +1,22 @@
 ---
 - name: Create build container
-  hosts: spbleq12
+  hosts: sppve
   gather_facts: false
 
   vars:
     resource_type: ct
     # imagebuilder depends on python3-distutils, which removed from ubuntu 24.04 with python 3.12
-    ct_template: local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst
+    ct_template: spsrv-proxmox:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst
     vmid: 3999
     hostname: openwrt-imagebuilder
     comment: Temp host for building openwrt image
     cores: 4
     mem: 2048
     disk_size: 10
-    net_ip: 192.168.20.223
-    net_vlan: ""
-    net_gw: 192.168.20.1
-    net_dns: 192.168.20.1
+    net_ip: 192.168.10.69
+    net_vlan: 10
+    net_gw: 192.168.10.1
+    net_dns: 192.168.10.1
     net_domain: "{{ inventory__homelab_domain }}"
     openwrt_version: 23.05.5
     openwrt_target: x86/64
@@ -25,7 +25,7 @@
     openwrt_image_builder_result: /tmp/{{ openwrt_image_builder }}/bin/targets/x86/64/{{ openwrt_image }}.gz
     openwrt_image: openwrt-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}-generic-ext4-combined.img
     openwrt_image_gz: "{{ openwrt_image }}.gz"
-    proxmox_template_path: /var/lib/vz/template/qcow2
+    proxmox_template_path: /mnt/pve/spsrv-proxmox/template/qcow2
 
   roles:
     - { role: pve_manager }
@@ -47,12 +47,14 @@
 - name: Build openwrt image
   hosts: openwrt-imagebuilder
   gather_facts: false
+  vars:
+    pve_host: sppve
   tasks:
     - name: Copy vars from another host
       ansible.builtin.set_fact:
-        openwrt_image_builder: "{{ hostvars['spbleq12'].openwrt_image_builder }}"
-        openwrt_image_builder_url: "{{ hostvars['spbleq12'].openwrt_image_builder_url }}"
-        openwrt_image_builder_result: "{{ hostvars['spbleq12'].openwrt_image_builder_result }}"
+        openwrt_image_builder: "{{ hostvars[pve_host].openwrt_image_builder }}"
+        openwrt_image_builder_url: "{{ hostvars[pve_host].openwrt_image_builder_url }}"
+        openwrt_image_builder_result: "{{ hostvars[pve_host].openwrt_image_builder_result }}"
 
     - name: Install packages for image builder
       ansible.builtin.package:
@@ -110,16 +112,17 @@
             tcpdump
             bind-dig
             mtr-json
+            sing-box
             wireguard-tools
             luci-proto-wireguard
-            sing-box
+            qrencode
         chdir: /tmp/{{ openwrt_image_builder }}
       become: true
       become_user: build
 
 
 - name: Copy openwrt image from container to proxmox host
-  hosts: spbleq12
+  hosts: sppve
   gather_facts: false
   tasks:
     - name: Delete old image

@@ -1,21 +1,21 @@
 ---
 - name: Provision host
-  hosts: spbleq12
+  hosts: sppve
   gather_facts: false
 
   vars:
     resource_type: vm
     inventory_groups: [openwrt]
     cloud_init_enabled: false
-    vmid: 1000
-    hostname: gw-cml
+    vmid: 199
+    hostname: gw-krs
     comment: OpenWRT VPN Router
     vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/openwrt-23.05.5-x86-64-generic-ext4-combined.img
-    net_ip: 192.168.20.222
+    net_ip: 192.168.10.99
     net_cidr: 24
-    net_vlan: ""
-    net_gw: 192.168.20.1
-    net_dns: 192.168.20.1
+    net_vlan: 10
+    net_gw: 192.168.10.1
+    net_dns: 192.168.10.1
     cores: 2
     mem: 1024
     disk_size: 1
@@ -80,7 +80,7 @@
         port: 22
 
 - name: Configure host
-  hosts: gw-cml
+  hosts: gw-krs
   strategy: linear  # role gekmihesg.openwrt don't work with mitogen
   roles:
     - openwrt

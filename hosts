@@ -11,6 +11,7 @@ ubnt-erx-krs
 ubnt-erx-cml
 
 [openwrt]
+gw-krs ansible_host=192.168.10.99
 gw-cml ansible_host=192.168.20.222
 
 [proxmox]
