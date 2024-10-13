@@ -33,7 +33,7 @@
     - Uci commit
     - Restart wireguard
 
-- name: wireguard | Configure client
+- name: wireguard | Configure peers
   uci:
     command: section
     config: network
@@ -46,7 +46,7 @@
       private_key: "{{ item.private_key | default(omit) }}"
       allowed_ips:
         - "{{ item.allowed_ips }}"
-  loop: "{{ openwrt_wg_server.clients }}"
+  loop: "{{ openwrt_wg_server.peers }}"
   loop_control:
     label: "{{ item.description }}"
   notify:
@@ -75,6 +75,27 @@
   loop:
     - { option: network, value: "{{ openwrt_wg_server.interface }}" }
     - { option: masq_src, value: "{{ openwrt_wg_server.addresses }}" }
+  notify:
+    - Uci commit
+    - Reload firewall
+
+- name: wireguard | Configure mark traffic rule "deluge"
+  uci:
+    command: section
+    config: firewall
+    type: rule
+    find_by:
+      name: deluge
+    value:
+      src: lan
+      dest: "*"
+      proto:
+        - all
+      src_ip:
+        - "{{ (openwrt_wg_server.peers | selectattr('description', 'search', 'deluge'))[0].allowed_ips | ansible.utils.ipaddr('address') }}"
+      set_mark: "0x1"
+      target: MARK
+      family: ipv4
   notify:
     - Uci commit
     - Reload firewall
