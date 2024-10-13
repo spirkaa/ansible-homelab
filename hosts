@@ -12,7 +12,7 @@ ubnt-erx-cml
 
 [openwrt]
 gw-krs ansible_host=192.168.10.99 openwrt_wg_server_enabled=true
-gw-cml ansible_host=192.168.20.222
+gw-cml ansible_host=192.168.20.99
 
 [proxmox]
 spsrv snmp_syslocation=krs

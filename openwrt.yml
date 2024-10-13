@@ -1,0 +1,6 @@
+---
+- name: OpenWRT routers
+  hosts: openwrt
+  strategy: linear  # role gekmihesg.openwrt don't work with mitogen
+  roles:
+    - openwrt

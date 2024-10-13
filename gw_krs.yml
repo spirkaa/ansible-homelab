@@ -20,6 +20,7 @@
     mem: 1024
     disk_size: 1
     vm_other_options: >
+      --cpu cputype=host
       --onboot 1
     netmask: "{{ (net_ip ~ '/' ~ net_cidr) | ansible.utils.ipaddr('netmask') }}"
 

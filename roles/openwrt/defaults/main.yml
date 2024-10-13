@@ -11,7 +11,7 @@ openwrt_dropbear:
 
 openwrt_sing_box_config:
   log:
-    level: info
+    level: warn
   route:
     auto_detect_interface: true
   inbounds:
