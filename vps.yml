@@ -18,11 +18,11 @@
     # - { role: common/snmp, tags: [vps, snmp] }
     # - { role: common/docker, tags: [vps, docker] }
     - { role: vps, tags: [vps, vps_specific] }
-    - role: xray
-      when: xray_enabled | default(false) | bool
+    - role: sing_box
+      when: sing_box_enabled | default(false) | bool
       tags:
         - vps
-        - xray
+        - sing_box
 
   pre_tasks:
     - name: Set timezone

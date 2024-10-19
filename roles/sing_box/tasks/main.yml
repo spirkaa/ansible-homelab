@@ -1,0 +1,66 @@
+---
+- name: Check currently installed sing-box version
+  ansible.builtin.slurp:
+    src: "{{ ((sing_box_config | dirname), 'version') | path_join }}"
+  register: sing_box_version_current
+  failed_when: false
+
+- name: Create config dir
+  ansible.builtin.file:
+    dest: "{{ sing_box_config | dirname }}"
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Get release, unpack, install, clean up
+  when: (sing_box_version_current.content is not defined) or (sing_box_version_current.content | b64decode | default('') | trim != sing_box_version)
+  block:
+    - name: Download sing-box
+      ansible.builtin.unarchive:
+        src: "{{ sing_box_url }}"
+        dest: "{{ sing_box_path }}"
+        mode: "0755"
+        owner: root
+        group: root
+        remote_src: true
+        extra_opts:
+          - --strip-components=1
+      notify: Restart sing-box
+
+    - name: Delete license file
+      ansible.builtin.file:
+        path: "{{ (sing_box_path, 'LICENSE') | path_join }}"
+        state: absent
+
+    - name: Store sing-box version
+      ansible.builtin.copy:
+        content: "{{ sing_box_version }}"
+        dest: "{{ ((sing_box_config | dirname), 'version') | path_join }}"
+        mode: "0644"
+
+- name: Copy systemd service
+  ansible.builtin.template:
+    src: sing-box.service.j2
+    dest: /etc/systemd/system/sing-box.service
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart sing-box
+
+- name: Copy config
+  ansible.builtin.template:
+    src: config.json.j2
+    dest: "{{ sing_box_config }}"
+    mode: "0644"
+    validate: "{{ (sing_box_path, 'sing-box') | path_join }} check -c %s"
+  notify: Restart sing-box
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start service
+  ansible.builtin.service:
+    name: sing-box
+    enabled: true
+    state: started

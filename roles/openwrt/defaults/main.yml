@@ -14,8 +14,21 @@ openwrt_sing_box_config:
     level: warn
   route:
     auto_detect_interface: true
+    rules:
+      - inbound: mixed-in
+        outbound: vless-out
+      - inbound: tun-in
+        outbound: vless-out
   inbounds:
+    - type: mixed
+      tag: mixed-in
+      listen: 0.0.0.0
+      listen_port: 1080
+      set_system_proxy: false
+      sniff: true
+      domain_strategy: ipv4_only
     - type: tun
+      tag: tun-in
       interface_name: tun0
       domain_strategy: ipv4_only
       inet4_address: 172.16.250.1/30
@@ -23,21 +36,28 @@ openwrt_sing_box_config:
       strict_route: false
       sniff: true
   outbounds:
+    - type: direct
+      tag: direct-out
     - type: vless
-      flow: "{{ (inventory__xray_config.clients | selectattr('email', 'search', inventory_hostname))[0].flow }}"
-      uuid: "{{ (inventory__xray_config.clients | selectattr('email', 'search', inventory_hostname))[0].id }}"
-      server: "{{ inventory__xray_config.server }}"
-      server_port: "{{ inventory__xray_config.port }}"
+      tag: vless-out
+      flow: "{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].flow }}"
+      uuid: "{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].uuid }}"
+      server: "{{ inventory__sing_box_config.server }}"
+      server_port: "{{ inventory__sing_box_config.port }}"
       tls:
         enabled: true
-        server_name: "{{ inventory__xray_config.server_name }}"
+        server_name: "{{ inventory__sing_box_config.server_name }}"
         reality:
           enabled: true
-          public_key: "{{ inventory__xray_config.public_key }}"
-          short_id: "{{ inventory__xray_config.short_id }}"
+          public_key: "{{ inventory__sing_box_config.public_key }}"
+          short_id: "{{ inventory__sing_box_config.short_id }}"
         utls:
           enabled: true
           fingerprint: chrome
+      multiplex:
+        enabled: true
+        max_connections: 16
+        min_streams: 16
 
 openwrt_wg_server:
   interface: wg0

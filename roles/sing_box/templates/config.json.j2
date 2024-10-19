@@ -1,0 +1,45 @@
+{
+    "log": {
+      "level": "warn"
+    },
+    "inbounds": [
+      {
+        "type": "vless",
+        "tag": "vless-in",
+        "listen": "0.0.0.0",
+        "listen_port": {{ inventory__sing_box_config.port }},
+        "sniff": true,
+        "sniff_override_destination": true,
+        "domain_strategy": "ipv4_only",
+        "users": {{ inventory__sing_box_config.users | to_nice_json(indent=2) | indent(width=8, first=false) }},
+        "tls": {
+          "enabled": true,
+          "server_name": "{{ inventory__sing_box_config.server_name }}",
+            "reality": {
+            "enabled": true,
+            "handshake": {
+              "server": "{{ inventory__sing_box_config.server_name }}",
+              "server_port": {{ inventory__sing_box_config.port }}
+            },
+            "private_key": "{{ inventory__sing_box_config.private_key }}",
+            "short_id": [
+              "{{ inventory__sing_box_config.short_id }}"
+            ]
+          }
+        },
+        "multiplex": {
+          "enabled": true
+        }
+      }
+    ],
+    "outbounds": [
+      {
+        "type": "direct",
+        "tag": "direct"
+      },
+      {
+        "type": "block",
+        "tag": "block"
+      }
+    ]
+  }

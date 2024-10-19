@@ -1,0 +1,6 @@
+---
+- name: Restart sing-box
+  ansible.builtin.service:
+    name: sing-box
+    state: restarted
+    daemon_reload: true
