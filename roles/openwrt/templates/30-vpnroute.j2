@@ -1,7 +1,13 @@
 #!/bin/sh
 
-if [ "${ACTION}" = "add" ] && [ "${DEVICENAME}" = "tun0" ]; then
+if [ "${ACTION}" = "add" ]; then
     sleep 5
-    logger -t hotplug "Adding default route for vpn table via tun0"
-    ip route add table vpn default dev tun0
+    if [ "${DEVICENAME}" = "tun0" ]; then
+        logger -t hotplug "Adding default route for vpn table via tun0"
+        ip route add table vpn default dev tun0
+    fi
+    if [ "${DEVICENAME}" = "tun1" ]; then
+        logger -t hotplug "Adding default route for shadowsocks table via tun1"
+        ip route add table shadowsocks default dev tun1
+    fi
 fi

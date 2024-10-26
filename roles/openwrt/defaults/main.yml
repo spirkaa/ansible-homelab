@@ -19,11 +19,15 @@ openwrt_sing_box_config:
         outbound: vless-out
       - inbound: tun-in
         outbound: vless-out
+      - inbound: tun2ss-in
+        outbound: ss-out
   inbounds:
     - type: mixed
       tag: mixed-in
       listen: 0.0.0.0
       listen_port: 1080
+      tcp_fast_open: true
+      tcp_multi_path: true
       set_system_proxy: false
       sniff: true
       domain_strategy: ipv4_only
@@ -32,6 +36,14 @@ openwrt_sing_box_config:
       interface_name: tun0
       domain_strategy: ipv4_only
       inet4_address: 172.16.250.1/30
+      auto_route: false
+      strict_route: false
+      sniff: true
+    - type: tun
+      tag: tun2ss-in
+      interface_name: tun1
+      domain_strategy: ipv4_only
+      inet4_address: 172.16.251.1/30
       auto_route: false
       strict_route: false
       sniff: true
@@ -58,6 +70,14 @@ openwrt_sing_box_config:
         enabled: true
         max_connections: 16
         min_streams: 16
+    - type: shadowsocks
+      tag: ss-out
+      server: "{{ inventory__sing_box_config.server }}"
+      server_port: "{{ inventory__sing_box_config.ss.port }}"
+      method: "{{ inventory__sing_box_config.ss.method }}"
+      password: "{{ inventory__sing_box_config.ss.password }}"
+      multiplex:
+        enabled: false
 
 openwrt_wg_server:
   interface: wg0

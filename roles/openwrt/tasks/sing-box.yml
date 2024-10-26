@@ -29,6 +29,15 @@
   ansible.builtin.lineinfile:
     path: /etc/iproute2/rt_tables
     line: "99\tvpn"
+    state: present
+  notify:
+    - Reload network
+
+- name: sing-box | Add shadowsocks route table
+  ansible.builtin.lineinfile:
+    path: /etc/iproute2/rt_tables
+    line: "100\tshadowsocks"
+    state: present
   notify:
     - Reload network
 
@@ -53,7 +62,22 @@
     - Uci commit
     - Reload network
 
-- name: sing-box | Configure firewall zone
+- name: sing-box | Configure routing rule mark0x2
+  uci:
+    command: section
+    config: network
+    type: rule
+    find_by:
+      name: mark0x2
+    value:
+      mark: "0x2"
+      priority: 100
+      lookup: shadowsocks
+  notify:
+    - Uci commit
+    - Reload network
+
+- name: sing-box | Configure firewall zone "tun"
   uci:
     command: section
     config: firewall
@@ -67,7 +91,9 @@
       input: ACCEPT
       masq: 1
       mtu_fix: 1
-      device: tun0
+      device:
+        - tun0
+        - tun1
       family: ipv4
   notify:
     - Uci commit
