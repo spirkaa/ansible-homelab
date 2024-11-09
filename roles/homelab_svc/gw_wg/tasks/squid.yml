@@ -16,24 +16,24 @@
   notify: squid-ldap - restart
   tags: squid
 
-- name: squid - start
-  community.docker.docker_container:
-    name: squid
-    image: "{{ squid_image }}"
-    image_name_mismatch: recreate
-    pull: true
-    volumes:
-      - "squid-var-cache:/var/cache/squid"
-    dns_servers:
-      - 1.1.1.1
-    network_mode: host
-    healthcheck:
-      test: ["CMD-SHELL", "squidclient -T 3 mgr:info 2> /dev/null | grep -qF '200 OK'"]
-      interval: 60s
-      timeout: 3s
-    restart_policy: unless-stopped
-    state: started
-  tags: squid
+# - name: squid - start
+#   community.docker.docker_container:
+#     name: squid
+#     image: "{{ squid_image }}"
+#     image_name_mismatch: recreate
+#     pull: true
+#     volumes:
+#       - "squid-var-cache:/var/cache/squid"
+#     dns_servers:
+#       - 1.1.1.1
+#     network_mode: host
+#     healthcheck:
+#       test: ["CMD-SHELL", "squidclient -T 3 mgr:info 2> /dev/null | grep -qF '200 OK'"]
+#       interval: 60s
+#       timeout: 3s
+#     restart_policy: unless-stopped
+#     state: started
+#   tags: squid
 
 - name: squid-ldap - start
   community.docker.docker_container:
