@@ -4,7 +4,7 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-freeipa_image: freeipa/freeipa-server:fedora-40-4.12.1
+freeipa_image: freeipa/freeipa-server:fedora-40-4.12.2
 phpldapadmin_image: osixia/phpldapadmin:0.9.0
 
 vault_image: vault:latest
