@@ -56,7 +56,7 @@
       name: mark0x1
     value:
       mark: "0x1"
-      priority: 100
+      priority: 99
       lookup: vpn
   notify:
     - Uci commit

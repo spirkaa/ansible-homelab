@@ -275,7 +275,7 @@ inventory__xray_config:
         3361343034323330326430383639353632316132663632623835
 
 inventory__sing_box_config:
-  server_name: yahoo.com
+  server_name: devmem.ru
   server: vps-sd-ams.devmem.ru
   port: 443
   public_key: lTcPXcKAgwGKgMcjCrHfWpc77_nsXQE0udNY0d-SjyQ

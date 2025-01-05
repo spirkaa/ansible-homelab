@@ -9,6 +9,9 @@ openwrt_dropbear:
   PasswordAuth: 0
   RootPasswordAuth: 0
 
+openwrt_dhcp: {}
+openwrt_dnsmasq: {}
+
 openwrt_sing_box_config:
   log:
     level: warn

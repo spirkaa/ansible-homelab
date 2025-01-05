@@ -1,0 +1,39 @@
+---
+- name: dhcp | Create pool for lan
+  uci:
+    command: add
+    config: dhcp
+    section: lan
+    type: dhcp
+  notify:
+    - Uci commit
+    - Reload dhcp
+
+- name: dhcp | Configure dhcp pool for lan
+  uci:
+    command: set
+    config: dhcp
+    section: lan
+    type: dhcp
+    value:
+      interface: "{{ openwrt_dhcp.interface | default('lan') }}"
+      start: "{{ openwrt_dhcp.start | default('100') }}"
+      limit: "{{ openwrt_dhcp.limit | default('100') }}"
+      leasetime: "{{ openwrt_dhcp.leasetime | default('24h') }}"
+      force: "{{ openwrt_dhcp.force | default('0') }}"
+      dhcpv4: "{{ openwrt_dhcp.dhcpv4 | default('server') }}"
+  notify:
+    - Uci commit
+    - Reload dhcp
+
+- name: dhcp | Disable dhcpv6 for lan
+  uci:
+    command: absent
+    key: "{{ item }}"
+  loop:
+    - dhcp.lan.ra
+    - dhcp.lan.ra_flags
+    - dhcp.lan.dhcpv6
+  notify:
+    - Uci commit
+    - Reload dhcp

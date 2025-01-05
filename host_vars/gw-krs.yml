@@ -1,0 +1,6 @@
+---
+openwrt_dnsmasq:
+  authoritative: 0
+
+openwrt_dhcp:
+  force: 0

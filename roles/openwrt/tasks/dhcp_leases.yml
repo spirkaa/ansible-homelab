@@ -1,0 +1,41 @@
+---
+- name: Set static lease state status for host {{ item.name }}
+  ansible.builtin.set_fact:
+    static_lease_state: "{{ item.state | default('present') }}"
+
+- name: Delete static lease for host {{ item.name }}
+  when: "'absent' in static_lease_state"
+  uci:
+    command: absent
+    config: dhcp
+    section: "{{ item.id }}"
+    type: host
+  notify:
+    - Uci commit
+    - Reload dhcp
+
+- name: Create and configure static lease for host
+  when: "'present' in static_lease_state"
+  notify:
+    - Uci commit
+    - Reload dhcp
+  block:
+    - name: Create static lease for host {{ item.name }}
+      uci:
+        command: add
+        config: dhcp
+        section: "{{ item.id | default('@host[-1]') }}"
+        type: host
+
+    - name: Configure static lease for host {{ item.name }}
+      uci:
+        command: set
+        config: dhcp
+        section: "{{ item.id | default('@host[-1]') }}"
+        type: host
+        value:
+          name: "{{ item.name | default(omit) }}"
+          ip: "{{ item.ip | default(omit) }}"
+          mac: "{{ item.mac | default(omit) }}"
+          leasetime: "{{ item.leasetime | default(omit) }}"
+          dns: "{{ item.dns | default(omit) }}"

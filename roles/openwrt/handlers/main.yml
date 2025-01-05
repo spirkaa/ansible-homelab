@@ -40,10 +40,16 @@
     state: reloaded
     enabled: true
 
+- name: Reload dhcp
+  ansible.builtin.service:
+    name: odhcpd
+    state: reloaded
+
 - name: Reload dnsmasq
   ansible.builtin.service:
     name: dnsmasq
     state: reloaded
+  listen: Reload dhcp
 
 - name: Run getdomains script
   ansible.builtin.service:

@@ -16,8 +16,8 @@
     net_vlan: 10
     net_gw: 192.168.10.1
     net_dns: 192.168.10.1
-    cores: 2
-    mem: 1024
+    cores: 4
+    mem: 2048
     disk_size: 1
     vm_other_options: >
       --cpu cputype=host

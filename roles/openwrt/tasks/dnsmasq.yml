@@ -1,0 +1,43 @@
+---
+- name: dnsmasq | Configure
+  uci:
+    command: set
+    config: dhcp
+    section: "@dnsmasq[-1]"
+    value:
+      authoritative: "{{ openwrt_dnsmasq.authoritative | default('1') }}"
+      filter_aaaa: "{{ openwrt_dnsmasq.filter_aaaa | default('1') }}"
+      sequential_ip: "{{ openwrt_dnsmasq.sequential_ip | default('1') }}"
+  notify:
+    - Uci commit
+    - Reload dnsmasq
+
+- name: dnsmasq | Configure forward server
+  uci:
+    command: add_list
+    config: dhcp
+    section: "@dnsmasq[-1]"
+    option: server
+    value: "{{ item }}"
+    unique: true
+  notify:
+    - Uci commit
+    - Reload dnsmasq
+  loop: "{{ openwrt_dnsmasq_forward_servers }}"
+  when:
+    - openwrt_dnsmasq_forward_servers is defined
+
+- name: dnsmasq | Configure rebind domain
+  uci:
+    command: add_list
+    config: dhcp
+    section: "@dnsmasq[-1]"
+    option: rebind_domain
+    value: "{{ item }}"
+    unique: true
+  notify:
+    - Uci commit
+    - Reload dnsmasq
+  loop: "{{ openwrt_dnsmasq_rebind_domains }}"
+  when:
+    - openwrt_dnsmasq_rebind_domains is defined

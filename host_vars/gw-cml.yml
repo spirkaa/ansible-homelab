@@ -1,0 +1,113 @@
+---
+openwrt_dnsmasq_forward_servers:
+  - /*.home.devmem.ru/192.168.10.1
+  - /*.k8s.devmem.ru/192.168.10.1
+  - /k8s.devmem.ru/192.168.10.1
+
+openwrt_dnsmasq_rebind_domains:
+  - devmem.ru
+
+openwrt_dhcp:
+  force: 1
+
+openwrt_dhcp_leases:
+  - id: "@host[0]"
+    name: JBL-Bar-9
+    ip: 192.168.20.42
+    mac: 88:d0:39:b0:9f:a1
+  - id: "@host[1]"
+    name: LGwebOSTV
+    ip: 192.168.20.49
+    mac: 44:cb:8b:ee:a6:f6
+  - id: "@host[2]"
+    name: UAP-AC-Pro
+    ip: 192.168.20.2
+    mac: f0:9f:c2:cb:03:70
+  - id: "@host[3]"
+    name: YandexStationMax
+    ip: 192.168.20.38
+    mac: 4c:79:6e:f2:fd:8c
+  - id: "@host[4]"
+    name: ble-tracker
+    ip: 192.168.20.48
+    mac: 30:ae:a4:04:40:bc
+  - id: "@host[5]"
+    name: mi-gateway
+    ip: 192.168.20.44
+    mac: 50:ec:50:c0:55:b9
+  - id: "@host[6]"
+    name: roborock-s6-pure
+    ip: 192.168.20.47
+    mac: 64:90:c1:1b:c2:22
+  - id: "@host[7]"
+    name: shield
+    ip: 192.168.20.40
+    mac: 48:b0:2d:2b:dc:2d
+  - id: "@host[8]"
+    name: shield-eth
+    ip: 192.168.20.41
+    mac: 48:b0:2d:2d:62:cd
+  - id: "@host[9]"
+    name: yeelink-light-ceiling15_mibt77E3
+    ip: 192.168.20.55
+    mac: 44:23:7c:2f:77:e3
+  - id: "@host[10]"
+    name: yeelink-light-ceiling15_mibt492D
+    ip: 192.168.20.57
+    mac: 50:ec:50:83:49:2d
+  - id: "@host[11]"
+    name: yeelink-light-ceiling15_mibtB3A2
+    ip: 192.168.20.56
+    mac: 44:23:7c:2f:b3:a2
+  - id: "@host[12]"
+    name: yeelink-light-ceiling24_miio9e
+    ip: 192.168.20.51
+    mac: 04:cf:8c:13:75:b5
+  - id: "@host[13]"
+    name: yeelink-light-ceiling24_miio15
+    ip: 192.168.20.50
+    mac: 04:cf:8c:1f:a2:ac
+  - id: "@host[14]"
+    name: yeelink-light-ceiling24_miio22
+    ip: 192.168.20.53
+    mac: 04:cf:8c:13:76:39
+  - id: "@host[15]"
+    name: yeelink-light-ceiling24_miiodf
+    ip: 192.168.20.52
+    mac: 04:cf:8c:13:64:f6
+  - id: "@host[16]"
+    name: yeelink-light-ceiling24_miiof7
+    ip: 192.168.20.54
+    mac: 04:cf:8c:13:73:0e
+  - id: "@host[17]"
+    name: yeelink-light-color4_mibt22CC
+    ip: 192.168.20.59
+    mac: 44:23:7c:3c:22:cc
+  - id: "@host[18]"
+    name: yeelink-light-color4_mibt8538
+    ip: 192.168.20.58
+    mac: 64:90:c1:97:85:38
+  - id: "@host[19]"
+    name: yeelink-light-colorc_miap00AD
+    ip: 192.168.20.61
+    mac: b4:60:ed:44:00:ad
+  - id: "@host[20]"
+    name: yeelink-light-colorc_miapDAB6
+    ip: 192.168.20.62
+    mac: b4:60:ed:43:da:b6
+  - id: "@host[21]"
+    name: yeelink-light-colorc_miapF8E5
+    ip: 192.168.20.63
+    mac: b4:60:ed:43:f8:e5
+  - id: "@host[22]"
+    name: yeelink-switch-sw1_mibt1CCB
+    ip: 192.168.20.60
+    mac: 58:b6:23:41:1c:cb
+  - id: "@host[23]"
+    name: zbbridge-tasmota_E3231F
+    ip: 192.168.20.45
+    mac: 98:f4:ab:e3:23:1f
+  - id: "@host[24]"
+    name: zhimi-humidifier-cb1_mibt980
+    ip: 192.168.20.46
+    mac: 5c:e5:0c:b7:09:80

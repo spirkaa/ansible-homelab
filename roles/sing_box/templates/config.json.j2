@@ -1,63 +1,63 @@
 {
-    "log": {
-      "level": "warn"
-    },
-    "inbounds": [
-      {
-        "type": "vless",
-        "tag": "vless-in",
-        "listen": "0.0.0.0",
-        "listen_port": {{ inventory__sing_box_config.port }},
-        "tcp_fast_open": true,
-        "tcp_multi_path": true,
-        "udp_fragment": false,
-        "udp_timeout": "1m",
-        "sniff": false,
-        "sniff_override_destination": false,
-        "domain_strategy": "ipv4_only",
-        "users": {{ inventory__sing_box_config.users | to_nice_json(indent=2) | indent(width=8, first=false) }},
-        "tls": {
+  "log": {
+    "level": "warn"
+  },
+  "inbounds": [
+    {
+      "type": "vless",
+      "tag": "vless-in",
+      "listen": "0.0.0.0",
+      "listen_port": {{ inventory__sing_box_config.port }},
+      "tcp_fast_open": true,
+      "tcp_multi_path": true,
+      "udp_fragment": false,
+      "udp_timeout": "1m",
+      "sniff": true,
+      "sniff_override_destination": true,
+      "domain_strategy": "ipv4_only",
+      "users": {{ inventory__sing_box_config.users | to_nice_json(indent=2) | indent(width=8, first=false) }},
+      "tls": {
+        "enabled": true,
+        "server_name": "{{ inventory__sing_box_config.server_name }}",
+          "reality": {
           "enabled": true,
-          "server_name": "{{ inventory__sing_box_config.server_name }}",
-            "reality": {
-            "enabled": true,
-            "handshake": {
-              "server": "{{ inventory__sing_box_config.server_name }}",
-              "server_port": {{ inventory__sing_box_config.port }}
-            },
-            "private_key": "{{ inventory__sing_box_config.private_key }}",
-            "short_id": [
-              "{{ inventory__sing_box_config.short_id }}"
-            ]
-          }
-        },
-        "multiplex": {
-          "enabled": true
+          "handshake": {
+            "server": "{{ inventory__sing_box_config.server_name }}",
+            "server_port": {{ inventory__sing_box_config.port }}
+          },
+          "private_key": "{{ inventory__sing_box_config.private_key }}",
+          "short_id": [
+            "{{ inventory__sing_box_config.short_id }}"
+          ]
         }
       },
-      {
-        "type": "shadowsocks",
-        "tag": "ss-in",
-        "listen": "0.0.0.0",
-        "listen_port": {{ inventory__sing_box_config.ss.port }},
-        "sniff": true,
-        "sniff_override_destination": true,
-        "domain_strategy": "ipv4_only",
-        "method": "{{ inventory__sing_box_config.ss.method }}",
-        "password": "{{ inventory__sing_box_config.ss.password }}",
-        "multiplex": {
-          "enabled": false
-        }
+      "multiplex": {
+        "enabled": true
       }
-    ],
-    "outbounds": [
-      {
-        "type": "direct",
-        "tag": "direct"
-      },
-      {
-        "type": "block",
-        "tag": "block"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "ss-in",
+      "listen": "0.0.0.0",
+      "listen_port": {{ inventory__sing_box_config.ss.port }},
+      "sniff": true,
+      "sniff_override_destination": true,
+      "domain_strategy": "ipv4_only",
+      "method": "{{ inventory__sing_box_config.ss.method }}",
+      "password": "{{ inventory__sing_box_config.ss.password }}",
+      "multiplex": {
+        "enabled": false
       }
-    ]
-  }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct-out"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ]
+}
