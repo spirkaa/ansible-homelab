@@ -2,16 +2,6 @@
 - name: Base config
   ansible.builtin.include_tasks: base.yml
 
-- name: DHCP config
-  ansible.builtin.include_tasks: dhcp.yml
-
-- name: DHCP static leases
-  ansible.builtin.include_tasks: dhcp_leases.yml
-  loop: "{{ openwrt_dhcp_leases | default([]) }}"
-
-- name: Dnsmasq config
-  ansible.builtin.include_tasks: dnsmasq.yml
-
 - name: Wireguard tasks
   ansible.builtin.include_tasks: wireguard.yml
   when: openwrt_wg_server_enabled | default(false) | bool
@@ -24,3 +14,13 @@
 
 - name: Getdomains script tasks
   ansible.builtin.include_tasks: getdomains.yml
+
+- name: Dnsmasq config
+  ansible.builtin.include_tasks: dnsmasq.yml
+
+- name: DHCP config
+  ansible.builtin.include_tasks: dhcp.yml
+
+- name: DHCP static leases
+  ansible.builtin.include_tasks: dhcp_leases.yml
+  loop: "{{ openwrt_dhcp_leases | default([]) }}"

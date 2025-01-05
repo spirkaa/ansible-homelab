@@ -6,6 +6,7 @@ openwrt_dnsmasq_forward_servers:
 
 openwrt_dnsmasq_rebind_domains:
   - devmem.ru
+  - plex.direct
 
 openwrt_dhcp:
   force: 1
