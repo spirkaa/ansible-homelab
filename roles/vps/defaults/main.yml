@@ -46,7 +46,7 @@ wg_pia_image: thrnz/docker-wireguard-pia:latest
 wg_pia_user: "{{ inventory__piavpn_user }}"
 wg_pia_pass: "{{ inventory__piavpn_pass }}"
 # https://serverlist.piaservers.net/vpninfo/servers/v6
-wg_pia_location: sweden_2
+wg_pia_location: swiss
 wg_pia_local_network: ""
 wg_pia_firewall: "0"
 wg_pia_fwd_iface: wg1
