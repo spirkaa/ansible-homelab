@@ -73,6 +73,7 @@ openwrt_sing_box_config:
         enabled: true
         max_connections: 16
         min_streams: 16
+        protocol: yamux
     - type: shadowsocks
       tag: ss-out
       server: "{{ inventory__sing_box_config.server }}"
