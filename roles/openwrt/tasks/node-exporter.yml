@@ -1,0 +1,25 @@
+---
+- name: node-exporter | Install package
+  community.general.opkg:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - prometheus-node-exporter-lua
+    - prometheus-node-exporter-lua-netstat
+    - prometheus-node-exporter-lua-openwrt
+    - prometheus-node-exporter-lua-uci_dhcp_host
+    - prometheus-node-exporter-lua-wifi
+    - prometheus-node-exporter-lua-wifi_stations
+  notify:
+    - Restart node-exporter
+
+- name: node-exporter | Configure service
+  uci:
+    command: set
+    config: prometheus-node-exporter-lua
+    section: main
+    value:
+      listen_interface: lan
+  notify:
+    - Uci commit
+    - Restart node-exporter

@@ -2,17 +2,17 @@
 - name: Base config
   ansible.builtin.include_tasks: base.yml
 
-- name: Wireguard tasks
+- name: Wireguard
   ansible.builtin.include_tasks: wireguard.yml
   when: openwrt_wg_server_enabled | default(false) | bool
 
-- name: Dnscrypt-proxy2 tasks
+- name: Dnscrypt-proxy2
   ansible.builtin.include_tasks: dnscrypt-proxy2.yml
 
-- name: Sing-box tasks
+- name: Sing-box
   ansible.builtin.include_tasks: sing-box.yml
 
-- name: Getdomains script tasks
+- name: Getdomains script
   ansible.builtin.include_tasks: getdomains.yml
 
 - name: Dnsmasq config
@@ -24,3 +24,6 @@
 - name: DHCP static leases
   ansible.builtin.include_tasks: dhcp_leases.yml
   loop: "{{ openwrt_dhcp_leases | default([]) }}"
+
+- name: Node-exporter
+  ansible.builtin.include_tasks: node-exporter.yml

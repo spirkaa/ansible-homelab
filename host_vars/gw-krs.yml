@@ -4,3 +4,4 @@ openwrt_dnsmasq:
 
 openwrt_dhcp:
   force: 0
+  ignore: 1

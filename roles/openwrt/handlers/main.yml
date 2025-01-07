@@ -60,3 +60,8 @@
   ansible.builtin.shell:
     cmd: ifdown {{ openwrt_wg_server.interface }} && ifup {{ openwrt_wg_server.interface }}
   changed_when: true
+
+- name: Restart node-exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter-lua
+    state: restarted

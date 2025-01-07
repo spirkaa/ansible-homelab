@@ -6,6 +6,7 @@
     section: "@dnsmasq[-1]"
     value:
       authoritative: "{{ openwrt_dnsmasq.authoritative | default('1') }}"
+      localservice: "{{ openwrt_dnsmasq.localservice | default('0') }}"
       filter_aaaa: "{{ openwrt_dnsmasq.filter_aaaa | default('1') }}"
       sequential_ip: "{{ openwrt_dnsmasq.sequential_ip | default('1') }}"
       logqueries: "{{ openwrt_dnsmasq.logqueries | default('0') }}"

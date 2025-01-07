@@ -1,6 +1,6 @@
 ---
 - name: Provision host
-  hosts: sppve
+  hosts: spmini
   gather_facts: false
 
   vars:
