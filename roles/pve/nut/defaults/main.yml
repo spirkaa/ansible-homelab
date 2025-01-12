@@ -1,6 +1,6 @@
 ---
 nut_config_path: /etc/nut
 nut_services:
-  - nut-driver
+  - nut-driver@homelabups
   - nut-server
   - nut-monitor
