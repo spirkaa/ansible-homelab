@@ -20,10 +20,12 @@ extra_mountpoints:
   - { src: "{{ zfs_path }}/src", path: "{{ nfs_export_path }}/src", fs: none, opts: "bind,_netdev,x-systemd.requires=zfs-mount.service", state: mounted }
 
 # zfs_disks:
-#   - ata-WDC_WD120EMFZ-11A6JA0_Z2KAEX5T
-#   - ata-WDC_WD120EMFZ-11A6JA0_Z2KJR39T
+#   - ata-WDC_WUH722222ALE6L4_1PG7Z9JV
+#   - ata-WDC_WUH722222ALE6L4_1PG7V9XV
 
 # retired_disks:
+#   - ata-WDC_WD120EMFZ-11A6JA0_Z2KAEX5T
+#   - ata-WDC_WD120EMFZ-11A6JA0_Z2KJR39T
 #   - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGNMJ4Z-part1, path: /mnt/parity/parity01, fs: ext4, opts: defaults, state: absent, content: false }
 #   - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGSUYPZ-part1, path: /mnt/parity/parity02, fs: ext4, opts: defaults, state: absent, content: false }
 #   - { src: /dev/disk/by-id/ata-HGST_HUH721008ALE604_1SGN507Z-part1, path: /mnt/data/disk05, fs: ext4, opts: defaults, state: absent, content: false }
