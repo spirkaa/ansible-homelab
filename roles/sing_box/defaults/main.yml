@@ -1,5 +1,5 @@
 ---
-sing_box_version: v1.10.6
+sing_box_version: v1.10.7
 sing_box_url: https://github.com/SagerNet/sing-box/releases/download/{{ sing_box_version }}/sing-box-{{ sing_box_version[1:] }}-linux-amd64.tar.gz
 sing_box_path: /usr/local/bin
 sing_box_config: /etc/sing-box/config.json
