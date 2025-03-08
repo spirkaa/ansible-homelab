@@ -52,7 +52,7 @@
       tags: reboot
 
   roles:
-    - { role: common/sytemd_resolved }
+    - { role: common/systemd_resolved }
 
 
 # - name: Apply common roles
