@@ -38,6 +38,7 @@
     image_name_mismatch: recreate
     pull: true
     hostname: "{{ inventory__ldap_domain }}"
+    read_only: true
     ports:
       - "389:389"  # ldap
       - "636:636"  # ldaps
@@ -49,17 +50,16 @@
       - "53:53"  # dns
       - "53:53/udp"  # dns
     volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      - "/sys/fs/cgroup/unified:/sys/fs/cgroup:rw"
       - "{{ freeipa_data_host_path }}:/data"
     tmpfs:
       - "/run"
       - "/tmp"
     sysctls:
       net.ipv6.conf.all.disable_ipv6: 0
-    security_opts:
-      - seccomp=unconfined
     command: >
       --unattended
+      --skip-mem-check
       --realm={{ app_base_domain | upper }}
       --domain={{ app_base_domain }}
       --ds-password={{ freeipa_ds_password }}
@@ -131,7 +131,7 @@
   delay: 1
   tags: freeipa
 
-- name: freeipa - customize - check if permisssion already exists
+- name: freeipa - customize - check if permission already exists
   ansible.builtin.command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;
@@ -145,7 +145,7 @@
   no_log: true
   tags: freeipa
 
-- name: freeipa - customize - permisssion for custom schema attrs
+- name: freeipa - customize - permission for custom schema attrs
   ansible.builtin.command: >
     docker exec freeipa sh -c 'kdestroy 2> /dev/null;
     echo "{{ freeipa_admin_password }}" | kinit admin > /dev/null;

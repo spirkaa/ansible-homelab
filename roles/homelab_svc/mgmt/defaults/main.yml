@@ -4,7 +4,7 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-freeipa_image: freeipa/freeipa-server:fedora-40-4.12.2
+freeipa_image: freeipa/freeipa-server:fedora-41-4.12.2
 phpldapadmin_image: osixia/phpldapadmin:0.9.0
 
 vault_image: vault:latest
@@ -24,7 +24,6 @@ smtp_user: "{{ inventory__smtp_username }}"
 smtp_pass: "{{ inventory__smtp_password }}"
 
 freeipa_data_host_path: "{{ app_path }}/freeipa/data"
-freeipa_journal_host_path: "{{ app_path }}/freeipa/journal"
 freeipa_ds_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           37316334373131356333346361626137633734653036663465303937336632383732333837386335
