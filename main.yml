@@ -3,14 +3,14 @@
   hosts: all
   gather_facts: false
 
-- name: Include vps
-  ansible.builtin.import_playbook: vps.yml
-
 - name: Include pve
   ansible.builtin.import_playbook: pve.yml
+
+- name: Include deploy_homelab
+  ansible.builtin.import_playbook: deploy_homelab.yml
 
 - name: Include gw_wg
   ansible.builtin.import_playbook: gw_wg.yml
 
-- name: Include deploy_homelab
-  ansible.builtin.import_playbook: deploy_homelab.yml
+- name: Include vps
+  ansible.builtin.import_playbook: vps.yml
