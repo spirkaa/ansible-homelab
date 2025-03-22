@@ -38,6 +38,3 @@
 
 # - name: Include deploy_homelab_svc_projects
 #   ansible.builtin.import_playbook: deploy_homelab_svc_projects.yml
-
-- name: Include deploy_homelab_upgrade_packages
-  ansible.builtin.import_playbook: deploy_homelab_upgrade_packages.yml

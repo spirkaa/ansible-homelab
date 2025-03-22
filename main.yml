@@ -14,3 +14,6 @@
 
 - name: Include vps
   ansible.builtin.import_playbook: vps.yml
+
+- name: Include deploy_homelab_upgrade_packages
+  ansible.builtin.import_playbook: deploy_homelab_upgrade_packages.yml
