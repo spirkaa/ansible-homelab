@@ -10,7 +10,7 @@
     vmid: 1299
     hostname: gw-cml
     comment: OpenWRT VPN Router
-    vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/openwrt-23.05.5-x86-64-generic-ext4-combined.img
+    vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/openwrt-24.10.0-x86-64-generic-ext4-combined.img
     net_ip: 192.168.20.99
     net_cidr: 24
     net_vlan: ""

@@ -10,6 +10,7 @@
       filter_aaaa: "{{ openwrt_dnsmasq.filter_aaaa | default('1') }}"
       sequential_ip: "{{ openwrt_dnsmasq.sequential_ip | default('1') }}"
       logqueries: "{{ openwrt_dnsmasq.logqueries | default('0') }}"
+      confdir: "{{ openwrt_dnsmasq.confdir | default('/tmp/dnsmasq.d') }}"
   notify:
     - Uci commit
     - Reload dnsmasq

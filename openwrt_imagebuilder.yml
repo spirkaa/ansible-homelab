@@ -18,10 +18,10 @@
     net_gw: 192.168.10.1
     net_dns: 192.168.10.1
     net_domain: "{{ inventory__homelab_domain }}"
-    openwrt_version: 23.05.5
+    openwrt_version: 24.10.0
     openwrt_target: x86/64
     openwrt_image_builder: openwrt-imagebuilder-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}.Linux-x86_64
-    openwrt_image_builder_url: https://downloads.openwrt.org/releases/{{ openwrt_version }}/targets/{{ openwrt_target }}/{{ openwrt_image_builder }}.tar.xz
+    openwrt_image_builder_url: https://downloads.openwrt.org/releases/{{ openwrt_version }}/targets/{{ openwrt_target }}/{{ openwrt_image_builder }}.tar.zst
     openwrt_image_builder_result: /tmp/{{ openwrt_image_builder }}/bin/targets/x86/64/{{ openwrt_image }}.gz
     openwrt_image: openwrt-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}-generic-ext4-combined.img
     openwrt_image_gz: "{{ openwrt_image }}.gz"
@@ -71,6 +71,7 @@
           - rsync
           - wget
           - unzip
+          - zstd
           - python3
           - python3-distutils
 
@@ -106,6 +107,7 @@
             coreutils-sha1sum
             python3
             nano-full
+            jq
             htop
             curl
             ss
@@ -116,6 +118,13 @@
             wireguard-tools
             luci-proto-wireguard
             qrencode
+            kmod-nf-tproxy
+            prometheus-node-exporter-lua
+            prometheus-node-exporter-lua-netstat
+            prometheus-node-exporter-lua-openwrt
+            prometheus-node-exporter-lua-uci_dhcp_host
+            prometheus-node-exporter-lua-wifi
+            prometheus-node-exporter-lua-wifi_stations
         chdir: /tmp/{{ openwrt_image_builder }}
       become: true
       become_user: build
