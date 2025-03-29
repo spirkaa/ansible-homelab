@@ -36,7 +36,7 @@
     name: freeipa
     image: "{{ freeipa_image }}"
     image_name_mismatch: recreate
-    pull: true
+    # pull: true
     hostname: "{{ inventory__ldap_domain }}"
     read_only: true
     ports:
@@ -77,7 +77,7 @@
     restart_policy: unless-stopped
     state: started
   register: freeipa_start
-  no_log: true
+  # no_log: true
   tags: freeipa
 
 - name: freeipa - wait
