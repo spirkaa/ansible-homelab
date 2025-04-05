@@ -31,11 +31,11 @@ frontend tcp443
 
 backend ingress-http
     mode tcp
-    server ingress-http {{ vps_wg_peers[0].private_ip }}:8080 send-proxy
+    server ingress-http {{ vps_wg_peers[0].private_ip }}:8080
 
 backend ingress-https
     mode tcp
-    server ingress-https {{ vps_wg_peers[0].private_ip }}:8443 send-proxy
+    server ingress-https {{ vps_wg_peers[0].private_ip }}:8443
 
 backend teleport
     mode tcp
