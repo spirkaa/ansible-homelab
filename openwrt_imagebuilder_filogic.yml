@@ -20,13 +20,12 @@
     net_dns: 192.168.10.1
     net_domain: "{{ inventory__homelab_domain }}"
     openwrt_version: 24.10.1
-    openwrt_target: x86/64
-    openwrt_image: openwrt-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}-generic-ext4-combined.img
-    openwrt_image_gz: "{{ openwrt_image }}.gz"
+    openwrt_target: mediatek/filogic
+    openwrt_profile: glinet_gl-mt6000
+    openwrt_image: openwrt-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}-{{ openwrt_profile }}-squashfs-sysupgrade.bin
     openwrt_image_builder: openwrt-imagebuilder-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}.Linux-x86_64
     openwrt_image_builder_url: https://downloads.openwrt.org/releases/{{ openwrt_version }}/targets/{{ openwrt_target }}/{{ openwrt_image_builder }}.tar.zst
-    openwrt_image_builder_result: /tmp/{{ openwrt_image_builder }}/bin/targets/{{ openwrt_target }}/{{ openwrt_image_gz }}
-    proxmox_template_path: /mnt/pve/spsrv-proxmox/template/qcow2
+    openwrt_image_builder_result: /tmp/{{ openwrt_image_builder }}/bin/targets/{{ openwrt_target }}/{{ openwrt_image }}
 
   roles:
     - { role: pve_manager }
@@ -37,12 +36,11 @@
         vmid: "{{ vmid }}"
         openwrt_version: "{{ openwrt_version }}"
         openwrt_target: "{{ openwrt_target }}"
+        openwrt_profile: "{{ openwrt_profile }}"
         openwrt_image: "{{ openwrt_image }}"
-        openwrt_image_gz: "{{ openwrt_image_gz }}"
         openwrt_image_builder: "{{ openwrt_image_builder }}"
         openwrt_image_builder_url: "{{ openwrt_image_builder_url }}"
         openwrt_image_builder_result: "{{ openwrt_image_builder_result }}"
-        proxmox_template_path: "{{ proxmox_template_path }}"
 
 
 - name: Build openwrt image
@@ -53,6 +51,7 @@
   tasks:
     - name: Copy vars from another host
       ansible.builtin.set_fact:
+        openwrt_profile: "{{ hostvars[pve_host].openwrt_profile }}"
         openwrt_image_builder: "{{ hostvars[pve_host].openwrt_image_builder }}"
         openwrt_image_builder_url: "{{ hostvars[pve_host].openwrt_image_builder_url }}"
         openwrt_image_builder_result: "{{ hostvars[pve_host].openwrt_image_builder_result }}"
@@ -93,12 +92,11 @@
       community.general.make:
         target: image
         params:
-          ROOTFS_PARTSIZE: 240
+          PROFILE: "{{ openwrt_profile }}"
           PACKAGES: >-
             -dnsmasq
             dnsmasq-full
             dnscrypt-proxy2
-            qemu-ga
             luci
             luci-ssl
             openssh-sftp-server
@@ -124,37 +122,27 @@
             prometheus-node-exporter-lua-uci_dhcp_host
             prometheus-node-exporter-lua-wifi
             prometheus-node-exporter-lua-wifi_stations
+            -wpad-basic-mbedtls
+            wpad-mbedtls
+            kmod-usb-net-cdc-ether
+            usb-modeswitch
+            luci-app-dockerman
+            block-mount
         chdir: /tmp/{{ openwrt_image_builder }}
       become: true
       become_user: build
 
+    - name: Download image to localhost
+      ansible.builtin.fetch:
+        src: "{{ openwrt_image_builder_result }}"
+        dest: ./
+        flat: true
+        fail_on_missing: true
 
-- name: Copy openwrt image from container to proxmox host
+- name: Cleanup
   hosts: sppve
   gather_facts: false
   tasks:
-    - name: Delete old image
-      ansible.builtin.file:
-        dest: "{{ proxmox_template_path }}/{{ openwrt_image }}"
-        state: absent
-
-    - name: Copy compressed image from container
-      ansible.builtin.command:
-        cmd: pct pull {{ vmid }} {{ openwrt_image_builder_result }} {{ proxmox_template_path }}/{{ openwrt_image_gz }}
-      register: _result
-      failed_when: _result.stderr
-      changed_when: true
-
-    - name: Uncompress image
-      ansible.builtin.command:
-        cmd: gunzip {{ openwrt_image_gz }}
-        chdir: "{{ proxmox_template_path }}"
-      register: _result
-      failed_when:
-        - _result.rc != 0
-        - ('trailing garbage ignored' not in _result.stderr)
-      changed_when: true
-
     - name: Destroy build container
       ansible.builtin.shell: >
         pct stop {{ vmid }} && pct destroy {{ vmid }}
