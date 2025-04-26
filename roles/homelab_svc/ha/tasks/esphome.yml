@@ -12,8 +12,12 @@
     dest: "{{ esphome_config_path }}/{{ item.dest }}"
     mode: "0644"
   loop:
-    - { src: ble-tracker.yaml.j2, dest: ble-tracker.yaml }
     - { src: secrets.yaml.j2, dest: secrets.yaml }
+    - { src: ble-tracker.yaml.j2, dest: ble-tracker.yaml }
+    - { src: .local-haier.yaml.j2, dest: .local-haier.yaml }
+    - { src: haier-ac01.yaml.j2, dest: haier-ac01.yaml }
+    - { src: haier-ac02.yaml.j2, dest: haier-ac02.yaml }
+    - { src: haier-ac03.yaml.j2, dest: haier-ac03.yaml }
   notify: esphome - restart
   tags: esphome
 
