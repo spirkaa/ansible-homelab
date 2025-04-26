@@ -4,7 +4,7 @@
 
 - name: Wireguard
   ansible.builtin.include_tasks: wireguard.yml
-  when: openwrt_wg_server_enabled | default(false) | bool
+  when: openwrt_wireguard
 
 - name: Dnscrypt-proxy2
   ansible.builtin.include_tasks: dnscrypt-proxy2.yml
@@ -27,3 +27,15 @@
 
 - name: Node-exporter
   ansible.builtin.include_tasks: node-exporter.yml
+
+- name: LTE config
+  ansible.builtin.include_tasks: lte.yml
+  when: openwrt_lte
+
+- name: WLAN config
+  ansible.builtin.include_tasks: wlan.yml
+  when: openwrt_wlan
+
+- name: Routes
+  ansible.builtin.include_tasks: routes.yml
+  when: openwrt_routes

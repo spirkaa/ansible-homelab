@@ -1,0 +1,109 @@
+---
+openwrt_lte:
+  device: eth2
+  proto: dhcp
+
+openwrt_lan:
+  ipaddr: 192.168.40.1
+  netmask: 255.255.255.0
+
+openwrt_wlan:
+  devices:
+    - id: radio0
+      type: mac80211
+      band: 2g
+      channel: auto
+      htmode: HE40
+      country: RU
+    - id: radio1
+      type: mac80211
+      band: 5g
+      channel: auto
+      htmode: HE160
+      country: RU
+  ifaces:
+    - id: default_radio0
+      device: radio0
+      network: lan
+      mode: ap
+      ssid: PVMDACHA_Wi_Fi
+      encryption: psk2
+      key: !vault |
+        $ANSIBLE_VAULT;1.1;AES256
+        37336435363631613463366561626134323537333163306161333234363938333563333138353037
+        6261653330376664396161376166376361393133373032380a313463636531626664633662366130
+        38396564393566343833393761653963383861356631663266646136303636316162383138306565
+        6535653536383964630a653032363032356238386539656162663237316163613466626233326165
+        3836
+      wpa_disable_eapol_key_retries: 1
+    - id: default_radio1
+      device: radio1
+      network: lan
+      mode: ap
+      ssid: devmem.ru
+      encryption: sae-mixed
+      key: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35373632663831333934396536666362623334393137376265633865313438373134323532383764
+          3739353831303537643138343461633633643261323965650a643630616332323335636532306165
+          31663030663533326161343261326235326163333238663962656434366236303766663338633065
+          3731613262323332620a643439326530336439666561333538386131623139376131363639333762
+          6265
+      wpa_disable_eapol_key_retries: 1
+
+openwrt_wireguard:
+  - interface: wg1
+    firewall_zone: lan
+    addresses: 10.250.254.40/24
+    private_key: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      62386439643737656535393163616663643362636436663030373365306134356235343832663331
+      3635353130313263333565373362303064333235643737380a346566373563323732613835643533
+      31626131396633633262336632353963323232346465623430323061333733666630363530313032
+      3462636435653261320a313938343264653838633932656532396139323162393564666131616266
+      65626537656134356234333636653733346665646464343234626661353233366163356363363233
+      6264303733376166326537346238663462643735663736313663
+    peers:
+      - description: krs
+        allowed_ips: 0.0.0.0/0
+        public_key: zy7VcdbRP+yTbWwQyhmXMo0Oi/vttJGcErhfQvaNeBE=
+        endpoint_host: vpn.devmem.ru
+        endpoint_port: 51820
+        persistent_keepalive: 10
+
+openwrt_routes:
+  - id: "@route[0]"
+    interface: wg1
+    target: 192.168.10.1/24
+  - id: "@route[1]"
+    interface: wg1
+    target: 192.168.11.1/24
+  - id: "@route[2]"
+    interface: wg1
+    target: 192.168.12.1/24
+  - id: "@route[3]"
+    interface: wg1
+    target: 192.168.13.1/24
+  - id: "@route[4]"
+    interface: wg1
+    target: 192.168.14.1/24
+  - id: "@route[5]"
+    interface: wg1
+    target: 192.168.20.1/24
+
+openwrt_dropbear:
+  PasswordAuth: 0
+  RootPasswordAuth: 0
+  authorized_keys: "{{ inventory__sshd_authorized_keys }}"
+
+openwrt_dnsmasq_forward_servers:
+  - /*.home.devmem.ru/192.168.10.1
+  - /*.k8s.devmem.ru/192.168.10.1
+  - /k8s.devmem.ru/192.168.10.1
+
+openwrt_dnsmasq_rebind_domains:
+  - devmem.ru
+  - plex.direct
+
+openwrt_dhcp:
+  force: 1

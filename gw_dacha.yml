@@ -1,0 +1,6 @@
+---
+- name: Configure host
+  hosts: gw-dacha
+  strategy: linear  # role gekmihesg.openwrt don't work with mitogen
+  roles:
+    - openwrt

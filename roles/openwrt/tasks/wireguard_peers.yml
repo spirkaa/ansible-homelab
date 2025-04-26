@@ -1,0 +1,24 @@
+---
+- name: wireguard | Configure peers
+  uci:
+    command: section
+    config: network
+    type: wireguard_{{ item.interface }}
+    find_by:
+      description: "{{ peer.description }}"
+    value:
+      description: "{{ peer.description }}"
+      public_key: "{{ peer.public_key }}"
+      private_key: "{{ peer.private_key | default(omit) }}"
+      endpoint_host: "{{ peer.endpoint_host | default(omit) }}"
+      endpoint_port: "{{ peer.endpoint_port | default(omit) }}"
+      route_allowed_ips: "{{ peer.route_allowed_ips | default(omit) }}"
+      persistent_keepalive: "{{ peer.persistent_keepalive | default(omit) }}"
+      allowed_ips: "{{ peer.allowed_ips }}"
+  loop_control:
+    loop_var: peer
+    label: "{{ peer.description }}"
+  loop: "{{ item.peers }}"
+  notify:
+    - Uci commit
+    - Restart wireguard

@@ -1,0 +1,32 @@
+---
+- name: route | Create network route
+  uci:
+    command: add
+    config: network
+    section: "{{ item.id | default('@route[-1]') }}"
+    type: route
+  loop: "{{ openwrt_routes }}"
+  notify:
+    - Uci commit
+    - Reload network
+
+- name: route | Configure network route
+  uci:
+    command: set
+    config: network
+    section: "{{ item.id | default('@route[-1]') }}"
+    type: route
+    value:
+      interface: "{{ item.interface | default(omit) }}"
+      target: "{{ item.target | default(omit) }}"
+      netmask: "{{ item.netmask | default(omit) }}"
+      gateway: "{{ item.gateway | default(omit) }}"
+      table: "{{ item.table | default(omit) }}"
+      source: "{{ item.source | default(omit) }}"
+      type: "{{ item.type | default(omit) }}"
+      proto: "{{ item.proto | default(omit) }}"
+      disabled: "{{ item.disabled | default(omit) }}"
+  loop: "{{ openwrt_routes }}"
+  notify:
+    - Uci commit
+    - Reload network

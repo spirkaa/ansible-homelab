@@ -1,0 +1,35 @@
+---
+- name: lte | Create network interface
+  uci:
+    command: add
+    config: network
+    section: lte
+    type: interface
+  notify:
+    - Uci commit
+    - Reload network
+
+- name: lte | Configure network interface
+  uci:
+    command: set
+    config: network
+    section: lte
+    type: interface
+    value:
+      device: "{{ openwrt_lte.device | default(omit) }}"
+      proto: "{{ openwrt_lte.proto | default(omit) }}"
+  notify:
+    - Uci commit
+    - Reload network
+
+- name: lte | Configure firewall zone "wan" - add_list
+  uci:
+    command: add_list
+    config: firewall
+    section: "@zone[1]"
+    option: network
+    value: lte
+    unique: true
+  notify:
+    - Uci commit
+    - Reload firewall

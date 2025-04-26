@@ -1,0 +1,43 @@
+---
+- name: wlan | Configure device
+  uci:
+    command: set
+    config: wireless
+    section: "{{ item.id }}"
+    type: wifi-device
+    value:
+      disabled: "{{ item.disabled | default('0') }}"
+      type: "{{ item.type | default(omit) }}"
+      band: "{{ item.band | default(omit) }}"
+      channel: "{{ item.channel | default(omit) }}"
+      htmode: "{{ item.htmode | default(omit) }}"
+      country: "{{ item.country | default(omit) }}"
+  loop_control:
+    label: "{{ item.id }}"
+  loop: "{{ openwrt_wlan.devices }}"
+  notify:
+    - Uci commit
+    - Reload wireless
+
+- name: wlan | Configure interface
+  uci:
+    command: set
+    config: wireless
+    section: "{{ item.id }}"
+    type: wifi-iface
+    value:
+      disabled: "{{ item.disabled | default('0') }}"
+      ifname: "{{ item.name | default(omit) }}"
+      device: "{{ item.device | default(omit) }}"
+      network: "{{ item.network | default(omit) }}"
+      mode: "{{ item.mode | default(omit) }}"
+      ssid: "{{ item.ssid | default(omit) }}"
+      encryption: "{{ item.encryption | default(omit) }}"
+      key: "{{ item.key | default(omit) }}"
+      wpa_disable_eapol_key_retries: "{{ item.wpa_disable_eapol_key_retries | default(omit) }}"
+  loop_control:
+    label: "{{ item.id }}"
+  loop: "{{ openwrt_wlan.ifaces }}"
+  notify:
+    - Uci commit
+    - Reload wireless

@@ -27,6 +27,17 @@
     - Uci commit
     - Reload system
 
+- name: base | Enable Luci HTTPS redirect
+  uci:
+    command: set
+    config: uhttpd
+    section: main
+    value:
+      redirect_https: 1
+  notify:
+    - Uci commit
+    - Reload uhttpd
+
 - name: base | Configure dropbear
   uci:
     command: set
@@ -40,16 +51,31 @@
     - Uci commit
     - Reload dropbear
 
-- name: base | Enable Luci HTTPS redirect
-  uci:
-    command: set
-    config: uhttpd
-    section: main
-    value:
-      redirect_https: 1
+- name: base | Set dropbear authorized keys
+  ansible.builtin.copy:
+    content: "{{ openwrt_dropbear.authorized_keys | join('\n') }}"
+    dest: /etc/dropbear/authorized_keys
+    owner: root
+    group: root
+    mode: "0600"
+  when: openwrt_dropbear.authorized_keys | default([]) | length > 0
   notify:
     - Uci commit
-    - Reload uhttpd
+    - Reload dropbear
+
+- name: Configure LAN interface
+  uci:
+    command: set
+    config: network
+    section: lan
+    type: interface
+    value:
+      ipaddr: "{{ openwrt_lan.ipaddr | default(omit) }}"
+      netmask: "{{ openwrt_lan.netmask | default(omit) }}"
+  when: openwrt_lan | default({})
+  notify:
+    - Uci commit
+    - Reload network
 
 - name: base | Flush handlers
   ansible.builtin.meta: flush_handlers

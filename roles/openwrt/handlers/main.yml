@@ -51,6 +51,15 @@
     state: reloaded
   listen: Reload dhcp
 
+- name: Reload wireless
+  ansible.builtin.command:
+    cmd: /sbin/wifi {{ item }}
+  register: _reload_wireless_status
+  changed_when: _reload_wireless_status != 0
+  loop:
+    - config
+    - reload
+
 - name: Run getdomains script
   ansible.builtin.service:
     name: getdomains
@@ -58,8 +67,11 @@
 
 - name: Restart wireguard
   ansible.builtin.shell:
-    cmd: ifdown {{ openwrt_wg_server.interface }} && ifup {{ openwrt_wg_server.interface }}
+    cmd: ifdown {{ item.interface }} && ifup {{ item.interface }}
   changed_when: true
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ openwrt_wireguard }}"
 
 - name: Restart node-exporter
   ansible.builtin.service:
