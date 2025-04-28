@@ -1,0 +1,32 @@
+---
+- name: Nginx | Create dir
+  ansible.builtin.file:
+    path: "{{ openwrt_nginx_config_path }}/conf.d"
+    state: directory
+    recurse: true
+
+- name: Nginx | Copy files
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+    owner: 101
+    group: 101
+  loop:
+    - { src: nginx/nginx.conf.j2, dest: "{{ openwrt_nginx_config_path }}/nginx.conf" }
+    - { src: nginx/default.conf.j2, dest: "{{ openwrt_nginx_config_path }}/conf.d/default.conf" }
+  notify: Restart nginx
+
+- name: Nginx | Start
+  community.docker.docker_container:
+    name: nginx
+    image: "{{ openwrt_nginx_image }}"
+    image_name_mismatch: recreate
+    pull: true
+    volumes:
+      - "{{ openwrt_nginx_config_path }}/nginx.conf:/etc/nginx/nginx.conf"
+      - "{{ openwrt_nginx_config_path }}/conf.d/default.conf:/etc/nginx/conf.d/default.conf"
+    network_mode: host
+    restart_policy: unless-stopped
+    state: started
+  register: _nginx_start

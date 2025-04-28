@@ -91,3 +91,6 @@ openwrt_sing_box_config:
       password: "{{ inventory__sing_box_config.ss.password }}"
       multiplex:
         enabled: false
+
+openwrt_nginx_config_path: /docker/nginx
+openwrt_nginx_image: nginxinc/nginx-unprivileged:alpine

@@ -128,6 +128,7 @@
             usb-modeswitch
             luci-app-dockerman
             block-mount
+            python3-requests
         chdir: /tmp/{{ openwrt_image_builder }}
       become: true
       become_user: build

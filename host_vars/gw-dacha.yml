@@ -107,3 +107,5 @@ openwrt_dnsmasq_rebind_domains:
 
 openwrt_dhcp:
   force: 1
+
+openwrt_nginx_enabled: true

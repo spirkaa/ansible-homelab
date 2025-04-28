@@ -77,3 +77,10 @@
   ansible.builtin.service:
     name: prometheus-node-exporter-lua
     state: restarted
+
+- name: Restart nginx
+  community.docker.docker_container:
+    name: nginx
+    state: started
+    restart: true
+  when: not _nginx_start.changed

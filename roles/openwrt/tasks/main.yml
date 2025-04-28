@@ -39,3 +39,11 @@
 - name: Routes
   ansible.builtin.include_tasks: routes.yml
   when: openwrt_routes
+
+- name: Nginx
+  ansible.builtin.include_tasks: nginx.yml
+  when: openwrt_nginx_enabled | default(false) | bool
+  args:
+    apply:
+      tags: nginx
+  tags: nginx
