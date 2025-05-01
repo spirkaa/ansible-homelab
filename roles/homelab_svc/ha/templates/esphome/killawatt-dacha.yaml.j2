@@ -1,0 +1,251 @@
+substitutions:
+  device_name: killawatt-dacha
+  friendly_name: Killawatt Dacha
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  libraries:
+    - SPI
+    - SdFat
+  on_boot:
+    - then:
+        ds1307.read_time:
+    - priority: -100
+      then:
+        # запись времени перезагрузки в файл
+        lambda: |-
+          char path[10] = "reset.csv";
+          char timestamp[32];
+          auto time = id(ds1307_time).now();
+          sprintf(timestamp, "%04u-%02u-%02u %02u:%02u:%02u",
+            time.year, time.month, time.day_of_month, time.hour, time.minute, time.second);
+          id(sd_fat1).append_file(path, timestamp);
+
+esp8266:
+  board: d1_mini
+
+wifi:
+  networks:
+    - ssid: !secret wifi_ssid
+      password: !secret wifi_password
+    - ssid: !secret wifi_ssid_dacha
+      password: !secret wifi_password
+  ap:
+    ssid: ${device_name}
+    password: !secret wifi_hotspot_password
+
+captive_portal:
+
+ota:
+  platform: esphome
+
+web_server:
+  port: 80
+
+logger:
+  baud_rate: 0
+
+api:
+
+external_components:
+  - source: components
+
+sd_fat:
+  id: sd_fat1
+  cs_pin: GPIO15
+
+uart:
+  baud_rate: 9600
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+  frequency: 100kHz
+
+one_wire:
+  - platform: gpio
+    pin: GPIO2
+
+time:
+  - platform: ds1307
+    id: ds1307_time
+    timezone: Europe/Moscow
+    update_interval: never
+    on_time:
+      - seconds: 3
+        minutes: /1
+        then:
+          # запись значений датчиков в файл
+          lambda: |-
+            char path[20];
+            char data[600];
+            char timestamp[32];
+
+            auto time = id(ds1307_time).now();
+
+            sprintf(path, "%04u%02u%02u.csv", time.year, time.month, time.day_of_month);
+            sprintf(timestamp, "%04u-%02u-%02u %02u:%02u:%02u",
+              time.year, time.month, time.day_of_month, time.hour, time.minute, time.second);
+            sprintf(data, "%s;%.0f;%.2f;%.0f;%.2f;%.1f;%.1f;%.1f;%.1f;%.1f;%.1f;%.1f;%.1f;%.0f;%.0f",
+              timestamp,
+              id(pzem004t_v).state, id(pzem004t_c).state, id(pzem004t_p).state, id(pzem004t_e).state,
+              id(t_outside).state, id(t_living_room).state, id(t_bedroom).state, id(t_water_heater).state,
+              id(t_pipe_hot).state, id(t_pipe_return).state, id(t_room_2floor).state,
+              id(bme280_t).state, id(bme280_p).state, id(bme280_h).state
+            );
+
+            id(sd_fat1).append_file(path, data);
+  - platform: sntp
+    timezone: Europe/Moscow
+    on_time_sync:
+      then:
+        ds1307.write_time:
+
+display:
+  - platform: lcd_pcf8574
+    dimensions: 20x4
+    address: 0x27
+    user_characters:
+      # sd card true
+      - position: 0 # \x08
+        data:
+          - 0b11100
+          - 0b11110
+          - 0b11111
+          - 0b11111
+          - 0b11111
+          - 0b11111
+          - 0b11111
+          - 0b11111
+      # sd card false
+      - position: 7 # \x07
+        data:
+          - 0b11100
+          - 0b11110
+          - 0b01110
+          - 0b10101
+          - 0b11011
+          - 0b10101
+          - 0b01110
+          - 0b11111
+    lambda: |-
+      // 1 строка
+      it.strftime(0, 0, "%H:%M:%S", id(ds1307_time).now());
+      if (id(sd_fat1).card_available) {
+        it.print(9, 0, "\x08");
+      } else {
+        it.print(9, 0, "\x07");
+      }
+      if (!isnan(id(t_outside).state)) {
+        it.printf(12, 0, "%.1f", id(t_outside).state);
+      }
+      // 2 строка
+      if (!isnan(id(pzem004t_v).state)) {
+        it.printf(0, 1, "%.0fV", id(pzem004t_v).state);
+      }
+      if (!isnan(id(pzem004t_p).state)) {
+        it.printf(4, 1, " %.0fW", id(pzem004t_p).state);
+      }
+      if (!isnan(id(t_living_room).state)) {
+        it.printf(12, 1, "%.1f", id(t_living_room).state);
+      }
+
+text_sensor:
+  - platform: uptime
+    name: ${friendly_name} - Uptime
+    entity_category: diagnostic
+  - platform: version
+    name: ${friendly_name} - ESPHome Version
+    hide_timestamp: True
+    entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      id: wifi_ip
+      name: ${friendly_name} - IP Address
+      entity_category: diagnostic
+    ssid:
+      id: wifi_ssid
+      name: ${friendly_name} - SSID
+      entity_category: diagnostic
+
+sensor:
+  - platform: pzem004t
+    voltage:
+      name: ${friendly_name} PZEM-004T Voltage
+      id: pzem004t_v
+    current:
+      name: ${friendly_name} PZEM-004T Current
+      id: pzem004t_c
+    power:
+      name: ${friendly_name} PZEM-004T Power
+      id: pzem004t_p
+    energy:
+      name: ${friendly_name} PZEM-004T Energy
+      id: pzem004t_e
+      filters:
+        # перевод Вт/ч в кВт/ч
+        - lambda: return x / 1000;
+    update_interval: 7s
+
+  - platform: bme280_i2c
+    address: 0x76
+    temperature:
+      name: ${friendly_name} BME280 Temperature
+      id: bme280_t
+    pressure:
+      name: ${friendly_name} BME280 Pressure
+      id: bme280_p
+      unit_of_measurement: mmHg
+      filters:
+        # перевод гПа в мм.рт.ст.
+        - lambda: return x * 0.75006375541921;
+    humidity:
+      name: ${friendly_name} BME280 Humidity
+      id: bme280_h
+    update_interval: 13s
+
+  - platform: dallas_temp
+    address: 0x2839DA3306000097
+    resolution: 10
+    name: ${friendly_name} T Outside # Улица
+    id: t_outside
+    update_interval: 16s
+  - platform: dallas_temp
+    address: 0x28FFE91B4716322
+    resolution: 10
+    name: ${friendly_name} T Living Room # Большая комната
+    id: t_living_room
+    update_interval: 16s
+  - platform: dallas_temp
+    address: 0x28FFEFCA4716330
+    resolution: 10
+    name: ${friendly_name} T Bedroom # Маленькая комната
+    id: t_bedroom
+    update_interval: 16s
+  - platform: dallas_temp
+    address: 0x103E978102808C
+    resolution: 10
+    name: ${friendly_name} T Water Heater # Водонагреватель
+    id: t_water_heater
+    update_interval: 16s
+  - platform: dallas_temp
+    address: 0x28FF246F52164B6
+    resolution: 10
+    name: ${friendly_name} T Pipe Hot # Горячая труба
+    id: t_pipe_hot
+    update_interval: 16s
+  - platform: dallas_temp
+    address: 0x28FFB094471637
+    resolution: 10
+    name: ${friendly_name} T Pipe Return # Обратная труба
+    id: t_pipe_return
+    update_interval: 16s
+  - platform: dallas_temp
+    address: 0x2855A73406002E
+    resolution: 10
+    name: ${friendly_name} T Room 2 Floor # Комната 2 этаж
+    id: t_room_2floor
+    update_interval: 16s
