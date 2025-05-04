@@ -37,6 +37,8 @@
     image: "{{ esphome_image }}"
     image_name_mismatch: recreate
     pull: true
+    env:
+      ESPHOME_DASHBOARD_USE_PING: "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ esphome_config_path }}:/config"

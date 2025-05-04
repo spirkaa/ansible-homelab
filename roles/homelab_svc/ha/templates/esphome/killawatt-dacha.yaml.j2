@@ -31,6 +31,7 @@ wifi:
       password: !secret wifi_password
     - ssid: !secret wifi_ssid_dacha
       password: !secret wifi_password
+  use_address: 192.168.40.5
   ap:
     ssid: ${device_name}
     password: !secret wifi_hotspot_password
@@ -208,43 +209,43 @@ sensor:
     update_interval: 13s
 
   - platform: dallas_temp
-    address: 0x2839DA3306000097
+    address: 0x9700000633da3928
     resolution: 10
     name: ${friendly_name} T Outside # Улица
     id: t_outside
     update_interval: 16s
   - platform: dallas_temp
-    address: 0x28FFE91B4716322
+    address: 0x220316471be9ff28
     resolution: 10
     name: ${friendly_name} T Living Room # Большая комната
     id: t_living_room
     update_interval: 16s
   - platform: dallas_temp
-    address: 0x28FFEFCA4716330
+    address: 0x30031647caefff28
     resolution: 10
     name: ${friendly_name} T Bedroom # Маленькая комната
     id: t_bedroom
     update_interval: 16s
   - platform: dallas_temp
-    address: 0x103E978102808C
+    address: 0x8c00080281973e10
     resolution: 10
     name: ${friendly_name} T Water Heater # Водонагреватель
     id: t_water_heater
     update_interval: 16s
   - platform: dallas_temp
-    address: 0x28FF246F52164B6
+    address: 0xb60416526f24ff28
     resolution: 10
     name: ${friendly_name} T Pipe Hot # Горячая труба
     id: t_pipe_hot
     update_interval: 16s
   - platform: dallas_temp
-    address: 0x28FFB094471637
+    address: 0x0703164794b0ff28
     resolution: 10
     name: ${friendly_name} T Pipe Return # Обратная труба
     id: t_pipe_return
     update_interval: 16s
   - platform: dallas_temp
-    address: 0x2855A73406002E
+    address: 0x2e00000634a75528
     resolution: 10
     name: ${friendly_name} T Room 2 Floor # Комната 2 этаж
     id: t_room_2floor
