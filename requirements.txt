@@ -3,7 +3,7 @@ ansible-core
 ansible-lint
 docker
 jmespath
-git+https://github.com/mitogen-hq/mitogen@master#egg=mitogen
+mitogen
 paramiko
 python-ldap
 yamllint
