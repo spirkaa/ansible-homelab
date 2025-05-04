@@ -26,7 +26,7 @@ openwrt_wlan:
       device: radio0
       network: lan
       mode: ap
-      ssid: PVMDACHA_Wi_Fi
+      ssid: PVMDACHA_Wi-Fi
       encryption: psk2
       key: !vault |
         $ANSIBLE_VAULT;1.1;AES256
@@ -107,5 +107,11 @@ openwrt_dnsmasq_rebind_domains:
 
 openwrt_dhcp:
   force: 1
+
+openwrt_dhcp_leases:
+  - id: "@host[0]"
+    name: killawatt-dacha
+    ip: 192.168.40.5
+    mac: 18:FE:34:D0:4E:29
 
 openwrt_nginx_enabled: true
