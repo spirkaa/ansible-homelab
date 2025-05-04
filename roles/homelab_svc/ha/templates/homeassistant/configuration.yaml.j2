@@ -100,7 +100,86 @@ yandex_smart_home:
   filter:
     include_domains:
       - light
-      # - switch
-      # - climate
-      # - humidifier
-      # - vacuum
+      - climate
+      - vacuum
+    include_entities:
+      - humidifier.xiaomi_humidifier
+      - sensor.living_room_temperature
+      - sensor.bedroom_temperature
+      - sensor.kitchen_temperature
+      - sensor.bathroom_temperature
+    exclude_entity_globs:
+      - climate.kholodilnik_*
+  entity_config:
+    humidifier.xiaomi_humidifier:
+      name: Увлажнитель
+      properties:
+        - type: temperature
+          entity: sensor.xiaomi_humidifier_temperature
+        - type: humidity
+          entity: sensor.xiaomi_humidifier_humidity
+        - type: water_level
+          entity: sensor.xiaomi_humidifier_water_level
+        - type: event.open
+          entity: binary_sensor.xiaomi_humidifier_water_tank
+      events:
+        open:
+          'opened': 'off' # бак снят
+          'closed': 'on' # бак установлен
+      custom_toggles:
+        controls_locked: # блокировка управления
+          state_entity_id: switch.xiaomi_humidifier_child_lock
+          turn_on:
+            action: switch.turn_on
+            entity_id: switch.xiaomi_humidifier_child_lock
+          turn_off:
+            action: switch.turn_off
+            entity_id: switch.xiaomi_humidifier_child_lock
+        backlight: # подсветка
+          state_template: '{% raw %}{{ not is_state("select.xiaomi_humidifier_led_brightness", "off") }}{% endraw %}'
+          turn_on:
+            action: select.select_option
+            entity_id: select.xiaomi_humidifier_led_brightness
+            data:
+              option: dim # или bright
+          turn_off:
+            action: select.select_option
+            entity_id: select.xiaomi_humidifier_led_brightness
+            data:
+              option: 'off'
+    sensor.living_room_temperature:
+      name: Датчик климата
+      properties:
+        - type: temperature
+          entity: sensor.living_room_temperature
+        - type: humidity
+          entity: sensor.living_room_humidity
+        - type: battery_level
+          entity: sensor.living_room_battery_level
+    sensor.bedroom_temperature:
+      name: Датчик климата
+      properties:
+        - type: temperature
+          entity: sensor.bedroom_temperature
+        - type: humidity
+          entity: sensor.bedroom_humidity
+        - type: battery_level
+          entity: sensor.bedroom_battery_level
+    sensor.kitchen_temperature:
+      name: Датчик климата
+      properties:
+        - type: temperature
+          entity: sensor.kitchen_temperature
+        - type: humidity
+          entity: sensor.kitchen_humidity
+        - type: battery_level
+          entity: sensor.kitchen_battery_level
+    sensor.bathroom_temperature:
+      name: Датчик климата
+      properties:
+        - type: temperature
+          entity: sensor.bathroom_temperature
+        - type: humidity
+          entity: sensor.bathroom_humidity
+        - type: battery_level
+          entity: sensor.bathroom_battery_level
