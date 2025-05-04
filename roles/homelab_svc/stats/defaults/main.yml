@@ -4,8 +4,8 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-librenms_db_image: yobasystems/alpine-mariadb:10.11
-librenms_image: jarischaefer/docker-librenms:24.12.0
+librenms_db_image: yobasystems/alpine-mariadb:11.4
+librenms_image: jarischaefer/docker-librenms:25.4.0
 influxdb_image: influxdb:1.8-alpine
 mosquitto_image: eclipse-mosquitto:latest
 
