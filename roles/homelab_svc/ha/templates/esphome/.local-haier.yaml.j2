@@ -129,36 +129,18 @@ sensor:
       name: ${friendly_name} Compressor Current
     compressor_frequency:
       name: ${friendly_name} Compressor Frequency
-    expansion_valve_open_degree:
-      name: ${friendly_name} Expansion Valve Open Degree
     indoor_coil_temperature:
       name: ${friendly_name} Indoor Coil Temperature
-    outdoor_coil_temperature:
-      name: ${friendly_name} Outdoor Coil Temperature
-    outdoor_defrost_temperature:
-      name: ${friendly_name} Outdoor Defrost Temperature
-    outdoor_in_air_temperature:
-      name: ${friendly_name} Outdoor In Air Temperature
-    outdoor_out_air_temperature:
-      name: ${friendly_name} Outdoor Out Air Temperature
     outdoor_temperature:
       name: ${friendly_name} Outdoor Temperature
 
 binary_sensor:
   - platform: haier
     haier_id: haier_ac
-    defrost_status:
-      name: ${friendly_name} Defrost Status
-    four_way_valve_status:
-      name: ${friendly_name} Four Way Valve Status
-    indoor_electric_heating_status:
-      name: ${friendly_name} Indoor Electric Heating Status
     indoor_fan_status:
       name: ${friendly_name} Indoor Fan Status
-    outdoor_fan_status:
-      name: ${friendly_name} Outdoor Fan Status
     compressor_status:
-      name: ${friendly_name} Outdoor Compressor Status
+      name: ${friendly_name} Compressor Status
 
 api:
   services:
