@@ -19,7 +19,7 @@
       MINIO_PROMETHEUS_URL: https://prometheus.k8s.{{ inventory__site }}
       MINIO_PROMETHEUS_JOB_ID: minio
     volumes:
-      - "{{ app_path }}/data/minio/data:/data"
+      - "{{ app_path }}/data/minio/data1:/data"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: true
