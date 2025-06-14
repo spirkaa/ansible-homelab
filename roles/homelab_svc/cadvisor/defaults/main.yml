@@ -1,5 +1,5 @@
 ---
-cadvisor_image: gcr.io/cadvisor/cadvisor:v0.49.2
+cadvisor_image: gcr.io/cadvisor/cadvisor:v0.52.1
 
 app_network_name: "{{ inventory__docker_network }}"
 app_base_domain: "{{ inventory__homelab_domain }}"
