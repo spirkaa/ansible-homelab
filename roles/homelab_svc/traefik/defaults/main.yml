@@ -2,7 +2,7 @@
 app_path: /docker
 tz: "{{ inventory__docker_tz }}"
 
-traefik_image: traefik:3.3
+traefik_image: traefik:3.4
 
 traefik_network_name: traefik
 traefik_web_port: 80
