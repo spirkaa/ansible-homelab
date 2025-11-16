@@ -1,0 +1,92 @@
+version: 0.16-0
+
+mqtt:
+  enabled: false
+
+ffmpeg:
+  hwaccel_args: preset-vaapi
+
+record:
+  enabled: true
+  retain:
+    days: 1
+    mode: motion
+  alerts:
+    retain:
+      days: 3
+      mode: motion
+  detections:
+    retain:
+      days: 3
+      mode: motion
+
+detect:
+  enabled: true
+
+detectors:
+  ov:
+    type: openvino
+    device: GPU
+
+model:
+  width: 300
+  height: 300
+  input_tensor: nhwc
+  input_pixel_format: bgr
+  path: /openvino-model/ssdlite_mobilenet_v2.xml
+  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+
+go2rtc:
+  streams:
+    bedroom:
+      - rtsp://admin:{{ frigate_rtsp_password_bedroom }}@192.168.20.140:554/cam/realmonitor?channel=1&subtype=0
+      - "ffmpeg:bedroom#audio=opus"
+    bedroom_sub:
+      - rtsp://admin:{{ frigate_rtsp_password_bedroom }}@192.168.20.140:554/cam/realmonitor?channel=1&subtype=1
+      - "ffmpeg:bedroom_sub#audio=opus"
+    living_room:
+      - rtsp://admin:{{ frigate_rtsp_password_living_room }}@192.168.20.142:554/cam/realmonitor?channel=1&subtype=0
+      - "ffmpeg:living_room#audio=opus"
+    living_room_sub:
+      - rtsp://admin:{{ frigate_rtsp_password_living_room }}@192.168.20.142:554/cam/realmonitor?channel=1&subtype=1
+      - "ffmpeg:living_room_sub#audio=opus"
+  webrtc:
+    candidates:
+      - 192.168.20.10:8555
+      - stun:8555
+
+cameras:
+  bedroom:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://localhost:8554/bedroom_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+        - path: rtsp://localhost:8554/bedroom
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+    live:
+      streams:
+        Main Stream: bedroom
+        Sub Stream: bedroom_sub
+  living_room:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://localhost:8554/living_room_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+        - path: rtsp://localhost:8554/living_room
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+    live:
+      streams:
+        Main Stream: living_room
+        Sub Stream: living_room_sub

@@ -7,6 +7,10 @@
   ansible.builtin.include_tasks: esphome.yml
   tags: esphome
 
+- name: frigate
+  ansible.builtin.include_tasks: frigate.yml
+  tags: frigate
+
 - name: grocy
   ansible.builtin.include_tasks: grocy.yml
   tags: grocy

@@ -4,10 +4,11 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-esphome_image: esphome/esphome:latest
-barcodebuddy_image: f0rc3/barcodebuddy:latest
-grocy_image: linuxserver/grocy:latest
 homeassistant_image: homeassistant/home-assistant:latest
+esphome_image: esphome/esphome:latest
+frigate_image: ghcr.io/blakeblackshear/frigate:stable
+grocy_image: linuxserver/grocy:latest
+barcodebuddy_image: f0rc3/barcodebuddy:latest
 
 homeassistant_config_path: "{{ app_path }}/homeassistant/config"
 homeassistant_telegram_bot_api_key: !vault |
@@ -71,3 +72,20 @@ esphome_wifi_hotspot_password: !vault |
           32313265323731336439303361343461363532303133666430633937643031653339666462643731
           3536613464666233380a356539636438613634303937613633326637376165623738333262663539
           3733
+
+frigate_config_path: "{{ app_path }}/frigate/config"
+frigate_media_path: "{{ app_path }}/frigate/media"
+frigate_rtsp_password_bedroom: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30626532346261363364636665613466386662636534623437383961363765643963393532643539
+          3730373238383831343465313064623533656465373130340a646133383532643133326638616566
+          34393761623438346532643232353361643965363962633333376362393466636531643664326534
+          6232643239636539320a353537613537643165663238653230363539646261396233366230323462
+          6237
+frigate_rtsp_password_living_room: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          34643961326338643563666336353462626530666533383862336138616465643038366436313938
+          6132666637636136383235363236663735666232653566360a333430303936343164316664373438
+          35633737356235643732326130346232646363666134343839663361616232653134636135386337
+          6439306536663532370a303236363363336535633861613633323161656465356464333030653963
+          3266

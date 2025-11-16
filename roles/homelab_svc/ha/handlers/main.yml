@@ -12,3 +12,10 @@
     state: started
     restart: true
   when: not esphome_start.changed
+
+- name: frigate - restart
+  community.docker.docker_container:
+    name: frigate
+    state: started
+    restart: true
+  when: not frigate_start.changed

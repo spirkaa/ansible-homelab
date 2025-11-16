@@ -1,0 +1,49 @@
+- name: frigate - create dir
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    recurse: true
+  loop:
+    - "{{ frigate_config_path }}"
+    - "{{ frigate_media_path }}"
+  tags: frigate
+
+- name: frigate - copy files
+  ansible.builtin.template:
+    src: frigate/{{ item.src }}
+    dest: "{{ frigate_config_path }}/{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - { src: config.yaml.j2, dest: config.yaml }
+  notify: frigate - restart
+  tags: frigate
+
+- name: frigate - start
+  community.docker.docker_container:
+    name: frigate
+    image: "{{ frigate_image }}"
+    image_name_mismatch: recreate
+    pull: true
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ frigate_config_path }}:/config"
+      - "{{ frigate_media_path }}:/media/frigate"
+    mounts:
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs_size: 1G
+    devices:
+      - "/dev/dri:/dev/dri"
+    ports:
+      - "8971:8971"
+      - "1984:1984" # go2rtc
+      - "8554:8554" # RTSP feeds
+      - "8555:8555/tcp" # WebRTC over tcp
+      - "8555:8555/udp" # WebRTC over udp
+    privileged: true
+    stop_timeout: 30
+    shm_size: 512M
+    restart_policy: unless-stopped
+    state: started
+  register: frigate_start
+  tags: frigate
