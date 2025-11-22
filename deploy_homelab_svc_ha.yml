@@ -19,6 +19,7 @@
     net_domain: "{{ inventory__homelab_domain }}"
     ct_other_options: >
       --onboot 1
+      --mp0 local-lvm:vm-3000-disk-1,mp=/docker/ha/frigate/media,size=40G
     lxc_options:
       - "lxc.mount.entry: /dev/dri dev/dri none bind,create=dir"
 
