@@ -1,5 +1,14 @@
 ---
-- name: Copy files
+- name: Ensure directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - /etc/modules-load.d
+    - /etc/modprobe.d
+
+- name: Configure kernel modules
   ansible.builtin.copy:
     src: files/{{ item.src }}
     dest: "{{ item.dest }}"
@@ -7,10 +16,11 @@
   loop:
     - { src: kvm.conf, dest: /etc/modprobe.d }
     - { src: kvm-intel.conf, dest: /etc/modprobe.d }
-    - { src: modules, dest: /etc }
+    - { src: modules-proxmox.conf, dest: /etc/modules-load.d/proxmox.conf }
 
 - name: Set sysctl entries
   ansible.posix.sysctl:
+    sysctl_file: /etc/sysctl.d/delayacct.conf
     name: kernel.task_delayacct
     value: "1"
     sysctl_set: true

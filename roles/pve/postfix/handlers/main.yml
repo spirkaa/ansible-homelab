@@ -16,6 +16,6 @@
 
 - name: Send test mail  # noqa: risky-shell-pipe
   ansible.builtin.shell: >
-    echo "test mail from {{ inventory_hostname }}" | /usr/bin/proxmox-mail-forward
+    echo "test mail" | mail -s "This is a test from {{ inventory_hostname }}" root
   changed_when: false
   listen: postfix config changed

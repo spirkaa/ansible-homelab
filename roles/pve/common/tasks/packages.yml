@@ -1,14 +1,33 @@
 ---
-- name: Configure no-subscription repo
+- name: Configure no-subscription repo (proxmox < 9)
   ansible.builtin.template:
     src: pve-no-subscription.list.j2
     dest: /etc/apt/sources.list.d/pve-no-subscription.list
     mode: "0644"
+  when:
+    - ansible_distribution_major_version | int < 13
 
-- name: Remove enterprise repo
+- name: Configure no-subscription repo
+  ansible.builtin.template:
+    src: proxmox.sources.j2
+    dest: /etc/apt/sources.list.d/proxmox.sources
+    mode: "0644"
+  when:
+    - ansible_distribution_major_version | int >= 13
+
+- name: Remove enterprise repo (proxmox < 9)
   ansible.builtin.file:
     path: /etc/apt/sources.list.d/pve-enterprise.list
     state: absent
+  when:
+    - ansible_distribution_major_version | int < 13
+
+- name: Remove enterprise repo
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.sources
+    state: absent
+  when:
+    - ansible_distribution_major_version | int >= 13
 
 - name: Install packages
   ansible.builtin.package:

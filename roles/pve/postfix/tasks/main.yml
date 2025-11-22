@@ -12,6 +12,7 @@
     src: "{{ item.src }}"
     dest: /etc/postfix/{{ item.dest }}
     mode: "{{ item.mode }}"
+    backup: true
   loop:
     - { src: sasl_passwd.j2, dest: sasl_passwd, mode: "0600" }
     - { src: smtp_header_checks.j2, dest: smtp_header_checks, mode: "0644" }
