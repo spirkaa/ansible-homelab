@@ -29,17 +29,6 @@ influxdb:
       - automation
       - device_tracker
 
-telegram_bot:
-  - platform: broadcast
-    api_key: !secret telegram_bot_api_key
-    allowed_chat_ids:
-      - !secret telegram_bot_chat_id
-
-notify:
-  - platform: telegram
-    name: telegram_ilya
-    chat_id: !secret telegram_bot_chat_id
-
 camera:
   - platform: xiaomi_cloud_map_extractor
     host: 192.168.20.47
