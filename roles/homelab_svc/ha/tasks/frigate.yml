@@ -40,6 +40,15 @@
       - "8554:8554" # RTSP feeds
       - "8555:8555/tcp" # WebRTC over tcp
       - "8555:8555/udp" # WebRTC over udp
+    networks:
+      - name: "{{ app_network_name }}"
+    networks_cli_compatible: true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.frigate.rule: "HostRegexp(`frigate(.{{ inventory__homelab_domain }})?`)"
+      traefik.http.services.frigate.loadbalancer.server.port: "8971"
+      traefik.http.routers.frigate.entrypoints: "websecure"
+      traefik.http.routers.frigate.tls: "true"
     privileged: true
     stop_timeout: 30
     shm_size: 512M

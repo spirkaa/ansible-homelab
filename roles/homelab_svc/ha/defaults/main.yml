@@ -3,6 +3,7 @@ app_path: /docker/ha
 puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
+app_network_name: "{{ inventory__docker_network }}"
 
 homeassistant_image: homeassistant/home-assistant:latest
 esphome_image: esphome/esphome:latest
