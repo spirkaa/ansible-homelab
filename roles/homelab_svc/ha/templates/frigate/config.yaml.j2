@@ -4,7 +4,11 @@ tls:
   enabled: false
 
 mqtt:
-  enabled: false
+  enabled: true
+  host: mqtt.{{ inventory__homelab_domain }}
+  port: 1883
+  user: frigate
+  password: {{ frigate_mqtt_password }}
 
 ffmpeg:
   hwaccel_args: preset-vaapi
