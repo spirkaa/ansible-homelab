@@ -1,0 +1,49 @@
+---
+- name: mosquitto - create dir
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "1883"
+    group: "1883"
+    recurse: true
+  loop:
+    - "{{ mosquitto_config_path }}"
+    - "{{ mosquitto_data_path }}"
+  tags: mosquitto
+
+- name: mosquitto - copy mosquitto.conf
+  ansible.builtin.template:
+    src: mosquitto/{{ item.src }}
+    dest: "{{ mosquitto_config_path }}/{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - { src: mosquitto.conf.j2, dest: mosquitto.conf }
+  notify: mosquitto - restart
+  tags: mosquitto
+
+- name: mosquitto - create password.txt
+  ansible.builtin.file:
+    path: "{{ mosquitto_password_file }}"
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+    mode: "0600"
+  notify: mosquitto - restart
+  tags: mosquitto
+
+- name: mosquitto - start
+  community.docker.docker_container:
+    name: mosquitto
+    image: "{{ mosquitto_image }}"
+    image_name_mismatch: recreate
+    pull: true
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - "{{ mosquitto_config_path }}:/mosquitto/config"
+      - "{{ mosquitto_data_path }}:/mosquitto/data"
+    restart_policy: unless-stopped
+    state: started
+  register: mosquitto_start
+  tags: mosquitto

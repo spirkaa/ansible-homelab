@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+
+listener 1883
+
+listener 9001
+protocol websockets
+
+log_dest stdout
+log_type all
+log_timestamp true
+log_timestamp_format %Y-%m-%dT%H:%M:%S
+connection_messages true
+
+persistence true
+persistence_location /mosquitto/data
+
+allow_anonymous false
+password_file /mosquitto/config/password.txt

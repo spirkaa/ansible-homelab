@@ -19,3 +19,10 @@
     state: started
     restart: true
   when: not frigate_start.changed
+
+- name: mosquitto - restart
+  community.docker.docker_container:
+    name: mosquitto
+    state: started
+    restart: true
+  when: not mosquitto_start.changed

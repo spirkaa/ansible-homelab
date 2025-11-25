@@ -7,6 +7,7 @@ tz: "{{ inventory__docker_tz }}"
 homeassistant_image: homeassistant/home-assistant:latest
 esphome_image: esphome/esphome:latest
 frigate_image: ghcr.io/blakeblackshear/frigate:stable
+mosquitto_image: eclipse-mosquitto:latest
 grocy_image: linuxserver/grocy:latest
 barcodebuddy_image: f0rc3/barcodebuddy:latest
 
@@ -74,3 +75,7 @@ frigate_rtsp_password_living_room: !vault |
           35633737356235643732326130346232646363666134343839663361616232653134636135386337
           6439306536663532370a303236363363336535633861613633323161656465356464333030653963
           3266
+
+mosquitto_data_path: "{{ app_path }}/mosquitto/data"
+mosquitto_config_path: "{{ app_path }}/mosquitto/config"
+mosquitto_password_file: "{{ mosquitto_config_path }}/password.txt"

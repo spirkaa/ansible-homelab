@@ -11,6 +11,10 @@
   ansible.builtin.include_tasks: frigate.yml
   tags: frigate
 
+- name: mosquitto
+  ansible.builtin.include_tasks: mosquitto.yml
+  tags: mosquitto
+
 - name: grocy
   ansible.builtin.include_tasks: grocy.yml
   tags: grocy
