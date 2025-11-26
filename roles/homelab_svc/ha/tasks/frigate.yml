@@ -46,9 +46,15 @@
     labels:
       traefik.enable: "true"
       traefik.http.routers.frigate.rule: "HostRegexp(`frigate(.{{ inventory__homelab_domain }})?`)"
-      traefik.http.services.frigate.loadbalancer.server.port: "8971"
+      traefik.http.services.frigate-svc.loadbalancer.server.port: "8971"
       traefik.http.routers.frigate.entrypoints: "websecure"
       traefik.http.routers.frigate.tls: "true"
+      traefik.http.routers.frigate.service: frigate-svc
+      traefik.http.routers.frigate-go2rtc.rule: "HostRegexp(`frigate-go2rtc(.{{ inventory__homelab_domain }})?`)"
+      traefik.http.services.frigate-go2rtc-svc.loadbalancer.server.port: "1984"
+      traefik.http.routers.frigate-go2rtc.entrypoints: "websecure"
+      traefik.http.routers.frigate-go2rtc.tls: "true"
+      traefik.http.routers.frigate-go2rtc.service: frigate-go2rtc-svc
     privileged: true
     stop_timeout: 30
     shm_size: 512M
