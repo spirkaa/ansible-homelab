@@ -23,6 +23,11 @@
       tags:
         - vps
         - sing_box
+    - role: xray
+      when: xray_enabled | default(false) | bool
+      tags:
+        - vps
+        - xray
 
   pre_tasks:
     - name: Set timezone
