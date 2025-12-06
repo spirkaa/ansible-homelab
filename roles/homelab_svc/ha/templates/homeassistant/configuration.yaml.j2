@@ -72,15 +72,14 @@ camera:
       seconds: 10
     auto_update: true
 
-binary_sensor:
-  - platform: template
-    sensors:
-      bathroom_motion_sensors:
-        friendly_name: Ванная Датчики движения
-        device_class: motion
-        value_template: >-
-          {% raw %}{{ is_state('binary_sensor.lumi_lumi_sensor_motion_3bf39503_ias_zone', 'on')
-          or is_state('binary_sensor.lumi_lumi_sensor_motion_ias_zone', 'on') }}{% endraw %}
+template:
+- binary_sensor:
+  - device_class: motion
+    default_entity_id: binary_sensor.bathroom_motion_sensors
+    name: Ванная Датчики движения
+    state: >-
+      {% raw %}{{ is_state('binary_sensor.lumi_lumi_sensor_motion_3bf39503_ias_zone', 'on')
+      or is_state('binary_sensor.lumi_lumi_sensor_motion_ias_zone', 'on') }}{% endraw %}
 
 gismeteo:
   vlublino:
