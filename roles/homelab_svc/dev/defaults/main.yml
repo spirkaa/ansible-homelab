@@ -5,7 +5,7 @@ pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
 gitea_db_image: postgres:16-alpine
-gitea_image: gitea/gitea:nightly
+gitea_image: gitea/gitea:main-nightly
 jenkins_image: git.devmem.ru/projects/jenkins:latest
 nexus_image: sonatype/nexus3:3.69.0
 
