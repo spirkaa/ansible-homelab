@@ -4,7 +4,7 @@ puid: "{{ inventory__docker_puid }}"
 pgid: "{{ inventory__docker_pgid }}"
 tz: "{{ inventory__docker_tz }}"
 
-samba_image: mbentley/timemachine:smb-20250614
+samba_image: mbentley/timemachine:smb-20251220
 minio_image: minio/minio:RELEASE.2025-04-22T22-12-26Z
 
 delugevpn_image: binhex/arch-delugevpn:2.0.5-1-04
