@@ -112,3 +112,7 @@ openwrt_dhcp_leases:
     name: zhimi-humidifier-cb1_mibt980
     ip: 192.168.20.46
     mac: 5c:e5:0c:b7:09:80
+  - id: "@host[25]"
+    name: sphome
+    ip: 192.168.20.4
+    mac: 1e:66:bc:79:2a:ab
