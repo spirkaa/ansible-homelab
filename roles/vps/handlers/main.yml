@@ -27,7 +27,7 @@
     name: bird
     state: restarted
 
-- name: restart haproxy
+- name: reload haproxy
   ansible.builtin.service:
     name: haproxy
-    state: restarted
+    state: reloaded

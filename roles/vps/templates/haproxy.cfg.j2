@@ -6,37 +6,69 @@ global
 defaults
     log global
     option httplog
+    option http-server-close
     option dontlognull
     timeout connect 5000
     timeout client 50000
     timeout server 50000
+    timeout tunnel 1h
 
-frontend tcp80
-    bind *:80
-    mode tcp
-    option tcplog
-    default_backend ingress-http
+frontend fe_stats
+    bind {{ vps_wg_private_ip }}:8404
+    mode http
+    stats enable
+    stats uri /stats
+    stats refresh 10s
 
-frontend tcp443
+frontend fe_tcp_443
     bind *:443
     mode tcp
     option tcplog
     tcp-request inspect-delay 5s
     tcp-request content accept if { req.ssl_hello_type 1 }
-    acl teleport_sni req.ssl_sni -i tele.{{ inventory__site }}
-    acl teleport_sni req.ssl_sni -i -m end .tele.{{ inventory__site }}
-    acl teleport_sni req.ssl_sni -i -m reg ^[0-9a-f]+\.teleport\.cluster\.local$
-    use_backend teleport if teleport_sni
-    default_backend ingress-https
 
-backend ingress-http
-    mode tcp
-    server ingress-http {{ vps_wg_peers[0].private_ip }}:8080
+    acl acl_teleport_sni req.ssl_sni -i tele.{{ inventory__site }}
+    acl acl_teleport_sni req.ssl_sni -i -m end .tele.{{ inventory__site }}
+    acl acl_teleport_sni req.ssl_sni -i -m reg ^[0-9a-f]+\.teleport\.cluster\.local$
+    use_backend be_teleport if acl_teleport_sni
 
-backend ingress-https
-    mode tcp
-    server ingress-https {{ vps_wg_peers[0].private_ip }}:8443
+    default_backend be_local_8080
 
-backend teleport
+frontend fe_http_8080
+    bind 127.0.0.1:8080 accept-proxy ssl crt /etc/haproxy/certs
+    mode http
+    option httplog
+    http-request set-var(txn.req_hdrs) req.hdrs
+    log-format "${HAPROXY_HTTP_LOG_FMT} hdrs:%{+Q}[var(txn.req_hdrs)]"
+
+    option forwardfor
+    http-request del-header X-Forwarded-For
+    http-request set-header X-Forwarded-Proto https if { ssl_fc }
+    http-request set-header X-Forwarded-Port %[dst_port]
+    http-request set-header Host %[req.hdr(Host)]
+
+    # acl acl_llama-swap.ai.{{ inventory__site }} req.hdr(Host) -i llama-swap.ai.{{ inventory__site }}
+    # use_backend be_cml if acl_llama-swap.ai.{{ inventory__site }}
+
+    acl acl_chat.ai.{{ inventory__site }} req.hdr(Host) -i chat.ai.{{ inventory__site }}
+    use_backend be_cml if acl_chat.ai.{{ inventory__site }}
+
+    default_backend be_no_match
+
+backend be_local_8080
     mode tcp
-    server teleport {{ vps_wg_peers[0].private_ip }}:10443 send-proxy
+    # check port set to downgrade TCP check without the proxy protocol https://github.com/haproxy/haproxy/issues/2498
+    server local_8080 127.0.0.1:8080 send-proxy check port 8080
+
+backend be_cml
+    mode http
+    server cml {{ vps_wg_peers[1].private_ip }}:8443 check ssl verify none
+
+backend be_teleport
+    mode tcp
+    option tcp-check
+    server teleport {{ vps_wg_peers[0].private_ip }}:10443 send-proxy check
+
+backend be_no_match
+    mode http
+    http-request deny deny_status 403
