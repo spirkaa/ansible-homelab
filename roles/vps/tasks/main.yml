@@ -4,9 +4,11 @@
 
 - name: antifilter tasks
   ansible.builtin.include_tasks: antifilter.yml
+  when: antifilter_enabled | default(false) | bool
 
 - name: bird tasks
   ansible.builtin.include_tasks: bird.yml
+  when: bird_enabled | default(false) | bool
 
 - name: haproxy tasks
   ansible.builtin.include_tasks: haproxy.yml

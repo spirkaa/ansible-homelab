@@ -16,6 +16,7 @@
     content: "{{ inventory__ssl_certificate }}\n{{ inventory__ssl_private_key }}\n"
     dest: /etc/haproxy/certs/devmem-ru-wildcard.pem
     mode: "0640"
+  no_log: true
   notify: reload haproxy
 
 - name: haproxy - copy configuration

@@ -3,8 +3,10 @@ Address = {{ vps_wg_private_ip }}/24
 PrivateKey = {{ vps_wg_privkey }}
 ListenPort = {{ vps_wg_port }}
 {% for peer in vps_wg_peers %}
+{% if peer.state == 'present' %}
 
 [Peer]
 PublicKey = {{ peer.pubkey }}
 AllowedIPs = {{ peer.private_ip }}/32
+{% endif %}
 {% endfor %}

@@ -26,18 +26,12 @@ vps_wg_peers:
     pubkey: Y6YxXdrCaAS/609owOXLRr17iq7T+NIgRkwQRuMbX2g=
     private_ip: 10.255.255.10
     public_ip: 81.88.215.162
+    state: present
   - name: cml
     as: 64647
     pubkey: neMYevYaQuS3xpQPU7yA+c5cmTRXenGhQ7S8EYDLYDw=
     private_ip: 10.255.255.20
-  - name: gw_wg
-    as: 64648
-    pubkey: nilkhfa4oZUahbwAC+8zH8DAuKaolLH/ndAhlLznPFY=
-    private_ip: 10.255.255.30
-  - name: deluge
-    as: 64649
-    pubkey: bouK5la7YRtwplcnzEBNoVktaIVwWbCKDFaxvtDK6jw=
-    private_ip: 10.255.255.40
+    state: present
 
 vps_antifilter_path: /opt/antifilter/antifilter.sh
 vps_bird_config_path: /etc/bird
