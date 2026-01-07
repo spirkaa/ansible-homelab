@@ -18,12 +18,6 @@
     name: dropbear
     state: reloaded
 
-- name: Reload sing-box
-  ansible.builtin.service:
-    name: sing-box
-    state: reloaded
-    enabled: true
-
 - name: Reload firewall
   ansible.builtin.service:
     name: firewall
@@ -33,12 +27,6 @@
   ansible.builtin.service:
     name: network
     state: reloaded
-
-- name: Reload dnscrypt-proxy
-  ansible.builtin.service:
-    name: dnscrypt-proxy
-    state: reloaded
-    enabled: true
 
 - name: Reload dhcp
   ansible.builtin.service:
@@ -51,6 +39,11 @@
     state: reloaded
   listen: Reload dhcp
 
+- name: Reload podkop
+  ansible.builtin.service:
+    name: podkop
+    state: reloaded
+
 - name: Reload wireless
   ansible.builtin.command:
     cmd: /sbin/wifi {{ item }}
@@ -59,11 +52,6 @@
   loop:
     - config
     - reload
-
-- name: Run getdomains script
-  ansible.builtin.service:
-    name: getdomains
-    state: restarted
 
 - name: Restart wireguard
   ansible.builtin.shell:

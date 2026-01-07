@@ -213,9 +213,9 @@ inventory__healthchecksio_slug: !vault |
 inventory__healthchecksio_url: https://hc-ping.com/{{ inventory__healthchecksio_slug }}
 
 inventory__xray_config:
-  server_name: max.ru
-  server: vps-sd-ams.devmem.ru
+  server: 185.246.153.175
   port: 443
+  server_name: max.ru
   public_key: lTcPXcKAgwGKgMcjCrHfWpc77_nsXQE0udNY0d-SjyQ
   private_key: !vault |
     $ANSIBLE_VAULT;1.1;AES256
@@ -275,9 +275,9 @@ inventory__xray_config:
         3361343034323330326430383639353632316132663632623835
 
 inventory__sing_box_config:
-  server_name: max.ru
-  server: vps-sd-ams.devmem.ru
+  server: 185.246.153.175
   port: 443
+  server_name: max.ru
   public_key: lTcPXcKAgwGKgMcjCrHfWpc77_nsXQE0udNY0d-SjyQ
   private_key: !vault |
     $ANSIBLE_VAULT;1.1;AES256

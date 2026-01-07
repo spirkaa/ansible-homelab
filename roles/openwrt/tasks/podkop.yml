@@ -1,0 +1,97 @@
+---
+- name: podkop | Settings
+  uci:
+    command: set
+    config: podkop
+    section: settings
+    type: settings
+    value:
+      dns_type: doh
+      dns_server: 9.9.9.9
+      enable_yacd: 1
+      dont_touch_dhcp: 1
+      exclude_ntp: 1
+  notify:
+    - Uci commit
+    - Reload dnsmasq
+    - Reload podkop
+
+- name: podkop | Main section
+  uci:
+    command: set
+    config: podkop
+    section: main
+    type: section
+    value:
+      mixed_proxy_enabled: 1
+      mixed_proxy_port: 1080
+      proxy_string: "{{ openwrt_podkop_proxy_string }}"
+      user_domain_list_type: text
+      user_subnet_list_type: disabled
+      user_domains_text: "{{ openwrt_podkop_user_domains | join('\n') }}"
+  notify:
+    - Uci commit
+    - Reload podkop
+
+- name: podkop | Main section - community lists
+  uci:
+    command: add_list
+    config: podkop
+    section: main
+    type: section
+    option: community_lists
+    value: "{{ item }}"
+    unique: true
+  loop: "{{ openwrt_podkop_community_lists }}"
+
+- name: podkop | Don't touch my dhcp 1
+  uci:
+    command: set
+    config: dhcp
+    section: "@dnsmasq[-1]"
+    value:
+      noresolv: 1
+      cachesize: 0
+  notify:
+    - Uci commit
+    - Reload dnsmasq
+    - Reload podkop
+
+- name: podkop | Don't touch my dhcp 2
+  uci:
+    command: add_list
+    config: dhcp
+    section: "@dnsmasq[-1]"
+    option: server
+    value: 127.0.0.42
+    unique: true
+  notify:
+    - Uci commit
+    - Reload dnsmasq
+    - Reload podkop
+
+- name: podkop | Add wireguard to source_network_interfaces
+  uci:
+    command: add_list
+    config: podkop
+    section: settings
+    type: settings
+    option: source_network_interfaces
+    value: "{{ openwrt_wireguard[0].interface }}"
+    unique: true
+  when:
+    - openwrt_wireguard
+    - openwrt_wireguard[0].server
+
+- name: podkop | Add deluge wireguard peer to fully_routed_ips
+  uci:
+    command: add_list
+    config: podkop
+    section: main
+    type: section
+    option: fully_routed_ips
+    value: "{{ (openwrt_wireguard[0].peers | selectattr('description', 'search', 'deluge'))[0].allowed_ips | ansible.utils.ipaddr('address') }}"
+    unique: true
+  when:
+    - openwrt_wireguard
+    - openwrt_wireguard[0].server

@@ -22,3 +22,4 @@
   notify:
     - Uci commit
     - Restart wireguard
+  no_log: true

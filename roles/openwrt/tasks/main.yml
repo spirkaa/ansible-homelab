@@ -6,14 +6,8 @@
   ansible.builtin.include_tasks: wireguard.yml
   when: openwrt_wireguard
 
-- name: Dnscrypt-proxy2
-  ansible.builtin.include_tasks: dnscrypt-proxy2.yml
-
-- name: Sing-box
-  ansible.builtin.include_tasks: sing-box.yml
-
-- name: Getdomains script
-  ansible.builtin.include_tasks: getdomains.yml
+- name: Podkop
+  ansible.builtin.include_tasks: podkop.yml
 
 - name: Dnsmasq config
   ansible.builtin.include_tasks: dnsmasq.yml

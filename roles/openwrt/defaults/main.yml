@@ -16,81 +16,14 @@ openwrt_wlan: {}
 openwrt_routes: []
 openwrt_dhcp: {}
 openwrt_dnsmasq: {}
-
 openwrt_wireguard: []
-
-openwrt_sing_box_config:
-  log:
-    level: warn
-  route:
-    auto_detect_interface: true
-    rules:
-      - inbound: mixed-in
-        outbound: vless-out
-      - inbound: tun-in
-        outbound: vless-out
-      - inbound: tun2ss-in
-        outbound: ss-out
-  inbounds:
-    - type: mixed
-      tag: mixed-in
-      listen: 0.0.0.0
-      listen_port: 1080
-      tcp_fast_open: true
-      tcp_multi_path: true
-      set_system_proxy: false
-      sniff: true
-      domain_strategy: ipv4_only
-    - type: tun
-      tag: tun-in
-      interface_name: tun0
-      domain_strategy: ipv4_only
-      address:
-        - 172.16.250.1/30
-      auto_route: false
-      strict_route: false
-      sniff: true
-    - type: tun
-      tag: tun2ss-in
-      interface_name: tun1
-      domain_strategy: ipv4_only
-      address:
-        - 172.16.251.1/30
-      auto_route: false
-      strict_route: false
-      sniff: true
-  outbounds:
-    - type: direct
-      tag: direct-out
-    - type: vless
-      tag: vless-out
-      flow: "{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].flow }}"
-      uuid: "{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].uuid }}"
-      server: "{{ inventory__sing_box_config.server }}"
-      server_port: "{{ inventory__sing_box_config.port }}"
-      tls:
-        enabled: true
-        server_name: "{{ inventory__sing_box_config.server_name }}"
-        reality:
-          enabled: true
-          public_key: "{{ inventory__sing_box_config.public_key }}"
-          short_id: "{{ inventory__sing_box_config.short_id }}"
-        utls:
-          enabled: true
-          fingerprint: chrome
-      multiplex:
-        enabled: true
-        max_connections: 16
-        min_streams: 16
-        protocol: yamux
-    - type: shadowsocks
-      tag: ss-out
-      server: "{{ inventory__sing_box_config.server }}"
-      server_port: "{{ inventory__sing_box_config.ss.port }}"
-      method: "{{ inventory__sing_box_config.ss.method }}"
-      password: "{{ inventory__sing_box_config.ss.password }}"
-      multiplex:
-        enabled: false
 
 openwrt_nginx_config_path: /docker/nginx
 openwrt_nginx_image: nginxinc/nginx-unprivileged:alpine
+
+openwrt_podkop_proxy_string: vless://{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].uuid }}@{{ inventory__sing_box_config.server }}:{{ inventory__sing_box_config.port }}?security=reality&sni={{ inventory__sing_box_config.server_name }}&alpn=h2&fp=chrome&pbk={{ inventory__sing_box_config.public_key }}&sid={{ inventory__sing_box_config.short_id }}&type=tcp&flow={{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].flow }}
+openwrt_podkop_community_lists:
+  - russia_inside
+openwrt_podkop_user_domains:
+  - rwth-aachen.de # jenkins mirror
+  - johnvansickle.com # ffmpeg static build

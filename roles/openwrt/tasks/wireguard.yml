@@ -38,6 +38,7 @@
   loop_control:
     label: "{{ item.interface }}"
   loop: "{{ openwrt_wireguard }}"
+  no_log: true
 
 - name: wireguard | Configure peers
   ansible.builtin.include_tasks: wireguard_peers.yml
@@ -45,7 +46,7 @@
     label: "{{ item.interface }}"
   loop: "{{ openwrt_wireguard }}"
 
-- name: wireguard | Configure firewall zone "lan" - add_list
+- name: wireguard | Configure firewall zone "lan" (site-to-site)
   uci:
     command: add_list
     config: firewall
@@ -63,51 +64,69 @@
     - item.firewall_zone is defined
     - item.firewall_zone == "lan"
 
-- name: wireguard | Configure firewall zone "lan" - enable masquerading
-  uci:
-    command: set
-    config: firewall
-    section: "@zone[0]"
-    value:
-      masq: 1
-  notify:
-    - Uci commit
-    - Reload firewall
-  when: openwrt_wireguard[0].server is defined
-
-- name: wireguard | Configure firewall zone "lan" - add_list
-  uci:
-    command: add_list
-    config: firewall
-    section: "@zone[0]"
-    option: "{{ item.option }}"
-    value: "{{ item.value }}"
-    unique: true
-  loop:
-    - { option: network, value: "{{ openwrt_wireguard[0].interface }}" }
-    - { option: masq_src, value: "{{ openwrt_wireguard[0].addresses }}" }
-  notify:
-    - Uci commit
-    - Reload firewall
-  when: openwrt_wireguard[0].server is defined
-
-- name: wireguard | Configure mark traffic rule "deluge"
+- name: wireguard | Configure firewall zone "{{ openwrt_wireguard[0].interface }}" (server)
   uci:
     command: section
     config: firewall
-    type: rule
+    type: zone
     find_by:
-      name: deluge
+      name: "{{ openwrt_wireguard[0].interface }}"
     value:
+      name: "{{ openwrt_wireguard[0].interface }}"
+      input: ACCEPT
+      output: ACCEPT
+      forward: ACCEPT
+      masq: 1
+      mtu_fix: 1
+      network:
+        - "{{ openwrt_wireguard[0].interface }}"
+      family: ipv4
+  notify:
+    - Uci commit
+    - Reload firewall
+  when: openwrt_wireguard[0].server is defined
+
+- name: wireguard | Configure forwarding (server)
+  uci:
+    command: section
+    config: firewall
+    type: forwarding
+    find_by:
+      name: "{{ item.name }}"
+    value:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+  notify:
+    - Uci commit
+    - Reload firewall
+  loop_control:
+    label: "{{ item.name }}"
+  loop:
+    - name: "{{ openwrt_wireguard[0].interface }}-lan"
+      src: "{{ openwrt_wireguard[0].interface }}"
+      dest: "lan"
+    - name: "{{ openwrt_wireguard[0].interface }}-wan"
+      src: "{{ openwrt_wireguard[0].interface }}"
+      dest: "wan"
+    - name: "lan-{{ openwrt_wireguard[0].interface }}"
+      src: "lan"
+      dest: "{{ openwrt_wireguard[0].interface }}"
+  when: openwrt_wireguard[0].server is defined
+
+- name: wireguard | Configure masquerading (server)
+  uci:
+    command: section
+    config: firewall
+    type: nat
+    find_by:
+      name: "{{ openwrt_wireguard[0].interface }}"
+    value:
+      name: "{{ openwrt_wireguard[0].interface }}"
+      target: MASQUERADE
       src: lan
-      dest: "*"
+      src_ip: "{{ openwrt_wireguard[0].addresses }}"
       proto:
         - all
-      src_ip:
-        - "{{ (openwrt_wireguard[0].peers | selectattr('description', 'search', 'deluge'))[0].allowed_ips | ansible.utils.ipaddr('address') }}"
-      set_mark: "0x1"
-      target: MARK
-      family: ipv4
   notify:
     - Uci commit
     - Reload firewall
