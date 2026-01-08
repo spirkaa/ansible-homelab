@@ -27,3 +27,4 @@ openwrt_podkop_community_lists:
 openwrt_podkop_user_domains:
   - rwth-aachen.de # jenkins mirror
   - johnvansickle.com # ffmpeg static build
+  - ansible.com
