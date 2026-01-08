@@ -25,6 +25,6 @@ openwrt_podkop_proxy_string: vless://{{ (inventory__sing_box_config.users | sele
 openwrt_podkop_community_lists:
   - russia_inside
 openwrt_podkop_user_domains:
-  - rwth-aachen.de # jenkins mirror
-  - johnvansickle.com # ffmpeg static build
+  - rwth-aachen.de  # jenkins mirror
+  - johnvansickle.com  # ffmpeg static build
   - ansible.com

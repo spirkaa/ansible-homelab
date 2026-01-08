@@ -1,3 +1,4 @@
+---
 - name: frigate - create dir
   ansible.builtin.file:
     path: "{{ item }}"
@@ -36,10 +37,10 @@
       - "/dev/dri:/dev/dri"
     ports:
       - "8971:8971"
-      - "1984:1984" # go2rtc
-      - "8554:8554" # RTSP feeds
-      - "8555:8555/tcp" # WebRTC over tcp
-      - "8555:8555/udp" # WebRTC over udp
+      - "1984:1984"  # go2rtc
+      - "8554:8554"  # RTSP feeds
+      - "8555:8555/tcp"  # WebRTC over tcp
+      - "8555:8555/udp"  # WebRTC over udp
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: true
