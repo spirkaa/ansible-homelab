@@ -5,6 +5,11 @@
     name:
       - haproxy
 
+- name: haproxy - generate DH parameters
+  ansible.builtin.command:
+    cmd: openssl dhparam -out /etc/haproxy/dh2048.pem 2048
+    creates: /etc/haproxy/dh2048.pem
+
 - name: haproxy - create certs directory
   ansible.builtin.file:
     path: /etc/haproxy/certs
