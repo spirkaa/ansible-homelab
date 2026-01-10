@@ -1,4 +1,17 @@
 ---
+- name: Enable BBR congestion control
+  ansible.posix.sysctl:
+    sysctl_file: /etc/sysctl.d/99-bbr.conf
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    reload: true
+    state: present
+  loop:
+    - { name: net.core.netdev_budget, value: "600" }
+    - { name: net.core.default_qdisc, value: "fq" }
+    - { name: net.ipv4.tcp_congestion_control, value: "bbr" }
+
 - name: Check currently installed sing-box version
   ansible.builtin.slurp:
     src: "{{ ((sing_box_config | dirname), 'version') | path_join }}"

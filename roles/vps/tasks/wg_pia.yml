@@ -1,6 +1,7 @@
 ---
 - name: wg-pia - set sysctl entry
   ansible.posix.sysctl:
+    sysctl_file: /etc/sysctl.d/99-src-valid-mark.conf
     name: net.ipv4.conf.all.src_valid_mark
     value: "1"
     sysctl_set: true

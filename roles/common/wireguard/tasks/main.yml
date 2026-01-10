@@ -13,6 +13,7 @@
 
 - name: Enable packet forwarding
   ansible.posix.sysctl:
+    sysctl_file: /etc/sysctl.d/99-ip-forward.conf
     name: net.ipv4.ip_forward
     value: "1"
     sysctl_set: true

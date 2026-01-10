@@ -1,7 +1,5 @@
 [vps]
-vps-sd-msk.devmem.ru snmp_syslocation=sale-dedic.com vps_wg_interface=wg0 haproxy_enabled=true
 vps-sd-ams.devmem.ru snmp_syslocation=sale-dedic.com wg_pia_enabled=true sing_box_enabled=true
-vps-dc1.devmem.ru snmp_syslocation=datacheap.ru vps_wan_interface=eno3 vps_wg_interface=wg0 haproxy_enabled=true
 vps-sber1.devmem.ru snmp_syslocation=cloud.ru vps_wan_interface=enp3s0 vps_wg_interface=wg0 haproxy_enabled=true
 
 [vps:vars]

@@ -33,7 +33,7 @@
       community.general.timezone:
         name: Europe/Moscow
 
-    - name: Set DNS
+    - name: Set DNS in resolv.conf
       ansible.builtin.copy:
         content: |
           nameserver 1.1.1.1
@@ -42,3 +42,9 @@
         mode: "0644"
         owner: root
         group: root
+
+    - name: Set DNS in dhclient.conf
+      ansible.builtin.lineinfile:
+        path: /etc/dhcp/dhclient.conf
+        line: supersede domain-name-servers 1.1.1.1, 1.0.0.1;
+        state: present
