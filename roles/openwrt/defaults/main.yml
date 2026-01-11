@@ -21,7 +21,7 @@ openwrt_wireguard: []
 openwrt_nginx_config_path: /docker/nginx
 openwrt_nginx_image: nginxinc/nginx-unprivileged:alpine
 
-openwrt_podkop_proxy_string: vless://{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].uuid }}@{{ inventory__sing_box_config.server }}:{{ inventory__sing_box_config.port }}?security=reality&sni={{ inventory__sing_box_config.server_name }}&alpn=h2&fp=chrome&pbk={{ inventory__sing_box_config.public_key }}&sid={{ inventory__sing_box_config.short_id }}&type=tcp&flow={{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].flow }}
+openwrt_podkop_proxy_string: vless://{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].uuid }}@{{ inventory__sing_box_config.server }}:{{ inventory__sing_box_config.listen_port }}?security=reality&sni={{ inventory__sing_box_config.server_name }}&alpn=h2&fp=chrome&pbk={{ inventory__sing_box_config.public_key }}&sid={{ inventory__sing_box_config.short_id }}&type=tcp&flow={{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].flow }}
 openwrt_podkop_community_lists:
   - russia_inside
 openwrt_podkop_user_domains:

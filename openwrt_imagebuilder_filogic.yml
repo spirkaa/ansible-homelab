@@ -19,7 +19,7 @@
     net_gw: 192.168.10.1
     net_dns: 192.168.10.1
     net_domain: "{{ inventory__homelab_domain }}"
-    openwrt_version: 24.10.4
+    openwrt_version: 24.10.5
     openwrt_target: mediatek/filogic
     openwrt_profile: glinet_gl-mt6000
     openwrt_image: openwrt-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}-{{ openwrt_profile }}-squashfs-sysupgrade.bin
