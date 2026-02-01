@@ -17,3 +17,7 @@
 - name: wg pia tasks
   ansible.builtin.include_tasks: wg_pia.yml
   when: wg_pia_enabled | default(false) | bool
+  args:
+    apply:
+      tags: wg_pia
+  tags: wg_pia
