@@ -1,4 +1,25 @@
 ---
+- name: haproxy - set sysctl entries
+  ansible.posix.sysctl:
+    sysctl_file: /etc/sysctl.d/99-haproxy.conf
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    reload: true
+    state: present
+  loop:
+    - { name: net.ipv4.ip_nonlocal_bind, value: "1" }
+    - { name: net.ipv4.ip_local_port_range, value: "10000 65535" }
+    - { name: net.ipv4.tcp_slow_start_after_idle, value: "0" }
+    - { name: net.ipv4.tcp_tw_reuse, value: "1" }
+    - { name: net.ipv4.tcp_fastopen, value: "3" }
+    - { name: net.ipv4.tcp_fin_timeout, value: "30" }
+    - { name: net.netfilter.nf_conntrack_tcp_timeout_time_wait, value: "30" }
+    - { name: net.core.somaxconn, value: "65535" }
+    - { name: net.core.netdev_max_backlog, value: "10000" }
+    - { name: net.ipv4.tcp_max_syn_backlog, value: "8192" }
+    - { name: net.ipv4.tcp_synack_retries, value: "3" }
+
 - name: haproxy - install packages
   ansible.builtin.package:
     state: present

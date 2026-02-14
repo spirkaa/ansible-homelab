@@ -13,6 +13,10 @@
 - name: haproxy tasks
   ansible.builtin.include_tasks: haproxy.yml
   when: haproxy_enabled | default(false) | bool
+  args:
+    apply:
+      tags: haproxy
+  tags: haproxy
 
 - name: wg pia tasks
   ansible.builtin.include_tasks: wg_pia.yml
