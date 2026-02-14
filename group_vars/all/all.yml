@@ -275,10 +275,10 @@ inventory__xray_config:
         3361343034323330326430383639353632316132663632623835
 
 inventory__sing_box_config:
-  server: 185.246.153.175
+  server: 45.155.205.117
   listen: 0.0.0.0
   listen_port: 443
-  server_name: max.ru
+  server_name: ya.ru
   server_port: 443
   public_key: lTcPXcKAgwGKgMcjCrHfWpc77_nsXQE0udNY0d-SjyQ
   private_key: !vault |
