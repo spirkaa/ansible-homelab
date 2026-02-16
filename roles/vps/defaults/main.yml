@@ -1,37 +1,8 @@
 ---
 vps_wan_interface: eth0
-vps_wg_interface: wg1
+
 vps_wg_config_path: /etc/wireguard
-vps_wg_private_ip: 10.255.255.1
 vps_wg_port: 51820
-vps_wg_privkey: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          64616661373133633762656331623837623331643766353661393362373238323831666539333438
-          6535363539636164643434623664643131386463306232610a373163306432633863633764613831
-          66663537353165333134663334666534663537653665386161333835366434613231353561333234
-          6235636364663766620a373639383938633366363664356561316136343839383637363338383034
-          63393563376435306262383366616332393161303965636166356562616339313633353930626638
-          3636323635666234386663343433346565376532393132353035
-vps_wg_pubkey: !vault |
-          $ANSIBLE_VAULT;1.1;AES256
-          33623738373166303839376363613237346434323363653830666164643539653233353233323164
-          6465376262633365623737303537633466643638393262350a643365343663653936323733356332
-          30356466363037653838356636623131333833383066393039356639623931343763313863316461
-          3963356235666366300a303465353836363163666134396263346237653336643938653533646133
-          61653064626637386162383066353864343064353038653262396566626630643136643565333963
-          3439343937633265363539636163333266623730303030643939
-vps_wg_peers:
-  - name: krs
-    as: 64646
-    pubkey: Y6YxXdrCaAS/609owOXLRr17iq7T+NIgRkwQRuMbX2g=
-    private_ip: 10.255.255.10
-    public_ip: 81.88.215.162
-    state: present
-  - name: cml
-    as: 64647
-    pubkey: neMYevYaQuS3xpQPU7yA+c5cmTRXenGhQ7S8EYDLYDw=
-    private_ip: 10.255.255.20
-    state: present
 
 vps_antifilter_path: /opt/antifilter/antifilter.sh
 vps_bird_config_path: /etc/bird
@@ -44,7 +15,7 @@ wg_pia_location: swiss
 wg_pia_local_network: ""
 wg_pia_firewall: "0"
 wg_pia_fwd_iface: wg1
-wg_pia_post_up: ip rule add from $(ip -br address show dev eth0 | awk '{print $3}' | awk -F/ '{print $1}') lookup main
+wg_pia_post_up: ip rule add from $(ip -br address show dev {{ vps_wan_interface }} | awk '{print $3}' | awk -F/ '{print $1}') lookup main
 
 # vps_iptables_forward_ports:
 #   - { port: "80", proto: "tcp", comment: "http", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8080 }

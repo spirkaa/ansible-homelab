@@ -98,7 +98,7 @@ backend be_teleport
 backend be_connect
     mode tcp
     option tcp-check
-    server connect vps-sd-ams.devmem.ru:443 check
+    server connect 10.255.254.1:443 check
 
 backend be_no_match
     mode http
