@@ -1,6 +1,11 @@
 ---
-- name: wireguard tasks
+- name: Wireguard tasks
   ansible.builtin.include_tasks: wireguard.yml
+  when: vps_wireguard | length > 0
+  args:
+    apply:
+      tags: wireguard
+  tags: wireguard
 
 - name: antifilter tasks
   ansible.builtin.include_tasks: antifilter.yml

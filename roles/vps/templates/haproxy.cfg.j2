@@ -26,7 +26,7 @@ defaults
     timeout tunnel 1h
 
 frontend fe_stats
-    bind {{ vps_wg_private_ip }}:8404
+    bind 10.255.255.1:8404
     mode http
     stats enable
     stats uri /stats
@@ -88,12 +88,12 @@ backend tcp_to_https
 
 backend be_cml
     mode http
-    server cml {{ vps_wg_peers[1].private_ip }}:8443 check ssl verify none alpn h2,http/1.1
+    server cml 10.255.255.20:8443 check ssl verify none alpn h2,http/1.1
 
 backend be_teleport
     mode tcp
     option tcp-check
-    server teleport {{ vps_wg_peers[0].private_ip }}:10443 send-proxy check
+    server teleport 10.255.255.10:10443 send-proxy check
 
 backend be_connect
     mode tcp

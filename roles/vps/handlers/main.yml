@@ -1,9 +1,12 @@
 ---
-- name: restart wireguard
+- name: Restart wireguard instance
   ansible.builtin.service:
-    name: wg-quick@{{ vps_wg_interface }}
-    enabled: true
+    name: wg-quick@{{ item }}
     state: restarted
+    daemon_reload: true
+  loop: "{{ _instances_changed }}"
+  when:
+    - not ansible_check_mode
 
 - name: save iptables
   ansible.builtin.command:

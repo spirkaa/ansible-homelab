@@ -1,12 +1,60 @@
 [Interface]
-Address = {{ vps_wg_private_ip }}/24
-PrivateKey = {{ vps_wg_privkey }}
-ListenPort = {{ vps_wg_port }}
-{% for peer in vps_wg_peers %}
-{% if peer.state == 'present' %}
+# {{ item.description }}
+Address = {{ item.address }}
+PrivateKey = {{ item.private_key }}
+{% if item.listen_port is defined %}
+ListenPort = {{ item.listen_port }}
+{% endif %}
+{% if item.dns is defined %}
+DNS = {{ item.dns }}
+{% endif %}
+{% if item.fwmark is defined %}
+FwMark = {{ item.fwmark }}
+{% endif %}
+{% if item.mtu is defined %}
+MTU = {{ item.mtu }}
+{% endif %}
+{% if item.table is defined %}
+Table = {{ item.table }}
+{% endif %}
+{% if item.pre_up is defined %}
+{% for pre_up in item.pre_up %}
+PreUp = {{ pre_up }}
+{% endfor %}
+{% endif %}
+{% if item.post_up is defined %}
+{% for post_up in item.post_up %}
+PostUp = {{ post_up }}
+{% endfor %}
+{% endif %}
+{% if item.pre_down is defined %}
+{% for pre_down in item.pre_down %}
+PreDown = {{ pre_down }}
+{% endfor %}
+{% endif %}
+{% if item.post_down is defined %}
+{% for post_down in item.post_down %}
+PostDown = {{ post_down }}
+{% endfor %}
+{% endif %}
+{% if item.save_config is defined %}
+SaveConfig = {{ item.save_config }}
+{% endif %}
+{% for peer in item.peers %}
+{% if peer.state is not defined or peer.state == 'present' %}
 
 [Peer]
-PublicKey = {{ peer.pubkey }}
-AllowedIPs = {{ peer.private_ip }}/32
+# {{ peer.description }}
+{% if peer.preshared_key is defined %}
+PresharedKey = {{ peer.preshared_key }}
+{% endif %}
+PublicKey = {{ peer.public_key }}
+AllowedIPs = {{ peer.allowed_ips }}
+{% if peer.endpoint is defined %}
+Endpoint = {{ peer.endpoint }}
+{% endif %}
+{% if peer.persistent_keepalive is defined %}
+PersistentKeepalive = {{ peer.persistent_keepalive }}
+{% endif %}
 {% endif %}
 {% endfor %}

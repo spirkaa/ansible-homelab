@@ -1,64 +1,86 @@
 ---
-- name: wireguard - install packages
+- name: Wireguard | Install packages
   ansible.builtin.package:
     state: present
     name:
       - iptables-persistent
 
-- name: wireguard - create directories
+- name: Wireguard | Create directories
   ansible.builtin.file:
-    path: "{{ vps_wg_config_path }}"
+    path: "{{ vps_wireguard_config_path }}"
     state: directory
     mode: "0700"
 
-- name: wireguard - copy configuration
+- name: Wireguard | Copy configuration
   ansible.builtin.template:
     src: wireguard.conf.j2
-    dest: "{{ vps_wg_config_path }}/{{ vps_wg_interface }}.conf"
+    dest: "{{ vps_wireguard_config_path }}/{{ item.interface }}.conf"
     mode: "0600"
   no_log: true
-  notify: restart wireguard
+  register: _wireguard_config
+  notify: Restart wireguard instance
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ vps_wireguard }}"
 
-- name: wireguard - configure iptables - accept forward
+- name: Wireguard | Configure iptables - accept forward
   ansible.builtin.iptables:
     chain: FORWARD
     policy: ACCEPT
   notify: save iptables
 
-- name: wireguard - configure iptables - forwarding from {{ vps_wan_interface }} to {{ vps_wg_interface }}
-  ansible.builtin.iptables:
-    chain: FORWARD
-    in_interface: "{{ vps_wan_interface }}"
-    out_interface: "{{ vps_wg_interface }}"
-    jump: ACCEPT
-    action: insert
-    comment: "forwarding from {{ vps_wan_interface }} to {{ vps_wg_interface }}"
-  notify: save iptables
+- name: Wireguard | Make changed instances list
+  ansible.builtin.set_fact:
+    _instances_changed: "{{ _wireguard_config.results | selectattr('changed', 'equalto', true) | map(attribute='item') | map(attribute='interface') | list }}"
 
-- name: wireguard - configure iptables - forwarding from {{ vps_wg_interface }} to {{ vps_wan_interface }}
-  ansible.builtin.iptables:
-    chain: FORWARD
-    in_interface: "{{ vps_wg_interface }}"
-    out_interface: "{{ vps_wan_interface }}"
-    ctstate:
-      - RELATED
-      - ESTABLISHED
-    jump: ACCEPT
-    action: insert
-    comment: "forwarding from {{ vps_wg_interface }} to {{ vps_wan_interface }}"
-  notify: save iptables
+- name: Wireguard | Flush handlers
+  ansible.builtin.meta: flush_handlers
 
-- name: wireguard - configure iptables - masquerade
-  ansible.builtin.iptables:
-    table: nat
-    chain: POSTROUTING
-    out_interface: "{{ vps_wan_interface }}"
-    jump: MASQUERADE
-    action: insert
-    comment: "masquerade for {{ vps_wan_interface }}"
-  notify: save iptables
+- name: Wireguard | Enable and start service instance
+  ansible.builtin.service:
+    name: wg-quick@{{ item.interface }}
+    enabled: true
+    state: started
+  when:
+    - not ansible_check_mode
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ vps_wireguard }}"
 
-# - name: wireguard - configure iptables - forward ports
+# - name: Wireguard | Configure iptables - forwarding from {{ vps_wan_interface }} to {{ vps_wg_interface }}
+#   ansible.builtin.iptables:
+#     chain: FORWARD
+#     in_interface: "{{ vps_wan_interface }}"
+#     out_interface: "{{ vps_wg_interface }}"
+#     jump: ACCEPT
+#     action: insert
+#     comment: "forwarding from {{ vps_wan_interface }} to {{ vps_wg_interface }}"
+#   notify: save iptables
+
+# - name: Wireguard | Configure iptables - forwarding from {{ vps_wg_interface }} to {{ vps_wan_interface }}
+#   ansible.builtin.iptables:
+#     chain: FORWARD
+#     in_interface: "{{ vps_wg_interface }}"
+#     out_interface: "{{ vps_wan_interface }}"
+#     ctstate:
+#       - RELATED
+#       - ESTABLISHED
+#     jump: ACCEPT
+#     action: insert
+#     comment: "forwarding from {{ vps_wg_interface }} to {{ vps_wan_interface }}"
+#   notify: save iptables
+
+# - name: Wireguard | Configure iptables - masquerade
+#   ansible.builtin.iptables:
+#     table: nat
+#     chain: POSTROUTING
+#     out_interface: "{{ vps_wan_interface }}"
+#     jump: MASQUERADE
+#     action: insert
+#     comment: "masquerade for {{ vps_wan_interface }}"
+#   notify: save iptables
+
+# - name: Wireguard | Configure iptables - forward ports
 #   ansible.builtin.iptables:
 #     table: nat
 #     chain: PREROUTING
@@ -72,7 +94,7 @@
 #   loop: "{{ vps_iptables_forward_ports }}"
 #   notify: save iptables
 
-# - name: wireguard - configure iptables - SNAT
+# - name: Wireguard | Configure iptables - SNAT
 #   ansible.builtin.iptables:
 #     table: nat
 #     chain: POSTROUTING

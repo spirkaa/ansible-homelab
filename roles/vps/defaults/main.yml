@@ -1,8 +1,8 @@
 ---
 vps_wan_interface: eth0
 
-vps_wg_config_path: /etc/wireguard
-vps_wg_port: 51820
+vps_wireguard_config_path: /etc/wireguard
+vps_wireguard: []
 
 vps_antifilter_path: /opt/antifilter/antifilter.sh
 vps_bird_config_path: /etc/bird
