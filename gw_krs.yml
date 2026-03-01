@@ -82,6 +82,7 @@
 
 - name: Configure host
   hosts: gw-krs
-  strategy: linear  # role gekmihesg.openwrt don't work with mitogen
+  strategy: linear  # collection community.openwrt don't work with mitogen
+  gather_facts: false
   roles:
     - openwrt

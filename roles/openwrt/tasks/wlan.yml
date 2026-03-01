@@ -1,6 +1,6 @@
 ---
 - name: wlan | Configure device
-  uci:
+  community.openwrt.uci:
     command: set
     config: wireless
     section: "{{ item.id }}"
@@ -20,7 +20,7 @@
     - Reload wireless
 
 - name: wlan | Configure interface
-  uci:
+  community.openwrt.uci:
     command: set
     config: wireless
     section: "{{ item.id }}"

@@ -1,13 +1,13 @@
 ---
 - name: Nginx | Create dir
-  ansible.builtin.file:
+  community.openwrt.file:
     path: "{{ openwrt_nginx_config_path }}/conf.d"
     state: directory
     recurse: true
 
 - name: Nginx | Copy files
-  ansible.builtin.template:
-    src: "{{ item.src }}"
+  community.openwrt.copy:
+    content: "{{ lookup('template', item.src) }}"
     dest: "{{ item.dest }}"
     mode: "0644"
     owner: 101

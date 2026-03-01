@@ -6,4 +6,4 @@
 
 ## Зависимости
 
-- gekmihesg.openwrt
+- [community.openwrt](https://ansible-collections.github.io/community.openwrt/branch/main/index.html)

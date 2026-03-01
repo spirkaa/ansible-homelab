@@ -54,7 +54,8 @@ openwrt_wlan:
 openwrt_wireguard:
   - interface: wg1
     firewall_zone: lan
-    addresses: 10.250.254.40/24
+    addresses:
+      - 10.250.254.40/24
     private_key: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       62386439643737656535393163616663643362636436663030373365306134356235343832663331
@@ -65,7 +66,8 @@ openwrt_wireguard:
       6264303733376166326537346238663462643735663736313663
     peers:
       - description: krs
-        allowed_ips: 0.0.0.0/0
+        allowed_ips:
+          - 0.0.0.0/0
         public_key: zy7VcdbRP+yTbWwQyhmXMo0Oi/vttJGcErhfQvaNeBE=
         endpoint_host: vpn.devmem.ru
         endpoint_port: 51820

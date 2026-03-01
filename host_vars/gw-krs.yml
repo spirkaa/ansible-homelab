@@ -10,7 +10,9 @@ openwrt_wireguard:
   - interface: wg0
     server: true
     listen_port: 51821
-    addresses: 10.44.0.1/24
+    addresses:
+      - 10.44.0.1/24
+    public_key: 10IYGaK04ISwjBPMfxcNMfZGMfmHl+Vd9eY3ePVV3hw=
     private_key: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       32393963396535633031386232366430306262363266356436366631326463663064373938353537
@@ -21,7 +23,8 @@ openwrt_wireguard:
       3463646464346330623565383737333735626238316465623136
     peers:
       - description: spgalaxy
-        allowed_ips: 10.44.0.2/32
+        allowed_ips:
+          - 10.44.0.2/32
         public_key: 7MEJZ4P8XYVlhQTcuOXN6oQdeevKXOdHjps/GSUt90o=
         private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -32,7 +35,8 @@ openwrt_wireguard:
           62663939653061306462323033643837303538363637346239323066613864663836353139666363
           3735643762393332633364383139626162353862653039646630
       - description: iphone
-        allowed_ips: 10.44.0.3/32
+        allowed_ips:
+          - 10.44.0.3/32
         public_key: dNpZeVI8rA0rHaZuW9IKtGVmyRPXM7viiSVzIVm1qCQ=
         private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -43,7 +47,8 @@ openwrt_wireguard:
           64383066383039643634336166646433363731653163313765616262313939363239323161383764
           3030396430646466653562643832316466346632396333623661
       - description: deluge
-        allowed_ips: 10.44.0.4/32
+        allowed_ips:
+          - 10.44.0.4/32
         public_key: BZGmOWXPm86fSQfCqQkEXEoLv43ocpS/8R2CuHb5oG8=
         private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -54,7 +59,8 @@ openwrt_wireguard:
           61383839653632336665326131363862653164366366663633396561326463613632336661623038
           3062393435333365363335633032663966353264653736656538
       - description: spmacbook
-        allowed_ips: 10.44.0.5/32
+        allowed_ips:
+          - 10.44.0.5/32
         public_key: okOdos3cbuHz3P2TF420HQqR+wDA0HpBOMIQVoXNti4=
         private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -65,7 +71,8 @@ openwrt_wireguard:
           65356630383064623663313930343233393737393633663639366138643932646361383039346636
           3337643538323637633366313436636435326238306338626465
       - description: spipad
-        allowed_ips: 10.44.0.6/32
+        allowed_ips:
+          - 10.44.0.6/32
         public_key: Z9hzkmp0VQK8JbmB1AdAfkfojnkkTVK4FP/NGHkcb00=
         private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -75,3 +82,26 @@ openwrt_wireguard:
           6430613561343436310a633935386463663261663039333665333165396663653562363930626132
           31343935333763346364336236353236313135353566353230356331666633336131383434383130
           3965313639616164313332326239666531666139326336323532
+
+  - interface: wg1
+    firewall_zone: lan
+    addresses:
+      - 10.255.255.11/32
+    public_key: FAzXW6hJ7Gb/83ZFcGCyktSVil13/SKvOHBDMYeR2C8=
+    private_key: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      38386462623938386439373037386232623164343634623033373434313965653135636438336235
+      3432663036663037383932396564376530363731313663300a316362396237383962303165303364
+      31383939643736373666633539376366303662636661666434316366633231363063346261376633
+      6236353462396663350a366663383335616332633762393030333936333862346336643966666130
+      36353862333066316136623166663634343534363830313061353832353333326563393633336365
+      3637653738633838326464336366663534346536643339356462
+    peers:
+      - description: vps-sber1
+        allowed_ips:
+          - 0.0.0.0/0
+          - 10.255.255.1/32
+        public_key: ptgafvY1m2aj4FKFwBCeEVylpPjaynqEYm0tQyR3P2c=
+        endpoint_host: vps-sber1.devmem.ru
+        endpoint_port: 51820
+        persistent_keepalive: 10

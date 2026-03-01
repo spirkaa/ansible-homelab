@@ -1,34 +1,20 @@
 ---
-- name: dhcp_leases | Set static lease state status for host {{ item.name }}
-  ansible.builtin.set_fact:
-    static_lease_state: "{{ item.state | default('present') }}"
-
-- name: dhcp_leases | Delete static lease for host {{ item.name }}
-  when: "'absent' in static_lease_state"
-  uci:
-    command: absent
-    config: dhcp
-    section: "{{ item.id }}"
-    type: host
-  notify:
-    - Uci commit
-    - Reload dhcp
-
-- name: dhcp_leases | Create and configure static lease for host
-  when: "'present' in static_lease_state"
+- name: dhcp_leases | Create and configure static lease
+  when:
+    - item.state is not defined or item.state == 'present'
   notify:
     - Uci commit
     - Reload dhcp
   block:
-    - name: dhcp_leases | Create static lease for host {{ item.name }}
-      uci:
+    - name: dhcp_leases | Create static lease {{ item.name }}
+      community.openwrt.uci:
         command: add
         config: dhcp
         section: "{{ item.id | default('@host[-1]') }}"
         type: host
 
-    - name: dhcp_leases | Configure static lease for host {{ item.name }}
-      uci:
+    - name: dhcp_leases | Configure static lease {{ item.name }}
+      community.openwrt.uci:
         command: set
         config: dhcp
         section: "{{ item.id | default('@host[-1]') }}"
@@ -39,3 +25,16 @@
           mac: "{{ item.mac | default(omit) }}"
           leasetime: "{{ item.leasetime | default(omit) }}"
           dns: "{{ item.dns | default(omit) }}"
+
+- name: dhcp_leases | Delete static lease {{ item.name }}
+  when:
+    - item.state is defined
+    - item.state == 'absent'
+  community.openwrt.uci:
+    command: absent
+    config: dhcp
+    section: "{{ item.id }}"
+    type: host
+  notify:
+    - Uci commit
+    - Reload dhcp

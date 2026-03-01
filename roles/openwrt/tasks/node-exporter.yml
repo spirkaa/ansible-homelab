@@ -1,6 +1,6 @@
 ---
 - name: node-exporter | Install package
-  community.general.opkg:
+  community.openwrt.opkg:
     name: "{{ item }}"
     state: present
   loop:
@@ -14,7 +14,7 @@
     - Restart node-exporter
 
 - name: node-exporter | Configure service
-  uci:
+  community.openwrt.uci:
     command: set
     config: prometheus-node-exporter-lua
     section: main

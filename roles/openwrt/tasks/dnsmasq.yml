@@ -1,6 +1,6 @@
 ---
 - name: dnsmasq | Configure
-  uci:
+  community.openwrt.uci:
     command: set
     config: dhcp
     section: "@dnsmasq[-1]"
@@ -15,7 +15,7 @@
     - Reload dnsmasq
 
 - name: dnsmasq | Configure forward server
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: dhcp
     section: "@dnsmasq[-1]"
@@ -30,7 +30,7 @@
     - openwrt_dnsmasq_forward_servers is defined
 
 - name: dnsmasq | Configure rebind domain
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: dhcp
     section: "@dnsmasq[-1]"

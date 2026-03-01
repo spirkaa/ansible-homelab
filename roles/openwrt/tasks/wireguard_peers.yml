@@ -1,10 +1,10 @@
 ---
-- name: wireguard | Configure peers
-  uci:
+- name: wireguard_peers | Configure peer
+  community.openwrt.uci:
     command: section
     config: network
     type: wireguard_{{ item.interface }}
-    find_by:
+    find:
       description: "{{ peer.description }}"
     value:
       description: "{{ peer.description }}"
@@ -23,3 +23,26 @@
     - Uci commit
     - Restart wireguard
   no_log: true
+  register: _wg_peers_config
+  when:
+    - peer.state is not defined or peer.state == 'present'
+
+- name: wireguard_peers | Delete peer
+  community.openwrt.uci:
+    command: absent
+    config: network
+    type: wireguard_{{ item.interface }}
+    find:
+      description: "{{ peer.description }}"
+  loop_control:
+    loop_var: peer
+    label: "{{ peer.description }}"
+  loop: "{{ item.peers }}"
+  notify:
+    - Uci commit
+    - Restart wireguard
+  no_log: true
+  register: _wg_peers_delete
+  when:
+    - peer.state is defined
+    - peer.state == 'absent'

@@ -1,6 +1,6 @@
 ---
 - name: podkop | Settings
-  uci:
+  community.openwrt.uci:
     command: set
     config: podkop
     section: settings
@@ -17,7 +17,7 @@
     - Reload podkop
 
 - name: podkop | Main section
-  uci:
+  community.openwrt.uci:
     command: set
     config: podkop
     section: main
@@ -34,7 +34,7 @@
     - Reload podkop
 
 - name: podkop | Main section - community lists
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: podkop
     section: main
@@ -45,7 +45,7 @@
   loop: "{{ openwrt_podkop_community_lists }}"
 
 - name: podkop | Don't touch my dhcp 1
-  uci:
+  community.openwrt.uci:
     command: set
     config: dhcp
     section: "@dnsmasq[-1]"
@@ -58,7 +58,7 @@
     - Reload podkop
 
 - name: podkop | Don't touch my dhcp 2
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: dhcp
     section: "@dnsmasq[-1]"
@@ -71,27 +71,38 @@
     - Reload podkop
 
 - name: podkop | Add wireguard to source_network_interfaces
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: podkop
     section: settings
     type: settings
     option: source_network_interfaces
-    value: "{{ openwrt_wireguard[0].interface }}"
+    value: "{{ item.interface }}"
     unique: true
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ _wg_servers }}"
   when:
-    - openwrt_wireguard
-    - openwrt_wireguard[0].server
+    - _wg_servers is defined
+
+- name: podkop | Find deluge wireguard peer
+  ansible.builtin.set_fact:
+    _wg_deluge_peer: "{{ item.peers | selectattr('description', 'search', 'deluge') | list }}"
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ _wg_servers }}"
+  when:
+    - _wg_servers is defined
 
 - name: podkop | Add deluge wireguard peer to fully_routed_ips
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: podkop
     section: main
     type: section
     option: fully_routed_ips
-    value: "{{ (openwrt_wireguard[0].peers | selectattr('description', 'search', 'deluge'))[0].allowed_ips | ansible.utils.ipaddr('address') }}"
+    value: "{{ item | ansible.utils.ipaddr('address') }}"
     unique: true
+  loop: "{{ _wg_deluge_peer[0].allowed_ips }}"
   when:
-    - openwrt_wireguard
-    - openwrt_wireguard[0].server
+    - _wg_deluge_peer is defined

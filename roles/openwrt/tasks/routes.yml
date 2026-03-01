@@ -1,32 +1,44 @@
 ---
-- name: route | Create network route
-  uci:
-    command: add
-    config: network
-    section: "{{ item.id | default('@route[-1]') }}"
-    type: route
-  loop: "{{ openwrt_routes }}"
+- name: routes | Create and configure network route
+  when:
+    - item.state is not defined or item.state == 'present'
   notify:
     - Uci commit
     - Reload network
+  block:
+    - name: routes | Create network route
+      community.openwrt.uci:
+        command: add
+        config: network
+        section: "{{ item.id | default('@route[-1]') }}"
+        type: route
 
-- name: route | Configure network route
-  uci:
-    command: set
+    - name: routes | Configure network route
+      community.openwrt.uci:
+        command: set
+        config: network
+        section: "{{ item.id | default('@route[-1]') }}"
+        type: route
+        value:
+          interface: "{{ item.interface | default(omit) }}"
+          target: "{{ item.target | default(omit) }}"
+          netmask: "{{ item.netmask | default(omit) }}"
+          gateway: "{{ item.gateway | default(omit) }}"
+          table: "{{ item.table | default(omit) }}"
+          source: "{{ item.source | default(omit) }}"
+          type: "{{ item.type | default(omit) }}"
+          proto: "{{ item.proto | default(omit) }}"
+          disabled: "{{ item.disabled | default(omit) }}"
+
+- name: routes | Delete network route
+  when:
+    - item.state is defined
+    - item.state == 'absent'
+  community.openwrt.uci:
+    command: absent
     config: network
-    section: "{{ item.id | default('@route[-1]') }}"
+    section: "{{ item.id }}"
     type: route
-    value:
-      interface: "{{ item.interface | default(omit) }}"
-      target: "{{ item.target | default(omit) }}"
-      netmask: "{{ item.netmask | default(omit) }}"
-      gateway: "{{ item.gateway | default(omit) }}"
-      table: "{{ item.table | default(omit) }}"
-      source: "{{ item.source | default(omit) }}"
-      type: "{{ item.type | default(omit) }}"
-      proto: "{{ item.proto | default(omit) }}"
-      disabled: "{{ item.disabled | default(omit) }}"
-  loop: "{{ openwrt_routes }}"
   notify:
     - Uci commit
     - Reload network

@@ -1,51 +1,51 @@
 ---
 - name: Uci commit
-  uci:
+  community.openwrt.uci:
     command: commit
 
 - name: Reload system
-  ansible.builtin.service:
+  community.openwrt.service:
     name: system
     state: reloaded
 
 - name: Reload uhttpd
-  ansible.builtin.service:
+  community.openwrt.service:
     name: uhttpd
     state: reloaded
 
 - name: Reload dropbear
-  ansible.builtin.service:
+  community.openwrt.service:
     name: dropbear
     state: reloaded
 
 - name: Reload firewall
-  ansible.builtin.service:
+  community.openwrt.service:
     name: firewall
     state: reloaded
 
 - name: Reload network
-  ansible.builtin.service:
+  community.openwrt.service:
     name: network
     state: reloaded
 
 - name: Reload dhcp
-  ansible.builtin.service:
+  community.openwrt.service:
     name: odhcpd
     state: reloaded
 
 - name: Reload dnsmasq
-  ansible.builtin.service:
+  community.openwrt.service:
     name: dnsmasq
     state: reloaded
   listen: Reload dhcp
 
 - name: Reload podkop
-  ansible.builtin.service:
+  community.openwrt.service:
     name: podkop
     state: reloaded
 
 - name: Reload wireless
-  ansible.builtin.command:
+  community.openwrt.command:
     cmd: /sbin/wifi {{ item }}
   register: _reload_wireless_status
   changed_when: _reload_wireless_status != 0
@@ -54,15 +54,14 @@
     - reload
 
 - name: Restart wireguard
-  ansible.builtin.shell:
-    cmd: ifdown {{ item.interface }} && ifup {{ item.interface }}
+  community.openwrt.command:
+    cmd: ifdown {{ item }} && ifup {{ item }}
+    uses_shell: true
   changed_when: true
-  loop_control:
-    label: "{{ item.interface }}"
-  loop: "{{ openwrt_wireguard }}"
+  loop: "{{ _wg_instances_changed }}"
 
 - name: Restart node-exporter
-  ansible.builtin.service:
+  community.openwrt.service:
     name: prometheus-node-exporter-lua
     state: restarted
 

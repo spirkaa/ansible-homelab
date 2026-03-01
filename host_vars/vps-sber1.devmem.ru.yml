@@ -22,11 +22,11 @@ vps_wireguard:
     post_up:
       - iptables -A FORWARD -i {{ vps_wan_interface }} -o %i -j ACCEPT
       - iptables -A FORWARD -i %i -o {{ vps_wan_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
-      # - iptables -t nat -A POSTROUTING -i %i -o {{ vps_wan_interface }} -j MASQUERADE
+      - iptables -t nat -A POSTROUTING -s 10.255.255.0/24 -o {{ vps_wan_interface }} -j MASQUERADE
     post_down:
       - iptables -D FORWARD -i {{ vps_wan_interface }} -o %i -j ACCEPT
       - iptables -D FORWARD -i %i -o {{ vps_wan_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
-      # - iptables -t nat -D POSTROUTING -i %i -o {{ vps_wan_interface }} -j MASQUERADE
+      - iptables -t nat -D POSTROUTING -s 10.255.255.0/24 -o {{ vps_wan_interface }} -j MASQUERADE
     peers:
       - description: krs
         allowed_ips: 10.255.255.10/32
@@ -50,8 +50,30 @@ vps_wireguard:
           3734306666383333620a356663336634346363643263366366373238393636656361316463333536
           36396132303236396535303435346134656262346139633439336333613766353039613738323363
           3438643433663437663533633663363739306462313762613533
+      - description: gw-krs
+        allowed_ips: 10.255.255.11/32
+        public_key: FAzXW6hJ7Gb/83ZFcGCyktSVil13/SKvOHBDMYeR2C8=
+        private_key: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          38386462623938386439373037386232623164343634623033373434313965653135636438336235
+          3432663036663037383932396564376530363731313663300a316362396237383962303165303364
+          31383939643736373666633539376366303662636661666434316366633231363063346261376633
+          6236353462396663350a366663383335616332633762393030333936333862346336643966666130
+          36353862333066316136623166663634343534363830313061353832353333326563393633336365
+          3637653738633838326464336366663534346536643339356462
+      - description: gw-cml
+        allowed_ips: 10.255.255.21/32
+        public_key: ITzif8qSoH66k+j7YVr5IDGTWhY8V7sewzqX3X9fwxo=
+        private_key: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32313636393036343962613332393739356266316134393661616331613763306563393962666334
+          3130623131663962386164623535626232373933373539320a623638383566616637666166373765
+          65326533316466633831336538333836643836363933376530643437393333383234643230633361
+          3232333036303330320a396166653363313635363038383664373034636334353863303433366130
+          62376130383035616463363364356462313965323034393761316230626238346534313231316231
+          6666653931336136373130396433303739386236336238363630
 
-  - interface: wg1
+  - interface: wg8
     description: World
     address: 10.255.254.2/24
     public_key: fZyaKWUEe5MAHUQkiimffxV6P3IBQus091665UEN0S4=
@@ -75,8 +97,8 @@ vps_wireguard:
         endpoint: vps-sd-ams.devmem.ru:51820
         persistent_keepalive: 10
 
-  - interface: wg2
-    description: Private connections routed through wg1
+  - interface: wg9
+    description: Private connections routed through wg8
     address: 10.45.0.1/24
     listen_port: 51821
     public_key: IhrtOPPJFMyn3cfcQ4K+Zz+VdKv0BqnGbTmH8aaX2l8=
@@ -90,15 +112,15 @@ vps_wireguard:
       6337316138626235383737373839666131333766376332393163
     post_up:
       - iptables -I FORWARD 1 -i %i -o {{ vps_wan_interface }} -j DROP
-      - iptables -A FORWARD -i wg1 -o %i -j ACCEPT
-      - iptables -A FORWARD -i %i -o wg1 -m state --state RELATED,ESTABLISHED -j ACCEPT
-      - iptables -t nat -A POSTROUTING -s 10.45.0.0/24 -o wg1 -j MASQUERADE
+      - iptables -A FORWARD -i wg8 -o %i -j ACCEPT
+      - iptables -A FORWARD -i %i -o wg8 -m state --state RELATED,ESTABLISHED -j ACCEPT
+      - iptables -t nat -A POSTROUTING -s 10.45.0.0/24 -o wg8 -j MASQUERADE
       - ip rule add from 10.45.0.0/24 table 1045
     post_down:
       - iptables -D FORWARD -i %i -o {{ vps_wan_interface }} -j DROP
-      - iptables -D FORWARD -i wg1 -o %i -j ACCEPT
-      - iptables -D FORWARD -i %i -o wg1 -m state --state RELATED,ESTABLISHED -j ACCEPT
-      - iptables -t nat -D POSTROUTING -s 10.45.0.0/24 -o wg1 -j MASQUERADE
+      - iptables -D FORWARD -i wg8 -o %i -j ACCEPT
+      - iptables -D FORWARD -i %i -o wg8 -m state --state RELATED,ESTABLISHED -j ACCEPT
+      - iptables -t nat -D POSTROUTING -s 10.45.0.0/24 -o wg8 -j MASQUERADE
       - ip rule del from 10.45.0.0/24 table 1045
     peers:
       - description: spmacbook

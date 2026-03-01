@@ -1,6 +1,6 @@
 ---
 - name: wireguard | Install package
-  community.general.opkg:
+  community.openwrt.opkg:
     name: "{{ item }}"
     state: present
   loop:
@@ -9,7 +9,7 @@
     - qrencode
 
 - name: wireguard | Add interface
-  uci:
+  community.openwrt.uci:
     command: add
     config: network
     type: interface
@@ -20,9 +20,10 @@
   loop_control:
     label: "{{ item.interface }}"
   loop: "{{ openwrt_wireguard }}"
+  no_log: true
 
 - name: wireguard | Configure interface
-  uci:
+  community.openwrt.uci:
     command: set
     config: network
     section: "{{ item.interface }}"
@@ -30,8 +31,7 @@
       proto: wireguard
       private_key: "{{ item.private_key }}"
       listen_port: "{{ item.listen_port | default(omit) }}"
-      addresses:
-        - "{{ item.addresses }}"
+      addresses: "{{ item.addresses }}"
   notify:
     - Uci commit
     - Restart wireguard
@@ -39,15 +39,46 @@
     label: "{{ item.interface }}"
   loop: "{{ openwrt_wireguard }}"
   no_log: true
+  register: _wg_config
 
 - name: wireguard | Configure peers
   ansible.builtin.include_tasks: wireguard_peers.yml
   loop_control:
     label: "{{ item.interface }}"
   loop: "{{ openwrt_wireguard }}"
+  when:
+    - item.peers is defined
+
+- name: wireguard | Check for changed instances
+  ansible.builtin.set_fact:
+    _wg_config_changed: >
+      {{ _wg_config.results
+        | selectattr('changed', 'equalto', true)
+        | map(attribute='item')
+        | map(attribute='interface')
+        | list
+      }}
+    _wg_peers_changed: >
+      {{ _wg_peers_config.results
+        | selectattr('changed', 'equalto', true)
+        | map(attribute='section')
+        | map('regex_replace','^@wireguard_(.*)\[.*','\1')
+        | list
+      }}
+    _wg_peers_deleted: >
+      {{ _wg_peers_delete.results
+        | selectattr('changed', 'equalto', true)
+        | map(attribute='section')
+        | map('regex_replace','^@wireguard_(.*)\[.*','\1')
+        | list
+      }}
+
+- name: wireguard | Make changed instances list
+  ansible.builtin.set_fact:
+    _wg_instances_changed: "{{ _wg_config_changed | union(_wg_peers_changed) | union(_wg_peers_deleted) | list }}"
 
 - name: wireguard | Configure firewall zone "lan" (site-to-site)
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: firewall
     section: "@zone[0]"
@@ -64,34 +95,53 @@
     - item.firewall_zone is defined
     - item.firewall_zone == "lan"
 
-- name: wireguard | Configure firewall zone "{{ openwrt_wireguard[0].interface }}" (server)
-  uci:
+- name: wireguard | Find server interfaces
+  ansible.builtin.set_fact:
+    _wg_servers: "{{ openwrt_wireguard | selectattr('server', 'defined') | list }}"
+
+- name: wireguard | Configure firewall zone (server)
+  community.openwrt.uci:
     command: section
     config: firewall
     type: zone
-    find_by:
-      name: "{{ openwrt_wireguard[0].interface }}"
+    find:
+      name: "{{ item.interface }}"
     value:
-      name: "{{ openwrt_wireguard[0].interface }}"
+      name: "{{ item.interface }}"
       input: ACCEPT
       output: ACCEPT
       forward: ACCEPT
       masq: 1
       mtu_fix: 1
       network:
-        - "{{ openwrt_wireguard[0].interface }}"
+        - "{{ item.interface }}"
       family: ipv4
   notify:
     - Uci commit
     - Reload firewall
-  when: openwrt_wireguard[0].server is defined
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ _wg_servers }}"
+
+- name: wireguard | Prepare forwarding rules
+  ansible.builtin.set_fact:
+    _wg_forwarding: >
+      {{ _wg_forwarding | default([]) + [
+          {'name': item.interface + '-lan', 'src': item.interface, 'dest': 'lan'},
+          {'name': item.interface + '-wan', 'src': item.interface, 'dest': 'wan'},
+          {'name': 'lan-' + item.interface, 'src': 'lan', 'dest': item.interface}
+        ]
+      }}
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ _wg_servers }}"
 
 - name: wireguard | Configure forwarding (server)
-  uci:
+  community.openwrt.uci:
     command: section
     config: firewall
     type: forwarding
-    find_by:
+    find:
       name: "{{ item.name }}"
     value:
       src: "{{ item.src }}"
@@ -101,33 +151,27 @@
     - Reload firewall
   loop_control:
     label: "{{ item.name }}"
-  loop:
-    - name: "{{ openwrt_wireguard[0].interface }}-lan"
-      src: "{{ openwrt_wireguard[0].interface }}"
-      dest: "lan"
-    - name: "{{ openwrt_wireguard[0].interface }}-wan"
-      src: "{{ openwrt_wireguard[0].interface }}"
-      dest: "wan"
-    - name: "lan-{{ openwrt_wireguard[0].interface }}"
-      src: "lan"
-      dest: "{{ openwrt_wireguard[0].interface }}"
-  when: openwrt_wireguard[0].server is defined
+  loop: "{{ _wg_forwarding }}"
+  when:
+    - _wg_forwarding is defined
 
 - name: wireguard | Configure masquerading (server)
-  uci:
+  community.openwrt.uci:
     command: section
     config: firewall
     type: nat
-    find_by:
-      name: "{{ openwrt_wireguard[0].interface }}"
+    find:
+      name: "{{ item.interface }}"
     value:
-      name: "{{ openwrt_wireguard[0].interface }}"
+      name: "{{ item.interface }}"
       target: MASQUERADE
       src: lan
-      src_ip: "{{ openwrt_wireguard[0].addresses }}"
+      src_ip: "{{ item.addresses[0] }}"
       proto:
         - all
   notify:
     - Uci commit
     - Reload firewall
-  when: openwrt_wireguard[0].server is defined
+  loop_control:
+    label: "{{ item.interface }}"
+  loop: "{{ _wg_servers }}"

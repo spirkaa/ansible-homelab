@@ -1,4 +1,20 @@
 ---
+# - name: base | Gather facts
+#   community.openwrt.setup:
+
+- name: base | Get current root password
+  community.openwrt.command:
+    cmd: "grep '^root:' /etc/shadow"
+  check_mode: false
+  changed_when: false
+  register: _shadow
+  no_log: true
+
+- name: base | Parse current root password
+  ansible.builtin.set_fact:
+    _shadow_parsed: "{{ _shadow.stdout | split(':') }}"
+  no_log: true
+
 - name: base | Encrypt root password
   ansible.builtin.set_fact:
     _root_password: "{{ openwrt_root_password | string | password_hash('sha512', openwrt_password_salt | string) }}"
@@ -6,14 +22,14 @@
   no_log: true
 
 - name: base | Set root password
-  ansible.builtin.replace:
+  community.openwrt.lineinfile:
     path: /etc/shadow
     regexp: "^root:([^:]*):"
-    replace: "root:{{ _root_password }}:"
+    line: "{{ 'root:' + _root_password + ':' + _shadow_parsed[2:] | join(':') }}"
   no_log: true
 
 - name: base | Configure system settings
-  uci:
+  community.openwrt.uci:
     command: set
     config: system
     section: "@system[0]"
@@ -28,7 +44,7 @@
     - Reload system
 
 - name: base | Enable Luci HTTPS redirect
-  uci:
+  community.openwrt.uci:
     command: set
     config: uhttpd
     section: main
@@ -39,7 +55,7 @@
     - Reload uhttpd
 
 - name: base | Configure dropbear
-  uci:
+  community.openwrt.uci:
     command: set
     config: dropbear
     section: "@dropbear[0]"
@@ -52,19 +68,19 @@
     - Reload dropbear
 
 - name: base | Set dropbear authorized keys
-  ansible.builtin.copy:
+  community.openwrt.copy:
     content: "{{ openwrt_dropbear.authorized_keys | join('\n') }}"
     dest: /etc/dropbear/authorized_keys
     owner: root
     group: root
     mode: "0600"
-  when: openwrt_dropbear.authorized_keys | default([]) | length > 0
   notify:
     - Uci commit
     - Reload dropbear
+  when: openwrt_dropbear.authorized_keys | default([]) | length > 0
 
 - name: Configure LAN interface
-  uci:
+  community.openwrt.uci:
     command: set
     config: network
     section: lan
@@ -72,10 +88,10 @@
     value:
       ipaddr: "{{ openwrt_lan.ipaddr | default(omit) }}"
       netmask: "{{ openwrt_lan.netmask | default(omit) }}"
-  when: openwrt_lan | default({})
   notify:
     - Uci commit
     - Reload network
+  when: openwrt_lan
 
 - name: base | Flush handlers
   ansible.builtin.meta: flush_handlers

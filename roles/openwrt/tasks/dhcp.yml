@@ -1,6 +1,6 @@
 ---
 - name: dhcp | Create pool for lan
-  uci:
+  community.openwrt.uci:
     command: add
     config: dhcp
     section: lan
@@ -10,7 +10,7 @@
     - Reload dhcp
 
 - name: dhcp | Configure dhcp pool for lan
-  uci:
+  community.openwrt.uci:
     command: set
     config: dhcp
     section: lan
@@ -28,7 +28,7 @@
     - Reload dhcp
 
 - name: dhcp | Disable dhcpv6 for lan
-  uci:
+  community.openwrt.uci:
     command: absent
     key: "{{ item }}"
   loop:
@@ -38,3 +38,9 @@
   notify:
     - Uci commit
     - Reload dhcp
+
+- name: dhcp | Configure static leases
+  ansible.builtin.include_tasks: dhcp_leases.yml
+  loop_control:
+    label: "{{ item.name }}"
+  loop: "{{ openwrt_dhcp_leases }}"

@@ -1,6 +1,6 @@
 ---
 - name: lte | Create network interface
-  uci:
+  community.openwrt.uci:
     command: add
     config: network
     section: lte
@@ -10,7 +10,7 @@
     - Reload network
 
 - name: lte | Configure network interface
-  uci:
+  community.openwrt.uci:
     command: set
     config: network
     section: lte
@@ -23,7 +23,7 @@
     - Reload network
 
 - name: lte | Configure firewall zone "wan" - add_list
-  uci:
+  community.openwrt.uci:
     command: add_list
     config: firewall
     section: "@zone[1]"

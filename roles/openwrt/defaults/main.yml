@@ -15,6 +15,7 @@ openwrt_lan: {}
 openwrt_wlan: {}
 openwrt_routes: []
 openwrt_dhcp: {}
+openwrt_dhcp_leases: []
 openwrt_dnsmasq: {}
 openwrt_wireguard: []
 

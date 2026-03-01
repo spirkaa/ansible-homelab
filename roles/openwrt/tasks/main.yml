@@ -2,9 +2,17 @@
 - name: Base config
   ansible.builtin.include_tasks: base.yml
 
+- name: LTE config
+  ansible.builtin.include_tasks: lte.yml
+  when: openwrt_lte
+
+- name: WLAN config
+  ansible.builtin.include_tasks: wlan.yml
+  when: openwrt_wlan
+
 - name: Wireguard
   ansible.builtin.include_tasks: wireguard.yml
-  when: openwrt_wireguard
+  when: openwrt_wireguard | length > 0
 
 - name: Podkop
   ansible.builtin.include_tasks: podkop.yml
@@ -15,24 +23,12 @@
 - name: DHCP config
   ansible.builtin.include_tasks: dhcp.yml
 
-- name: DHCP static leases
-  ansible.builtin.include_tasks: dhcp_leases.yml
-  loop: "{{ openwrt_dhcp_leases | default([]) }}"
+- name: Routes
+  ansible.builtin.include_tasks: routes.yml
+  loop: "{{ openwrt_routes }}"
 
 - name: Node-exporter
   ansible.builtin.include_tasks: node-exporter.yml
-
-- name: LTE config
-  ansible.builtin.include_tasks: lte.yml
-  when: openwrt_lte
-
-- name: WLAN config
-  ansible.builtin.include_tasks: wlan.yml
-  when: openwrt_wlan
-
-- name: Routes
-  ansible.builtin.include_tasks: routes.yml
-  when: openwrt_routes
 
 - name: Nginx
   ansible.builtin.include_tasks: nginx.yml
