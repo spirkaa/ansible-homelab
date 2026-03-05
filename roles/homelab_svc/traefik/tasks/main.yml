@@ -17,6 +17,7 @@
     dest: "{{ traefik_cert_path_host }}/{{ traefik_cert_name }}.crt"
     mode: "0644"
   notify: traefik - restart
+  no_log: true
   tags: traefik
 
 - name: traefik - copy certificate private key
