@@ -1,6 +1,7 @@
 APP_NAME = Gitea
 RUN_USER = git
 RUN_MODE = prod
+WORK_PATH = {{ gitea_app_data_path }}
 
 [server]
 DOMAIN = {{ gitea_domain }}
@@ -41,7 +42,7 @@ JWT_SECRET = {{ gitea_jwt_secret }}
 ROOT_PATH = {{ gitea_app_data_path }}/log
 MODE = file
 LEVEL = Info
-logger.router.MODE =
+logger.router.MODE = ,
 
 [service]
 REGISTER_EMAIL_CONFIRM = false
