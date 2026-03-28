@@ -1,4 +1,4 @@
-version: 0.16-0
+version: 0.17-0
 
 tls:
   enabled: false
@@ -15,9 +15,10 @@ ffmpeg:
 
 record:
   enabled: true
-  retain:
+  continuous:
+    days: 0
+  motion:
     days: 7
-    mode: motion
   alerts:
     retain:
       days: 30
@@ -47,16 +48,16 @@ go2rtc:
   streams:
     bedroom:
       - rtsp://admin:{{ frigate_rtsp_password_bedroom }}@192.168.20.140:554/cam/realmonitor?channel=1&subtype=0
-      - "ffmpeg:bedroom#audio=opus"
+      - ffmpeg:bedroom#audio=opus
     bedroom_sub:
       - rtsp://admin:{{ frigate_rtsp_password_bedroom }}@192.168.20.140:554/cam/realmonitor?channel=1&subtype=1#backchannel=0
-      - "ffmpeg:bedroom_sub#audio=opus"
+      - ffmpeg:bedroom_sub#audio=opus
     living_room:
       - rtsp://admin:{{ frigate_rtsp_password_living_room }}@192.168.20.142:554/cam/realmonitor?channel=1&subtype=0
-      - "ffmpeg:living_room#audio=opus"
+      - ffmpeg:living_room#audio=opus
     living_room_sub:
       - rtsp://admin:{{ frigate_rtsp_password_living_room }}@192.168.20.142:554/cam/realmonitor?channel=1&subtype=1#backchannel=0
-      - "ffmpeg:living_room_sub#audio=opus"
+      - ffmpeg:living_room_sub#audio=opus
   webrtc:
     candidates:
       - 192.168.20.10:8555
