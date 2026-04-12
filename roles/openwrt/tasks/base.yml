@@ -91,7 +91,7 @@
   notify:
     - Uci commit
     - Reload network
-  when: openwrt_lan
+  when: openwrt_lan.keys() | length > 0
 
 - name: base | Flush handlers
   ansible.builtin.meta: flush_handlers

@@ -1,12 +1,8 @@
 ---
 - name: wireguard | Install package
   community.openwrt.opkg:
-    name: "{{ item }}"
+    name: "{{ openwrt_wireguard_packages | join(',') }}"
     state: present
-  loop:
-    - wireguard-tools
-    - luci-proto-wireguard
-    - qrencode
 
 - name: wireguard | Add interface
   community.openwrt.uci:

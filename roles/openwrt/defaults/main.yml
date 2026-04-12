@@ -19,6 +19,25 @@ openwrt_dhcp_leases: []
 openwrt_dnsmasq: {}
 openwrt_wireguard: []
 
+openwrt_wireguard_packages:
+  - wireguard-tools
+  - luci-proto-wireguard
+  - qrencode
+
+openwrt_podkop_version: 0.7.14
+openwrt_podkop_packages:
+  - podkop
+  - luci-app-podkop
+  - luci-i18n-podkop-ru
+
+openwrt_node_exporter_packages:
+  - prometheus-node-exporter-lua
+  - prometheus-node-exporter-lua-netstat
+  - prometheus-node-exporter-lua-openwrt
+  - prometheus-node-exporter-lua-uci_dhcp_host
+  - prometheus-node-exporter-lua-wifi
+  - prometheus-node-exporter-lua-wifi_stations
+
 openwrt_nginx_config_path: /docker/nginx
 openwrt_nginx_image: nginxinc/nginx-unprivileged:alpine
 
@@ -29,3 +48,5 @@ openwrt_podkop_user_domains:
   - rwth-aachen.de  # jenkins mirror
   - johnvansickle.com  # ffmpeg static build
   - ansible.com
+  - keybase.io
+  - thenewstack.io

@@ -4,11 +4,11 @@
 
 - name: LTE config
   ansible.builtin.include_tasks: lte.yml
-  when: openwrt_lte
+  when: openwrt_lte.keys() | length > 0
 
 - name: WLAN config
   ansible.builtin.include_tasks: wlan.yml
-  when: openwrt_wlan
+  when: openwrt_wlan.keys() | length > 0
 
 - name: Wireguard
   ansible.builtin.include_tasks: wireguard.yml

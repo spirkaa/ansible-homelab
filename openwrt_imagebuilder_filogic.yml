@@ -19,7 +19,7 @@
     net_gw: 192.168.10.1
     net_dns: 192.168.10.1
     net_domain: "{{ inventory__homelab_domain }}"
-    openwrt_version: 24.10.5
+    openwrt_version: 24.10.6
     openwrt_target: mediatek/filogic
     openwrt_profile: glinet_gl-mt6000
     openwrt_image: openwrt-{{ openwrt_version }}-{{ openwrt_target | replace('/','-') }}-{{ openwrt_profile }}-squashfs-sysupgrade.bin
@@ -96,9 +96,9 @@
         group: build
         mode: "0644"
       loop:
-        - https://github.com/itdoginfo/podkop/releases/download/0.7.10/podkop-v0.7.10-r1-all.ipk
-        - https://github.com/itdoginfo/podkop/releases/download/0.7.10/luci-app-podkop-v0.7.10-r1-all.ipk
-        - https://github.com/itdoginfo/podkop/releases/download/0.7.10/luci-i18n-podkop-ru-0.7.10.ipk
+        - https://github.com/itdoginfo/podkop/releases/download/0.7.14/podkop-v0.7.14-r1-all.ipk
+        - https://github.com/itdoginfo/podkop/releases/download/0.7.14/luci-app-podkop-v0.7.14-r1-all.ipk
+        - https://github.com/itdoginfo/podkop/releases/download/0.7.14/luci-i18n-podkop-ru-0.7.14.ipk
 
     - name: Build image
       community.general.make:

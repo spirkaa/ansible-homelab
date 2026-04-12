@@ -52,7 +52,7 @@ openwrt_wlan:
       wpa_disable_eapol_key_retries: 1
 
 openwrt_wireguard:
-  - interface: wg1
+  - interface: wg0
     firewall_zone: lan
     addresses:
       - 10.250.254.40/24
@@ -72,25 +72,47 @@ openwrt_wireguard:
         endpoint_host: vpn.devmem.ru
         endpoint_port: 51820
         persistent_keepalive: 10
+  - interface: wg1
+    firewall_zone: lan
+    addresses:
+      - 10.255.255.41/32
+    public_key: zV1FX58V76v7Bdwrw5YScgzuMlust9QqzEP4LeQu/jo=
+    private_key: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      64653962373865363665323062316335306639333435646634323038333337333164383165626530
+      6464356239373139303065613366333061373331373331340a653364656437626332306239303262
+      32326664396631316265353538353861373534616331333663633234323339623362353133363136
+      3032386264303737380a343562353933323236613264353465376639623566663230313366613366
+      37323831653535653932663737313864313831343665303337326361656439316630376535366439
+      3434346133616531346439616664313934393261613061666239
+    peers:
+      - description: vps-sber1
+        allowed_ips:
+          - 0.0.0.0/0
+          - 10.255.255.1/32
+        public_key: ptgafvY1m2aj4FKFwBCeEVylpPjaynqEYm0tQyR3P2c=
+        endpoint_host: vps-sber1.devmem.ru
+        endpoint_port: 51820
+        persistent_keepalive: 10
 
 openwrt_routes:
   - id: "@route[0]"
-    interface: wg1
+    interface: wg0
     target: 192.168.10.1/24
   - id: "@route[1]"
-    interface: wg1
+    interface: wg0
     target: 192.168.11.1/24
   - id: "@route[2]"
-    interface: wg1
+    interface: wg0
     target: 192.168.12.1/24
   - id: "@route[3]"
-    interface: wg1
+    interface: wg0
     target: 192.168.13.1/24
   - id: "@route[4]"
-    interface: wg1
+    interface: wg0
     target: 192.168.14.1/24
   - id: "@route[5]"
-    interface: wg1
+    interface: wg0
     target: 192.168.20.1/24
 
 openwrt_dropbear:

@@ -1,4 +1,27 @@
 ---
+- name: podkop | Gather package facts
+  community.openwrt.package_facts:
+
+- name: podkop | Check if package is installed
+  ansible.builtin.set_fact:
+    _podkop_version: "{{ ansible_facts['packages'][openwrt_podkop_packages[0]][0]['version'] }}"
+  when: openwrt_podkop_packages[0] in ansible_facts['packages']
+
+- name: podkop | Install package
+  community.openwrt.command:
+    cmd: |
+      cd /tmp
+      curl -L -O https://github.com/itdoginfo/podkop/releases/download/{{ openwrt_podkop_version }}/podkop-v{{ openwrt_podkop_version }}-r1-all.ipk
+      curl -L -O https://github.com/itdoginfo/podkop/releases/download/{{ openwrt_podkop_version }}/luci-app-podkop-v{{ openwrt_podkop_version }}-r1-all.ipk
+      curl -L -O https://github.com/itdoginfo/podkop/releases/download/{{ openwrt_podkop_version }}/luci-i18n-podkop-ru-{{ openwrt_podkop_version }}.ipk
+      opkg install --force-downgrade /tmp/podkop-v{{ openwrt_podkop_version }}-r1-all.ipk
+      opkg install --force-downgrade /tmp/luci-app-podkop-v{{ openwrt_podkop_version }}-r1-all.ipk
+      opkg install --force-downgrade /tmp/luci-i18n-podkop-ru-{{ openwrt_podkop_version }}.ipk
+    uses_shell: true
+  when: >
+    _podkop_version is not defined
+    or _podkop_version[1:] != openwrt_podkop_version
+
 - name: podkop | Settings
   community.openwrt.uci:
     command: set

@@ -1,15 +1,8 @@
 ---
 - name: node-exporter | Install package
   community.openwrt.opkg:
-    name: "{{ item }}"
+    name: "{{ openwrt_node_exporter_packages | join(',') }}"
     state: present
-  loop:
-    - prometheus-node-exporter-lua
-    - prometheus-node-exporter-lua-netstat
-    - prometheus-node-exporter-lua-openwrt
-    - prometheus-node-exporter-lua-uci_dhcp_host
-    - prometheus-node-exporter-lua-wifi
-    - prometheus-node-exporter-lua-wifi_stations
   notify:
     - Restart node-exporter
 
