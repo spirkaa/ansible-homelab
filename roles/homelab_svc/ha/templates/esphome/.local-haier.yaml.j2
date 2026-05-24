@@ -151,3 +151,21 @@ api:
     - service: turn_off
       then:
         - climate.haier.power_off: haier_ac
+
+text_sensor:
+  - platform: uptime
+    name: ${friendly_name} - Uptime
+    entity_category: diagnostic
+  - platform: version
+    name: ${friendly_name} - ESPHome Version
+    hide_timestamp: True
+    entity_category: diagnostic
+  - platform: wifi_info
+    ip_address:
+      id: wifi_ip
+      name: ${friendly_name} - IP Address
+      entity_category: diagnostic
+    ssid:
+      id: wifi_ssid
+      name: ${friendly_name} - SSID
+      entity_category: diagnostic
