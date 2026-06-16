@@ -16,6 +16,9 @@ wg_pia_local_network: ""
 wg_pia_firewall: "0"
 wg_pia_fwd_iface: wg1
 wg_pia_post_up: ip rule add from $(ip -br address show dev {{ vps_wan_interface }} | awk '{print $3}' | awk -F/ '{print $1}') lookup main
+wg_pia_interface: wg0
+wg_pia_container_name: wg-pia
+wg_pia_handshake_timeout: 300
 
 # vps_iptables_forward_ports:
 #   - { port: "80", proto: "tcp", comment: "http", to_dest: "{{ vps_wg_peers[0].private_ip }}", to_port: 8080 }

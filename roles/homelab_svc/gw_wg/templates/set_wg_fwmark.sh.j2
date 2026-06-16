@@ -7,7 +7,7 @@ set -o nounset
 # set -o xtrace
 
 # Check and set fwmark on wireguard interface
-if ! /opt/wg-json | jq -e '.{{ wg_access_server_interface }} | has("fwmark")'; then
+if ! /usr/local/bin/wg-json | jq -e '.{{ wg_access_server_interface }} | has("fwmark")'; then
   /usr/bin/wg set {{ wg_access_server_interface }} fwmark 51820
 fi
 

@@ -8,9 +8,23 @@
     reload: true
     state: present
 
+- name: wg-pia - copy monitoring script
+  ansible.builtin.template:
+    src: check_wg_pia.sh.j2
+    dest: /opt/check_wg_pia.sh
+    mode: "0755"
+
+- name: wg-pia - create cron job for monitoring script
+  ansible.builtin.cron:
+    name: check_wg_pia
+    minute: "*"
+    user: root
+    job: /opt/check_wg_pia.sh >>/var/log/check_wg_pia.log 2>&1
+    cron_file: ansible_check_wg_pia
+
 - name: wg-pia - start
   community.docker.docker_container:
-    name: wg-pia
+    name: "{{ wg_pia_container_name }}"
     image: "{{ wg_pia_image }}"
     image_name_mismatch: recreate
     pull: true

@@ -12,6 +12,7 @@ repos:
       - id: check-merge-conflict
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
+        exclude: .*templates/.*j2$
       - id: check-yaml
         args: [--unsafe]
   - repo: https://github.com/adrienverge/yamllint
