@@ -41,12 +41,25 @@ openwrt_node_exporter_packages:
 openwrt_nginx_config_path: /docker/nginx
 openwrt_nginx_image: nginxinc/nginx-unprivileged:alpine
 
-openwrt_podkop_proxy_string: vless://{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].uuid }}@{{ inventory__sing_box_config.server }}:{{ inventory__sing_box_config.listen_port }}?security=reality&sni={{ inventory__sing_box_config.server_name }}&alpn=h2&fp=chrome&pbk={{ inventory__sing_box_config.public_key }}&sid={{ inventory__sing_box_config.short_id }}&type=tcp&flow={{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].flow }}
+openwrt_podkop_proxy_string: vless://{{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].uuid }}@{{ inventory__sing_box_config.server }}:{{ inventory__sing_box_config.listen_port }}?security=reality&sni={{ inventory__sing_box_config.server_name }}&alpn=h2&fp=firefox&pbk={{ inventory__sing_box_config.public_key }}&sid={{ inventory__sing_box_config.short_id }}&type=tcp&flow={{ (inventory__sing_box_config.users | selectattr('name', 'equalto', inventory_hostname))[0].flow }}
 openwrt_podkop_community_lists:
   - russia_inside
+  - hodca
+  - cloudflare
+  - hetzner
+  - ovh
+  - digitalocean
+  - cloudfront
+  - meta
+  - twitter
+  - telegram
 openwrt_podkop_user_domains:
   - rwth-aachen.de  # jenkins mirror
   - johnvansickle.com  # ffmpeg static build
   - ansible.com
   - keybase.io
   - thenewstack.io
+  - registry-1.docker.io
+  - ecr-public.aws.com
+  - public.ecr.aws
+  - agentclientprotocol.com

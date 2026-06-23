@@ -142,3 +142,29 @@ openwrt_wireguard:
         endpoint_host: vps-sber1.devmem.ru
         endpoint_port: 51820
         persistent_keepalive: 10
+  - interface: wg9
+    firewall_zone: lan
+    addresses:
+      - 10.45.0.20/32
+    public_key: LyYOESsmu3/A7bNSkZs/RUmH5McbkeUR044PLuEvagA=
+    private_key: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      64363433656531326234353263636636336231313165633931383430333066656633663962623030
+      3136313032393861366262333363386464363262346332380a383566306639633439623561363366
+      31303530326232363935333766386131373733646135373930336330316566623739633638346530
+      3664663836653966620a343131633838313461666131363062633366396566323030666235353739
+      63376333353532376264613934336530663565393961333762336133646535613537306530366338
+      6536376438383933626239353262643039343332663139663835
+    peers:
+      - description: vps-sber1
+        allowed_ips:
+          - 0.0.0.0/0
+          - 10.45.0.1/32
+        public_key: IhrtOPPJFMyn3cfcQ4K+Zz+VdKv0BqnGbTmH8aaX2l8=
+        endpoint_host: vps-sber1.devmem.ru
+        endpoint_port: 51821
+        persistent_keepalive: 10
+
+openwrt_podkop_connection_type: vpn
+openwrt_podkop_interface: wg9
+openwrt_podkop_proxy_string: ""

@@ -34,6 +34,7 @@
       enable_yacd: 1
       dont_touch_dhcp: 1
       exclude_ntp: 1
+      download_lists_via_proxy: 1
   notify:
     - Uci commit
     - Reload dnsmasq
@@ -46,9 +47,11 @@
     section: main
     type: section
     value:
+      connection_type: "{{ openwrt_podkop_connection_type | default(omit) }}"
+      interface: "{{ openwrt_podkop_interface | default(omit) }}"
+      proxy_string: "{{ openwrt_podkop_proxy_string | default(omit) }}"
       mixed_proxy_enabled: 1
       mixed_proxy_port: 1080
-      proxy_string: "{{ openwrt_podkop_proxy_string }}"
       user_domain_list_type: text
       user_subnet_list_type: disabled
       user_domains_text: "{{ openwrt_podkop_user_domains | join('\n') }}"
