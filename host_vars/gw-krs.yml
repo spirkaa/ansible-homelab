@@ -114,7 +114,7 @@ openwrt_wireguard:
           - 0.0.0.0/0
           - 10.255.255.1/32
         public_key: ptgafvY1m2aj4FKFwBCeEVylpPjaynqEYm0tQyR3P2c=
-        endpoint_host: vps-sber1.devmem.ru
+        endpoint_host: 45.155.205.117
         endpoint_port: 51820
         persistent_keepalive: 10
   - interface: wg9
@@ -136,7 +136,7 @@ openwrt_wireguard:
           - 0.0.0.0/0
           - 10.45.0.1/32
         public_key: IhrtOPPJFMyn3cfcQ4K+Zz+VdKv0BqnGbTmH8aaX2l8=
-        endpoint_host: vps-sber1.devmem.ru
+        endpoint_host: 45.155.205.117
         endpoint_port: 51821
         persistent_keepalive: 10
 
