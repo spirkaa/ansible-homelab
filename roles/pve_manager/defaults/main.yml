@@ -9,10 +9,10 @@ vmid: 5500
 hostname: tpl
 # net_ip: 192.168.13.55
 
-vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-24.04-server-cloudimg-amd64.img
+vm_image: /mnt/pve/spsrv-proxmox/template/qcow2/ubuntu-26.04-server-cloudimg-amd64.img
 vm_ostype: l26
 
-ct_template: spsrv-proxmox:vztmpl/ubuntu-24.04-docker.tar.zst
+ct_template: spsrv-proxmox:vztmpl/ubuntu-26.04-docker.tar.zst
 
 resourse_pool: ansible
 resourse_pool_comment: Created with a little help of Ansible
