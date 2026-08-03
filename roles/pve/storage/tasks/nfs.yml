@@ -27,4 +27,4 @@
     name: nfs-kernel-server
     state: started
     enabled: true
-  when: nfs_exports | length
+  when: nfs_exports | length > 0

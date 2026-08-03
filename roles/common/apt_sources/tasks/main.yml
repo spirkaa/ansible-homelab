@@ -7,19 +7,19 @@
   notify: Update APT cache
   become: true
   when: >
-    ansible_distribution == "Debian" and ansible_distribution_major_version | int < 13
-    or ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int < 26
+    ansible_facts.distribution == "Debian" and ansible_facts.distribution_major_version | int < 13
+    or ansible_facts.distribution == "Ubuntu" and ansible_facts.distribution_major_version | int < 26
 
 - name: Configure APT sources list
   ansible.builtin.template:
-    src: "{{ ansible_distribution | lower }}.sources.j2"
-    dest: /etc/apt/sources.list.d/{{ ansible_distribution | lower }}.sources
+    src: "{{ ansible_facts.distribution | lower }}.sources.j2"
+    dest: /etc/apt/sources.list.d/{{ ansible_facts.distribution | lower }}.sources
     mode: "0644"
   notify: Update APT cache
   become: true
   when: >
-    ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 13
-    or ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 26
+    ansible_facts.distribution == "Debian" and ansible_facts.distribution_major_version | int >= 13
+    or ansible_facts.distribution == "Ubuntu" and ansible_facts.distribution_major_version | int >= 26
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers

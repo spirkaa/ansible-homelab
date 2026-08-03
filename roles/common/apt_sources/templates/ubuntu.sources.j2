@@ -2,6 +2,6 @@
 
 Types: deb
 URIs: {{ apt_sources_mirror_url }}/ubuntu/
-Suites: {{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }}-updates {{ ansible_distribution_release | lower }}-security
+Suites: {{ ansible_facts.distribution_release | lower }} {{ ansible_facts.distribution_release | lower }}-updates {{ ansible_facts.distribution_release | lower }}-security
 Components: main multiverse restricted universe
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
