@@ -120,7 +120,7 @@ openwrt_wireguard:
   - interface: wg9
     firewall_zone: lan
     addresses:
-      - 10.45.0.10/32
+      - 10.45.0.11/32
     public_key: KhTCa6XZgZlp96kKpb9grMvTkUTrXeWkis4wftsVnkM=
     private_key: !vault |
       $ANSIBLE_VAULT;1.1;AES256
