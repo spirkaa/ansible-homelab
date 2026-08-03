@@ -38,7 +38,7 @@
         mode: "0755"
       register: hddtemp_cfg
 
-    - name: Creaty systemd dir
+    - name: Create systemd dir
       ansible.builtin.file:
         path: /usr/lib/systemd/system
         state: directory
