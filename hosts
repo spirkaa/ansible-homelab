@@ -41,7 +41,7 @@ ansible_user=root
 [vm]
 mgmt
 dev
-gw-wg
+# gw-wg
 
 [vm:vars]
 ansible_user=ubuntu
