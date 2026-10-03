@@ -4,7 +4,7 @@
     name: minio
     image: "{{ minio_image }}"
     image_name_mismatch: recreate
-    pull: true
+    pull: false
     user: 1000:1000
     command: server /data --console-address :9001
     ports:
