@@ -33,6 +33,11 @@ INTERNAL_TOKEN = {{ gitea_internal_token }}
 LOGIN_REMEMBER_DAYS = 30
 REVERSE_PROXY_LIMIT = 1
 REVERSE_PROXY_TRUSTED_PROXIES = 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+ALLOWED_HOST_LIST = .devmem.ru,private
+EGRESS_MODE = strict
+
+[migrations]
+ALLOWED_HOST_LIST = github.com,gitlab.com,private,loopback
 
 [oauth2]
 ENABLED = true
@@ -90,9 +95,6 @@ ENABLE_AUTO_REGISTRATION = true
 USERNAME = email
 ACCOUNT_LINKING = auto
 
-[webhook]
-ALLOWED_HOST_LIST = *
-
 [mailer]
 ENABLED = true
 SUBJECT_PREFIX = [git]
@@ -105,19 +107,12 @@ PASSWD = {{ smtp_pass }}
 [session]
 PROVIDER = db
 
-[picture]
-DISABLE_GRAVATAR = true
-ENABLE_FEDERATED_AVATAR = false
-
 [attachment]
 ENABLED = true
 MAX_SIZE = 10
 
 [metrics]
 ENABLED = true
-
-[migrations]
-ALLOW_LOCALNETWORKS = true
 
 [packages]
 ENABLED = true
