@@ -57,6 +57,7 @@
       DB_PASS: "{{ librenms_db_pass }}"
       APP_KEY: "{{ librenms_app_key }}"
       BASE_URL: "{{ librenms_base_url }}"
+      APP_TRUSTED_PROXIES: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
     volumes:
       - "{{ app_path }}/librenms/logs/nginx:/var/log/nginx"
       - "{{ app_path }}/librenms/logs/app:/opt/librenms/logs"
