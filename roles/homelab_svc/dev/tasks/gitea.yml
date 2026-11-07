@@ -71,7 +71,7 @@
       POSTGRES_PASSWORD: "{{ gitea_db_pass }}"
       POSTGRES_DB: "{{ gitea_db_user }}"
     volumes:
-      - "{{ dev_app_path }}/gitea/db:/var/lib/postgresql/data"
+      - "{{ dev_app_path }}/gitea/db:/var/lib/postgresql"
     networks:
       - name: "{{ app_network_name }}"
     networks_cli_compatible: true
